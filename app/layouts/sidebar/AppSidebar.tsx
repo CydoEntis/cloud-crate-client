@@ -24,16 +24,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props} className="p-3">
       <SidebarContent>
-        <h3 className="text-xl text-cyan-600 font-extrabold">CloudCrate</h3>
+        <div className="py-6">
+          <h3 className="text-xl text-cyan-600 font-extrabold">CloudCrate</h3>
+        </div>
         <SidebarMenu>
           {navlinks.map((link) => (
-            <SidebarMenuItem key={link.id}>
+            <SidebarMenuItem key={link.id} className="my-1">
               <SidebarNavlink text={link.text} to={link.to} />
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarRail />
     </Sidebar>
   );
 }
