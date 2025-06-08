@@ -1,4 +1,5 @@
 import { ChevronLeft, Settings } from "lucide-react";
+import { ImageUpload } from "~/components/ImageUpload";
 import PageHeader from "~/components/PageHeader";
 import { Button } from "~/components/ui/button";
 
@@ -13,7 +14,8 @@ const FilesPage = () => {
             <Settings className="text-indigo-600" />
           </Button>
         }
-      ></PageHeader>
+      />
+      <ImageUpload />
     </section>
   );
 };
