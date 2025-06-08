@@ -2,7 +2,7 @@ import { isRouteErrorResponse, Links, Meta, NavLink, Outlet, Scripts, ScrollRest
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import SidebarLayout from "./layouts/SidebarLayout";
+import SidebarLayout from "./routes/sidebar";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <>
-      <SidebarLayout></SidebarLayout>
+      <Outlet />
       {/* <div>
         <NavLink
           to="/about"

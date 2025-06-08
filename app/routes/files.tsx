@@ -11,13 +11,12 @@ export async function clientLoader(): Promise<Payment[]> {
   return payments;
 }
 
-
 const FilesPage = ({ loaderData }: Route.ComponentProps) => {
   return (
     <section>
       <PageHeader
-        title="Placeholder Bucket Name"
-        description="This is just placeholder for now"
+        title="Images Crate"
+        description="A crate to store all images"
         actions={
           <Button variant="outline" className="rounded-lg">
             <Settings className="text-indigo-600" />

@@ -12,7 +12,7 @@ const SidebarNavlink = ({ to, text }: SidebarNavlinkProps) => {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        [baseClasses, isActive ? "text-purple-700 font-bold bg-gray-100" : "bg-none text-black hover:bg-gray-100"].join(" ")
+        [baseClasses, isActive ? "text-indigo-700 font-bold bg-gray-100" : "bg-none text-black hover:bg-gray-100"].join(" ")
       }
     >
       {text}

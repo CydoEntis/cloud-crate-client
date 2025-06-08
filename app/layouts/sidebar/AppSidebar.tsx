@@ -18,6 +18,11 @@ const navlinks = [
     text: "Files",
     to: "/files",
   },
+    {
+    id: 4,
+    text: "Login",
+    to: "/auth/login",
+  },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -25,7 +30,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props} className="p-3">
       <SidebarContent>
         <div className="py-6">
-          <h3 className="text-xl text-cyan-600 font-extrabold">CloudCrate</h3>
+          <h3 className="text-xl text-indigo-500 font-extrabold">CloudCrate</h3>
         </div>
         <SidebarMenu>
           {navlinks.map((link) => (
