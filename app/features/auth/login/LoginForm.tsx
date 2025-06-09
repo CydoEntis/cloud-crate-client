@@ -3,21 +3,48 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
+import { z } from "zod/v4";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+type LoginFormProps = {
+  login: () => void;
+};
+
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginValues = z.infer<typeof loginSchema>;
+
+export function LoginForm({ login }: LoginFormProps) {
+  const form = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: LoginValues) => {
+    console.log(form.formState.errors);
+    console.log(data);
+  };
+
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6")}>
       <Card className=" shadow-md">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" placeholder="m@example.com" required {...form.register("email")} />
               </div>
               <div className="grid gap-3">
                 <div className="flex items-center">
@@ -29,7 +56,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required {...form.register("password")} />
               </div>
               <div className="flex flex-col gap-3">
                 <Button

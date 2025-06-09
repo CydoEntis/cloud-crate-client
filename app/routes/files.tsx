@@ -11,6 +11,8 @@ export async function clientLoader(): Promise<Payment[]> {
   return payments;
 }
 
+
+
 const FilesPage = ({ loaderData }: Route.ComponentProps) => {
   return (
     <section>
