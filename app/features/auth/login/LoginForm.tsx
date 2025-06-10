@@ -6,6 +6,7 @@ import { cn } from "~/lib/utils";
 import { z } from "zod/v4";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 type LoginFormProps = {
   login: () => void;
@@ -19,6 +20,8 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ login }: LoginFormProps) {
+  const [error, setError] = useState("");
+
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -27,9 +30,31 @@ export function LoginForm({ login }: LoginFormProps) {
     },
   });
 
-  const onSubmit = (data: LoginValues) => {
-    console.log(form.formState.errors);
-    console.log(data);
+  const onSubmit = async (data: LoginValues) => {
+    try {
+      const response = await fetch("http://localhost:5233/api/Auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        setError(result);
+      }
+
+      const result = await response.json();
+
+      const token = result.token;
+
+      localStorage.setItem("token", token);
+
+      console.log(token);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (
@@ -57,6 +82,7 @@ export function LoginForm({ login }: LoginFormProps) {
                   </a>
                 </div>
                 <Input id="password" type="password" required {...form.register("password")} />
+                <p className="text-destructive text-sm">{error && error}</p>
               </div>
               <div className="flex flex-col gap-3">
                 <Button
