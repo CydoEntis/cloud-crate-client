@@ -75,12 +75,6 @@ export function RegisterForm({ register }: RegisterFormProps) {
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-indigo-500"
-                  >
-                    Forgot your password?
-                  </a>
                 </div>
                 <Input id="password" type="password" required {...form.register("password")} />
                 <p className="text-destructive text-sm">{error && error}</p>
@@ -91,12 +85,6 @@ export function RegisterForm({ register }: RegisterFormProps) {
                   className="w-full bg-indigo-500 cursor-pointer hover:bg-indigo-600 transition-all duration-200"
                 >
                   Register
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full border border-indigo-500 hover:bg-indigo-50  cursor-pointer transition-all duration-200"
-                >
-                  Register with Google
                 </Button>
               </div>
             </div>

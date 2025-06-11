@@ -14,10 +14,11 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as publicRouteImport } from './routes/(public)/route'
 import { Route as protectedRouteImport } from './routes/(protected)/route'
 import { Route as IndexImport } from './routes/index'
-import { Route as publicRegisterImport } from './routes/(public)/register'
-import { Route as publicLoginImport } from './routes/(public)/login'
 import { Route as protectedFilesImport } from './routes/(protected)/files'
 import { Route as protectedDashboardImport } from './routes/(protected)/dashboard'
+import { Route as publicauthRouteImport } from './routes/(public)/(auth)/route'
+import { Route as publicauthRegisterImport } from './routes/(public)/(auth)/register'
+import { Route as publicauthLoginImport } from './routes/(public)/(auth)/login'
 
 // Create/Update Routes
 
@@ -37,18 +38,6 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const publicRegisterRoute = publicRegisterImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-
-const publicLoginRoute = publicLoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-
 const protectedFilesRoute = protectedFilesImport.update({
   id: '/files',
   path: '/files',
@@ -59,6 +48,23 @@ const protectedDashboardRoute = protectedDashboardImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => protectedRouteRoute,
+} as any)
+
+const publicauthRouteRoute = publicauthRouteImport.update({
+  id: '/(auth)',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+
+const publicauthRegisterRoute = publicauthRegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => publicauthRouteRoute,
+} as any)
+
+const publicauthLoginRoute = publicauthLoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => publicauthRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -86,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicRouteImport
       parentRoute: typeof rootRoute
     }
+    '/(public)/(auth)': {
+      id: '/(public)/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof publicauthRouteImport
+      parentRoute: typeof publicRouteImport
+    }
     '/(protected)/dashboard': {
       id: '/(protected)/dashboard'
       path: '/dashboard'
@@ -100,19 +113,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedFilesImport
       parentRoute: typeof protectedRouteImport
     }
-    '/(public)/login': {
-      id: '/(public)/login'
+    '/(public)/(auth)/login': {
+      id: '/(public)/(auth)/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof publicLoginImport
-      parentRoute: typeof publicRouteImport
+      preLoaderRoute: typeof publicauthLoginImport
+      parentRoute: typeof publicauthRouteImport
     }
-    '/(public)/register': {
-      id: '/(public)/register'
+    '/(public)/(auth)/register': {
+      id: '/(public)/(auth)/register'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof publicRegisterImport
-      parentRoute: typeof publicRouteImport
+      preLoaderRoute: typeof publicauthRegisterImport
+      parentRoute: typeof publicauthRouteImport
     }
   }
 }
@@ -133,14 +146,26 @@ const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(
   protectedRouteRouteChildren,
 )
 
+interface publicauthRouteRouteChildren {
+  publicauthLoginRoute: typeof publicauthLoginRoute
+  publicauthRegisterRoute: typeof publicauthRegisterRoute
+}
+
+const publicauthRouteRouteChildren: publicauthRouteRouteChildren = {
+  publicauthLoginRoute: publicauthLoginRoute,
+  publicauthRegisterRoute: publicauthRegisterRoute,
+}
+
+const publicauthRouteRouteWithChildren = publicauthRouteRoute._addFileChildren(
+  publicauthRouteRouteChildren,
+)
+
 interface publicRouteRouteChildren {
-  publicLoginRoute: typeof publicLoginRoute
-  publicRegisterRoute: typeof publicRegisterRoute
+  publicauthRouteRoute: typeof publicauthRouteRouteWithChildren
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
-  publicLoginRoute: publicLoginRoute,
-  publicRegisterRoute: publicRegisterRoute,
+  publicauthRouteRoute: publicauthRouteRouteWithChildren,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
@@ -148,19 +173,19 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 )
 
 export interface FileRoutesByFullPath {
-  '/': typeof publicRouteRouteWithChildren
+  '/': typeof publicauthRouteRouteWithChildren
   '/dashboard': typeof protectedDashboardRoute
   '/files': typeof protectedFilesRoute
-  '/login': typeof publicLoginRoute
-  '/register': typeof publicRegisterRoute
+  '/login': typeof publicauthLoginRoute
+  '/register': typeof publicauthRegisterRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof publicRouteRouteWithChildren
+  '/': typeof publicauthRouteRouteWithChildren
   '/dashboard': typeof protectedDashboardRoute
   '/files': typeof protectedFilesRoute
-  '/login': typeof publicLoginRoute
-  '/register': typeof publicRegisterRoute
+  '/login': typeof publicauthLoginRoute
+  '/register': typeof publicauthRegisterRoute
 }
 
 export interface FileRoutesById {
@@ -168,10 +193,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(protected)': typeof protectedRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
+  '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
   '/(protected)/dashboard': typeof protectedDashboardRoute
   '/(protected)/files': typeof protectedFilesRoute
-  '/(public)/login': typeof publicLoginRoute
-  '/(public)/register': typeof publicRegisterRoute
+  '/(public)/(auth)/login': typeof publicauthLoginRoute
+  '/(public)/(auth)/register': typeof publicauthRegisterRoute
 }
 
 export interface FileRouteTypes {
@@ -184,10 +210,11 @@ export interface FileRouteTypes {
     | '/'
     | '/(protected)'
     | '/(public)'
+    | '/(public)/(auth)'
     | '/(protected)/dashboard'
     | '/(protected)/files'
-    | '/(public)/login'
-    | '/(public)/register'
+    | '/(public)/(auth)/login'
+    | '/(public)/(auth)/register'
   fileRoutesById: FileRoutesById
 }
 
@@ -231,8 +258,15 @@ export const routeTree = rootRoute
     "/(public)": {
       "filePath": "(public)/route.tsx",
       "children": [
-        "/(public)/login",
-        "/(public)/register"
+        "/(public)/(auth)"
+      ]
+    },
+    "/(public)/(auth)": {
+      "filePath": "(public)/(auth)/route.tsx",
+      "parent": "/(public)",
+      "children": [
+        "/(public)/(auth)/login",
+        "/(public)/(auth)/register"
       ]
     },
     "/(protected)/dashboard": {
@@ -243,13 +277,13 @@ export const routeTree = rootRoute
       "filePath": "(protected)/files.tsx",
       "parent": "/(protected)"
     },
-    "/(public)/login": {
-      "filePath": "(public)/login.tsx",
-      "parent": "/(public)"
+    "/(public)/(auth)/login": {
+      "filePath": "(public)/(auth)/login.tsx",
+      "parent": "/(public)/(auth)"
     },
-    "/(public)/register": {
-      "filePath": "(public)/register.tsx",
-      "parent": "/(public)"
+    "/(public)/(auth)/register": {
+      "filePath": "(public)/(auth)/register.tsx",
+      "parent": "/(public)/(auth)"
     }
   }
 }
