@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { Link } from "@tanstack/react-router";
 
 type LoginFormProps = {
   login: () => void;
@@ -101,9 +102,9 @@ export function LoginForm({ login }: LoginFormProps) {
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4 text-indigo-500 font-bold">
+              <Link to="/register" className="underline underline-offset-4 text-indigo-500 font-bold">
                 Sign up
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>
