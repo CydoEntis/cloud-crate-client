@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_private/_private")({
+export const Route = createFileRoute("/(protected)")({
   component: RouteComponent,
 });
 
