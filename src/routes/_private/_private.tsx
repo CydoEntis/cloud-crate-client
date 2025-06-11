@@ -1,10 +1,13 @@
-import { Outlet } from "react-router";
+import { Separator } from "@/components/ui/separator";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { Separator } from "~/components/ui/separator";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
-import { AppSidebar } from "../layouts/sidebar/AppSidebar";
+export const Route = createFileRoute("/_private/_private")({
+  component: RouteComponent,
+});
 
-export default function SidebarLayout() {
+function RouteComponent() {
   return (
     <SidebarProvider>
       <AppSidebar />

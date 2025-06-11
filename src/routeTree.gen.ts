@@ -11,34 +11,15 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SidebarImport } from './routes/sidebar'
-import { Route as LoginImport } from './routes/login'
-import { Route as HomeImport } from './routes/home'
 import { Route as FilesImport } from './routes/files'
-import { Route as FileImport } from './routes/file'
-import { Route as DashboardImport } from './routes/dashboard'
-import { Route as BucketsImport } from './routes/buckets'
-import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as IndexImport } from './routes/index'
+import { Route as PublicRegisterImport } from './routes/_public/register'
+import { Route as PublicPublicImport } from './routes/_public/public'
+import { Route as PublicLoginImport } from './routes/_public/login'
+import { Route as PrivateDashboardImport } from './routes/_private/dashboard'
+import { Route as PrivatePrivateImport } from './routes/_private/_private'
 
 // Create/Update Routes
-
-const SidebarRoute = SidebarImport.update({
-  id: '/sidebar',
-  path: '/sidebar',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LoginRoute = LoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const HomeRoute = HomeImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const FilesRoute = FilesImport.update({
   id: '/files',
@@ -46,26 +27,38 @@ const FilesRoute = FilesImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const FileRoute = FileImport.update({
-  id: '/file',
-  path: '/file',
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const DashboardRoute = DashboardImport.update({
-  id: '/dashboard',
+const PublicRegisterRoute = PublicRegisterImport.update({
+  id: '/_public/register',
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PublicPublicRoute = PublicPublicImport.update({
+  id: '/_public/public',
+  path: '/public',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PublicLoginRoute = PublicLoginImport.update({
+  id: '/_public/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PrivateDashboardRoute = PrivateDashboardImport.update({
+  id: '/_private/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRoute,
 } as any)
 
-const BucketsRoute = BucketsImport.update({
-  id: '/buckets',
-  path: '/buckets',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AuthenticatedRoute = AuthenticatedImport.update({
-  id: '/_authenticated',
+const PrivatePrivateRoute = PrivatePrivateImport.update({
+  id: '/_private/_private',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -73,32 +66,11 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedImport
-      parentRoute: typeof rootRoute
-    }
-    '/buckets': {
-      id: '/buckets'
-      path: '/buckets'
-      fullPath: '/buckets'
-      preLoaderRoute: typeof BucketsImport
-      parentRoute: typeof rootRoute
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardImport
-      parentRoute: typeof rootRoute
-    }
-    '/file': {
-      id: '/file'
-      path: '/file'
-      fullPath: '/file'
-      preLoaderRoute: typeof FileImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/files': {
@@ -108,25 +80,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FilesImport
       parentRoute: typeof rootRoute
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeImport
+    '/_private/_private': {
+      id: '/_private/_private'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PrivatePrivateImport
       parentRoute: typeof rootRoute
     }
-    '/login': {
-      id: '/login'
+    '/_private/dashboard': {
+      id: '/_private/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PrivateDashboardImport
+      parentRoute: typeof rootRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
+      preLoaderRoute: typeof PublicLoginImport
       parentRoute: typeof rootRoute
     }
-    '/sidebar': {
-      id: '/sidebar'
-      path: '/sidebar'
-      fullPath: '/sidebar'
-      preLoaderRoute: typeof SidebarImport
+    '/_public/public': {
+      id: '/_public/public'
+      path: '/public'
+      fullPath: '/public'
+      preLoaderRoute: typeof PublicPublicImport
+      parentRoute: typeof rootRoute
+    }
+    '/_public/register': {
+      id: '/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof PublicRegisterImport
       parentRoute: typeof rootRoute
     }
   }
@@ -135,93 +121,78 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '': typeof AuthenticatedRoute
-  '/buckets': typeof BucketsRoute
-  '/dashboard': typeof DashboardRoute
-  '/file': typeof FileRoute
+  '/': typeof IndexRoute
   '/files': typeof FilesRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/sidebar': typeof SidebarRoute
+  '': typeof PrivatePrivateRoute
+  '/dashboard': typeof PrivateDashboardRoute
+  '/login': typeof PublicLoginRoute
+  '/public': typeof PublicPublicRoute
+  '/register': typeof PublicRegisterRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof AuthenticatedRoute
-  '/buckets': typeof BucketsRoute
-  '/dashboard': typeof DashboardRoute
-  '/file': typeof FileRoute
+  '/': typeof IndexRoute
   '/files': typeof FilesRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/sidebar': typeof SidebarRoute
+  '': typeof PrivatePrivateRoute
+  '/dashboard': typeof PrivateDashboardRoute
+  '/login': typeof PublicLoginRoute
+  '/public': typeof PublicPublicRoute
+  '/register': typeof PublicRegisterRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_authenticated': typeof AuthenticatedRoute
-  '/buckets': typeof BucketsRoute
-  '/dashboard': typeof DashboardRoute
-  '/file': typeof FileRoute
+  '/': typeof IndexRoute
   '/files': typeof FilesRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/sidebar': typeof SidebarRoute
+  '/_private/_private': typeof PrivatePrivateRoute
+  '/_private/dashboard': typeof PrivateDashboardRoute
+  '/_public/login': typeof PublicLoginRoute
+  '/_public/public': typeof PublicPublicRoute
+  '/_public/register': typeof PublicRegisterRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | ''
-    | '/buckets'
-    | '/dashboard'
-    | '/file'
+    | '/'
     | '/files'
-    | '/home'
+    | ''
+    | '/dashboard'
     | '/login'
-    | '/sidebar'
+    | '/public'
+    | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | ''
-    | '/buckets'
-    | '/dashboard'
-    | '/file'
-    | '/files'
-    | '/home'
-    | '/login'
-    | '/sidebar'
+  to: '/' | '/files' | '' | '/dashboard' | '/login' | '/public' | '/register'
   id:
     | '__root__'
-    | '/_authenticated'
-    | '/buckets'
-    | '/dashboard'
-    | '/file'
+    | '/'
     | '/files'
-    | '/home'
-    | '/login'
-    | '/sidebar'
+    | '/_private/_private'
+    | '/_private/dashboard'
+    | '/_public/login'
+    | '/_public/public'
+    | '/_public/register'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  AuthenticatedRoute: typeof AuthenticatedRoute
-  BucketsRoute: typeof BucketsRoute
-  DashboardRoute: typeof DashboardRoute
-  FileRoute: typeof FileRoute
+  IndexRoute: typeof IndexRoute
   FilesRoute: typeof FilesRoute
-  HomeRoute: typeof HomeRoute
-  LoginRoute: typeof LoginRoute
-  SidebarRoute: typeof SidebarRoute
+  PrivatePrivateRoute: typeof PrivatePrivateRoute
+  PrivateDashboardRoute: typeof PrivateDashboardRoute
+  PublicLoginRoute: typeof PublicLoginRoute
+  PublicPublicRoute: typeof PublicPublicRoute
+  PublicRegisterRoute: typeof PublicRegisterRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthenticatedRoute: AuthenticatedRoute,
-  BucketsRoute: BucketsRoute,
-  DashboardRoute: DashboardRoute,
-  FileRoute: FileRoute,
+  IndexRoute: IndexRoute,
   FilesRoute: FilesRoute,
-  HomeRoute: HomeRoute,
-  LoginRoute: LoginRoute,
-  SidebarRoute: SidebarRoute,
+  PrivatePrivateRoute: PrivatePrivateRoute,
+  PrivateDashboardRoute: PrivateDashboardRoute,
+  PublicLoginRoute: PublicLoginRoute,
+  PublicPublicRoute: PublicPublicRoute,
+  PublicRegisterRoute: PublicRegisterRoute,
 }
 
 export const routeTree = rootRoute
@@ -234,39 +205,35 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_authenticated",
-        "/buckets",
-        "/dashboard",
-        "/file",
+        "/",
         "/files",
-        "/home",
-        "/login",
-        "/sidebar"
+        "/_private/_private",
+        "/_private/dashboard",
+        "/_public/login",
+        "/_public/public",
+        "/_public/register"
       ]
     },
-    "/_authenticated": {
-      "filePath": "_authenticated.tsx"
-    },
-    "/buckets": {
-      "filePath": "buckets.tsx"
-    },
-    "/dashboard": {
-      "filePath": "dashboard.tsx"
-    },
-    "/file": {
-      "filePath": "file.tsx"
+    "/": {
+      "filePath": "index.tsx"
     },
     "/files": {
       "filePath": "files.tsx"
     },
-    "/home": {
-      "filePath": "home.tsx"
+    "/_private/_private": {
+      "filePath": "_private/_private.tsx"
     },
-    "/login": {
-      "filePath": "login.tsx"
+    "/_private/dashboard": {
+      "filePath": "_private/dashboard.tsx"
     },
-    "/sidebar": {
-      "filePath": "sidebar.tsx"
+    "/_public/login": {
+      "filePath": "_public/login.tsx"
+    },
+    "/_public/public": {
+      "filePath": "_public/public.tsx"
+    },
+    "/_public/register": {
+      "filePath": "_public/register.tsx"
     }
   }
 }

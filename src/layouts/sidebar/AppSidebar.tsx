@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarRail } from "~/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarRail } from "@/components/ui/sidebar";
 import SidebarNavlink from "./SidebarNavlink";
 
 const navlinks = [
@@ -21,7 +21,7 @@ const navlinks = [
     {
     id: 4,
     text: "Login",
-    to: "/auth/login",
+    to: "/login",
   },
 ];
 
