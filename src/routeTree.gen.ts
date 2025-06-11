@@ -11,15 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as publicRouteImport } from './routes/(public)/route'
 import { Route as protectedRouteImport } from './routes/(protected)/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as publicRegisterImport } from './routes/(public)/register'
-import { Route as publicPublicImport } from './routes/(public)/public'
 import { Route as publicLoginImport } from './routes/(public)/login'
 import { Route as protectedFilesImport } from './routes/(protected)/files'
 import { Route as protectedDashboardImport } from './routes/(protected)/dashboard'
 
 // Create/Update Routes
+
+const publicRouteRoute = publicRouteImport.update({
+  id: '/(public)',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const protectedRouteRoute = protectedRouteImport.update({
   id: '/(protected)',
@@ -33,21 +38,15 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const publicRegisterRoute = publicRegisterImport.update({
-  id: '/(public)/register',
+  id: '/register',
   path: '/register',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const publicPublicRoute = publicPublicImport.update({
-  id: '/(public)/public',
-  path: '/public',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => publicRouteRoute,
 } as any)
 
 const publicLoginRoute = publicLoginImport.update({
-  id: '/(public)/login',
+  id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => publicRouteRoute,
 } as any)
 
 const protectedFilesRoute = protectedFilesImport.update({
@@ -80,6 +79,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedRouteImport
       parentRoute: typeof rootRoute
     }
+    '/(public)': {
+      id: '/(public)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof publicRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/(protected)/dashboard': {
       id: '/(protected)/dashboard'
       path: '/dashboard'
@@ -99,21 +105,14 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof publicLoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/(public)/public': {
-      id: '/(public)/public'
-      path: '/public'
-      fullPath: '/public'
-      preLoaderRoute: typeof publicPublicImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof publicRouteImport
     }
     '/(public)/register': {
       id: '/(public)/register'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof publicRegisterImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof publicRouteImport
     }
   }
 }
@@ -134,21 +133,33 @@ const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(
   protectedRouteRouteChildren,
 )
 
+interface publicRouteRouteChildren {
+  publicLoginRoute: typeof publicLoginRoute
+  publicRegisterRoute: typeof publicRegisterRoute
+}
+
+const publicRouteRouteChildren: publicRouteRouteChildren = {
+  publicLoginRoute: publicLoginRoute,
+  publicRegisterRoute: publicRegisterRoute,
+}
+
+const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
+  publicRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof protectedRouteRouteWithChildren
+  '/': typeof publicRouteRouteWithChildren
   '/dashboard': typeof protectedDashboardRoute
   '/files': typeof protectedFilesRoute
   '/login': typeof publicLoginRoute
-  '/public': typeof publicPublicRoute
   '/register': typeof publicRegisterRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof protectedRouteRouteWithChildren
+  '/': typeof publicRouteRouteWithChildren
   '/dashboard': typeof protectedDashboardRoute
   '/files': typeof protectedFilesRoute
   '/login': typeof publicLoginRoute
-  '/public': typeof publicPublicRoute
   '/register': typeof publicRegisterRoute
 }
 
@@ -156,26 +167,26 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/(protected)': typeof protectedRouteRouteWithChildren
+  '/(public)': typeof publicRouteRouteWithChildren
   '/(protected)/dashboard': typeof protectedDashboardRoute
   '/(protected)/files': typeof protectedFilesRoute
   '/(public)/login': typeof publicLoginRoute
-  '/(public)/public': typeof publicPublicRoute
   '/(public)/register': typeof publicRegisterRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/files' | '/login' | '/public' | '/register'
+  fullPaths: '/' | '/dashboard' | '/files' | '/login' | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/files' | '/login' | '/public' | '/register'
+  to: '/' | '/dashboard' | '/files' | '/login' | '/register'
   id:
     | '__root__'
     | '/'
     | '/(protected)'
+    | '/(public)'
     | '/(protected)/dashboard'
     | '/(protected)/files'
     | '/(public)/login'
-    | '/(public)/public'
     | '/(public)/register'
   fileRoutesById: FileRoutesById
 }
@@ -183,17 +194,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   protectedRouteRoute: typeof protectedRouteRouteWithChildren
-  publicLoginRoute: typeof publicLoginRoute
-  publicPublicRoute: typeof publicPublicRoute
-  publicRegisterRoute: typeof publicRegisterRoute
+  publicRouteRoute: typeof publicRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   protectedRouteRoute: protectedRouteRouteWithChildren,
-  publicLoginRoute: publicLoginRoute,
-  publicPublicRoute: publicPublicRoute,
-  publicRegisterRoute: publicRegisterRoute,
+  publicRouteRoute: publicRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -208,9 +215,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/(protected)",
-        "/(public)/login",
-        "/(public)/public",
-        "/(public)/register"
+        "/(public)"
       ]
     },
     "/": {
@@ -223,6 +228,13 @@ export const routeTree = rootRoute
         "/(protected)/files"
       ]
     },
+    "/(public)": {
+      "filePath": "(public)/route.tsx",
+      "children": [
+        "/(public)/login",
+        "/(public)/register"
+      ]
+    },
     "/(protected)/dashboard": {
       "filePath": "(protected)/dashboard.tsx",
       "parent": "/(protected)"
@@ -232,13 +244,12 @@ export const routeTree = rootRoute
       "parent": "/(protected)"
     },
     "/(public)/login": {
-      "filePath": "(public)/login.tsx"
-    },
-    "/(public)/public": {
-      "filePath": "(public)/public.tsx"
+      "filePath": "(public)/login.tsx",
+      "parent": "/(public)"
     },
     "/(public)/register": {
-      "filePath": "(public)/register.tsx"
+      "filePath": "(public)/register.tsx",
+      "parent": "/(public)"
     }
   }
 }
