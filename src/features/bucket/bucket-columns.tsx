@@ -9,7 +9,16 @@ export const bucketColumns = [
   }),
   columnHelper.accessor("name", {
     header: "Name",
-    cell: (info) => info.getValue(),
+        cell: (info) => (
+      <div className="flex gap-2 items-center">
+        <div className="bg-red-300 rounded-2xl h-10 w-10" />
+        <div className="flex flex-col">
+        <h4 className="font-bold">{info.getValue()}</h4>
+        <p className="text-sm text-gray-400">This is a crate description</p>
+
+        </div>
+      </div>
+    ),
   }),
   columnHelper.accessor("region", {
     header: "Region",
