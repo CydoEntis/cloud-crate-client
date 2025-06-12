@@ -1,4 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
+import Avatar from "boring-avatars";
 
 const columnHelper = createColumnHelper<Bucket>();
 
@@ -9,13 +10,12 @@ export const bucketColumns = [
   }),
   columnHelper.accessor("name", {
     header: "Name",
-        cell: (info) => (
+    cell: (info) => (
       <div className="flex gap-2 items-center">
-        <div className="bg-red-300 rounded-2xl h-10 w-10" />
+        <Avatar name={info.getValue()} size={40} variant="marble" square className="rounded-xl" />
         <div className="flex flex-col">
-        <h4 className="font-bold">{info.getValue()}</h4>
-        <p className="text-sm text-gray-400">This is a crate description</p>
-
+          <h4 className="font-bold">{info.getValue()}</h4>
+          <p className="text-sm text-gray-400">This is a crate description</p>
         </div>
       </div>
     ),
