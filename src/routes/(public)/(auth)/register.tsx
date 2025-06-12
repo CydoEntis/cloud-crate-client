@@ -9,11 +9,13 @@ export const Route = createFileRoute("/(public)/(auth)/register")({
 
 function RegisterPage() {
   return (
-    <div className="flex flex-1 items-center justify-center p-6 md:p-10">
+    <div className="flex flex-1 justify-center p-6 md:p-10 pt-16 z-10 relative ">
       <div className="w-full max-w-sm">
-       <RegisterForm register={function (): void {
-          throw new Error("Function not implemented.");
-        } } />
+        <RegisterForm
+          register={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
     </div>
   );
