@@ -1,3 +1,4 @@
+import { Progress } from "@/components/ui/progress";
 import { createColumnHelper } from "@tanstack/react-table";
 import Avatar from "boring-avatars";
 
@@ -20,10 +21,22 @@ export const bucketColumns = [
       </div>
     ),
   }),
-  columnHelper.accessor("region", {
-    header: "Region",
-    cell: (info) => info.getValue(),
+  columnHelper.accessor("storage", {
+    header: "Storage",
+    cell: (info) => {
+      const used = Number(info.getValue()); // assuming it's numeric or can be converted
+      const max = 100; // total capacity
+      const percent = Math.min((used / max) * 100, 100);
+
+      return (
+        <div className="w-32 flex gap-2 items-center">
+          <div className="mb-1 text-xs font-medium text-muted-foreground">{percent.toFixed(0)}%</div>
+          <Progress value={percent} />
+        </div>
+      );
+    },
   }),
+
   columnHelper.accessor("createdAt", {
     header: "Created At",
     cell: (info) => new Date(info.getValue()).toLocaleDateString(),
@@ -33,6 +46,6 @@ export const bucketColumns = [
 export type Bucket = {
   id: number;
   name: string;
-  region: string;
+  storage: string;
   createdAt: string;
 };

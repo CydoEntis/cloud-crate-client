@@ -12,7 +12,7 @@ export const Route = createFileRoute("/(protected)/buckets")({
 const mockData: Bucket[] = Array.from({ length: 45 }, (_, i) => ({
   id: i + 1,
   name: `Bucket ${i + 1}`,
-  region: ["us-east", "eu-west", "ap-south"][i % 3],
+  storage: ["32", "44", "55", "10", "100", "12"][i % 3],
   createdAt: new Date(Date.now() - i * 86400000).toISOString(),
 }));
 
