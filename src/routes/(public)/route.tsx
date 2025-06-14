@@ -17,8 +17,8 @@ function RouteComponent() {
           </Link>
 
           <div className="flex gap-4 items-center">
-            <SidebarNavlink to="/login" text="Login" />
-            <SidebarNavlink to="/register" text="Register" />
+            {/* <SidebarNavlink to="/login" text="Login" />
+            <SidebarNavlink to="/register" text="Register" /> */}
           </div>
         </nav>
       </header>

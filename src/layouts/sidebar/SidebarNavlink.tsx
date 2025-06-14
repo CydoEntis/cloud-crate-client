@@ -5,9 +5,10 @@ import { useEffect, useRef, useState } from "react";
 type SidebarNavlinkProps = {
   to: string;
   text: string;
+  icon: React.ReactElement;
 };
 
-const SidebarNavlink = ({ to, text }: SidebarNavlinkProps) => {
+const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isActive = pathname === to;
 
@@ -47,8 +48,9 @@ const SidebarNavlink = ({ to, text }: SidebarNavlinkProps) => {
             color: isActive ? "#4f46e5" : isHovered ? "#374151" : "#6b7280",
           }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="font-medium"
+          className="font-medium flex items-center gap-4"
         >
+          <>{icon}</>
           {text}
         </motion.span>
       </Link>

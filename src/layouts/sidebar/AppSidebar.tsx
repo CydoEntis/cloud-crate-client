@@ -3,12 +3,15 @@ import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/compone
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/cloud-crate-logo.png";
 import SidebarNavlink from "./SidebarNavlink";
+import { Cog, Files, LayoutDashboard, Settings, Star, Trash2, Users2 } from "lucide-react";
 
 const navlinks = [
-  { id: 1, text: "Home", to: "/" },
-  { id: 2, text: "Buckets", to: "/buckets" },
-  { id: 3, text: "Files", to: "/files" },
-  { id: 4, text: "Login", to: "/login" },
+  { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
+  { id: 2, text: "Files", to: "/files", icon: <Files /> },
+  { id: 3, text: "Members", to: "/members", icon: <Users2 /> },
+  { id: 4, text: "Favorites", to: "/favorites", icon: <Star /> },
+  { id: 5, text: "Deleted Files", to: "/deleted", icon: <Trash2 /> },
+  { id: 6, text: "Settings", to: "/Settings", icon: <Settings /> },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -24,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           {navlinks.map((link) => (
             <SidebarMenuItem key={link.id} className="my-1">
-              <SidebarNavlink text={link.text} to={link.to} />
+              <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
