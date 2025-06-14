@@ -1,6 +1,9 @@
 import * as React from "react";
 import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarRail } from "@/components/ui/sidebar";
 import SidebarNavlink from "./SidebarNavlink";
+import { Link } from "@tanstack/react-router";
+import logo from "@/assets/cloud-crate-logo.png";
+
 
 const navlinks = [
   {
@@ -18,7 +21,7 @@ const navlinks = [
     text: "Files",
     to: "/files",
   },
-    {
+  {
     id: 4,
     text: "Login",
     to: "/login",
@@ -30,7 +33,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props} className="p-3">
       <SidebarContent>
         <div className="py-6">
-          <h3 className="text-xl text-indigo-500 font-extrabold">CloudCrate</h3>
+          <Link to="/" className="flex justify-center items-center gap-2">
+            <img src={logo} alt="Cloud Crate Logo" className="h-10 w-10" />
+            <h3 className="font-bold text-3xl text-indigo-500">Cloud Crate</h3>
+          </Link>
         </div>
         <SidebarMenu>
           {navlinks.map((link) => (
