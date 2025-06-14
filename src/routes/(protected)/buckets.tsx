@@ -67,7 +67,7 @@ function RouteComponent() {
       <div className="w-1/4 pb-8">
         <ChartPieDonutText />
       </div>
-      <div className="border border-gray-300 rounded-xl">
+      <div className="border border-gray-300 rounded-4xl">
         <div className="p-4">
           <h3 className="text-3xl font-bold">Your Buckets</h3>
         </div>
@@ -83,7 +83,7 @@ function RouteComponent() {
                       setSortField(header.column.id as keyof Bucket);
                       setSortOrder(isDesc ? "asc" : "desc");
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer px-4 font-bold text-md"
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {sortField === header.column.id && (sortOrder === "asc" ? " ↑" : " ↓")}
@@ -96,27 +96,28 @@ function RouteComponent() {
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  <TableCell className="p-4" key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
                 ))}
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </div>
-
-      <div className="mt-4 flex gap-2 items-center">
-        <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
-          Previous
-        </button>
-        <span>
-          Page {page} of {Math.ceil(totalCount / pageSize)}
-        </span>
-        <button
-          onClick={() => setPage((p) => (p < Math.ceil(totalCount / pageSize) ? p + 1 : p))}
-          disabled={page >= Math.ceil(totalCount / pageSize)}
-        >
-          Next
-        </button>
+        <div className="mt-4 flex gap-2 items-center px-4 pb-4">
+          <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
+            Previous
+          </button>
+          <span>
+            Page {page} of {Math.ceil(totalCount / pageSize)}
+          </span>
+          <button
+            onClick={() => setPage((p) => (p < Math.ceil(totalCount / pageSize) ? p + 1 : p))}
+            disabled={page >= Math.ceil(totalCount / pageSize)}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

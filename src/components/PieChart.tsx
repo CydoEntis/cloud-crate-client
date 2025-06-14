@@ -14,7 +14,7 @@ const usedPercent = Math.round((used / total) * 100);
 
 export function ChartPieDonutText() {
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col shadow-none">
       <CardHeader className="items-center pb-0">
         <CardTitle>Storage Usage</CardTitle>
       </CardHeader>

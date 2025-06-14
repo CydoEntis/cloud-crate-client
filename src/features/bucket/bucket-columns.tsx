@@ -5,10 +5,6 @@ import Avatar from "boring-avatars";
 const columnHelper = createColumnHelper<Bucket>();
 
 export const bucketColumns = [
-  columnHelper.accessor("id", {
-    header: "ID",
-    cell: (info) => info.getValue(),
-  }),
   columnHelper.accessor("name", {
     header: "Name",
     cell: (info) => (
