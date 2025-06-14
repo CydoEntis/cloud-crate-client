@@ -4,6 +4,10 @@ import { bucketColumns } from "@/features/bucket/bucket-columns";
 import type { Bucket } from "@/features/bucket/bucket-columns";
 import { createFileRoute } from "@tanstack/react-router";
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
+import { Plus, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PieChart } from "recharts";
+import { ChartPieDonutText } from "@/components/PieChart";
 
 export const Route = createFileRoute("/(protected)/buckets")({
   component: RouteComponent,
@@ -50,37 +54,55 @@ function RouteComponent() {
 
   return (
     <div>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  onClick={() => {
-                    const isDesc = sortOrder === "desc" && sortField === header.column.id;
-                    setSortField(header.column.id as keyof Bucket);
-                    setSortOrder(isDesc ? "asc" : "desc");
-                  }}
-                  className="cursor-pointer"
-                >
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                  {sortField === header.column.id && (sortOrder === "asc" ? " ↑" : " ↓")}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="flex justify-between items-center pb-8">
+        <h3 className="text-4xl font-bold">Crates Dashboard</h3>
+        <div className="flex gap-2 items-center">
+          <Search size={24} />
+          <Button variant="outline" className="border border-gray-300 shadow-none rounded-full cursor-pointer">
+            <Plus size={24} />
+            Create
+          </Button>
+        </div>
+      </div>
+      <div className="w-1/4 pb-8">
+        <ChartPieDonutText />
+      </div>
+      <div className="border border-gray-300 rounded-xl">
+        <div className="p-4">
+          <h3 className="text-3xl font-bold">Your Buckets</h3>
+        </div>
+        <Table className="">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    onClick={() => {
+                      const isDesc = sortOrder === "desc" && sortField === header.column.id;
+                      setSortField(header.column.id as keyof Bucket);
+                      setSortOrder(isDesc ? "asc" : "desc");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {sortField === header.column.id && (sortOrder === "asc" ? " ↑" : " ↓")}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <div className="mt-4 flex gap-2 items-center">
         <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
