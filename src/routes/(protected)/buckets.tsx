@@ -8,6 +8,7 @@ import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PieChart } from "recharts";
 import { ChartPieDonutText } from "@/components/PieChart";
+import BucketStorage from "@/features/bucket/BucketStorage";
 
 export const Route = createFileRoute("/(protected)/buckets")({
   component: RouteComponent,
@@ -64,9 +65,7 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
-      <div className="w-1/4 pb-8">
-        <ChartPieDonutText />
-      </div>
+      <BucketStorage />
       <div className="border border-gray-300 rounded-4xl">
         <div className="p-4">
           <h3 className="text-3xl font-bold">Your Buckets</h3>
