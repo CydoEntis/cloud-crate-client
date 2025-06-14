@@ -1,36 +1,19 @@
 import * as React from "react";
-import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarRail } from "@/components/ui/sidebar";
-import SidebarNavlink from "./SidebarNavlink";
+import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/cloud-crate-logo.png";
-
+import SidebarNavlink from "./SidebarNavlink";
 
 const navlinks = [
-  {
-    id: 1,
-    text: "Home",
-    to: "/",
-  },
-  {
-    id: 2,
-    text: "Buckets",
-    to: "/buckets",
-  },
-  {
-    id: 3,
-    text: "Files",
-    to: "/files",
-  },
-  {
-    id: 4,
-    text: "Login",
-    to: "/login",
-  },
+  { id: 1, text: "Home", to: "/" },
+  { id: 2, text: "Buckets", to: "/buckets" },
+  { id: 3, text: "Files", to: "/files" },
+  { id: 4, text: "Login", to: "/login" },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar {...props} className="p-3">
+    <Sidebar {...props}>
       <SidebarContent>
         <div className="py-6">
           <Link to="/" className="flex justify-center items-center gap-2">
