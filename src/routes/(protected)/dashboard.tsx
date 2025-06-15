@@ -24,26 +24,38 @@ function RouteComponent() {
     {
       id: 1,
       name: "Invoices",
+      files: 212,
+      color: "#FF9E09"
     },
     {
       id: 2,
       name: "Wedding",
+      files: 97,
+      color: "#FF6C3E"
     },
     {
       id: 3,
       name: "Design",
+      files: 120,
+      color: "#B256EB"
     },
     {
       id: 4,
       name: "Baby Shower",
+      files: 231,
+      color: "#EE6F4F"
     },
     {
       id: 5,
       name: "School notes",
+      files: 530,
+      color: "#76D9C6"
     },
     {
       id: 6,
       name: "Blueprints",
+      files: 400,
+      color: "#6DCC55"
     },
   ];
 
@@ -98,12 +110,16 @@ function RouteComponent() {
       <main className="flex flex-col gap-8">
         <SectionOverview title="Folders">
           {folders.map((folder) => (
-            <div className="flex justify-between items-center w-[300px] border rounded-xl p-2 shadow-sm bg-gray-50">
-              <div className="flex items-center gap-2">
-                <FolderIcon size={20} />
-                <p>{folder.name}</p>
+            <div className="flex justify-between items-center w-[300px] border rounded-xl p-4 shadow-sm">
+              <div className="flex items-center gap-4">
+                <div className="p-4 rounded-xl" style={{ backgroundColor: folder.color }}>
+                  <FolderIcon size={24} color="white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">{folder.name}</h3>
+                  <p className="text-muted-foreground text-sm">{folder.files} files</p>
+                </div>
               </div>
-              <MoreVertical size={20} />
             </div>
           ))}
         </SectionOverview>
