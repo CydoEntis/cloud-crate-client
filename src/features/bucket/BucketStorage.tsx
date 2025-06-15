@@ -29,19 +29,22 @@ const BucketStorage = () => {
   ];
 
   return (
-    <div className="w-full h-2 rounded-md overflow-hidden flex gap-1 my-2">
-      {displayCrates.map((crate) => {
-        const percent = (crate.usedStorage / totalStorage) * 100;
+    <div className="flex flex-col">
+      <div className="w-full h-2 rounded-md overflow-hidden flex gap-1 my-2">
+        {displayCrates.map((crate) => {
+          const percent = (crate.usedStorage / totalStorage) * 100;
 
-        return (
-          <div
-            key={crate.id}
-            className={`${crate.color} h-full rounded-full`}
-            style={{ width: `${percent}%` }}
-            title={`${crate.name}: ${(crate.usedStorage / 1024 / 1024).toFixed(1)} MB`}
-          />
-        );
-      })}
+          return (
+            <div
+              key={crate.id}
+              className={`${crate.color} h-full rounded-full`}
+              style={{ width: `${percent}%` }}
+              title={`${crate.name}: ${(crate.usedStorage / 1024 / 1024).toFixed(1)} MB`}
+            />
+          );
+        })}
+      </div>
+      <p className="text-muted-foreground text-sm">3.4 GB of 5 GB used</p>
     </div>
   );
 };
