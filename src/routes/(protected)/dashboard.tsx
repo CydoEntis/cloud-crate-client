@@ -2,6 +2,7 @@ import PageHeader from "@/components/PageHeader";
 import SectionOverview from "@/components/SectionOverview";
 import { Button } from "@/components/ui/button";
 import BucketStorage from "@/features/bucket/BucketStorage";
+import BucketStorageOverview from "@/features/bucket/BucketStorageOverview";
 import { RecentFile } from "@/features/files/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
 import { Cloud, File, FilePlus, FolderIcon, FolderPlus, Image, MoreVertical } from "lucide-react";
@@ -146,18 +147,8 @@ function RouteComponent() {
           </SectionOverview>
         </section>
         <aside className="col-span-1 flex flex-col gap-4">
-          <div className="rounded-xl  p-4 shadow-md border">
-            <div className="flex gap-2 mb-4">
-              <Cloud size={24} />
-              <h3 className="font-semibold text-lg">Storage</h3>
-            </div>
-            <BucketStorage />
-          </div>
-          <div className="p-4 rounded-xl bg-primary text-center text-white flex flex-col gap-8 shadow-md">
-            <h3 className="text-lg font-bold">Expand Your Cloud Coverage</h3>
-            <p>Unlock more storage, faster speeds, and premium features by upgrading your plan.</p>
-            <Button className="cursor-pointer bg-white text-primary w-full text-lg py-5">Upgrade Plan</Button>
-          </div>
+          <BucketStorageOverview />
+
           <div className="flex flex-col gap-4">
             <h3 className="font-bold text-lg">Quick Access</h3>
             {folders.map((folder) => (
