@@ -3,6 +3,7 @@ import SectionOverview from "@/components/SectionOverview";
 import { Button } from "@/components/ui/button";
 import BucketStorage from "@/features/bucket/BucketStorage";
 import BucketStorageOverview from "@/features/bucket/BucketStorageOverview";
+import UpgradeCTA from "@/features/bucket/UpgradeCTA";
 import { RecentFile } from "@/features/files/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
 import { Cloud, File, FilePlus, FolderIcon, FolderPlus, Image, MoreVertical } from "lucide-react";
@@ -148,7 +149,7 @@ function RouteComponent() {
         </section>
         <aside className="col-span-1 flex flex-col gap-4">
           <BucketStorageOverview />
-
+          <UpgradeCTA />
           <div className="flex flex-col gap-4">
             <h3 className="font-bold text-lg">Quick Access</h3>
             {folders.map((folder) => (
