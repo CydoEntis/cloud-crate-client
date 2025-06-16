@@ -1,4 +1,5 @@
 import PageHeader from "@/components/PageHeader";
+import QuickAccessCard from "@/components/QuickAccessCard";
 import SectionOverview from "@/components/SectionOverview";
 import { Button } from "@/components/ui/button";
 import BucketStorage from "@/features/bucket/BucketStorage";
@@ -11,6 +12,14 @@ import { Cloud, File, FilePlus, FolderIcon, FolderPlus, Image, MoreVertical } fr
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: RouteComponent,
 });
+
+export type Folder = {
+  id: number;
+  name: string;
+  files: number;
+  color: string;
+  size: number;
+};
 
 function RouteComponent() {
   const headerActions = (
@@ -153,19 +162,7 @@ function RouteComponent() {
           <div className="flex flex-col gap-4">
             <h3 className="font-bold text-lg">Quick Access</h3>
             {folders.map((folder) => (
-              <div className="flex justify-between items-center w-full border rounded-xl p-4 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="p-4 rounded-xl" style={{ backgroundColor: folder.color }}>
-                    <FolderIcon size={24} color="white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">{folder.name}</h3>
-                    <p className="text-muted-foreground text-sm">
-                      {folder.size} GB * {folder.files} files
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <QuickAccessCard folder={folder } />
             ))}
           </div>
         </aside>
