@@ -1,3 +1,13 @@
+import {
+  FileText,
+  FileCode2,
+  FileMusic,
+  FileSpreadsheet,
+  FileImage,
+  FileArchive,
+  File as FileIcon,
+} from "lucide-react";
+
 const fileTypeBackgrounds: Record<string, string> = {
   // Text-related
   txt: "#3B82F6",
@@ -44,6 +54,56 @@ const fileTypeBackgrounds: Record<string, string> = {
   default: "#374151",
 };
 
+const fileTypeIcons: Record<string, React.ElementType> = {
+  // Text-related
+  txt: FileText,
+  docx: FileText,
+  rtf: FileText,
+
+  // Excel-related
+  xls: FileSpreadsheet,
+  xlsx: FileSpreadsheet,
+  csv: FileSpreadsheet,
+
+  // PDF
+  pdf: FileIcon,
+
+  // Code-related
+  js: FileCode2,
+  jsx: FileCode2,
+  ts: FileCode2,
+  tsx: FileCode2,
+  html: FileCode2,
+  css: FileCode2,
+  json: FileCode2,
+
+  // Image-related
+  jpg: FileImage,
+  jpeg: FileImage,
+  png: FileImage,
+  gif: FileImage,
+  svg: FileImage,
+  webp: FileImage,
+
+  // Audio/music
+  mp3: FileMusic,
+  wav: FileMusic,
+  flac: FileMusic,
+
+  // Compressed
+  zip: FileArchive,
+  rar: FileArchive,
+  "7z": FileArchive,
+  tar: FileArchive,
+
+  // Fallback
+  default: FileIcon,
+};
+
 export const getFileBg = (extension: string): string => {
   return fileTypeBackgrounds[extension.toLowerCase()] || fileTypeBackgrounds.default;
+};
+
+export const getFileIcon = (extension: string): React.ElementType => {
+  return fileTypeIcons[extension.toLowerCase()] || fileTypeIcons.default;
 };

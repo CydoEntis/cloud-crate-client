@@ -1,22 +1,20 @@
 import React, { useMemo, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { bucketColumns, type Bucket } from "@/features/bucket/bucket-columns";
-import BucketStorage from "@/features/bucket/BucketStorage";
+import { bucketColumns, type StoredFile } from "@/features/bucket/bucket-columns";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Search, Plus } from "lucide-react";
-import { Button } from "./ui/button";
 
-const mockData: Bucket[] = Array.from({ length: 45 }, (_, i) => ({
-  id: i + 1,
-  name: `Bucket ${i + 1}`,
-  storage: ["32", "44", "55", "10", "100", "12"][i % 3],
-  createdAt: new Date(Date.now() - i * 86400000).toISOString(),
+
+const mockData: StoredFile[] = Array.from({ length: 45 }, (_, i) => ({
+  fileName: "file.png",
+  owner: "Cydo Entis",
+  size: ["32", "44", "55", "10", "100", "12"][i % 3],
+  uploaded: new Date(Date.now() - i * 86400000).toISOString(),
 }));
 
 function FileTable() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sortField, setSortField] = useState<keyof Bucket>("name");
+  const [sortField, setSortField] = useState<keyof StoredFile>("fileName");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const totalCount = mockData.length;
@@ -49,7 +47,7 @@ function FileTable() {
     <div>
       <div className="border border-gray-300 rounded-4xl">
         <div className="p-4">
-          <h3 className="text-3xl font-bold">Your Buckets</h3>
+          <h3 className="text-3xl font-bold">Recent Files</h3>
         </div>
         <Table className="">
           <TableHeader>
@@ -60,7 +58,7 @@ function FileTable() {
                     key={header.id}
                     onClick={() => {
                       const isDesc = sortOrder === "desc" && sortField === header.column.id;
-                      setSortField(header.column.id as keyof Bucket);
+                      setSortField(header.column.id as keyof StoredFile);
                       setSortOrder(isDesc ? "asc" : "desc");
                     }}
                     className="cursor-pointer px-4 font-bold text-md"

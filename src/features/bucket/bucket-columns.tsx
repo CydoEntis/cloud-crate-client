@@ -1,47 +1,48 @@
-import { Progress } from "@/components/ui/progress";
+import FileIndicator from "@/components/FileIndicator";
 import { createColumnHelper } from "@tanstack/react-table";
-import Avatar from "boring-avatars";
 
-const columnHelper = createColumnHelper<Bucket>();
+const columnHelper = createColumnHelper<StoredFile>();
 
 export const bucketColumns = [
-  columnHelper.accessor("name", {
-    header: "Name",
-    cell: (info) => (
-      <div className="flex gap-2 items-center">
-        <Avatar name={info.getValue()} size={40} variant="marble" square className="rounded-xl" />
-        <div className="flex flex-col">
-          <h4 className="font-bold">{info.getValue()}</h4>
-          <p className="text-sm text-gray-400">This is a crate description</p>
-        </div>
-      </div>
-    ),
-  }),
-  columnHelper.accessor("storage", {
-    header: "Storage",
+  columnHelper.accessor("fileName", {
+    header: "File Name",
     cell: (info) => {
-      const used = Number(info.getValue()); // assuming it's numeric or can be converted
-      const max = 100; // total capacity
-      const percent = Math.min((used / max) * 100, 100);
+      const fileName = info.getValue();
+      const rowId = info.row.id;
+      console.log(fileName);
 
       return (
-        <div className="w-32 flex gap-2 items-center">
-          <div className="mb-1 text-xs font-medium text-muted-foreground">{percent.toFixed(0)}%</div>
-          <Progress value={percent} />
+        <div key={rowId} className="flex gap-2 items-center">
+          <FileIndicator filename={fileName} />
+          <h4 className="font-bold">{fileName}</h4>
         </div>
       );
     },
   }),
-
-  columnHelper.accessor("createdAt", {
-    header: "Created At",
-    cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+  columnHelper.accessor("owner", {
+    header: "File Owner",
+    cell: (info) => {
+      return <p>{info.getValue()}</p>;
+    },
+  }),
+  columnHelper.accessor("size", {
+    header: "File Size",
+    cell: (info) => {
+      const size = Number(info.getValue());
+      return <p>{size} MB</p>;
+    },
+  }),
+  columnHelper.accessor("uploaded", {
+    header: "Uploaded At",
+    cell: (info) => {
+      return <p>{info.getValue()}</p>;
+    },
   }),
 ];
 
-export type Bucket = {
-  id: number;
-  name: string;
-  storage: string;
-  createdAt: string;
+export type StoredFile = {
+  fileName: string;
+  owner: string;
+  uploaded: string;
+  size: string;
 };
