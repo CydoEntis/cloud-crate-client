@@ -1,3 +1,4 @@
+import FileTable from "@/components/FileTable";
 import PageHeader from "@/components/PageHeader";
 import QuickAccessCard from "@/components/QuickAccessCard";
 import SectionOverview from "@/components/SectionOverview";
@@ -155,6 +156,7 @@ function RouteComponent() {
               />
             ))}
           </SectionOverview>
+          <FileTable />
         </section>
         <aside className="col-span-1 flex flex-col gap-4">
           <BucketStorageOverview />
