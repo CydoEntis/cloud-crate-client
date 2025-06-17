@@ -3,13 +3,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { bucketColumns, type StoredFile } from "@/features/bucket/bucket-columns";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
-
 const mockData: StoredFile[] = Array.from({ length: 45 }, (_, i) => ({
-  fileName: "file.png",
+  fileName: "file.txt",
   owner: "Cydo Entis",
   size: ["32", "44", "55", "10", "100", "12"][i % 3],
   uploaded: new Date(Date.now() - i * 86400000).toISOString(),
 }));
+
+// Define width classes per column ID
+const columnWidths: Record<string, string> = {
+  fileName: "w-1/2",
+  owner: "w-1/5",
+  size: "w-1/12",
+  uploaded: "w-1/5",
+  actions: "w-[160px]",
+};
 
 function FileTable() {
   const [page, setPage] = useState(1);
@@ -49,7 +57,7 @@ function FileTable() {
         <div className="p-4">
           <h3 className="text-3xl font-bold">Recent Files</h3>
         </div>
-        <Table className="">
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -61,7 +69,7 @@ function FileTable() {
                       setSortField(header.column.id as keyof StoredFile);
                       setSortOrder(isDesc ? "asc" : "desc");
                     }}
-                    className="cursor-pointer px-4 font-bold text-md"
+                    className={`cursor-pointer px-4 font-bold text-md ${columnWidths[header.column.id] || ""}`}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {sortField === header.column.id && (sortOrder === "asc" ? " ↑" : " ↓")}
@@ -74,7 +82,7 @@ function FileTable() {
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="p-4" key={cell.id}>
+                  <TableCell key={cell.id} className={`p-4 ${columnWidths[cell.column.id] || ""}`}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
