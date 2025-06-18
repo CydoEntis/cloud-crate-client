@@ -7,11 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { Link } from "@tanstack/react-router";
-
-type LoginFormProps = {
-  login: () => void;
-};
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useLogin } from "../hooks";
+import { useAuthStore } from "../authStore";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required"),
@@ -20,7 +18,8 @@ const loginSchema = z.object({
 
 type LoginValues = z.infer<typeof loginSchema>;
 
-export function LoginForm({ login }: LoginFormProps) {
+export function LoginForm() {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
 
   const form = useForm<LoginValues>({
@@ -31,30 +30,17 @@ export function LoginForm({ login }: LoginFormProps) {
     },
   });
 
+  const { mutateAsync: login, isPending } = useLogin();
+  const setAuth = useAuthStore((state) => state.setAuth);
+
   const onSubmit = async (data: LoginValues) => {
     try {
-      const response = await fetch("http://localhost:5233/api/Auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const result = await response.json();
-        setError(result);
-      }
-
-      const result = await response.json();
-
-      const token = result.token;
-
-      localStorage.setItem("token", token);
-
+      const { token} = await login(data);
       console.log(token);
-    } catch (error) {
-      console.error("Login failed:", error);
+      setAuth(token, "1");
+      navigate({to: "/"});
+    } catch (err: any) {
+      setError(err?.message || "Login failed.");
     }
   };
 
@@ -83,14 +69,15 @@ export function LoginForm({ login }: LoginFormProps) {
                   </a>
                 </div>
                 <Input id="password" type="password" required {...form.register("password")} />
-                <p className="text-destructive text-sm">{error && error}</p>
+                {error && <p className="text-destructive text-sm">{error}</p>}
               </div>
               <div className="flex flex-col gap-3">
                 <Button
                   type="submit"
                   className="w-full bg-indigo-500 cursor-pointer hover:bg-indigo-600 transition-all duration-200"
+                  disabled={isPending}
                 >
-                  Login
+                  {isPending ? "Logging in..." : "Login"}
                 </Button>
                 <Button
                   variant="outline"

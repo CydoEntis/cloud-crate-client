@@ -3,6 +3,7 @@ import PageHeader from "@/components/PageHeader";
 import QuickAccessCard from "@/components/QuickAccessCard";
 import SectionOverview from "@/components/SectionOverview";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/features/auth";
 import BucketStorage from "@/features/bucket/BucketStorage";
 import BucketStorageOverview from "@/features/bucket/BucketStorageOverview";
 import UpgradeCTA from "@/features/bucket/UpgradeCTA";
@@ -124,9 +125,13 @@ function RouteComponent() {
     },
   ];
 
+  const accessToken = useAuthStore.getState().accessToken;
+  console.log(accessToken);
   return (
     <section>
-      <header></header>
+      <header>
+        <p>{accessToken ? "Logged In" : "Logged Out"}</p>
+      </header>
       <PageHeader title="Welcome back, Demo User" actions={headerActions} />
       <main className="grid grid-cols-5 gap-8">
         <section className="col-span-4 flex flex-col gap-8">
@@ -148,7 +153,7 @@ function RouteComponent() {
           <SectionOverview title="Recent Files">
             {files.map((file) => (
               <RecentFile
-                key={file.name}
+                key={file.name + Math.random()}
                 name={file.name}
                 size={file.size}
                 extension={file.extension}
@@ -164,7 +169,7 @@ function RouteComponent() {
           <div className="flex flex-col gap-4">
             <h3 className="font-bold text-lg">Quick Access</h3>
             {folders.map((folder) => (
-              <QuickAccessCard folder={folder } />
+              <QuickAccessCard folder={folder} />
             ))}
           </div>
         </aside>

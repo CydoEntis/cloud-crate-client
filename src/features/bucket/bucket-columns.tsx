@@ -11,7 +11,6 @@ export const bucketColumns = [
     cell: (info) => {
       const fileName = info.getValue();
       const rowId = info.row.id;
-      console.log(fileName);
 
       return (
         <div key={rowId} className="flex gap-2 items-center">
