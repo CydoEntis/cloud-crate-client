@@ -52,58 +52,53 @@ function FileTable() {
   });
 
   return (
-    <div>
-      <div className="border border-gray-300 rounded-4xl">
-        <div className="p-4">
-          <h3 className="text-3xl font-bold">Recent Files</h3>
-        </div>
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    onClick={() => {
-                      const isDesc = sortOrder === "desc" && sortField === header.column.id;
-                      setSortField(header.column.id as keyof StoredFile);
-                      setSortOrder(isDesc ? "asc" : "desc");
-                    }}
-                    className={`cursor-pointer px-4 font-bold text-md ${columnWidths[header.column.id] || ""}`}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {sortField === header.column.id && (sortOrder === "asc" ? " ↑" : " ↓")}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className={`p-4 ${columnWidths[cell.column.id] || ""}`}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <div className="mt-4 flex gap-2 items-center px-4 pb-4">
-          <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
-            Previous
-          </button>
-          <span>
-            Page {page} of {Math.ceil(totalCount / pageSize)}
-          </span>
-          <button
-            onClick={() => setPage((p) => (p < Math.ceil(totalCount / pageSize) ? p + 1 : p))}
-            disabled={page >= Math.ceil(totalCount / pageSize)}
-          >
-            Next
-          </button>
-        </div>
+    <div className="p-4 bg-white rounded-xl">
+      <Table>
+        <TableHeader>D
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  onClick={() => {
+                    const isDesc = sortOrder === "desc" && sortField === header.column.id;
+                    setSortField(header.column.id as keyof StoredFile);
+                    setSortOrder(isDesc ? "asc" : "desc");
+                  }}
+                  className={`cursor-pointer px-4 font-bold text-md ${columnWidths[header.column.id] || ""}`}
+                >
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {sortField === header.column.id && (sortOrder === "asc" ? " ↑" : " ↓")}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id} className={`p-4 ${columnWidths[cell.column.id] || ""}`}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <div className="mt-4 flex gap-2 items-center px-4 pb-4">
+        <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
+          Previous
+        </button>
+        <span>
+          Page {page} of {Math.ceil(totalCount / pageSize)}
+        </span>
+        <button
+          onClick={() => setPage((p) => (p < Math.ceil(totalCount / pageSize) ? p + 1 : p))}
+          disabled={page >= Math.ceil(totalCount / pageSize)}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
