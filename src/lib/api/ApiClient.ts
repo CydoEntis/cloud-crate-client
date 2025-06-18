@@ -18,7 +18,6 @@ export class ApiService {
     this.setupInterceptors();
   }
 
-  // === Token Management ===
   private getAccessToken(): string | null {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
@@ -67,7 +66,7 @@ export class ApiService {
           this.isRefreshing = true;
 
           try {
-            const res = await this.api.post("/auth/refresh"); // Assumes refresh token in cookie
+            const res = await this.api.post("/auth/refresh");
             const newToken = res.data.accessToken;
             this.setAccessToken(newToken);
             this.processQueue(null, newToken);
@@ -76,7 +75,7 @@ export class ApiService {
             return this.api(originalRequest);
           } catch (refreshError) {
             this.processQueue(refreshError, null);
-            this.clearAccessToken(); // optional: logout
+            this.clearAccessToken();
             return Promise.reject(refreshError);
           } finally {
             this.isRefreshing = false;
@@ -99,7 +98,6 @@ export class ApiService {
     this.failedQueue = [];
   }
 
-  // === Public request methods ===
   public get<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.api.get<T>(url, config);
   }
@@ -116,7 +114,6 @@ export class ApiService {
     return this.api.delete<T>(url, config);
   }
 
-  // === Raw Axios instance (optional) ===
   public get instance(): AxiosInstance {
     return this.api;
   }
