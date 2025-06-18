@@ -1,4 +1,5 @@
 import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
+import { useAuthStore } from "@/features/auth/authStore";
 
 export class ApiService {
   private api: AxiosInstance;
@@ -7,7 +8,6 @@ export class ApiService {
     resolve: (token: string) => void;
     reject: (error: any) => void;
   }[] = [];
-  private ACCESS_TOKEN_KEY = "access_token";
 
   constructor(baseURL: string) {
     this.api = axios.create({
@@ -18,23 +18,11 @@ export class ApiService {
     this.setupInterceptors();
   }
 
-  private getAccessToken(): string | null {
-    return localStorage.getItem(this.ACCESS_TOKEN_KEY);
-  }
-
-  public setAccessToken(token: string): void {
-    localStorage.setItem(this.ACCESS_TOKEN_KEY, token);
-  }
-
-  public clearAccessToken(): void {
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-  }
-
   // === Interceptors ===
   private setupInterceptors(): void {
     this.api.interceptors.request.use(
       (config) => {
-        const token = this.getAccessToken();
+        const token = useAuthStore.getState().accessToken;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -67,15 +55,17 @@ export class ApiService {
 
           try {
             const res = await this.api.post("/auth/refresh");
-            const newToken = res.data.accessToken;
-            this.setAccessToken(newToken);
-            this.processQueue(null, newToken);
+            const { accessToken, userId } = res.data;
 
-            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+            // ✅ Update Zustand store
+            useAuthStore.getState().setAuth(accessToken, userId);
+            this.processQueue(null, accessToken);
+
+            originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
             return this.api(originalRequest);
           } catch (refreshError) {
             this.processQueue(refreshError, null);
-            this.clearAccessToken();
+            useAuthStore.getState().clearAuth(); // ✅ logout on failure
             return Promise.reject(refreshError);
           } finally {
             this.isRefreshing = false;

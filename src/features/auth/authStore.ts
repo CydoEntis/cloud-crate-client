@@ -7,13 +7,22 @@ interface AuthState {
   clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  userId: null,
-  accessToken: null,
-  setAuth: (token: string, userId: string) => {
-    set({ accessToken: token, userId });
-  },
-  clearAuth: () => {
-    set({ accessToken: null, userId: null });
-  },
-}));
+export const useAuthStore = create<AuthState>((set) => {
+  const token = localStorage.getItem("accessToken");
+  const userId = localStorage.getItem("userId");
+
+  return {
+    accessToken: token,
+    userId: userId,
+    setAuth: (token: string, userId: string) => {
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("userId", userId);
+      set({ accessToken: token, userId });
+    },
+    clearAuth: () => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userId");
+      set({ accessToken: null, userId: null });
+    },
+  };
+});
