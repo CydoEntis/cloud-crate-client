@@ -13,19 +13,14 @@ import { Link } from "@tanstack/react-router";
 import { useRegister } from "../hooks";
 import { useAuthStore } from "../authStore";
 import { setFormErrors } from "@/lib/formUtils";
-
-const registerSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type RegisterValues = z.infer<typeof registerSchema>;
+import { registerSchema } from "../schemas";
+import type { RegisterRequest } from "../types";
 
 export function RegisterForm() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<RegisterValues>({
+  const form = useForm<RegisterRequest>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
@@ -36,7 +31,7 @@ export function RegisterForm() {
   const { mutateAsync: register, isPending } = useRegister();
   const setAuth = useAuthStore((state) => state.setAuth);
 
-  async function onSubmit(data: RegisterValues) {
+  async function onSubmit(data: RegisterRequest) {
     try {
       const { token, userId } = await register(data);
       setAuth(token, userId);
