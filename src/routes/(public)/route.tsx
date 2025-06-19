@@ -1,6 +1,7 @@
 import SidebarNavlink from "@/layouts/sidebar/SidebarNavlink";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
 import logo from "@/assets/cloud-crate-logo.png";
+
 
 export const Route = createFileRoute("/(public)")({
   component: RouteComponent,

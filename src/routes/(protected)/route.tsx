@@ -1,9 +1,16 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/features/auth";
 import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(protected)")({
+  beforeLoad: () => {
+    const token = useAuthStore.getState().accessToken;
+    if (!token) {
+      throw redirect({ to: "/login" });
+    }
+  },
   component: RouteComponent,
 });
 
