@@ -72,7 +72,8 @@ export class ApiService {
           }
         }
 
-        return Promise.reject(error);
+        const parsedError = this.parseApiError(error);
+        return Promise.reject(parsedError);
       }
     );
   }
@@ -106,5 +107,21 @@ export class ApiService {
 
   public get instance(): AxiosInstance {
     return this.api;
+  }
+
+  private parseApiError(error: AxiosError): Error | { errors: Record<string, string> } {
+    if (error.response?.data) {
+      const data = error.response.data;
+
+      if (typeof data === "object" && !Array.isArray(data)) {
+        return { errors: data as Record<string, string> };
+      }
+
+      if (typeof data === "string") {
+        return new Error(data);
+      }
+    }
+
+    return error;
   }
 }
