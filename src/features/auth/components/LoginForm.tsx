@@ -13,20 +13,14 @@ import { Link } from "@tanstack/react-router";
 
 import { useLogin } from "../hooks";
 import { useAuthStore } from "../authStore";
-import { setFormErrors } from "@/lib/formUtils";
-
-const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type LoginValues = z.infer<typeof loginSchema>;
+import { loginSchema } from "../schemas";
+import type { LoginRequest } from "../types";
 
 export function LoginForm() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<LoginValues>({
+  const form = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -37,7 +31,7 @@ export function LoginForm() {
   const { mutateAsync: login, isPending } = useLogin();
   const setAuth = useAuthStore((state) => state.setAuth);
 
-  async function onSubmit(data: LoginValues) {
+  async function onSubmit(data: LoginRequest) {
     try {
       const { token } = await login(data);
       setAuth(token, "1");
