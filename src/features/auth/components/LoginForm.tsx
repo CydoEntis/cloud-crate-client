@@ -43,9 +43,9 @@ export function LoginForm() {
       setAuth(token, "1");
       navigate({ to: "/" });
     } catch (err: any) {
-      if (err.errors) {
-        setError(null);
-        setFormErrors(form, err.errors);
+      if (err.errors && (err.errors.email || err.errors.password)) {
+        form.clearErrors();
+        setError("Invalid email or password");
       } else if (err.message) {
         setError(err.message);
       } else {
