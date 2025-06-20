@@ -71,9 +71,8 @@ export class ApiService {
             this.isRefreshing = false;
           }
         }
-
-        const parsedError = this.parseApiError(error);
-        return Promise.reject(parsedError);
+        
+        return Promise.reject(error);
       }
     );
   }

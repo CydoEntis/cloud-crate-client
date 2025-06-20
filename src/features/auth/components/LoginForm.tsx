@@ -15,6 +15,7 @@ import { useLogin } from "../hooks";
 import { useAuthStore } from "../authStore";
 import { loginSchema } from "../schemas";
 import type { LoginRequest } from "../types";
+import { extractApiErrors, setFormErrors, type ApiError } from "@/lib/formUtils";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -36,15 +37,9 @@ export function LoginForm() {
       const { token } = await login(data);
       setAuth(token, "1");
       navigate({ to: "/" });
-    } catch (err: any) {
-      if (err.errors && (err.errors.email || err.errors.password)) {
-        form.clearErrors();
-        setError("Invalid email or password");
-      } else if (err.message) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred");
-      }
+    } catch (err: unknown) {
+      const globalError = extractApiErrors(err, form);
+      setError(globalError);
     }
   }
 

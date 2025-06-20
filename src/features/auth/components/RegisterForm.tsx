@@ -12,7 +12,7 @@ import { Link } from "@tanstack/react-router";
 
 import { useRegister } from "../hooks";
 import { useAuthStore } from "../authStore";
-import { setFormErrors } from "@/lib/formUtils";
+import { setFormErrors, type ApiError } from "@/lib/formUtils";
 import { registerSchema } from "../schemas";
 import type { RegisterRequest } from "../types";
 
@@ -37,9 +37,12 @@ export function RegisterForm() {
       setAuth(token, userId);
       navigate({ to: "/" });
     } catch (err: any) {
-      if (err.errors) {
+      if (err.response?.data && Array.isArray(err.response.data)) {
         setError(null);
-        setFormErrors(form, err.errors);
+        const globalError = setFormErrors(form, err.response.data.errors as ApiError[]);
+        setError(globalError);
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
       } else if (err.message) {
         setError(err.message);
       } else {
