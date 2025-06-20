@@ -34,8 +34,8 @@ export function LoginForm() {
 
   async function onSubmit(data: LoginRequest) {
     try {
-      const { token } = await login(data);
-      setAuth(token, "1");
+      const { accessToken } = await login(data);
+      setAuth(accessToken);
       navigate({ to: "/" });
     } catch (err: unknown) {
       const globalError = extractApiErrors(err, form);

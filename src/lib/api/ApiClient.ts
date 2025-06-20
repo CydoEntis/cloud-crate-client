@@ -55,10 +55,10 @@ export class ApiService {
 
           try {
             const res = await this.api.post("/auth/refresh");
-            const { accessToken, userId } = res.data;
+            const { accessToken } = res.data;
 
             // ✅ Update Zustand store
-            useAuthStore.getState().setAuth(accessToken, userId);
+            useAuthStore.getState().setAuth(accessToken);
             this.processQueue(null, accessToken);
 
             originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
@@ -71,7 +71,7 @@ export class ApiService {
             this.isRefreshing = false;
           }
         }
-        
+
         return Promise.reject(error);
       }
     );
