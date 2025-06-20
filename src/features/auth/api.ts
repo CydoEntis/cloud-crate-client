@@ -7,7 +7,6 @@ export const login = async (credentials: LoginRequest): Promise<{ accessToken: s
     success,
     errors,
   } = (await api.post<ApiResponse<{ accessToken: string }>>("/auth/login", credentials)).data;
-
   return result!;
 };
 
