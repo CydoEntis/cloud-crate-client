@@ -1,8 +1,8 @@
 import api from "@/lib/api";
 
 export const login = async (credentials: { email: string; password: string }) => {
-  const res = await api.post("/auth/login", credentials);
-  console.log("Response: ", res);
+  const res = (await api.post("/auth/login", credentials)).data;
+  console.log("Response: ", res.data);
   return res.data;
 };
 
