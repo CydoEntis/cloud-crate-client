@@ -12,3 +12,12 @@ export type ApiResponse<T> = {
   statusCode: number;
   errors?: ApiError[];
 };
+
+export type UserResponse = {
+  id: string;
+  email: string;
+  plan: "Free" | "Pro";
+  crateLimit: number;
+  crateCount: number;
+  usedStorage: number;
+};
