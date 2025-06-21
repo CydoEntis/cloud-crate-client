@@ -126,7 +126,6 @@ function RouteComponent() {
   ];
 
   const accessToken = useAuthStore.getState().accessToken;
-  console.log(accessToken);
   return (
     <section>
       <header>

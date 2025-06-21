@@ -35,6 +35,7 @@ export function LoginForm() {
   async function onSubmit(data: LoginRequest) {
     try {
       const { accessToken } = await login(data);
+      console.log(accessToken);
       setAuth(accessToken);
       navigate({ to: "/" });
     } catch (err: unknown) {
