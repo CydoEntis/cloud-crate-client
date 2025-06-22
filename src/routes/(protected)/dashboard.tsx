@@ -7,9 +7,11 @@ import { useAuthStore } from "@/features/auth";
 import BucketStorage from "@/features/bucket/BucketStorage";
 import BucketStorageOverview from "@/features/bucket/BucketStorageOverview";
 import UpgradeCTA from "@/features/bucket/UpgradeCTA";
+import { useGetUserCrates } from "@/features/crates/hooks";
 import { RecentFile } from "@/features/files/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
 import { File, FilePlus, FolderIcon, FolderPlus, Image } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: RouteComponent,
@@ -24,6 +26,15 @@ export type Folder = {
 };
 
 function RouteComponent() {
+  const [showMoal, setShowModal] = useState(false);
+  const { data: crates, isLoading } = useGetUserCrates();
+
+  useEffect(() => {
+    if (!isLoading && crates && crates.length === 0) {
+      setShowModal(true);
+    }
+  }, [crates, isLoading]);
+
   const headerActions = (
     <div className="flex gap-2">
       <Button>
