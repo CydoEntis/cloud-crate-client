@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createCrate } from "./api";
+import { createCrate, getUserCrates } from "./api";
 import api from "@/lib/api";
 import type { ApiResponse } from "../auth/types";
 import type { Crate } from "./types";
@@ -13,4 +13,8 @@ export const useCreateCrate = () =>
     },
   });
 
-
+export const useGetUserCrates = () =>
+  useQuery<Crate[]>({
+    queryKey: ["crates"],
+    queryFn: getUserCrates,
+  });

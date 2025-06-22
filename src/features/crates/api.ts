@@ -6,3 +6,8 @@ export const createCrate = async (data: CreateCrateRequest): Promise<Crate> => {
   const { data: result } = (await api.post<ApiResponse<Crate>>("/crates", data)).data;
   return result!;
 };
+
+export const getUserCrates = async (): Promise<Crate[]> => {
+  const { data: result } = (await api.get<ApiResponse<Crate[]>>("/crates")).data;
+  return result!;
+};
