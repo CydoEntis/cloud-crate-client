@@ -4,9 +4,9 @@ import QuickAccessCard from "@/components/QuickAccessCard";
 import SectionOverview from "@/components/SectionOverview";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/features/auth";
-import BucketStorage from "@/features/bucket/BucketStorage";
 import BucketStorageOverview from "@/features/bucket/BucketStorageOverview";
 import UpgradeCTA from "@/features/bucket/UpgradeCTA";
+import { CreateCrateModal } from "@/features/crates/components/CreateCrateModal";
 import { useGetUserCrates } from "@/features/crates/hooks";
 import { RecentFile } from "@/features/files/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
@@ -26,7 +26,7 @@ export type Folder = {
 };
 
 function RouteComponent() {
-  const [showMoal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const { data: crates, isLoading } = useGetUserCrates();
 
   useEffect(() => {
@@ -138,52 +138,55 @@ function RouteComponent() {
 
   const accessToken = useAuthStore.getState().accessToken;
   return (
-    <section>
-      <header>
-        <p>{accessToken ? "Logged In" : "Logged Out"}</p>
-      </header>
-      <PageHeader title="Welcome back, Demo User" actions={headerActions} />
-      <main className="grid grid-cols-5 gap-8">
-        <section className="col-span-4 flex flex-col gap-8">
-          <SectionOverview title="Recent Folders">
-            {folders.map((folder) => (
-              <div className="flex justify-between items-center w-[300px] border rounded-xl p-4 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="p-4 rounded-xl" style={{ backgroundColor: folder.color }}>
-                    <FolderIcon size={24} color="white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">{folder.name}</h3>
-                    <p className="text-muted-foreground text-sm">{folder.files} files</p>
+    <>
+      <CreateCrateModal showModal={showModal} setShowModal={setShowModal} />
+      <section>
+        <header>
+          <p>{accessToken ? "Logged In" : "Logged Out"}</p>
+        </header>
+        <PageHeader title="Welcome back, Demo User" actions={headerActions} />
+        <main className="grid grid-cols-5 gap-8">
+          <section className="col-span-4 flex flex-col gap-8">
+            <SectionOverview title="Recent Folders">
+              {folders.map((folder) => (
+                <div className="flex justify-between items-center w-[300px] border rounded-xl p-4 shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 rounded-xl" style={{ backgroundColor: folder.color }}>
+                      <FolderIcon size={24} color="white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold">{folder.name}</h3>
+                      <p className="text-muted-foreground text-sm">{folder.files} files</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </SectionOverview>
-          <SectionOverview title="Recent Files">
-            {files.map((file) => (
-              <RecentFile
-                key={file.name + Math.random()}
-                name={file.name}
-                size={file.size}
-                extension={file.extension}
-                icon={file.icon}
-              />
-            ))}
-          </SectionOverview>
-          <FileTable />
-        </section>
-        <aside className="col-span-1 flex flex-col gap-4">
-          <BucketStorageOverview />
-          <UpgradeCTA />
-          <div className="flex flex-col gap-4">
-            <h3 className="font-bold text-lg">Quick Access</h3>
-            {folders.map((folder) => (
-              <QuickAccessCard folder={folder} />
-            ))}
-          </div>
-        </aside>
-      </main>
-    </section>
+              ))}
+            </SectionOverview>
+            <SectionOverview title="Recent Files">
+              {files.map((file) => (
+                <RecentFile
+                  key={file.name + Math.random()}
+                  name={file.name}
+                  size={file.size}
+                  extension={file.extension}
+                  icon={file.icon}
+                />
+              ))}
+            </SectionOverview>
+            <FileTable />
+          </section>
+          <aside className="col-span-1 flex flex-col gap-4">
+            <BucketStorageOverview />
+            <UpgradeCTA />
+            <div className="flex flex-col gap-4">
+              <h3 className="font-bold text-lg">Quick Access</h3>
+              {folders.map((folder) => (
+                <QuickAccessCard folder={folder} />
+              ))}
+            </div>
+          </aside>
+        </main>
+      </section>
+    </>
   );
 }
