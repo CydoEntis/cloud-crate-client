@@ -9,7 +9,7 @@ import BucketStorageOverview from "@/features/bucket/BucketStorageOverview";
 import UpgradeCTA from "@/features/bucket/UpgradeCTA";
 import { RecentFile } from "@/features/files/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
-import { Cloud, File, FilePlus, FolderIcon, FolderPlus, Image, MoreVertical } from "lucide-react";
+import { File, FilePlus, FolderIcon, FolderPlus, Image } from "lucide-react";
 
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: RouteComponent,
