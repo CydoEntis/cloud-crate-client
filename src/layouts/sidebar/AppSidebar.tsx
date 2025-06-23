@@ -7,6 +7,7 @@ import { Files, LayoutDashboard, Settings, Star, Trash2, Users2, Plus, Box, Awar
 import { useAuthStore } from "@/features/auth/authStore";
 import { Button } from "@/components/ui/button";
 import { useGetUserCrates } from "@/features/crates/hooks";
+import { useUserStore } from "@/features/auth/userStore";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
@@ -19,13 +20,13 @@ const navlinks = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: crates, isLoading } = useGetUserCrates();
+  const { user } = useUserStore();
   const navigate = useNavigate();
 
   const logout = () => {
     useAuthStore.getState().clearAuth();
     navigate({ to: "/login" });
   };
-
   return (
     <Sidebar {...props}>
       <SidebarContent className="flex flex-col justify-between h-full">
@@ -49,7 +50,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
 
           {/* Divider */}
-          <div className="px-4 mt-6 mb-2 text-xs font-semibold text-gray-500">Your Crates (2/3)</div>
+          <div className="px-4 mt-6 mb-2 text-xs font-semibold text-gray-500">
+            Your Crates ({user?.crateCount}/{user?.crateLimit})
+          </div>
 
           {/* Crate Navigation */}
           <SidebarMenu>
