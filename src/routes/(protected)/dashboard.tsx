@@ -11,7 +11,8 @@ import { useGetUserCrates } from "@/features/crates/hooks";
 import { RecentFile } from "@/features/files/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
 import { File, FilePlus, FolderIcon, FolderPlus, Image } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useCrateModalStore } from "@/features/crates/crateModalStore";
 
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: RouteComponent,
@@ -26,14 +27,14 @@ export type Folder = {
 };
 
 function RouteComponent() {
-  const [showModal, setShowModal] = useState(false);
   const { data: crates, isLoading } = useGetUserCrates();
+  const { open } = useCrateModalStore();
 
   useEffect(() => {
     if (!isLoading && crates && crates.length === 0) {
-      setShowModal(true);
+      open();
     }
-  }, [crates, isLoading]);
+  }, [crates, isLoading, open]);
 
   const headerActions = (
     <div className="flex gap-2">
@@ -137,9 +138,10 @@ function RouteComponent() {
   ];
 
   const accessToken = useAuthStore.getState().accessToken;
+
   return (
     <>
-      <CreateCrateModal showModal={showModal} setShowModal={setShowModal} />
+      <CreateCrateModal />
       <section>
         <header>
           <p>{accessToken ? "Logged In" : "Logged Out"}</p>
@@ -149,7 +151,10 @@ function RouteComponent() {
           <section className="col-span-4 flex flex-col gap-8">
             <SectionOverview title="Recent Folders">
               {folders.map((folder) => (
-                <div className="flex justify-between items-center w-[300px] border rounded-xl p-4 shadow-sm">
+                <div
+                  key={folder.id}
+                  className="flex justify-between items-center w-[300px] border rounded-xl p-4 shadow-sm"
+                >
                   <div className="flex items-center gap-4">
                     <div className="p-4 rounded-xl" style={{ backgroundColor: folder.color }}>
                       <FolderIcon size={24} color="white" />
@@ -181,7 +186,7 @@ function RouteComponent() {
             <div className="flex flex-col gap-4">
               <h3 className="font-bold text-lg">Quick Access</h3>
               {folders.map((folder) => (
-                <QuickAccessCard folder={folder} />
+                <QuickAccessCard key={folder.id} folder={folder} />
               ))}
             </div>
           </aside>

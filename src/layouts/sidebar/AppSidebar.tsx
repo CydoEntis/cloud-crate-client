@@ -71,14 +71,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             )}
 
             <SidebarMenuItem className="mx-4">
-              <Button
-                onClick={() => open()} // ✅ Now opens the modal
-                variant="ghost"
-                className="w-full flex items-center justify-center border border-dashed border-gray-300 text-gray-400 hover:border-primary hover:text-primary hover:bg-indigo-50 p-2 cursor-pointer"
-              >
-                <Plus size={28} />
-                <span className="text-sm font-medium">New Crate</span>
-              </Button>
+              {user?.crateLimit !== user?.crateCount ? (
+                <Button
+                  onClick={() => open()}
+                  variant="ghost"
+                  className="w-full flex items-center justify-center border border-dashed border-gray-300 text-gray-400 hover:border-primary hover:text-primary hover:bg-indigo-50 p-2 cursor-pointer"
+                >
+                  <Plus size={28} />
+                  <span className="text-sm font-medium">New Crate</span>
+                </Button>
+              ) : null}
             </SidebarMenuItem>
           </SidebarMenu>
         </div>
