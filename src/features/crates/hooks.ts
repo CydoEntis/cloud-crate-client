@@ -7,10 +7,14 @@ import type { Crate } from "./types";
 export const useCreateCrate = () =>
   useMutation({
     mutationFn: createCrate,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data)
       //Todo: Show toast
       // Todo: Refresh cache for crate list.
     },
+    onError: (error) => {
+      console.log(error);
+    }
   });
 
 export const useGetUserCrates = () =>

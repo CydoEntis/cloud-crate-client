@@ -8,6 +8,7 @@ import { useAuthStore } from "@/features/auth/authStore";
 import { Button } from "@/components/ui/button";
 import { useGetUserCrates } from "@/features/crates/hooks";
 import { useUserStore } from "@/features/auth/userStore";
+import { useCrateModalStore } from "@/features/crates/crateModalStore";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
@@ -20,6 +21,7 @@ const navlinks = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: crates, isLoading } = useGetUserCrates();
+  const { open } = useCrateModalStore();
   const { user } = useUserStore();
   const navigate = useNavigate();
 
@@ -70,7 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
             <SidebarMenuItem className="mx-4">
               <Button
-                onClick={() => console.log("Open new crate modal")}
+                onClick={() => open()} // ✅ Now opens the modal
                 variant="ghost"
                 className="w-full flex items-center justify-center border border-dashed border-gray-300 text-gray-400 hover:border-primary hover:text-primary hover:bg-indigo-50 p-2 cursor-pointer"
               >
