@@ -43,7 +43,15 @@ export function CreateCrateModal() {
           <DialogDescription>Enter a name and pick a color</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <Input placeholder="Crate name" {...form.register("name")} />
+          <Input
+            placeholder="Crate name"
+            {...form.register("name", {
+              onChange: (e) => {
+                form.setValue("name", e.target.value);
+                setError("");
+              },
+            })}
+          />
           {/* <Select onValueChange={(val) => form.setValue("color", val)}>
             <SelectTrigger>
               <SelectValue placeholder="Select a color" />
