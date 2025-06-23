@@ -23,7 +23,8 @@ export function CreateCrateModal({ showModal, setShowModal }: CreateCrateModalPr
 
   const onSubmit = (data: CreateCrateRequest) => {
     createCrateMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        console.log(data);
         setShowModal(false);
         form.reset();
       },

@@ -6,13 +6,7 @@ import SidebarNavlink from "./SidebarNavlink";
 import { Files, LayoutDashboard, Settings, Star, Trash2, Users2, Plus, Box, Award } from "lucide-react";
 import { useAuthStore } from "@/features/auth/authStore";
 import { Button } from "@/components/ui/button";
-import cloudy from "@/assets/Cloudy.svg";
-
-// Mocked crate list – replace with real API hook later
-const mockCrates = [
-  { id: "crate-1", name: "Personal" },
-  { id: "crate-2", name: "Work Files" },
-];
+import { useGetUserCrates } from "@/features/crates/hooks";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
@@ -24,6 +18,7 @@ const navlinks = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: crates, isLoading } = useGetUserCrates();
   const navigate = useNavigate();
 
   const logout = () => {
@@ -58,11 +53,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           {/* Crate Navigation */}
           <SidebarMenu>
-            {mockCrates.map((crate) => (
-              <SidebarMenuItem key={crate.id}>
-                <SidebarNavlink to={`/crates/${crate.id}`} icon={<Box />} text={crate.name} />
+            {isLoading ? (
+              <SidebarMenuItem>
+                <span className="text-sm text-muted-foreground">Loading crates...</span>
               </SidebarMenuItem>
-            ))}
+            ) : (
+              crates?.map((crate) => (
+                <SidebarMenuItem key={crate.id}>
+                  <SidebarNavlink to={`/crates/${crate.id}`} icon={<Box />} text={crate.name} />
+                </SidebarMenuItem>
+              ))
+            )}
 
             <SidebarMenuItem className="mx-4">
               <Button
