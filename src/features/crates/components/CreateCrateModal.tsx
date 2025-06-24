@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCreateCrate } from "../hooks";
 import { extractApiErrors } from "@/lib/formUtils";
 import { useState } from "react";
+import { ColorPicker } from "@/components/ColorPicker";
 
 export function CreateCrateModal() {
   const { isOpen, close } = useCrateModalStore();
@@ -52,16 +53,7 @@ export function CreateCrateModal() {
               },
             })}
           />
-          {/* <Select onValueChange={(val) => form.setValue("color", val)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a color" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="#FF9E09">Orange</SelectItem>
-              <SelectItem value="#76D9C6">Teal</SelectItem>
-              <SelectItem value="#B256EB">Purple</SelectItem>
-            </SelectContent>
-          </Select> */}
+          <ColorPicker name="color" control={form.control} />
           {error && <p className="text-sm text-red-500 font-medium -mt-1">{error}</p>}
           <Button type="submit" disabled={isPending}>
             Create Crate

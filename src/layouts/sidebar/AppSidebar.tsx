@@ -71,7 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             )}
 
             <SidebarMenuItem className="mx-4">
-              {user?.crateLimit !== user?.crateCount ? (
+              {/* {user?.crateLimit !== user?.crateCount ? ( */}
                 <Button
                   onClick={() => open()}
                   variant="ghost"
@@ -80,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Plus size={28} />
                   <span className="text-sm font-medium">New Crate</span>
                 </Button>
-              ) : null}
+              {/* ) : null} */}
             </SidebarMenuItem>
           </SidebarMenu>
         </div>
