@@ -1,7 +1,6 @@
 import { SidebarMenuItem } from "@/components/ui/sidebar";
 import { useGetUserCrates } from "../hooks";
 import { Box } from "lucide-react";
-import { useAuthStore } from "@/features/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import SidebarNavlink from "@/layouts/sidebar/SidebarNavlink";
 import { useUserStore } from "@/features/auth/userStore";
