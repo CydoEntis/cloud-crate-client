@@ -11,6 +11,7 @@ import { useUserStore } from "@/features/auth/userStore";
 import { useCrateModalStore } from "@/features/crates/crateModalStore";
 import { CrateSidebarLinks } from "@/features/crates/components/CrateSideBarLinks";
 import { AddCrateButton } from "@/features/crates/components/AddCrateButton";
+import UpgradeAccountButton from "@/components/UpgradeAccountButton";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
@@ -67,23 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* Logout Button */}
         <div className="pb-6 px-4 space-y-4">
-          <div
-            className="p-4 rounded-xl space-y-3 bg-indigo-50 border border-primary h-48"
-            style={{
-              backgroundImage: `url('/public/Cloudy.svg')`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-            }}
-          >
-            <div className="flex flex-col gap-4 justify-center items-center">
-              <h3 className="text-lg font-bold text-gray-700  tracking-tight leading-5 text-center">Upgrade to Pro</h3>
-              <p className="text-sm text-gray-700 font-semibold  tracking-tighter leading-4 text-center">
-                Upgrade to a premium account and get premium features
-              </p>
-              <Button className="cursor-pointer shadow-lg">Upgrade Now</Button>
-            </div>
-          </div>
+          <UpgradeAccountButton />
           <Button
             onClick={logout}
             className="w-full py-2 px-4 rounded-xl text-center border-gray-500 hover:border-primary text-gray-500 cursor-pointer hover:bg-indigo-50 hover:text-primary"

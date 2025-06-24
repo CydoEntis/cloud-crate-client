@@ -25,7 +25,18 @@ export function CrateSidebarLinks() {
     <>
       {crates?.map((crate) => (
         <SidebarMenuItem key={crate.id}>
-          <SidebarNavlink to={`/crates/${crate.id}`} icon={<Box />} text={crate.name} />
+          <SidebarNavlink
+            to={`/crates/${crate.id}`}
+            icon={
+              <div
+                className="rounded-md p-1 flex items-center justify-center"
+                style={{ backgroundColor: crate.color, width: 24, height: 24 }}
+              >
+                <Box size={16} className="text-white" />
+              </div>
+            }
+            text={crate.name}
+          />
         </SidebarMenuItem>
       ))}
     </>
