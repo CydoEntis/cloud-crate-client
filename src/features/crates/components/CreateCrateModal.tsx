@@ -2,13 +2,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { createCrate } from "../api";
 import { createCrateSchema } from "../schemas";
 import type { CreateCrateRequest } from "../types";
 import { useCrateModalStore } from "../crateModalStore";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateCrate } from "../hooks";
 import { extractApiErrors } from "@/lib/formUtils";
 import { useState } from "react";
@@ -20,7 +17,7 @@ export function CreateCrateModal() {
   const [error, setError] = useState("");
   const form = useForm<CreateCrateRequest>({
     resolver: zodResolver(createCrateSchema),
-    defaultValues: { name: "" },
+    defaultValues: { name: "", color: "" },
   });
 
   const onSubmit = async (data: CreateCrateRequest) => {
