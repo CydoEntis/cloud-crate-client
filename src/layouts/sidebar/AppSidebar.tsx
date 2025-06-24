@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useGetUserCrates } from "@/features/crates/hooks";
 import { useUserStore } from "@/features/auth/userStore";
 import { useCrateModalStore } from "@/features/crates/crateModalStore";
+import { CrateSidebarLinks } from "@/features/crates/components/CrateSideBarLinks";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
@@ -58,17 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           {/* Crate Navigation */}
           <SidebarMenu>
-            {isLoading ? (
-              <SidebarMenuItem>
-                <span className="text-sm text-muted-foreground">Loading crates...</span>
-              </SidebarMenuItem>
-            ) : (
-              crates?.map((crate) => (
-                <SidebarMenuItem key={crate.id}>
-                  <SidebarNavlink to={`/crates/${crate.id}`} icon={<Box />} text={crate.name} />
-                </SidebarMenuItem>
-              ))
-            )}
+            <CrateSidebarLinks />
 
             <SidebarMenuItem className="mx-4">
               {/* {user?.crateLimit !== user?.crateCount ? ( */}
