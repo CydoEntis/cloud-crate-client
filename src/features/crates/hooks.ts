@@ -1,21 +1,20 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createCrate, getUserCrates } from "./api";
-import api from "@/lib/api";
-import type { ApiResponse } from "../auth/types";
 import type { Crate } from "./types";
 
-export const useCreateCrate = () =>
-  useMutation({
+export const useCreateCrate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: createCrate,
-    onSuccess: (data) => {
-      console.log(data)
-      //Todo: Show toast
-      // Todo: Refresh cache for crate list.
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crates"] });
     },
     onError: (error) => {
       console.log(error);
-    }
+    },
   });
+};
 
 export const useGetUserCrates = () =>
   useQuery<Crate[]>({
