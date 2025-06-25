@@ -9,6 +9,7 @@ export const useCreateCrate = () => {
     mutationFn: createCrate,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["crates"] });
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
     onError: (error) => {
       console.log(error);

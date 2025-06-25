@@ -23,8 +23,6 @@ const navlinks = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: crates, isLoading } = useGetUserCrates();
-  const { open } = useCrateModalStore();
   const { user } = useUserStore();
   const navigate = useNavigate();
 

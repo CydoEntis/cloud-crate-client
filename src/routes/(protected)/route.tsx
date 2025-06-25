@@ -30,7 +30,6 @@ function RouteComponent() {
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
         </header>
         <div className="flex flex-1 flex-col gap-4 p-10 bg-gray-50 dark:bg-slate-950">
-          <p>{user!.id}</p>
           <Outlet />
         </div>
       </SidebarInset>
