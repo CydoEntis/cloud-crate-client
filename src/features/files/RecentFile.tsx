@@ -1,5 +1,5 @@
 import { MoreVertical } from "lucide-react";
-import { getFileBg } from "./util/file.utils";
+import { getFileColor } from "./util/file.utils";
 
 type RecentFileProps = {
   name: string;
@@ -9,7 +9,7 @@ type RecentFileProps = {
 };
 
 export const RecentFile = ({ name, size, extension, icon }: RecentFileProps) => {
-  const bg = getFileBg(extension);
+  const bg = getFileColor(extension);
   return (
     <div className="flex justify-between items-center w-[300px] border rounded-xl p-2 shadow-sm">
       <div className="flex items-center gap-2 w-full">

@@ -1,4 +1,4 @@
-import { getFileBg, getFileIcon } from "@/features/files/util/file.utils";
+import { getFileColor, getFileIcon } from "@/features/files/util/file.utils";
 import React from "react";
 
 type FileIndicatorProps = {
@@ -9,7 +9,7 @@ const FileIndicator = ({ filename }: FileIndicatorProps) => {
   if (!filename || typeof filename !== "string") return null;
 
   const ext = filename.split(".").pop() ?? "";
-  const bg = getFileBg(ext);
+  const bg = getFileColor(ext);
   const Icon = getFileIcon(ext);
 
 

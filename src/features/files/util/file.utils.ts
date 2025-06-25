@@ -100,7 +100,7 @@ const fileTypeIcons: Record<string, React.ElementType> = {
   default: FileIcon,
 };
 
-export const getFileBg = (extension: string): string => {
+export const getFileColor = (extension: string): string => {
   return fileTypeBackgrounds[extension.toLowerCase()] || fileTypeBackgrounds.default;
 };
 
