@@ -1,72 +1,80 @@
 import FileIndicator from "@/components/FileIndicator";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
+import { MoreVertical } from "lucide-react";
+
+export type StoredFile = {
+  name: string;
+  uploadedBy: string;
+  uploadDate: string;
+  size: string;
+  isFolder?: boolean;
+  folder?: string;
+};
 
 const columnHelper = createColumnHelper<StoredFile>();
 
 export const bucketColumns = [
-  columnHelper.accessor("fileName", {
-    header: "File Name",
-    meta: { width: "50%" },
+  columnHelper.accessor("name", {
+    header: "Name",
+    meta: { width: "60%" },
     cell: (info) => {
       const fileName = info.getValue();
-      const rowId = info.row.id;
+      const row = info.row.original;
 
       return (
-        <div key={rowId} className="flex gap-2 items-center">
-          <FileIndicator filename={fileName} />
+        <div className="flex gap-2 items-center">
+          <FileIndicator filename={fileName} isFolder={row.isFolder} />
           <h4 className="font-bold">{fileName}</h4>
         </div>
       );
     },
   }),
-  columnHelper.accessor("owner", {
-    header: "File Owner",
-    meta: { width: "20%" },
+  columnHelper.accessor("uploadedBy", {
+    header: "Uploaded By",
+    meta: { width: "15%" },
     cell: (info) => {
       return <p>{info.getValue()}</p>;
     },
   }),
   columnHelper.accessor("size", {
-    header: "File Size",
+    header: "Size",
     meta: { width: "10%" },
-
     cell: (info) => {
-      const size = Number(info.getValue());
-      return <p>{size} MB</p>;
+      const size = info.getValue();
+      return <p>{size === "-" ? "-" : `${size} MB`}</p>;
     },
   }),
-  columnHelper.accessor("uploaded", {
+  columnHelper.accessor("uploadDate", {
     header: "Uploaded At",
     meta: { width: "10%" },
     cell: (info) => {
-      return <p>{info.getValue()}</p>;
+      const raw = info.getValue();
+      if (!raw) return <p>-</p>;
+
+      const date = new Date(raw);
+      const formatted = date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+      return <p>{formatted}</p>;
     },
   }),
   columnHelper.display({
-    id: "actions",
-    meta: { width: "10%" },
-    header: "Actions",
+    id: "controls",
+    meta: { width: "5%" },
     cell: (info) => {
       const row = info.row.original;
 
       return (
         <div className="flex gap-2">
-          <Button className="bg-blue-500" onClick={() => console.log("Edit", row)}>
-            Edit
-          </Button>
-          <Button variant="destructive" onClick={() => console.log("Delete", row)}>
-            Delete
+          <Button variant="ghost" onClick={() => console.log("Edit", row)}>
+            <MoreVertical size={30} />
           </Button>
         </div>
       );
     },
   }),
 ];
-
-export type StoredFile = {
-  fileName: string;
-  owner: string;
-  uploaded: string;
-  size: string;
-};

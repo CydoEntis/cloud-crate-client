@@ -29,7 +29,21 @@ const BucketStorage = () => {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="py-4 flex flex-col">
+      <h5 className="text-md text-muted-foreground font-semibold">Total Storage</h5>
+      <div className="flex justify-between items-center">
+        <div className="flex gap-1 items-end">
+          <h3 className="font-semibold text-2xl">{(usedStorage / 1024 / 1024 / 1024).toFixed(1)} GB</h3>
+          <p className="text-muted-foreground text-md font-semibold">used</p>
+        </div>
+
+        <div className="flex gap-1 items-end">
+          <p className="text-muted-foreground text-md font-semibold">from</p>
+          <h3 className="font-semibold text-2xl">{(totalStorage / 1024 ** 3).toFixed(2)} GB</h3>
+        </div>
+      </div>
+
+      {/* Storage bar */}
       <div className="w-full h-2 rounded-md overflow-hidden flex gap-1 my-2">
         {displayCrates.map((crate) => {
           const percent = (crate.usedStorage / totalStorage) * 100;
@@ -44,7 +58,16 @@ const BucketStorage = () => {
           );
         })}
       </div>
-      <p className="text-muted-foreground text-sm">3.4 GB of 5 GB used</p>
+
+      {/* Color Key / Legend */}
+      <div className="mt-3 flex gap-4">
+        {displayCrates.map((crate) => (
+          <div key={crate.id} className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-sm ${crate.color}`} />
+            <span className="text-muted-foreground">{crate.name}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

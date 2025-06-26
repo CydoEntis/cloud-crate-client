@@ -12,10 +12,10 @@ export function FileCard({ filename }: FileCardProps) {
   const color = getFileColor(extension);
 
   return (
-    <div className="group flex flex-col justify-between h-60 bg-white dark:bg-zinc-900 rounded-2xl shadow overflow-hidden transition">
+    <div className="group flex flex-col justify-between h-30 bg-white dark:bg-zinc-900 rounded-2xl shadow overflow-hidden transition">
       {/* Icon Area */}
       <div className="flex items-center justify-center h-full">
-        <Icon className="w-16 h-16 transition-colors duration-300 text-gray-400 group-hover:text-indigo-400" />
+        <Icon className="w-12 h-12 transition-colors duration-300 text-gray-400 group-hover:text-indigo-400" />
       </div>
 
       {/* Footer */}
