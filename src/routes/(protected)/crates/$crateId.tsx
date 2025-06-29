@@ -24,7 +24,7 @@ function CrateDetailPage() {
       </div>
       <div className="mb-4">
         <BucketStorage />
-        <ImageUpload />
+        <ImageUpload crateId={crateId} />
       </div>
 
       <div>
