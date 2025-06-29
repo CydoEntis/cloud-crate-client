@@ -23,7 +23,6 @@ function CrateDetailPage() {
         </Button>
       </div>
       <div className="mb-4">
-        {/* Add buttons/filters/etc here */}
         <BucketStorage />
         <ImageUpload />
       </div>
