@@ -1,10 +1,14 @@
 import { z } from "zod";
 
 export const uploadFileSchema = z.object({
-  file: z
-    .instanceof(File)
-    .refine((file) => file.size > 0, "File is required")
-    .refine((file) => file.size <= 10 * 1024 * 1024, "Max file size is 10MB")
-    .refine((file) => ["image/jpeg", "image/png", "image/svg+xml"].includes(file.type), "Unsupported file type"),
+  files: z
+    .array(z.instanceof(File))
+    .min(1, "Please select at least one file")
+    .refine((files) => files.every((f) => f.size <= 10 * 1024 * 1024), {
+      message: "Each file must be under 10MB",
+    })
+    .refine((files) => files.every((f) => ["image/png", "image/jpeg", "image/svg+xml"].includes(f.type)), {
+      message: "Unsupported file type",
+    }),
   folderId: z.string().uuid().optional(),
 });
