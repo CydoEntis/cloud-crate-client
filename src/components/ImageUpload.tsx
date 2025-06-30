@@ -43,6 +43,7 @@ export function ImageUpload({ crateId, folderId }: ImageUploadProps) {
           const file = e.target.files?.[0];
           if (file) {
             setValue("file", file, { shouldValidate: true });
+            handleSubmit(onSubmit)(); // auto-submit
           }
         }}
       />
