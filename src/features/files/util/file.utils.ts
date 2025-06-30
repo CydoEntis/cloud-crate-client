@@ -107,3 +107,8 @@ export const getFileColor = (extension: string): string => {
 export const getFileIcon = (extension: string): React.ElementType => {
   return fileTypeIcons[extension.toLowerCase()] || fileTypeIcons.default;
 };
+
+export const getFileExtension = (fileName: string): string => {
+  const parts = fileName.split(".");
+  return parts.length > 1 ? parts.pop()!.toLowerCase() : "";
+};

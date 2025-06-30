@@ -90,7 +90,12 @@ export function ImageUpload({ crateId, folderId }: ImageUploadProps) {
       {progressList.length > 0 && (
         <div className="flex gap-4 mt-4 space-y-2">
           {progressList.map((item) => (
-            <UploadProgressItem key={item.id} fileName={item.fileName} percent={item.percent} />
+            <UploadProgressItem
+              key={item.id}
+              fileName={item.fileName}
+              percent={item.percent}
+              onClose={() => setProgressList((prev) => prev.filter((i) => i.id !== item.id))}
+            />
           ))}
         </div>
       )}
