@@ -60,7 +60,7 @@ export function ImageUpload({ crateId, folderId }: ImageUploadProps) {
           const selectedFiles = Array.from(e.target.files ?? []);
           if (selectedFiles.length > 0) {
             setValue("files", selectedFiles, { shouldValidate: true });
-            handleSubmit(onSubmit)(); // auto-submit
+            handleSubmit(onSubmit)();
           }
         }}
       />
@@ -79,9 +79,9 @@ export function ImageUpload({ crateId, folderId }: ImageUploadProps) {
         <p className="text-gray-400 text-sm text-center">Supported Formats: SVG, JPG, PNG (10mb each)</p>
       </div>
 
-      {files?.length > 0 && (
+      {/* {files?.length > 0 && (
         <div className="text-sm mt-2 text-center text-gray-500">Selected: {files.map((f) => f.name).join(", ")}</div>
-      )}
+      )} */}
 
       {formState.errors.files && (
         <div className="text-sm text-red-500 mt-1 text-center">{formState.errors.files.message}</div>
