@@ -10,7 +10,7 @@ type SidebarNavlinkProps = {
 
 const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isActive = pathname === to;
+  const isActive = pathname === to || pathname.startsWith(to + "/");
 
   const ref = useRef<HTMLAnchorElement>(null);
   const [height, setHeight] = useState(0);

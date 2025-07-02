@@ -42,9 +42,16 @@ function CrateDetailPage() {
     refetch();
   };
 
+  // Update navigation and state on folder click
   const handleNavigate = (folderId: string | null) => {
     setCurrentFolderId(folderId);
-    navigate({ to: `/crates/${crateId}/folders/${folderId}` });
+
+    if (folderId) {
+      navigate({ to: `/crates/${crateId}/folders/${folderId}` });
+    } else {
+      // Navigate to root folder view
+      navigate({ to: `/crates/${crateId}` });
+    }
   };
 
   return (
@@ -60,7 +67,9 @@ function CrateDetailPage() {
 
       <div>
         <h3 className="text-lg font-semibold mb-2">Files</h3>
-        <FileTable crateId={crateId} folderId={currentFolderId} />
+
+        {/* Pass onFolderClick to FileTable */}
+        <FileTable crateId={crateId} folderId={currentFolderId} onFolderClick={handleNavigate} />
       </div>
     </section>
   );

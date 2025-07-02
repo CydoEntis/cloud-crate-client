@@ -9,6 +9,7 @@ import { useFolderContents } from "@/features/folder/hooks";
 type FileTableProps = {
   crateId: string;
   folderId: string | null;
+  onFolderClick?: (folderId: string) => void; // NEW callback prop
 };
 
 // Extend column meta typing for width
@@ -16,7 +17,7 @@ type BucketColumnMeta = {
   width?: string;
 };
 
-function FileTable({ crateId, folderId }: FileTableProps) {
+function FileTable({ crateId, folderId, onFolderClick }: FileTableProps) {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10); // fixed page size, adjust as needed
   const [sortField, setSortField] = useState<keyof StoredFile>("size");
@@ -114,8 +115,7 @@ function FileTable({ crateId, folderId }: FileTableProps) {
                 key={row.id}
                 onClick={() => {
                   if (rowData.isFolder) {
-                    // TODO: handle folder navigation (lift state or use router)
-                    console.log("Open folder", rowData.name);
+                    onFolderClick?.(rowData.id); // Call callback on folder click
                   }
                 }}
                 className={rowData.isFolder ? "cursor-pointer hover:bg-muted/30" : ""}
