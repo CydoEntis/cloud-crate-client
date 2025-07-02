@@ -33,7 +33,12 @@ const columnWidths: Record<string, string> = {
   actions: "w-[160px]",
 };
 
-function FileTable() {
+type FileTableProps = {
+  crateId: string;
+  folderId: string | null;
+};
+
+function FileTable({ crateId, folderId }: FileTableProps) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortField, setSortField] = useState<keyof StoredFile>("size");
