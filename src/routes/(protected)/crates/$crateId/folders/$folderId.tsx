@@ -1,4 +1,3 @@
-import { getFolderPath, getSiblingFolders } from "@/features/folder/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import type { Folder } from "../../../dashboard";
@@ -30,4 +29,5 @@ function CrateDetailPage() {
   // };
 
   // Rest of UI stays mostly the same
+  return <p>Folder Page</p>
 }

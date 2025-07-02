@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFolder, getRootFolders, getSubfolders, renameFolder, deleteFolder, moveFolder } from "./api";
-import type { Folder, CreateFolderRequest } from "./types";
+import type { Folder, CreateFolderRequest, CreateFolderArgs } from "./types";
 
 export const useRootFolders = (crateId: string) =>
   useQuery<Folder[]>({
@@ -18,12 +18,14 @@ export const useSubfolders = (parentId: string | null) =>
 
 export const useCreateFolder = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (data: CreateFolderRequest) => createFolder(data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["folders", "root", variables.crateId] });
-      if (variables.parentFolderId) {
-        queryClient.invalidateQueries({ queryKey: ["folders", "subfolders", variables.parentFolderId] });
+    mutationFn: ({ crateId, data }: CreateFolderArgs) => createFolder(crateId, data),
+    onSuccess: (_, { crateId, data }) => {
+      queryClient.invalidateQueries({ queryKey: ["folders", "root", crateId] });
+
+      if (data.parentFolderId) {
+        queryClient.invalidateQueries({ queryKey: ["folders", "subfolders", data.parentFolderId] });
       }
     },
   });
