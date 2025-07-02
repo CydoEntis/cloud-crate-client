@@ -1,15 +1,15 @@
 import React, { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { bucketColumns } from "@/features/bucket/bucket-columns";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 import type { StoredFile } from "@/features/files/types";
 import { useFolderContents } from "@/features/folder/hooks";
+import { crateColumns } from "@/features/bucket/crate-columns";
 
 type FileTableProps = {
   crateId: string;
   folderId: string | null;
-  onFolderClick?: (folderId: string) => void; // NEW callback prop
+  onFolderClick?: (folderId: string | null) => void; // callback to notify folder click
 };
 
 // Extend column meta typing for width
@@ -24,9 +24,6 @@ function FileTable({ crateId, folderId, onFolderClick }: FileTableProps) {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const { folders, files, isLoading, error } = useFolderContents(crateId, folderId);
-  console.log("Folders: ", folders);
-  console.log("Files: ", files);
-  console.log(error);
 
   const combinedData: StoredFile[] = useMemo(() => {
     const folderItems: StoredFile[] = folders.map((f) => ({
@@ -67,7 +64,7 @@ function FileTable({ crateId, folderId, onFolderClick }: FileTableProps) {
 
   const table = useReactTable({
     data: filteredData,
-    columns: bucketColumns,
+    columns: crateColumns,
     manualPagination: true,
     pageCount: Math.ceil(totalCount / pageSize),
     getCoreRowModel: getCoreRowModel(),
@@ -113,9 +110,9 @@ function FileTable({ crateId, folderId, onFolderClick }: FileTableProps) {
             return (
               <TableRow
                 key={row.id}
-                onClick={() => {
-                  if (rowData.isFolder) {
-                    onFolderClick?.(rowData.id); // Call callback on folder click
+                onClick={(event) => {
+                  if (rowData.isFolder && !(event.target as HTMLElement).closest(".actions-cell")) {
+                    onFolderClick?.(rowData.id ?? null);
                   }
                 }}
                 className={rowData.isFolder ? "cursor-pointer hover:bg-muted/30" : ""}
@@ -123,9 +120,9 @@ function FileTable({ crateId, folderId, onFolderClick }: FileTableProps) {
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className={`p-4 ${
-                      (cell.column.columnDef.meta as BucketColumnMeta)?.width || ""
-                    } ${cell.column.id === "controls" ? "justify-end flex" : ""}`}
+                    className={`p-4 ${(cell.column.columnDef.meta as BucketColumnMeta)?.width || ""} ${
+                      cell.column.id === "controls" ? "actions-cell justify-end flex" : ""
+                    }`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

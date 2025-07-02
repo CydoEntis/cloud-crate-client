@@ -1,5 +1,3 @@
-import { columns, payments } from "@/features/bucket/columns";
-import type { Payment } from "@/features/bucket/columns";
 import { Settings } from "lucide-react";
 import { ImageUpload } from "@/components/ImageUpload";
 import PageHeader from "@/components/PageHeader";
@@ -23,8 +21,8 @@ function FilesPage() {
           </Button>
         }
       />
-      <ImageUpload />
-      <DataTable columns={columns} data={payments} />
+      {/* <ImageUpload /> */}
+      {/* <DataTable columns={columns} data={payments} /> */}
     </section>
   );
 }

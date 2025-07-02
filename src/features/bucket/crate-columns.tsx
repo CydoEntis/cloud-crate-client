@@ -6,7 +6,7 @@ import type { StoredFile } from "../files/types";
 
 const columnHelper = createColumnHelper<StoredFile>();
 
-export const bucketColumns = [
+export const crateColumns = [
   columnHelper.accessor("name", {
     header: "Name",
     meta: { width: "60%" },
@@ -25,9 +25,7 @@ export const bucketColumns = [
   columnHelper.accessor("uploadedBy", {
     header: "Uploaded By",
     meta: { width: "15%" },
-    cell: (info) => {
-      return <p>{info.getValue()}</p>;
-    },
+    cell: (info) => <p>{info.getValue()}</p>,
   }),
   columnHelper.accessor("size", {
     header: "Size",
@@ -62,7 +60,13 @@ export const bucketColumns = [
 
       return (
         <div className="flex gap-2">
-          <Button variant="ghost" onClick={() => console.log("Edit", row)}>
+          <Button
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent row click when clicking button
+              console.log("Edit", row);
+            }}
+          >
             <MoreVertical size={30} />
           </Button>
         </div>
