@@ -12,3 +12,17 @@ export const uploadFileSchema = z.object({
     }),
   folderId: z.string().uuid().optional(),
 });
+
+export const StoredFileSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  crateId: z.string().uuid(),
+  folderId: z.string().uuid().nullable(),
+  size: z.number(),
+  mimeType: z.string(),
+  uploadDate: z.string(),
+  uploadedBy: z.string(),
+  isFolder: z.boolean().optional(), 
+});
+
+export const StoredFileListSchema = z.array(StoredFileSchema);

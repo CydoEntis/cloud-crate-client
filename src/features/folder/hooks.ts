@@ -1,19 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFolder, getRootFolders, getSubfolders, renameFolder, deleteFolder, moveFolder } from "./api";
 import type { Folder, CreateFolderRequest, CreateFolderArgs } from "./types";
+import { getFiles } from "../files/api";
 
 export const useRootFolders = (crateId: string) =>
   useQuery<Folder[]>({
-    queryKey: ["folders", "root", crateId],
+    queryKey: ["folders", crateId, "root"],
     queryFn: () => getRootFolders(crateId),
     enabled: !!crateId,
   });
 
-export const useSubfolders = (parentId: string | null) =>
+// Pass crateId and parentId here and enable only if both present
+export const useSubfolders = (crateId: string, parentId: string | null) =>
   useQuery<Folder[]>({
-    queryKey: ["folders", "subfolders", parentId],
-    queryFn: () => (parentId ? getSubfolders(parentId) : Promise.resolve([])),
-    enabled: !!parentId,
+    queryKey: ["folders", crateId, "subfolders", parentId],
+    queryFn: () => (crateId && parentId ? getSubfolders(crateId, parentId) : Promise.resolve([])),
+    enabled: !!crateId && !!parentId,
   });
 
 export const useCreateFolder = () => {
@@ -22,16 +24,15 @@ export const useCreateFolder = () => {
   return useMutation({
     mutationFn: ({ crateId, data }: CreateFolderArgs) => createFolder(crateId, data),
     onSuccess: (_, { crateId, data }) => {
-      queryClient.invalidateQueries({ queryKey: ["folders", "root", crateId] });
+      queryClient.invalidateQueries({ queryKey: ["folders", crateId, "root"] });
 
       if (data.parentFolderId) {
-        queryClient.invalidateQueries({ queryKey: ["folders", "subfolders", data.parentFolderId] });
+        queryClient.invalidateQueries({ queryKey: ["folders", crateId, "subfolders", data.parentFolderId] });
       }
     },
   });
 };
 
-// Rename a folder
 export const useRenameFolder = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -61,4 +62,33 @@ export const useMoveFolder = () => {
       queryClient.invalidateQueries({ queryKey: ["folders"] });
     },
   });
+};
+
+export const useFolderContents = (crateId: string, folderId: string | null) => {
+  const {
+    data: folders = [],
+    isLoading: isFoldersLoading,
+    error: foldersError,
+  } = useQuery({
+    queryKey: ["folders", crateId, folderId ?? "root"],
+    queryFn: () => (folderId ? getSubfolders(crateId, folderId) : getRootFolders(crateId)),
+    enabled: !!crateId,
+  });
+
+  const {
+    data: files = [],
+    isLoading: isFilesLoading,
+    error: filesError,
+  } = useQuery({
+    queryKey: ["files", crateId, folderId ?? "root"],
+    queryFn: () => getFiles(crateId, folderId),
+    enabled: !!crateId,
+  });
+
+  return {
+    folders,
+    files,
+    isLoading: isFoldersLoading || isFilesLoading,
+    error: foldersError || filesError,
+  };
 };

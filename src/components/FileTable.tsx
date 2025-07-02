@@ -1,75 +1,68 @@
-import React, { useMemo, useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { bucketColumns, type StoredFile } from "@/features/bucket/bucket-columns";
+import { bucketColumns } from "@/features/bucket/bucket-columns";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Button } from "./ui/button";
-
-// Updated mock data with folders and files
-const mockData: StoredFile[] = [
-  { name: "Photos", uploadedBy: "Cydo", size: "-", uploadDate: "", isFolder: true },
-  { name: "Invoices", uploadedBy: "Cydo", size: "-", uploadDate: "", isFolder: true },
-  { name: "notes.txt", uploadedBy: "Cydo", size: "12", uploadDate: new Date().toISOString() },
-  { name: "receipt.pdf", uploadedBy: "Cydo", size: "44", uploadDate: new Date().toISOString() },
-  { name: "rs-bot.java", uploadedBy: "Cydo", size: "12", uploadDate: new Date().toISOString() },
-  { name: "mike-blackmail.docx", uploadedBy: "Cydo", size: "12", uploadDate: new Date().toISOString() },
-  { name: "tax-evasion.xlsx", uploadedBy: "Cydo", size: "12", uploadDate: new Date().toISOString() },
-  { name: "image1.png", uploadedBy: "Cydo", size: "55", uploadDate: new Date().toISOString(), folder: "Photos" },
-
-  {
-    name: "invoice-march.pdf",
-    uploadedBy: "Cydo",
-    size: "32",
-    uploadDate: new Date().toISOString(),
-    folder: "Invoices",
-  },
-];
-
-// Define width classes per column ID
-const columnWidths: Record<string, string> = {
-  fileName: "w-1/2",
-  owner: "w-1/5",
-  size: "w-1/12",
-  uploaded: "w-1/5",
-  actions: "w-[160px]",
-};
+import type { StoredFile } from "@/features/files/types";
+import { useFolderContents } from "@/features/folder/hooks";
 
 type FileTableProps = {
   crateId: string;
   folderId: string | null;
 };
 
+// Extend column meta typing for width
+type BucketColumnMeta = {
+  width?: string;
+};
+
 function FileTable({ crateId, folderId }: FileTableProps) {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize] = useState(10); // fixed page size, adjust as needed
   const [sortField, setSortField] = useState<keyof StoredFile>("size");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [currentFolder, setCurrentFolder] = useState<string | null>(null);
+
+  const { folders, files, isLoading, error } = useFolderContents(crateId, folderId);
+  console.log("Folders: ", folders);
+  console.log("Files: ", files);
+  console.log(error);
+
+  const combinedData: StoredFile[] = useMemo(() => {
+    const folderItems: StoredFile[] = folders.map((f) => ({
+      id: f.id,
+      name: f.name,
+      crateId: f.crateId,
+      folderId: f.parentFolderId ?? null,
+      size: 0,
+      mimeType: "folder",
+      uploadDate: f.createdAt ?? "",
+      uploadedBy: "",
+      isFolder: true,
+    }));
+
+    const fileItems: StoredFile[] = files.map((file) => ({
+      ...file,
+      isFolder: false,
+    }));
+
+    return [...folderItems, ...fileItems];
+  }, [folders, files]);
 
   const filteredData = useMemo(() => {
-    let filtered = mockData.filter((file) => {
-      if (currentFolder) {
-        return file.folder === currentFolder && !file.isFolder;
-      } else {
-        return !file.folder || file.isFolder;
-      }
-    });
-
-    const sorted = [...filtered].sort((a, b) => {
+    const sorted = [...combinedData].sort((a, b) => {
       const aVal = a[sortField] ?? "";
       const bVal = b[sortField] ?? "";
 
-      // Convert to string for comparison and handle numeric strings
       if (sortField === "size") {
         return sortOrder === "asc" ? Number(aVal) - Number(bVal) : Number(bVal) - Number(aVal);
       }
-
       return sortOrder === "asc" ? String(aVal).localeCompare(String(bVal)) : String(bVal).localeCompare(String(aVal));
     });
 
     return sorted.slice((page - 1) * pageSize, page * pageSize);
-  }, [page, pageSize, sortField, sortOrder, currentFolder]);
+  }, [combinedData, page, pageSize, sortField, sortOrder]);
 
-  const totalCount = filteredData.length;
+  const totalCount = combinedData.length;
 
   const table = useReactTable({
     data: filteredData,
@@ -85,19 +78,11 @@ function FileTable({ crateId, folderId }: FileTableProps) {
     },
   });
 
+  if (isLoading) return <p>Loading files...</p>;
+  if (error) return <p>Error loading files</p>;
+
   return (
     <div className="p-4 bg-white rounded-xl mt-8">
-      {currentFolder && (
-        <button
-          className="mb-4 px-4 text-blue-500 underline"
-          onClick={() => {
-            setCurrentFolder(null);
-            setPage(1);
-          }}
-        >
-          ← Back to all files
-        </button>
-      )}
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -110,7 +95,9 @@ function FileTable({ crateId, folderId }: FileTableProps) {
                     setSortField(header.column.id as keyof StoredFile);
                     setSortOrder(isDesc ? "asc" : "desc");
                   }}
-                  className={`cursor-pointer px-4 font-bold text-md ${columnWidths[header.column.id] || ""}`}
+                  className={`cursor-pointer px-4 font-bold text-md ${
+                    (header.column.columnDef.meta as BucketColumnMeta)?.width || ""
+                  }`}
                 >
                   {flexRender(header.column.columnDef.header, header.getContext())}
                   {sortField === header.column.id && (sortOrder === "asc" ? " ↑" : " ↓")}
@@ -127,8 +114,8 @@ function FileTable({ crateId, folderId }: FileTableProps) {
                 key={row.id}
                 onClick={() => {
                   if (rowData.isFolder) {
-                    setCurrentFolder(rowData.name);
-                    setPage(1);
+                    // TODO: handle folder navigation (lift state or use router)
+                    console.log("Open folder", rowData.name);
                   }
                 }}
                 className={rowData.isFolder ? "cursor-pointer hover:bg-muted/30" : ""}
@@ -136,7 +123,9 @@ function FileTable({ crateId, folderId }: FileTableProps) {
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className={`p-4 ${columnWidths[cell.column.id] || ""} ${cell.column.id === "controls" ? "justify-end flex" : ""}`}
+                    className={`p-4 ${
+                      (cell.column.columnDef.meta as BucketColumnMeta)?.width || ""
+                    } ${cell.column.id === "controls" ? "justify-end flex" : ""}`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

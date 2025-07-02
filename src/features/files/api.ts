@@ -1,4 +1,7 @@
 import api from "@/lib/api";
+import type { ApiResponse } from "../auth/types";
+import { StoredFileListSchema } from "./schemas";
+import type { StoredFile } from "./types";
 
 export type UploadFileRequest = {
   crateId: string;
@@ -24,4 +27,12 @@ export const uploadFile = async ({ crateId, file, folderId, onProgress }: Upload
   });
 
   return data;
+};
+
+export const getFiles = async (crateId: string, folderId?: string | null): Promise<StoredFile[]> => {
+  const endpoint = folderId ? `/crates/${crateId}/folders/${folderId}/files` : `/crates/${crateId}/files`;
+  const response = await api.get<ApiResponse<StoredFile[]>>(endpoint);
+  console.log("Files response data:", response.data.data);
+  const filesData = response.data?.data ?? [];
+  return StoredFileListSchema.parse(filesData);
 };

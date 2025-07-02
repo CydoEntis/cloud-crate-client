@@ -2,15 +2,7 @@ import FileIndicator from "@/components/FileIndicator";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
-
-export type StoredFile = {
-  name: string;
-  uploadedBy: string;
-  uploadDate: string;
-  size: string;
-  isFolder?: boolean;
-  folder?: string;
-};
+import type { StoredFile } from "../files/types";
 
 const columnHelper = createColumnHelper<StoredFile>();
 
@@ -41,8 +33,8 @@ export const bucketColumns = [
     header: "Size",
     meta: { width: "10%" },
     cell: (info) => {
-      const size = info.getValue();
-      return <p>{size === "-" ? "-" : `${size} MB`}</p>;
+      const size = info.getValue() as number;
+      return <p>{size === 0 ? "-" : `${size} MB`}</p>;
     },
   }),
   columnHelper.accessor("uploadDate", {

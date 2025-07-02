@@ -11,11 +11,12 @@ export const createFolder = async (crateId: string, data: CreateFolderRequest): 
 
 export const getRootFolders = async (crateId: string): Promise<Folder[]> => {
   const response = await api.get<ApiResponse<Folder>>(`/crates/${crateId}/folders/root`);
+  console.log("FOLDERS: ", response.data.data);
   return FolderListResponseSchema.parse(response.data.data);
 };
 
-export const getSubfolders = async (parentId: string): Promise<Folder[]> => {
-  const response = await api.get<ApiResponse<Folder>>(`/folders/${parentId}/subfolders`);
+export const getSubfolders = async (crateId: string, parentId: string): Promise<Folder[]> => {
+  const response = await api.get<ApiResponse<Folder[]>>(`/crates/${crateId}/folders/${parentId}/subfolders`);
   return FolderListResponseSchema.parse(response.data.data);
 };
 
