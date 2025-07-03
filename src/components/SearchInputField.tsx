@@ -1,48 +1,49 @@
-import { useEffect } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Search } from "lucide-react";
 import { useDebouncedCallback } from "@react-hookz/web";
 
 type Props = {
-  name: string;
+  value: string;
+  onChange: (val: string) => void;
   label?: string;
   placeholder?: string;
-  onDebouncedChange: (value: string) => void;
   delay?: number;
 };
 
-export default function SearchInputField({
-  name,
-  label,
-  placeholder = "Search...",
-  onDebouncedChange,
-  delay = 300,
-}: Props) {
-  const { control } = useFormContext();
-  const value = useWatch({ name, control });
+export default function SearchInputField({ value, onChange, label, placeholder = "Search...", delay = 300 }: Props) {
+  const [inputValue, setInputValue] = useState(value);
 
-  const debounced = useDebouncedCallback(onDebouncedChange, [onDebouncedChange], delay);
+  const debounced = useDebouncedCallback(
+    (val: string) => {
+      onChange(val);
+    },
+    [onChange],
+    delay
+  );
 
   useEffect(() => {
-    debounced(value);
-  }, [value, debounced]);
+    debounced(inputValue);
+  }, [inputValue, debounced]);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   return (
-    <FormField
-      name={name}
-      render={({ field }) => (
-        <FormItem className="relative w-full max-w-xs">
-          {label && <FormLabel>{label}</FormLabel>}
-          <FormControl>
-            <>
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
-              <Input {...field} placeholder={placeholder} className="pl-9" type="text" autoComplete="off" />
-            </>
-          </FormControl>
-        </FormItem>
-      )}
-    />
+    <div className="relative w-full max-w-xs">
+      {label && <label className="block mb-1 font-medium">{label}</label>}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
+        <Input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder={placeholder}
+          className="pl-9"
+          type="text"
+          autoComplete="off"
+        />
+      </div>
+    </div>
   );
 }

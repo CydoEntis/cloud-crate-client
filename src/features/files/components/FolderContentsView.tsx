@@ -1,9 +1,11 @@
-import { useState, useMemo } from "react";
-import { useFolderContents } from "@/features/folder/hooks";
+import { useState, useMemo, useEffect } from "react";
+import { useFolderContents, useCreateFolder } from "@/features/folder/hooks";
 import type { StoredFile } from "@/features/files/types";
 import FileTable from "./FileTable";
 import FilePagination from "./FilePagination";
 import { crateColumns } from "@/features/bucket/crate-columns";
+import FileTableToolbar from "./FileTableToolbar";
+import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 
 type Props = {
   crateId: string;
@@ -12,9 +14,16 @@ type Props = {
 };
 
 export default function FolderContentsView({ crateId, folderId, onFolderClick }: Props) {
-  const { folders, files, isLoading, error } = useFolderContents(crateId, folderId);
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const pageSize = 10;
+
+  // Use your hook with search param
+  const { folders, files, isLoading, error } = useFolderContents(crateId, folderId);
+
+  // Create folder mutation hook
+  const createFolderMutation = useCreateFolder();
 
   const combinedData = useMemo<StoredFile[]>(() => {
     const folderItems = folders.map((f) => ({
@@ -49,11 +58,36 @@ export default function FolderContentsView({ crateId, folderId, onFolderClick }:
     [combinedData, page, pageSize]
   );
 
+  // Folder creation handler called from modal
+  const handleCreateFolder = async (name: string, color: string) => {
+    if (!name.trim()) return;
+
+    try {
+      await createFolderMutation.mutateAsync({
+        crateId,
+        data: {
+          name: name.trim(),
+          crateId,
+          parentFolderId: folderId,
+        },
+      });
+      setIsCreateFolderOpen(false);
+    } catch (err) {
+      console.error("Failed to create folder", err);
+      // You can add error UI here if you want
+    }
+  };
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading contents.</p>;
 
   return (
     <div className="p-4 bg-white rounded-xl mt-8">
+      <FileTableToolbar search={search} setSearch={setSearch} onOpenCreateFolder={() => setIsCreateFolderOpen(true)} />
       <FileTable
         data={paginated}
         columns={crateColumns}
@@ -62,6 +96,12 @@ export default function FolderContentsView({ crateId, folderId, onFolderClick }:
         }}
       />
       <FilePagination page={page} pageSize={pageSize} totalCount={combinedData.length} onPageChange={setPage} />
+
+      <CreateFolderModal
+        isOpen={isCreateFolderOpen}
+        onClose={() => setIsCreateFolderOpen(false)}
+        onCreate={handleCreateFolder}
+      />
     </div>
   );
 }

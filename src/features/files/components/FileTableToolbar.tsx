@@ -4,15 +4,14 @@ import { Button } from "@/components/ui/button";
 type Props = {
   search: string;
   setSearch: (val: string) => void;
-  onCreateFolder: () => void;
+  onOpenCreateFolder: () => void;
 };
 
-function FileTableToolbar({ setSearch, onCreateFolder }: Props) {
+function FileTableToolbar({ search, setSearch, onOpenCreateFolder }: Props) {
   return (
     <div className="flex items-center justify-between mb-4">
-      <SearchInputField name="search" onDebouncedChange={setSearch} placeholder="Search files or folders..." />
-
-      <Button onClick={onCreateFolder}>+ New Folder</Button>
+      <SearchInputField value={search} onChange={setSearch} placeholder="Search files or folders..." />
+      <Button onClick={onOpenCreateFolder}>+ New Folder</Button>
     </div>
   );
 }
