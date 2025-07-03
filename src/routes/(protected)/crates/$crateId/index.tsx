@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FolderBreadcrumb } from "@/components/FolderBreadcrumb";
+import FolderContentsView from "@/features/files/components/FolderContentsView";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/")({
   component: CrateDetailPage,
@@ -66,10 +67,8 @@ function CrateDetailPage() {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-2">Files</h3>
-
-        {/* Pass onFolderClick to FileTable */}
-        <FileTable crateId={crateId} folderId={currentFolderId} onFolderClick={handleNavigate} />
+        <h3 className="text-lg font-semibold mb-2">Root/</h3>
+        <FolderContentsView crateId={crateId} folderId={currentFolderId} onFolderClick={handleNavigate} />
       </div>
     </section>
   );
