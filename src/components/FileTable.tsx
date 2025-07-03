@@ -25,21 +25,29 @@ function FileTable({ crateId, folderId, onFolderClick }: FileTableProps) {
 
   const { folders, files, isLoading, error } = useFolderContents(crateId, folderId);
 
+  // Map folders and files to unified StoredFile shape expected by table
   const combinedData: StoredFile[] = useMemo(() => {
     const folderItems: StoredFile[] = folders.map((f) => ({
       id: f.id,
       name: f.name,
       crateId: f.crateId,
       folderId: f.parentFolderId ?? null,
-      size: 0,
+      size: 0, // folders have size 0
       mimeType: "folder",
       uploadDate: f.createdAt ?? "",
-      uploadedBy: "",
+      uploadedBy: "", // you can map uploader if available
       isFolder: true,
     }));
 
     const fileItems: StoredFile[] = files.map((file) => ({
-      ...file,
+      id: file.id,
+      name: file.name,
+      crateId: file.crateId,
+      folderId: file.folderId ?? null,
+      size: Math.round((file.size ?? 0) / 1024 / 1024), // convert bytes to MB, rounded
+      mimeType: file.mimeType,
+      uploadDate: file.uploadDate ?? file.uploadedBy ?? "",
+      uploadedBy: file.uploadedBy ?? "",
       isFolder: false,
     }));
 

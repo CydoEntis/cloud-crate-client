@@ -18,11 +18,11 @@ export const StoredFileSchema = z.object({
   name: z.string(),
   crateId: z.string().uuid(),
   folderId: z.string().uuid().nullable(),
-  size: z.number(),
   mimeType: z.string(),
-  uploadDate: z.string(),
-  uploadedBy: z.string(),
-  isFolder: z.boolean().optional(), 
+  size: z.number().optional().default(0),
+  uploadDate: z.string().optional().default(""),
+  uploadedBy: z.string().optional().default(""),
+  isFolder: z.boolean().optional(),
 });
 
 export const StoredFileListSchema = z.array(StoredFileSchema);

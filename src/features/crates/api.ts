@@ -9,6 +9,5 @@ export const createCrate = async (data: CreateCrateRequest): Promise<Crate> => {
 
 export const getUserCrates = async (): Promise<Crate[]> => {
   const { data: result } = (await api.get<ApiResponse<Crate[]>>("/crates")).data;
-  console.log("RESULT: ", result);
   return result!;
 };

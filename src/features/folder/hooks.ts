@@ -65,6 +65,7 @@ export const useMoveFolder = () => {
 };
 
 export const useFolderContents = (crateId: string, folderId: string | null) => {
+  console.log(crateId, folderId)
   const {
     data: folders = [],
     isLoading: isFoldersLoading,
@@ -75,15 +76,22 @@ export const useFolderContents = (crateId: string, folderId: string | null) => {
     enabled: !!crateId,
   });
 
+  console.log(folders);
+
   const {
     data: files = [],
     isLoading: isFilesLoading,
     error: filesError,
   } = useQuery({
     queryKey: ["files", crateId, folderId ?? "root"],
-    queryFn: () => getFiles(crateId, folderId),
+    queryFn: async () => {
+      const files = await getFiles(crateId, folderId);
+      console.log("Files fetched:", files);
+      return files;
+    },
     enabled: !!crateId,
   });
+  console.log(filesError)
 
   return {
     folders,

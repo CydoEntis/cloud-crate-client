@@ -30,9 +30,8 @@ export const uploadFile = async ({ crateId, file, folderId, onProgress }: Upload
 };
 
 export const getFiles = async (crateId: string, folderId?: string | null): Promise<StoredFile[]> => {
-  const endpoint = folderId ? `/crates/${crateId}/folders/${folderId}/files` : `/crates/${crateId}/files`;
-  const response = await api.get<ApiResponse<StoredFile[]>>(endpoint);
-  console.log("Files response data:", response.data.data);
+  const params = folderId ? { folderId } : {};
+  const response = await api.get<ApiResponse<StoredFile[]>>(`/crates/${crateId}/files`, { params });
   const filesData = response.data?.data ?? [];
   return StoredFileListSchema.parse(filesData);
 };
