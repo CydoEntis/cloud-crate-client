@@ -1,11 +1,22 @@
-import React from 'react'
+import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { flexRender } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
+import type { StoredFile } from "@/features/files/types";
 
-type Props = {}
+type Props = {
+  table: Table<StoredFile>;
+};
 
-function FileTableHeader({}: Props) {
+export default function FileTableHeader({ table }: Props) {
   return (
-    <div>FileTableHeader</div>
-  )
+    <TableHeader>
+      {table.getHeaderGroups().map((headerGroup) => (
+        <TableRow key={headerGroup.id}>
+          {headerGroup.headers.map((header) => (
+            <TableHead key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</TableHead>
+          ))}
+        </TableRow>
+      ))}
+    </TableHeader>
+  );
 }
-
-export default FileTableHeader
