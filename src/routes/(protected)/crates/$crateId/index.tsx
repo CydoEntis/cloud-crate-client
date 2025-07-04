@@ -1,18 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Settings } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import BucketStorage from "@/features/storage/components/AvailableStorageIndicator";
+import { useState } from "react";
+import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
 import { ImageUpload } from "@/components/ImageUpload";
-import FileTable from "@/components/FileTable";
 import { useCreateFolder, useRootFolders } from "@/features/folder/hooks";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { FolderBreadcrumb } from "@/components/FolderBreadcrumb";
+
 import FolderContentsView from "@/features/files/components/FolderContentsView";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/")({
@@ -62,7 +53,7 @@ function CrateDetailPage() {
       </div>
 
       <div className="mb-4">
-        <BucketStorage />
+        <AvailableStorageIndicator crateId={crateId} />
         <ImageUpload crateId={crateId} folderId={currentFolderId ?? undefined} />
       </div>
 
