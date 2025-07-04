@@ -6,7 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import BucketStorage from "@/features/bucket/BucketStorage";
+import BucketStorage from "@/features/storage/components/AvailableStorageIndicator";
 
 export const Route = createFileRoute("/(protected)/buckets")({
   component: RouteComponent,

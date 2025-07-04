@@ -14,7 +14,7 @@ const crates: Crate[] = [
   { id: "4", name: "Logs", usedStorage: 400_000_000, color: "bg-green-500" },
 ];
 
-const BucketStorage = () => {
+const AvailableStorageIndicator = () => {
   const usedStorage = crates.reduce((sum, crate) => sum + crate.usedStorage, 0);
   const remainingStorage = Math.max(totalStorage - usedStorage, 0);
 
@@ -59,7 +59,6 @@ const BucketStorage = () => {
         })}
       </div>
 
-      {/* Color Key / Legend */}
       <div className="mt-3 flex gap-4">
         {displayCrates.map((crate) => (
           <div key={crate.id} className="flex items-center gap-2">
@@ -72,4 +71,4 @@ const BucketStorage = () => {
   );
 };
 
-export default BucketStorage;
+export default AvailableStorageIndicator;

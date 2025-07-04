@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import type { Folder } from "../../../dashboard";
-import BucketStorage from "@/features/bucket/BucketStorage";
+import BucketStorage from "@/features/storage/components/AvailableStorageIndicator";
 import { ImageUpload } from "@/components/ImageUpload";
 import FileTable from "@/components/FileTable";
 import { useCreateFolder, useRootFolders } from "@/features/folder/hooks";

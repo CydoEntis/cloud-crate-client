@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Settings } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import BucketStorage from "@/features/bucket/BucketStorage";
+import BucketStorage from "@/features/storage/components/AvailableStorageIndicator";
 import { ImageUpload } from "@/components/ImageUpload";
 import FileTable from "@/components/FileTable";
 import { useCreateFolder, useRootFolders } from "@/features/folder/hooks";

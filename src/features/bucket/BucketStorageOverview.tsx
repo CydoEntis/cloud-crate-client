@@ -1,5 +1,5 @@
 import { Cloud } from "lucide-react";
-import BucketStorage from "./BucketStorage";
+import BucketStorage from "../storage/components/AvailableStorageIndicator";
 
 const BucketStorageOverview = () => {
   return (
