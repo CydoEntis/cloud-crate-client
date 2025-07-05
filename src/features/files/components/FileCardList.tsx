@@ -1,4 +1,4 @@
-import { FileCard } from "./FileCard";
+import FileCard from "./FileCard";
 
 const mockFiles = [
   { filename: "notes.txt" },
@@ -9,7 +9,7 @@ const mockFiles = [
   { filename: "archive.zip" },
 ];
 
-export function FileCardList() {
+function FileCardList() {
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-12 gap-4">
@@ -20,3 +20,5 @@ export function FileCardList() {
     </div>
   );
 }
+
+export default FileCardList;

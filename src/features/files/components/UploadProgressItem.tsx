@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  FileText,
-  FileCode2,
-  FileMusic,
-  FileSpreadsheet,
-  FileImage,
-  FileArchive,
-  File as FileIcon,
-  X,
-} from "lucide-react";
-import { getFileColor, getFileExtension, getFileIcon } from "../util/file.utils";
+import { X } from "lucide-react";
+import { getFileColor, getFileExtension, getFileIcon } from "../util";
 
 type UploadProgressItemProps = {
   fileName: string;
@@ -17,7 +8,7 @@ type UploadProgressItemProps = {
   onClose?: () => void;
 };
 
-export function UploadProgressItem({ fileName, percent, onClose }: UploadProgressItemProps) {
+function UploadProgressItem({ fileName, percent, onClose }: UploadProgressItemProps) {
   const [visible, setVisible] = useState(true);
 
   const ext = getFileExtension(fileName);
@@ -72,3 +63,5 @@ export function UploadProgressItem({ fileName, percent, onClose }: UploadProgres
     </div>
   );
 }
+
+export default UploadProgressItem;

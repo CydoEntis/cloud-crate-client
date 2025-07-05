@@ -1,5 +1,5 @@
 import { MoreVertical } from "lucide-react";
-import { getFileColor } from "./util/file.utils";
+import { getFileColor } from "../util";
 
 type RecentFileProps = {
   name: string;
@@ -8,7 +8,7 @@ type RecentFileProps = {
   icon: React.ReactNode;
 };
 
-export const RecentFile = ({ name, size, extension, icon }: RecentFileProps) => {
+function RecentFile({ name, size, extension, icon }: RecentFileProps) {
   const bg = getFileColor(extension);
   return (
     <div className="flex justify-between items-center w-[300px] border rounded-xl p-2 shadow-sm">
@@ -28,4 +28,6 @@ export const RecentFile = ({ name, size, extension, icon }: RecentFileProps) => 
       </div>
     </div>
   );
-};
+}
+
+export default RecentFile;

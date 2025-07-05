@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const uploadFileSchema = z.object({
+export const UploadFileSchema = z.object({
   files: z
     .array(z.instanceof(File))
     .min(1, "Please select at least one file")

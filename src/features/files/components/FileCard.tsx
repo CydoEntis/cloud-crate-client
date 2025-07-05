@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { getFileColor, getFileIcon } from "../util/file.utils";
+import { getFileColor, getFileIcon } from "../util";
 
 type FileCardProps = {
   filename: string;
 };
 
-export function FileCard({ filename }: FileCardProps) {
+function FileCard({ filename }: FileCardProps) {
   const extension = filename.split(".").pop()?.toLowerCase() || "default";
   const Icon = getFileIcon(extension);
   const color = getFileColor(extension);
@@ -28,3 +28,5 @@ export function FileCard({ filename }: FileCardProps) {
     </div>
   );
 }
+
+export default FileCard;

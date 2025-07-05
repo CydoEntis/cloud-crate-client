@@ -10,7 +10,7 @@ type FileTableProps = {
   onRowClick?: (file: StoredFile) => void;
 };
 
-export default function FileTable({ data, columns, onRowClick }: FileTableProps) {
+function FileTable({ data, columns, onRowClick }: FileTableProps) {
   const table = useReactTable<StoredFile>({
     data,
     columns,
@@ -28,3 +28,5 @@ export default function FileTable({ data, columns, onRowClick }: FileTableProps)
     </Table>
   );
 }
+
+export default FileTable;

@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 
-type Props = {
+type FilePaginationProps = {
   page: number;
   pageSize: number;
   totalCount: number;
   onPageChange: (page: number) => void;
 };
 
-export default function FilePagination({ page, pageSize, totalCount, onPageChange }: Props) {
+function FilePagination({ page, pageSize, totalCount, onPageChange }: FilePaginationProps) {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
@@ -26,3 +26,5 @@ export default function FilePagination({ page, pageSize, totalCount, onPageChang
     </div>
   );
 }
+
+export default FilePagination;

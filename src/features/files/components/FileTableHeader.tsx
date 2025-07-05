@@ -3,11 +3,11 @@ import { flexRender } from "@tanstack/react-table";
 import type { Table } from "@tanstack/react-table";
 import type { StoredFile } from "@/features/files/types";
 
-type Props = {
+type FileTableHeaderProps = {
   table: Table<StoredFile>;
 };
 
-export default function FileTableHeader({ table }: Props) {
+function FileTableHeader({ table }: FileTableHeaderProps) {
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
@@ -20,3 +20,5 @@ export default function FileTableHeader({ table }: Props) {
     </TableHeader>
   );
 }
+
+export default FileTableHeader;

@@ -1,4 +1,4 @@
-import { getFileColor, getFileIcon } from "@/features/files/util/file.utils";
+import { getFileColor, getFileIcon } from "@/features/files/util";
 import { Folder } from "lucide-react";
 
 type FileIndicatorProps = {

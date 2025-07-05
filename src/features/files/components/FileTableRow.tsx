@@ -2,12 +2,12 @@ import { TableRow, TableCell } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
 import type { StoredFile } from "@/features/files/types";
 
-type Props = {
+type FileTableRowProps = {
   row: any;
   onClick?: (file: StoredFile) => void;
 };
 
-export default function FileTableRow({ row, onClick }: Props) {
+function FileTableRow({ row, onClick }: FileTableRowProps) {
   const rowData: StoredFile = row.original;
   return (
     <TableRow
@@ -30,3 +30,5 @@ export default function FileTableRow({ row, onClick }: Props) {
     </TableRow>
   );
 }
+
+export default FileTableRow;

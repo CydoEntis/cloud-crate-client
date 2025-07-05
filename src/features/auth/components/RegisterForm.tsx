@@ -15,7 +15,7 @@ import { registerSchema } from "../schemas";
 import type { RegisterRequest } from "../types";
 import { useAuthStore } from "../store";
 
-export function RegisterForm() {
+function RegisterForm() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -115,3 +115,5 @@ export function RegisterForm() {
     </div>
   );
 }
+
+export default RegisterForm;

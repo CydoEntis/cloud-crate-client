@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/features/auth";
 import { CreateCrateModal } from "@/features/crates/components/CreateCrateModal";
 import { useGetUserCrates } from "@/features/crates/hooks";
-import { RecentFile } from "@/features/files/RecentFile";
+import { RecentFile } from "@/features/files/components/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
 import { File, FilePlus, FolderIcon, FolderPlus, Image } from "lucide-react";
 import { useEffect } from "react";

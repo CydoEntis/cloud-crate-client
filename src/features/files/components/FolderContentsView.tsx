@@ -7,22 +7,20 @@ import { crateColumns } from "@/features/crates/components/crate-columns";
 import FileTableToolbar from "./FileTableToolbar";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 
-type Props = {
+type FileContentsViewProps = {
   crateId: string;
   folderId: string | null;
   onFolderClick?: (folderId: string | null) => void;
 };
 
-export default function FolderContentsView({ crateId, folderId, onFolderClick }: Props) {
+function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsViewProps) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const pageSize = 10;
 
-  // Use your hook with search param
   const { folders, files, isLoading, error } = useFolderContents(crateId, folderId);
 
-  // Create folder mutation hook
   const createFolderMutation = useCreateFolder();
 
   const combinedData = useMemo<StoredFile[]>(() => {
@@ -38,7 +36,7 @@ export default function FolderContentsView({ crateId, folderId, onFolderClick }:
       isFolder: true,
     }));
 
-    const fileItems = files.map((file) => ({
+    const fileItems = files.map((file: StoredFile) => ({
       id: file.id,
       name: file.name,
       crateId: file.crateId,
@@ -58,7 +56,6 @@ export default function FolderContentsView({ crateId, folderId, onFolderClick }:
     [combinedData, page, pageSize]
   );
 
-  // Folder creation handler called from modal
   const handleCreateFolder = async (name: string, color: string) => {
     if (!name.trim()) return;
 
@@ -74,7 +71,6 @@ export default function FolderContentsView({ crateId, folderId, onFolderClick }:
       setIsCreateFolderOpen(false);
     } catch (err) {
       console.error("Failed to create folder", err);
-      // You can add error UI here if you want
     }
   };
 
@@ -91,7 +87,7 @@ export default function FolderContentsView({ crateId, folderId, onFolderClick }:
       <FileTable
         data={paginated}
         columns={crateColumns}
-        onRowClick={(file) => {
+        onRowClick={(file: StoredFile) => {
           if (file.isFolder) onFolderClick?.(file.id);
         }}
       />
@@ -105,3 +101,5 @@ export default function FolderContentsView({ crateId, folderId, onFolderClick }:
     </div>
   );
 }
+
+export default FolderContentsView;

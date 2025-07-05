@@ -17,7 +17,7 @@ import { extractApiErrors, setFormErrors, type ApiError } from "@/lib/formUtils"
 import { loginSchema } from "../schemas";
 import { useAuthStore } from "../store";
 
-export function LoginForm() {
+function LoginForm() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -116,3 +116,5 @@ export function LoginForm() {
     </div>
   );
 }
+
+export default LoginForm;
