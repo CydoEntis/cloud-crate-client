@@ -12,7 +12,7 @@ import { RecentFile } from "@/features/files/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
 import { File, FilePlus, FolderIcon, FolderPlus, Image } from "lucide-react";
 import { useEffect } from "react";
-import { useCrateModalStore } from "@/features/crates/crateModalStore";
+import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
 
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: RouteComponent,

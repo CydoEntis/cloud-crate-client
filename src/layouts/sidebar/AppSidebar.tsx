@@ -8,7 +8,7 @@ import { useAuthStore } from "@/features/auth/authStore";
 import { Button } from "@/components/ui/button";
 import { useGetUserCrates } from "@/features/crates/hooks";
 import { useUserStore } from "@/features/auth/userStore";
-import { useCrateModalStore } from "@/features/crates/crateModalStore";
+import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
 import { CrateSidebarLinks } from "@/features/crates/components/CrateSideBarLinks";
 import { AddCrateButton } from "@/features/crates/components/AddCrateButton";
 import UpgradeAccountButton from "@/components/UpgradeAccountButton";

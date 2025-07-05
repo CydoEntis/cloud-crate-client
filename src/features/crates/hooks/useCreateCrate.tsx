@@ -1,6 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createCrate, getUserCrates } from "./api";
-import type { Crate } from "./types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCrate } from "../api";
 
 export const useCreateCrate = () => {
   const queryClient = useQueryClient();
@@ -12,13 +11,7 @@ export const useCreateCrate = () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
     onError: (error) => {
-      console.log(error);
+      console.error(error);
     },
   });
 };
-
-export const useGetUserCrates = () =>
-  useQuery<Crate[]>({
-    queryKey: ["crates"],
-    queryFn: getUserCrates,
-  });

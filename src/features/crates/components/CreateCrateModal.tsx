@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { createCrateSchema } from "../schemas";
 import type { CreateCrateRequest } from "../types";
-import { useCrateModalStore } from "../crateModalStore";
+import { useCrateModalStore } from "../store/crateModalStore";
 import { useCreateCrate } from "../hooks";
 import { extractApiErrors } from "@/lib/formUtils";
 import { useState } from "react";
