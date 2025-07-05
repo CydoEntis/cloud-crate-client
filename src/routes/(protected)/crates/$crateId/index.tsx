@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
 import { ImageUpload } from "@/components/ImageUpload";
-import { useCreateFolder, useRootFolders } from "@/features/folder/hooks";
 
 import FolderContentsView from "@/features/files/components/FolderContentsView";
 
@@ -13,37 +12,11 @@ export const Route = createFileRoute("/(protected)/crates/$crateId/")({
 function CrateDetailPage() {
   const { crateId } = Route.useParams();
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
-  const [newFolderName, setNewFolderName] = useState("");
   const navigate = useNavigate();
-  const { data: rootFolders = [], refetch } = useRootFolders(crateId);
-  const createFolderMutation = useCreateFolder();
 
-  const handleCreateFolder = async () => {
-    if (!newFolderName.trim()) return;
-
-    await createFolderMutation.mutateAsync({
-      crateId,
-      data: {
-        name: newFolderName.trim(),
-        crateId,
-        parentFolderId: currentFolderId,
-      },
-    });
-
-    setNewFolderName("");
-    refetch();
-  };
-
-  // Update navigation and state on folder click
   const handleNavigate = (folderId: string | null) => {
     setCurrentFolderId(folderId);
-
-    if (folderId) {
-      navigate({ to: `/crates/${crateId}/folders/${folderId}` });
-    } else {
-      // Navigate to root folder view
-      navigate({ to: `/crates/${crateId}` });
-    }
+    navigate({ to: folderId ? `/crates/${crateId}/folders/${folderId}` : `/crates/${crateId}` });
   };
 
   return (

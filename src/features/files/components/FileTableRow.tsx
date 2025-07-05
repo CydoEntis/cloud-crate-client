@@ -5,19 +5,41 @@ import type { StoredFile } from "@/features/files/types";
 type FileTableRowProps = {
   row: any;
   onClick?: (file: StoredFile) => void;
+  onDropFolder?: (sourceFolderId: string, targetFolderId: string) => void;
 };
 
-function FileTableRow({ row, onClick }: FileTableRowProps) {
+function FileTableRow({ row, onClick, onDropFolder }: FileTableRowProps) {
   const rowData: StoredFile = row.original;
+
+  const isFolder = rowData.isFolder;
+
   return (
     <TableRow
       key={row.id}
+      draggable={isFolder}
       onClick={(event) => {
-        if (rowData.isFolder && !(event.target as HTMLElement).closest(".actions-cell")) {
+        if (isFolder && !(event.target as HTMLElement).closest(".actions-cell")) {
           onClick?.(rowData);
         }
       }}
-      className={rowData.isFolder ? "cursor-pointer hover:bg-muted/30" : ""}
+      onDragStart={(e) => {
+        if (isFolder) {
+          e.dataTransfer.setData("text/plain", rowData.id); // drag source folderId
+        }
+      }}
+      onDragOver={(e) => {
+        // Allow dropping on folders only
+        if (isFolder) {
+          e.preventDefault();
+        }
+      }}
+      onDrop={(e) => {
+        const draggedId = e.dataTransfer.getData("text/plain");
+        if (isFolder && draggedId && draggedId !== rowData.id) {
+          onDropFolder?.(draggedId, rowData.id);
+        }
+      }}
+      className={isFolder ? "cursor-pointer hover:bg-muted/30" : ""}
     >
       {row.getVisibleCells().map((cell: any) => (
         <TableCell

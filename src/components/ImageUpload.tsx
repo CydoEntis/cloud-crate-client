@@ -2,10 +2,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import { Upload } from "lucide-react";
-import { uploadFileSchema } from "@/features/files/schemas";
 import type { UploadFileInput } from "@/features/files/types";
 import { useUploadFile } from "@/features/files/hooks";
-import { UploadProgressItem } from "@/features/files/components/UploadProgressItem";
+import { UploadFileSchema, UploadProgressItem } from "@/features/files";
 
 type ImageUploadProps = {
   crateId: string;
@@ -14,7 +13,7 @@ type ImageUploadProps = {
 
 export function ImageUpload({ crateId, folderId }: ImageUploadProps) {
   const { register, handleSubmit, setValue, watch, formState } = useForm<UploadFileInput>({
-    resolver: zodResolver(uploadFileSchema),
+    resolver: zodResolver(UploadFileSchema),
     defaultValues: {
       folderId,
       files: [],

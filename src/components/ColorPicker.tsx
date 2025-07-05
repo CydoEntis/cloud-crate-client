@@ -35,7 +35,7 @@ export function ColorPicker({ control, name }: ColorPickerProps) {
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Crate Color</label>
+      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Select Color</label>
       <div className="flex items-center overflow-x-auto">
         {colorOptions.map((color) => {
           const selected = value === color.value;

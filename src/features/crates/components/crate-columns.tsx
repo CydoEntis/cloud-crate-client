@@ -13,10 +13,10 @@ const crateColumns = [
     cell: (info) => {
       const fileName = info.getValue();
       const row = info.row.original;
-
+      console.log(row);
       return (
         <div className="flex gap-2 items-center">
-          <FileIndicator filename={fileName} isFolder={row.isFolder} />
+          <FileIndicator filename={fileName} isFolder={row.isFolder} folderColor={row.folderColor} />
           <h4 className="font-bold">{fileName}</h4>
         </div>
       );

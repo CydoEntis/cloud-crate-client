@@ -1,9 +1,11 @@
-import type { ApiResponse } from "@/features/auth";
-import type { CreateFolderRequest, Folder } from "../types";
-import { FolderSchema } from "../schemas";
 import api from "@/lib/api";
+import type { CreateFolderRequest } from "../types";
 
-export const createFolder = async (crateId: string, data: CreateFolderRequest): Promise<Folder> => {
-  const response = await api.post<ApiResponse<Folder>>(`/crates/${crateId}/folders`, data);
-  return FolderSchema.parse(response.data.data);
+export const createFolder = async (crateId: string, data: CreateFolderRequest): Promise<void> => {
+  const payload = {
+    ...data,
+    parentFolderId: data.parentFolderId === "root" ? null : data.parentFolderId,
+  };
+
+  await api.post(`/crates/${crateId}/folders`, payload);
 };

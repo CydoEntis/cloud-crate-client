@@ -4,13 +4,13 @@ import QuickAccessCard from "@/components/QuickAccessCard";
 import SectionOverview from "@/components/SectionOverview";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/features/auth";
-import { CreateCrateModal } from "@/features/crates/components/CreateCrateModal";
 import { useGetUserCrates } from "@/features/crates/hooks";
-import { RecentFile } from "@/features/files/components/RecentFile";
 import { createFileRoute } from "@tanstack/react-router";
 import { File, FilePlus, FolderIcon, FolderPlus, Image } from "lucide-react";
 import { useEffect } from "react";
 import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
+import { CreateCrateModal } from "@/features/crates";
+import { RecentFile } from "@/features/files";
 
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: RouteComponent,

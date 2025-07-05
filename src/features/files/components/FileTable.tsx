@@ -8,9 +8,10 @@ type FileTableProps = {
   data: StoredFile[];
   columns: ColumnDef<StoredFile, any>[];
   onRowClick?: (file: StoredFile) => void;
+  onDropFolder?: (sourceFolderId: string, targetFolderId: string) => void;
 };
 
-function FileTable({ data, columns, onRowClick }: FileTableProps) {
+function FileTable({ data, columns, onRowClick, onDropFolder }: FileTableProps) {
   const table = useReactTable<StoredFile>({
     data,
     columns,
@@ -22,7 +23,7 @@ function FileTable({ data, columns, onRowClick }: FileTableProps) {
       <FileTableHeader table={table} />
       <TableBody>
         {table.getRowModel().rows.map((row) => (
-          <FileTableRow key={row.id} row={row} onClick={onRowClick} />
+          <FileTableRow key={row.id} row={row} onClick={onRowClick} onDropFolder={onDropFolder} />
         ))}
       </TableBody>
     </Table>

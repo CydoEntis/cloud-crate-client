@@ -23,6 +23,7 @@ export const StoredFileSchema = z.object({
   uploadDate: z.string().optional().default(""),
   uploadedBy: z.string().optional().default(""),
   isFolder: z.boolean().optional(),
+  folderColor: z.string().optional(),
 });
 
 export const StoredFileListSchema = z.array(StoredFileSchema);

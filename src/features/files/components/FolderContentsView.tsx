@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useFolderContents, useCreateFolder } from "@/features/folder/hooks";
+import { useFolderContents, useCreateFolder, useMoveFolder } from "@/features/folder/hooks";
 import type { StoredFile } from "@/features/files/types";
 import FileTable from "./FileTable";
 import FilePagination from "./FilePagination";
@@ -19,9 +19,15 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const pageSize = 10;
 
-  const { folders, files, isLoading, error } = useFolderContents(crateId, folderId);
-
+  const {
+    folders,
+    files,
+    isLoading,
+    error,
+    refetchFolders, // ⬅️ add this
+  } = useFolderContents(crateId, folderId);
   const createFolderMutation = useCreateFolder();
+  const moveFolderMutation = useMoveFolder();
 
   const combinedData = useMemo<StoredFile[]>(() => {
     const folderItems = folders.map((f) => ({
@@ -34,6 +40,7 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
       uploadDate: f.createdAt ?? "",
       uploadedBy: "",
       isFolder: true,
+      folderColor: f.color,
     }));
 
     const fileItems = files.map((file: StoredFile) => ({
@@ -63,14 +70,33 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
       await createFolderMutation.mutateAsync({
         crateId,
         data: {
-          name: name.trim(),
+          name,
           crateId,
-          parentFolderId: folderId,
+          parentFolderId: folderId ?? "root",
+          color,
         },
       });
+
       setIsCreateFolderOpen(false);
+
+      // 🔄 Ensure UI updates
+      await refetchFolders();
     } catch (err) {
       console.error("Failed to create folder", err);
+    }
+  };
+
+  const handleDropFolder = async (sourceFolderId: string, targetFolderId: string) => {
+    if (sourceFolderId === targetFolderId) return;
+
+    try {
+      await moveFolderMutation.mutateAsync({
+        crateId,
+        folderId: sourceFolderId,
+        newParentId: targetFolderId,
+      });
+    } catch (err) {
+      console.error("Failed to move folder", err);
     }
   };
 
@@ -90,6 +116,7 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
         onRowClick={(file: StoredFile) => {
           if (file.isFolder) onFolderClick?.(file.id);
         }}
+        onDropFolder={handleDropFolder} // 🧩 Pass drop handler
       />
       <FilePagination page={page} pageSize={pageSize} totalCount={combinedData.length} onPageChange={setPage} />
 
