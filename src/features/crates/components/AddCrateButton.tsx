@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { useCrateModalStore } from "../store/crateModalStore";
 import { useUserStore } from "@/features/auth";
 
-export function AddCrateButton() {
+function AddCrateButton() {
   const { open } = useCrateModalStore();
   const { user } = useUserStore();
 
@@ -25,3 +25,5 @@ export function AddCrateButton() {
     </SidebarMenuItem>
   );
 }
+
+export default AddCrateButton;

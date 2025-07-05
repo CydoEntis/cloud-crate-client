@@ -11,7 +11,7 @@ import { extractApiErrors } from "@/lib/formUtils";
 import { useState } from "react";
 import { ColorPicker } from "@/components/ColorPicker";
 
-export function CreateCrateModal() {
+function CreateCrateModal() {
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
   const [error, setError] = useState("");
@@ -60,3 +60,5 @@ export function CreateCrateModal() {
     </Dialog>
   );
 }
+
+export default CreateCrateModal;

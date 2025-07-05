@@ -6,7 +6,7 @@ import type { StoredFile } from "../../files/types";
 
 const columnHelper = createColumnHelper<StoredFile>();
 
-export const crateColumns = [
+const crateColumns = [
   columnHelper.accessor("name", {
     header: "Name",
     meta: { width: "60%" },
@@ -74,3 +74,5 @@ export const crateColumns = [
     },
   }),
 ];
+
+export default crateColumns;

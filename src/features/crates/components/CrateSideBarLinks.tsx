@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import SidebarNavlink from "@/layouts/sidebar/SidebarNavlink";
 import { useUserStore } from "@/features/auth";
 
-export function CrateSidebarLinks() {
+function CrateSidebarLinks() {
   const { data: crates, isLoading } = useGetUserCrates();
   const { user } = useUserStore();
 
@@ -42,3 +42,5 @@ export function CrateSidebarLinks() {
     </>
   );
 }
+
+export default CrateSidebarLinks;
