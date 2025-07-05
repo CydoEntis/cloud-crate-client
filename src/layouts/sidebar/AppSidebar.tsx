@@ -11,7 +11,7 @@ import { useUserStore } from "@/features/auth/userStore";
 import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
 import { CrateSidebarLinks } from "@/features/crates/components/CrateSideBarLinks";
 import { AddCrateButton } from "@/features/crates/components/AddCrateButton";
-import UpgradeAccountButton from "@/components/UpgradeAccountButton";
+import UpgradeAccountButton from "@/features/account/components/UpgradeAccountButton";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
