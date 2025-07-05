@@ -2,7 +2,7 @@ import FileIndicator from "@/components/FileIndicator";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
-import type { StoredFile } from "../files/types";
+import type { StoredFile } from "../../files/types";
 
 const columnHelper = createColumnHelper<StoredFile>();
 

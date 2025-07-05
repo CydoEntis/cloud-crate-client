@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { bucketColumns } from "@/features/bucket/crate-columns";
-import type { StoredFile } from "@/features/bucket/crate-columns";
+import { bucketColumns } from "@/features/crates/components/crate-columns";
+import type { StoredFile } from "@/features/crates/components/crate-columns";
 import { createFileRoute } from "@tanstack/react-router";
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import { Plus, Search } from "lucide-react";

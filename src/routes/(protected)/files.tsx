@@ -1,8 +1,6 @@
 import { Settings } from "lucide-react";
-import { ImageUpload } from "@/components/ImageUpload";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/features/bucket/FileTable";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(protected)/files")({

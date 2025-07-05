@@ -4,7 +4,7 @@ import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-tabl
 import { Button } from "./ui/button";
 import type { StoredFile } from "@/features/files/types";
 import { useFolderContents } from "@/features/folder/hooks";
-import { crateColumns } from "@/features/bucket/crate-columns";
+import { crateColumns } from "@/features/crates/components/crate-columns";
 
 type FileTableProps = {
   crateId: string;
@@ -32,10 +32,10 @@ function FileTable({ crateId, folderId, onFolderClick }: FileTableProps) {
       name: f.name,
       crateId: f.crateId,
       folderId: f.parentFolderId ?? null,
-      size: 0, // folders have size 0
+      size: 0,
       mimeType: "folder",
       uploadDate: f.createdAt ?? "",
-      uploadedBy: "", // you can map uploader if available
+      uploadedBy: "",
       isFolder: true,
     }));
 
