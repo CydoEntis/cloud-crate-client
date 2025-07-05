@@ -4,7 +4,6 @@ import QuickAccessCard from "@/components/QuickAccessCard";
 import SectionOverview from "@/components/SectionOverview";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/features/auth";
-import UpgradeCTA from "@/features/bucket/UpgradeCTA";
 import { CreateCrateModal } from "@/features/crates/components/CreateCrateModal";
 import { useGetUserCrates } from "@/features/crates/hooks";
 import { RecentFile } from "@/features/files/RecentFile";
@@ -179,7 +178,6 @@ function RouteComponent() {
             </SectionOverview>
           </section>
           <aside className="col-span-1 flex flex-col gap-4">
-            <UpgradeCTA />
             <div className="flex flex-col gap-4">
               <h3 className="font-bold text-lg">Quick Access</h3>
               {folders.map((folder) => (
