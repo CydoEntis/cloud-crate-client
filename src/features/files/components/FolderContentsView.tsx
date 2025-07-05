@@ -3,9 +3,9 @@ import { useFolderContents, useCreateFolder } from "@/features/folder/hooks";
 import type { StoredFile } from "@/features/files/types";
 import FileTable from "./FileTable";
 import FilePagination from "./FilePagination";
-import { crateColumns } from "@/features/crates/components/crate-columns";
 import FileTableToolbar from "./FileTableToolbar";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
+import crateColumns from "@/features/crates/components/crate-columns";
 
 type FileContentsViewProps = {
   crateId: string;

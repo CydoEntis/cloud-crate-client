@@ -16,7 +16,7 @@ type Props = {
   onCreate: (name: string, color: string) => void;
 };
 
-export default function CreateFolderModal({ isOpen, onClose, onCreate }: Props) {
+function CreateFolderModal({ isOpen, onClose, onCreate }: Props) {
   const [error, setError] = useState("");
 
   const form = useForm<FormData>({
@@ -92,3 +92,5 @@ export default function CreateFolderModal({ isOpen, onClose, onCreate }: Props) 
     </Dialog>
   );
 }
+
+export default CreateFolderModal;

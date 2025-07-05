@@ -20,3 +20,5 @@ function FolderBrowser({ crateId }: { crateId: string }) {
     </div>
   );
 }
+
+export default FolderBrowser;

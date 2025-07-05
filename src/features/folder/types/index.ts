@@ -1,5 +1,5 @@
 import type z from "zod";
-import type { FolderSchema, CreateFolderRequestSchema, MoveFolderRequestSchema } from "./schemas";
+import type { CreateFolderRequestSchema, FolderSchema, MoveFolderRequestSchema } from "../schemas";
 
 export type Folder = z.infer<typeof FolderSchema>;
 
@@ -11,3 +11,4 @@ export type CreateFolderArgs = {
   crateId: string;
   data: CreateFolderRequest;
 };
+
