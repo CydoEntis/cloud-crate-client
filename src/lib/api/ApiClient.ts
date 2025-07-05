@@ -1,5 +1,5 @@
+import { useAuthStore } from "@/features/auth";
 import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
-import { useAuthStore } from "@/features/auth/authStore";
 
 export class ApiService {
   private api: AxiosInstance;

@@ -1,6 +1,6 @@
 import type z from "zod";
-import type { loginSchema, registerSchema } from "./schemas";
 import type { ApiError } from "@/lib/formUtils";
+import type { loginSchema, registerSchema } from "../schemas";
 
 export type LoginRequest = z.infer<typeof loginSchema>;
 export type RegisterRequest = z.infer<typeof registerSchema>;
@@ -20,4 +20,9 @@ export type UserResponse = {
   crateLimit: number;
   crateCount: number;
   usedStorage: number;
+};
+
+export type RegisterResponse = {
+  token: string;
+  userId: string;
 };

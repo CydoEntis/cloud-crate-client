@@ -12,10 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Link } from "@tanstack/react-router";
 
 import { useLogin } from "../hooks";
-import { useAuthStore } from "../authStore";
-import { loginSchema } from "../schemas";
 import type { LoginRequest } from "../types";
 import { extractApiErrors, setFormErrors, type ApiError } from "@/lib/formUtils";
+import { loginSchema } from "../schemas";
+import { useAuthStore } from "../store";
 
 export function LoginForm() {
   const navigate = useNavigate();

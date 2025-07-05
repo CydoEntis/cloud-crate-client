@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -11,10 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Link } from "@tanstack/react-router";
 
 import { useRegister } from "../hooks";
-import { useAuthStore } from "../authStore";
 import { setFormErrors, type ApiError } from "@/lib/formUtils";
 import { registerSchema } from "../schemas";
 import type { RegisterRequest } from "../types";
+import { useAuthStore } from "../store";
 
 export function RegisterForm() {
   const navigate = useNavigate();
@@ -33,8 +32,8 @@ export function RegisterForm() {
 
   async function onSubmit(data: RegisterRequest) {
     try {
-      const { token, userId } = await register(data);
-      setAuth(token, userId);
+      const { token } = await register(data);
+      setAuth(token);
       navigate({ to: "/" });
     } catch (err: any) {
       if (err.response?.data && Array.isArray(err.response.data)) {

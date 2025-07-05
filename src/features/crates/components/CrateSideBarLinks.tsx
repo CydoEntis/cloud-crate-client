@@ -3,7 +3,7 @@ import { useGetUserCrates } from "../hooks";
 import { Box } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SidebarNavlink from "@/layouts/sidebar/SidebarNavlink";
-import { useUserStore } from "@/features/auth/userStore";
+import { useUserStore } from "@/features/auth";
 
 export function CrateSidebarLinks() {
   const { data: crates, isLoading } = useGetUserCrates();

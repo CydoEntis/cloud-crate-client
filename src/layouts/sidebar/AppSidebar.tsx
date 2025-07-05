@@ -4,14 +4,11 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import logo from "@/assets/cloud-crate-logo.png";
 import SidebarNavlink from "./SidebarNavlink";
 import { Files, LayoutDashboard, Settings, Star, Trash2, Users2, Plus, Box, Award } from "lucide-react";
-import { useAuthStore } from "@/features/auth/authStore";
 import { Button } from "@/components/ui/button";
-import { useGetUserCrates } from "@/features/crates/hooks";
-import { useUserStore } from "@/features/auth/userStore";
-import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
 import { CrateSidebarLinks } from "@/features/crates/components/CrateSideBarLinks";
 import { AddCrateButton } from "@/features/crates/components/AddCrateButton";
 import UpgradeAccountButton from "@/features/account/components/UpgradeAccountButton";
+import { useAuthStore, useUserStore } from "@/features/auth";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
