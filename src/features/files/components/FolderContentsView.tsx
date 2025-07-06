@@ -19,28 +19,22 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const pageSize = 10;
 
-  const {
-    folders,
-    files,
-    isLoading,
-    error,
-    refetchFolders, // ⬅️ add this
-  } = useFolderContents(crateId, folderId);
+  const { folders, files, isLoading, error, refetchFolders } = useFolderContents(crateId, folderId);
   const createFolderMutation = useCreateFolder();
   const moveFolderMutation = useMoveFolder();
 
   const combinedData = useMemo<StoredFile[]>(() => {
-    const folderItems = folders.map((f) => ({
-      id: f.id,
-      name: f.name,
-      crateId: f.crateId,
-      folderId: f.parentFolderId ?? null,
+    const folderItems = folders.map((folder) => ({
+      id: folder.id,
+      name: folder.name,
+      crateId: folder.crateId,
+      folderId: folder.parentFolderId ?? null,
       size: 0,
       mimeType: "folder",
-      uploadDate: f.createdAt ?? "",
+      uploadDate: folder.createdAt ?? "",
       uploadedBy: "",
       isFolder: true,
-      folderColor: f.color,
+      folderColor: folder.color,
     }));
 
     const fileItems = files.map((file: StoredFile) => ({
@@ -79,7 +73,6 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
 
       setIsCreateFolderOpen(false);
 
-      // 🔄 Ensure UI updates
       await refetchFolders();
     } catch (err) {
       console.error("Failed to create folder", err);
