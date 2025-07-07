@@ -8,22 +8,14 @@ export const useCreateFolder = () => {
   return useMutation({
     mutationFn: ({ crateId, data }: CreateFolderArgs) => createFolder(crateId, data),
     onSuccess: (_, { crateId, data }) => {
-      const key = data.parentFolderId ?? "root"; // always use "root", never null
+      const parentFolderKey = data.parentFolderId ?? "root";
 
       queryClient.invalidateQueries({
         predicate: (query) =>
           Array.isArray(query.queryKey) &&
-          query.queryKey[0] === "folders" &&
+          query.queryKey[0] === "folderContents" &&
           query.queryKey[1] === crateId &&
-          query.queryKey[2] === key,
-      });
-
-      queryClient.invalidateQueries({
-        predicate: (query) =>
-          Array.isArray(query.queryKey) &&
-          query.queryKey[0] === "files" &&
-          query.queryKey[1] === crateId &&
-          query.queryKey[2] === key,
+          query.queryKey[2] === parentFolderKey,
       });
     },
   });

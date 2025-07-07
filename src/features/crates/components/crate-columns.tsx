@@ -1,3 +1,4 @@
+// crateColumns.ts
 import FileIndicator from "@/components/FileIndicator";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,57 +11,61 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { createColumnHelper } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
-import type { StoredFile } from "../../files/types";
+import type { FolderOrFileItem } from "@/features/folder/types";
+import { FolderItemType } from "@/features/folder/types";
 
-const columnHelper = createColumnHelper<StoredFile>();
+const columnHelper = createColumnHelper<FolderOrFileItem>();
 
-const crateColumns = [
+const crateColumns = (options: {
+  onFolderClick?: (folderId: string) => void;
+  onBackClick?: (parentId: string | null) => void;
+  onDropToParent?: (itemIds: string[]) => void;
+}) => [
   columnHelper.accessor("name", {
     header: "Name",
     meta: { width: "60%" },
     cell: (info) => {
       const fileName = info.getValue();
-      const row = info.row.original;
+      const row = info.row.original as FolderOrFileItem & { isBackRow?: boolean };
+      const isBackRow = row.isBackRow === true;
 
       return (
-        <div className="flex gap-2 items-center">
-          <FileIndicator filename={fileName} isFolder={row.isFolder} folderColor={row.folderColor} />
+        <div
+          className={`flex gap-2 items-center w-full px-2 py-1 rounded cursor-pointer ${
+            isBackRow ? "text-muted-foreground italic hover:bg-muted" : "hover:bg-accent"
+          }`}
+          onDragOver={(e) => {
+            if (isBackRow) e.preventDefault();
+          }}
+          onDrop={(e) => {
+            if (isBackRow) {
+              try {
+                const ids = JSON.parse(e.dataTransfer.getData("application/json")) as string[];
+                options.onDropToParent?.(ids);
+              } catch {
+                // ignore
+              }
+            }
+          }}
+        >
+          <FileIndicator
+            filename={fileName}
+            isFolder={row.type === FolderItemType.Folder}
+            folderColor={row.color ?? "#9CA3AF"}
+          />
           <h4 className="font-bold">{fileName}</h4>
         </div>
       );
     },
   }),
 
-  columnHelper.accessor("uploadedBy", {
-    header: "Uploaded By",
-    meta: { width: "15%" },
-    cell: (info) => <p>{info.getValue()}</p>,
-  }),
-
-  columnHelper.accessor("size", {
+  columnHelper.accessor("sizeInBytes", {
     header: "Size",
     meta: { width: "10%" },
     cell: (info) => {
-      const size = info.getValue() as number;
-      return <p>{size === 0 ? "-" : `${size} MB`}</p>;
-    },
-  }),
-
-  columnHelper.accessor("uploadDate", {
-    header: "Uploaded At",
-    meta: { width: "10%" },
-    cell: (info) => {
-      const raw = info.getValue();
-      if (!raw) return <p>-</p>;
-
-      const date = new Date(raw);
-      const formatted = date.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-
-      return <p>{formatted}</p>;
+      const size = info.getValue() as number | undefined;
+      if (size === undefined) return <p>-</p>;
+      return <p>{size === 0 ? "-" : `${(size / (1024 * 1024)).toFixed(2)} MB`}</p>;
     },
   }),
 
@@ -69,6 +74,7 @@ const crateColumns = [
     meta: { width: "5%" },
     cell: (info) => {
       const row = info.row.original;
+      if ((row as any).isBackRow) return null;
 
       return (
         <DropdownMenu>
@@ -77,38 +83,13 @@ const crateColumns = [
               <MoreVertical size={20} />
             </Button>
           </DropdownMenuTrigger>
-
           <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log("Rename", row);
-              }}
-            >
-              Rename
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log("Delete", row);
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
-
-            {row.isFolder && (
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log("Change color", row);
-                }}
-              >
-                Change Color
-              </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => e.stopPropagation()}>Rename</DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => e.stopPropagation()}>Delete</DropdownMenuItem>
+            {row.type === FolderItemType.Folder && (
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>Change Color</DropdownMenuItem>
             )}
           </DropdownMenuContent>
         </DropdownMenu>

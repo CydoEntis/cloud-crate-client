@@ -2,9 +2,10 @@ import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
 import type { Table } from "@tanstack/react-table";
 import type { StoredFile } from "@/features/files/types";
+import type { FolderOrFileItem } from "@/features/folder";
 
 type FileTableHeaderProps = {
-  table: Table<StoredFile>;
+  table: Table<FolderOrFileItem>;
 };
 
 function FileTableHeader({ table }: FileTableHeaderProps) {

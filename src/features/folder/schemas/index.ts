@@ -23,3 +23,24 @@ export const FolderResponseSchema = FolderSchema;
 export const MoveFolderRequestSchema = z.object({
   newParentId: z.string().uuid().nullable(),
 });
+
+export const FolderItemTypeSchema = z.enum(["Folder", "File"]);
+
+export const FolderOrFileItemSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  type: FolderItemTypeSchema,
+  crateId: z.string().uuid(),
+  parentFolderId: z.string().uuid().nullable().optional(),
+  mimeType: z.string().nullable().optional(),
+  sizeInBytes: z.number().int().nullable().optional(),
+  color: z.string().nullable().optional(),
+});
+
+export const FolderContentsResponseSchema = z.object({
+  items: z.array(FolderOrFileItemSchema),
+  totalCount: z.number().int(),
+  page: z.number().int(),
+  pageSize: z.number().int(),
+  parentFolderId: z.string().uuid().nullable().optional(),
+});

@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect } from "react";
 import { useFolderContents, useCreateFolder, useMoveFolder } from "@/features/folder/hooks";
-import type { StoredFile } from "@/features/files/types";
 import FileTable from "./FileTable";
 import FilePagination from "./FilePagination";
 import FileTableToolbar from "./FileTableToolbar";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import crateColumns from "@/features/crates/components/crate-columns";
+import { FolderItemType } from "@/features/folder/types";
 
-type FileContentsViewProps = {
+export type FileContentsViewProps = {
   crateId: string;
   folderId: string | null;
   onFolderClick?: (folderId: string | null) => void;
@@ -19,44 +19,39 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const pageSize = 10;
 
-  const { folders, files, isLoading, error, refetchFolders } = useFolderContents(crateId, folderId);
+  const { data, isLoading, error, refetch } = useFolderContents(crateId, folderId, {
+    page,
+    pageSize,
+    search,
+  });
+
   const createFolderMutation = useCreateFolder();
   const moveFolderMutation = useMoveFolder();
 
-  const combinedData = useMemo<StoredFile[]>(() => {
-    const folderItems = folders.map((folder) => ({
-      id: folder.id,
-      name: folder.name,
-      crateId: folder.crateId,
-      folderId: folder.parentFolderId ?? null,
-      size: 0,
-      mimeType: "folder",
-      uploadDate: folder.createdAt ?? "",
-      uploadedBy: "",
-      isFolder: true,
-      folderColor: folder.color,
-    }));
+  const combinedData = useMemo(() => {
+    if (!data) return [];
 
-    const fileItems = files.map((file: StoredFile) => ({
-      id: file.id,
-      name: file.name,
-      crateId: file.crateId,
-      folderId: file.folderId ?? null,
-      size: Math.round((file.size ?? 0) / 1024 / 1024),
-      mimeType: file.mimeType,
-      uploadDate: file.uploadDate ?? file.uploadedBy ?? "",
-      uploadedBy: file.uploadedBy ?? "",
-      isFolder: false,
-    }));
+    const items = data.items.filter((item) => item.id !== "__back");
 
-    return [...folderItems, ...fileItems];
-  }, [folders, files]);
+    if (folderId) {
+      const backFolderId = data.parentFolderId ?? null;
+      return [
+        {
+          id: "__back",
+          name: "..",
+          crateId,
+          parentFolderId: backFolderId,
+          type: FolderItemType.Folder,
+          isBackRow: true,
+          sizeInBytes: 0,
+          mimeType: undefined,
+        },
+        ...items,
+      ];
+    }
 
-  const paginated = useMemo(
-    () => combinedData.slice((page - 1) * pageSize, page * pageSize),
-    [combinedData, page, pageSize]
-  );
-
+    return items;
+  }, [data, folderId, crateId]);
   const handleCreateFolder = async (name: string, color: string) => {
     if (!name.trim()) return;
 
@@ -66,20 +61,19 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
         data: {
           name,
           crateId,
-          parentFolderId: folderId ?? "root",
+          parentFolderId: folderId === "root" ? null : folderId,
           color,
         },
       });
 
       setIsCreateFolderOpen(false);
-
-      await refetchFolders();
+      await refetch();
     } catch (err) {
       console.error("Failed to create folder", err);
     }
   };
 
-  const handleDropFolder = async (sourceFolderId: string, targetFolderId: string) => {
+  const handleDropFolder = async (sourceFolderId: string, targetFolderId: string | null) => {
     if (sourceFolderId === targetFolderId) return;
 
     try {
@@ -88,14 +82,21 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
         folderId: sourceFolderId,
         newParentId: targetFolderId,
       });
+
+      await refetch();
     } catch (err) {
       console.error("Failed to move folder", err);
     }
   };
 
+  const handleDropToParent = async (ids: string[]) => {
+    const parentId = data?.parentFolderId ?? null;
+    await Promise.all(ids.map((id) => handleDropFolder(id, parentId)));
+  };
+
   useEffect(() => {
     setPage(1);
-  }, [search]);
+  }, [search, folderId]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading contents.</p>;
@@ -103,15 +104,24 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
   return (
     <div className="p-4 bg-white rounded-xl mt-8">
       <FileTableToolbar search={search} setSearch={setSearch} onOpenCreateFolder={() => setIsCreateFolderOpen(true)} />
+
       <FileTable
-        data={paginated}
-        columns={crateColumns}
-        onRowClick={(file: StoredFile) => {
-          if (file.isFolder) onFolderClick?.(file.id);
+        data={combinedData}
+        columns={crateColumns({
+          onDropToParent: handleDropToParent,
+        })}
+        onRowClick={(row) => {
+          console.log("CLICKED");
+          if ((row as any).isBackRow) {
+            onFolderClick?.(row.parentFolderId ?? null);
+          } else if (row.type === FolderItemType.Folder) {
+            onFolderClick?.(row.id);
+          }
         }}
-        onDropFolder={handleDropFolder} // 🧩 Pass drop handler
+        onDropFolder={handleDropFolder}
       />
-      <FilePagination page={page} pageSize={pageSize} totalCount={combinedData.length} onPageChange={setPage} />
+
+      <FilePagination page={page} pageSize={pageSize} totalCount={data?.totalCount ?? 0} onPageChange={setPage} />
 
       <CreateFolderModal
         isOpen={isCreateFolderOpen}

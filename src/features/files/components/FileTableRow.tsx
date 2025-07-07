@@ -1,17 +1,17 @@
 import { TableRow, TableCell } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
-import type { StoredFile } from "@/features/files/types";
+import { FolderItemType, type FolderOrFileItem } from "@/features/folder";
 
 type FileTableRowProps = {
   row: any;
-  onClick?: (file: StoredFile) => void;
+  onClick?: (file: FolderOrFileItem) => void;
   onDropFolder?: (sourceFolderId: string, targetFolderId: string) => void;
 };
 
 function FileTableRow({ row, onClick, onDropFolder }: FileTableRowProps) {
-  const rowData: StoredFile = row.original;
+  const rowData: FolderOrFileItem = row.original;
 
-  const isFolder = rowData.isFolder;
+  const isFolder = rowData.type === FolderItemType.Folder;
 
   return (
     <TableRow
@@ -24,11 +24,10 @@ function FileTableRow({ row, onClick, onDropFolder }: FileTableRowProps) {
       }}
       onDragStart={(e) => {
         if (isFolder) {
-          e.dataTransfer.setData("text/plain", rowData.id); // drag source folderId
+          e.dataTransfer.setData("text/plain", rowData.id);
         }
       }}
       onDragOver={(e) => {
-        // Allow dropping on folders only
         if (isFolder) {
           e.preventDefault();
         }

@@ -2,17 +2,17 @@ import { useReactTable, getCoreRowModel, type ColumnDef } from "@tanstack/react-
 import { Table, TableBody } from "@/components/ui/table";
 import FileTableHeader from "./FileTableHeader";
 import FileTableRow from "./FileTableRow";
-import type { StoredFile } from "@/features/files/types";
+import type { FolderOrFileItem } from "@/features/folder/types";
 
 type FileTableProps = {
-  data: StoredFile[];
-  columns: ColumnDef<StoredFile, any>[];
-  onRowClick?: (file: StoredFile) => void;
-  onDropFolder?: (sourceFolderId: string, targetFolderId: string) => void;
+  data: FolderOrFileItem[]; 
+  columns: ColumnDef<FolderOrFileItem, any>[];
+  onRowClick?: (file: FolderOrFileItem) => void;
+  onDropFolder?: (sourceFolderId: string, targetFolderId: string | null) => void;
 };
 
 function FileTable({ data, columns, onRowClick, onDropFolder }: FileTableProps) {
-  const table = useReactTable<StoredFile>({
+  const table = useReactTable<FolderOrFileItem>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
