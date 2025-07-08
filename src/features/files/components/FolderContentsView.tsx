@@ -52,6 +52,7 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
 
     return items;
   }, [data, folderId, crateId]);
+
   const handleCreateFolder = async (name: string, color: string) => {
     if (!name.trim()) return;
 
@@ -109,9 +110,16 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
         data={combinedData}
         columns={crateColumns({
           onDropToParent: handleDropToParent,
+          onBackClick: (id) => {
+            console.log("Back clicked, navigating to:", id);
+            onFolderClick?.(id);
+          },
+          onFolderClick: (id) => {
+            console.log("Folder clicked, navigating to:", id);
+            onFolderClick?.(id);
+          },
         })}
         onRowClick={(row) => {
-          console.log("CLICKED");
           if ((row as any).isBackRow) {
             onFolderClick?.(row.parentFolderId ?? null);
           } else if (row.type === FolderItemType.Folder) {

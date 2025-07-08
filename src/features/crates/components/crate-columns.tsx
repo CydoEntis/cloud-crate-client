@@ -1,4 +1,3 @@
-// crateColumns.ts
 import FileIndicator from "@/components/FileIndicator";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +33,13 @@ const crateColumns = (options: {
           className={`flex gap-2 items-center w-full px-2 py-1 rounded cursor-pointer ${
             isBackRow ? "text-muted-foreground italic hover:bg-muted" : "hover:bg-accent"
           }`}
+          onClick={() => {
+            if (isBackRow) {
+              options.onBackClick?.(row.parentFolderId ?? null);
+            } else if (row.type === FolderItemType.Folder) {
+              options.onFolderClick?.(row.id);
+            }
+          }}
           onDragOver={(e) => {
             if (isBackRow) e.preventDefault();
           }}
@@ -43,7 +49,7 @@ const crateColumns = (options: {
                 const ids = JSON.parse(e.dataTransfer.getData("application/json")) as string[];
                 options.onDropToParent?.(ids);
               } catch {
-                // ignore
+                // ignore invalid JSON or other errors
               }
             }
           }}
