@@ -7,7 +7,6 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/(protected)")({
   beforeLoad: () => {
     const token = useAuthStore.getState().accessToken;
-    console.log(token);
     if (!token) {
       throw redirect({ to: "/login" });
     }

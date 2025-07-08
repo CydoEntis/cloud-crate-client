@@ -15,14 +15,6 @@ function CrateDetailPage() {
 
   const navigate = useNavigate();
 
-  const handleNavigate = (folderId: string | null) => {
-    if (folderId) {
-      navigate({ to: `/crates/${crateId}/folders/${folderId}` });
-    } else {
-      navigate({ to: `/crates/${crateId}` });
-    }
-  };
-
   return (
     <section>
       <div className="flex justify-between items-center border-b border-gray-300 py-2">
@@ -36,7 +28,7 @@ function CrateDetailPage() {
 
       <div>
         <h3 className="text-lg font-semibold mb-2">Root/</h3>
-        <FolderContentsView crateId={crateId} folderId={currentFolderId} onFolderClick={handleNavigate} />
+        <FolderContentsView crateId={crateId} folderId={currentFolderId} />
       </div>
     </section>
   );

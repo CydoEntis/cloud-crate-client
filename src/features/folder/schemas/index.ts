@@ -35,6 +35,7 @@ export const FolderOrFileItemSchema = z.object({
   mimeType: z.string().nullable().optional(),
   sizeInBytes: z.number().int().nullable().optional(),
   color: z.string().nullable().optional(),
+  parentOfCurrentFolderId: z.string().uuid().nullable().optional(),
 });
 
 export const FolderContentsResponseSchema = z.object({
@@ -43,4 +44,5 @@ export const FolderContentsResponseSchema = z.object({
   page: z.number().int(),
   pageSize: z.number().int(),
   parentFolderId: z.string().uuid().nullable().optional(),
+  parentOfCurrentFolderId: z.string().uuid().nullable().optional(),
 });

@@ -6,14 +6,15 @@ import FileTableToolbar from "./FileTableToolbar";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import crateColumns from "@/features/crates/components/crate-columns";
 import { FolderItemType } from "@/features/folder/types";
+import { useNavigate } from "@tanstack/react-router";
 
 export type FileContentsViewProps = {
   crateId: string;
   folderId: string | null;
-  onFolderClick?: (folderId: string | null) => void;
 };
 
-function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsViewProps) {
+function FolderContentsView({ crateId, folderId }: FileContentsViewProps) {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
@@ -27,6 +28,16 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
 
   const createFolderMutation = useCreateFolder();
   const moveFolderMutation = useMoveFolder();
+
+  const handleNavigate = (toFolderId: string | null) => {
+    if (toFolderId) {
+      console.log("NAVIGATING DEEPER");
+      navigate({ to: `/crates/${crateId}/folders/${toFolderId}` });
+    } else {
+      console.log("NAVIGATING HOME");
+      navigate({ to: `/crates/${crateId}` });
+    }
+  };
 
   const combinedData = useMemo(() => {
     if (!data) return [];
@@ -110,20 +121,26 @@ function FolderContentsView({ crateId, folderId, onFolderClick }: FileContentsVi
         data={combinedData}
         columns={crateColumns({
           onDropToParent: handleDropToParent,
-          onBackClick: (id) => {
-            console.log("Back clicked, navigating to:", id);
-            onFolderClick?.(id);
+          onBackClick: () => {
+            if (!data?.parentOfCurrentFolderId) {
+              handleNavigate(null);
+            } else {
+              handleNavigate(data.parentOfCurrentFolderId);
+            }
           },
           onFolderClick: (id) => {
-            console.log("Folder clicked, navigating to:", id);
-            onFolderClick?.(id);
+            handleNavigate(id);
           },
         })}
         onRowClick={(row) => {
           if ((row as any).isBackRow) {
-            onFolderClick?.(row.parentFolderId ?? null);
+            if (!data?.parentFolderId) {
+              handleNavigate(null);
+            } else {
+              handleNavigate(data.parentFolderId);
+            }
           } else if (row.type === FolderItemType.Folder) {
-            onFolderClick?.(row.id);
+            handleNavigate(row.id);
           }
         }}
         onDropFolder={handleDropFolder}

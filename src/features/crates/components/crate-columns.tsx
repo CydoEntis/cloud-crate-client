@@ -33,7 +33,9 @@ const crateColumns = (options: {
           className={`flex gap-2 items-center w-full px-2 py-1 rounded cursor-pointer ${
             isBackRow ? "text-muted-foreground italic hover:bg-muted" : "hover:bg-accent"
           }`}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation(); // ✅ Prevent double trigger
+
             if (isBackRow) {
               options.onBackClick?.(row.parentFolderId ?? null);
             } else if (row.type === FolderItemType.Folder) {
@@ -49,7 +51,7 @@ const crateColumns = (options: {
                 const ids = JSON.parse(e.dataTransfer.getData("application/json")) as string[];
                 options.onDropToParent?.(ids);
               } catch {
-                // ignore invalid JSON or other errors
+                // ignore invalid JSON
               }
             }
           }}
@@ -69,9 +71,9 @@ const crateColumns = (options: {
     header: "Size",
     meta: { width: "10%" },
     cell: (info) => {
-      const size = info.getValue() as number | undefined;
+      const size = info.getValue();
       if (size === undefined) return <p>-</p>;
-      return <p>{size === 0 ? "-" : `${(size / (1024 * 1024)).toFixed(2)} MB`}</p>;
+      return <p>{size === 0 ? "-" : `${(size! / (1024 * 1024)).toFixed(2)} MB`}</p>;
     },
   }),
 
