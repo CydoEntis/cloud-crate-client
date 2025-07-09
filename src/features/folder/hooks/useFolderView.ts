@@ -1,12 +1,11 @@
-// features/folder/hooks/useFolderView.ts
 import { useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useMemo } from "react";
 import { useFolderContents } from "./useFolderContents";
 import { useCreateFolder } from "./useCreateFolder";
 import { useMoveFolder } from "./useMoveFolder";
-import { FolderItemType } from "../types";
-import { getFolderPath } from "../utils/navigation";
+import { getFolderPath } from "../utils/getFolderPath";
 import { injectBackRow } from "../utils/folderItemTransformer";
+import { navigateToFolder } from "../utils/navigateToFolder";
 
 export function useFolderView(crateId: string, folderId: string | null) {
   const navigate = useNavigate();
@@ -25,8 +24,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
   const moveFolderMutation = useMoveFolder();
 
   const handleNavigate = (toFolderId: string | null) => {
-    const path = getFolderPath(crateId, toFolderId);
-    navigate({ to: path });
+    navigateToFolder(navigate, crateId, toFolderId);
   };
 
   const handleCreateFolder = async (name: string, color: string) => {

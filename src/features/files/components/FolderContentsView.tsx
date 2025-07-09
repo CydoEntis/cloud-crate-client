@@ -20,7 +20,7 @@ function FolderContentsView({ crateId, folderId }: FileContentsViewProps) {
     search,
     setSearch,
     setPage,
-    combinedData,
+    folderItemsWithBackRow,
     isCreateFolderOpen,
     setIsCreateFolderOpen,
     handleCreateFolder,
@@ -37,7 +37,7 @@ function FolderContentsView({ crateId, folderId }: FileContentsViewProps) {
     <div className="p-4 bg-white rounded-xl mt-8">
       <FileTableToolbar search={search} setSearch={setSearch} onOpenCreateFolder={() => setIsCreateFolderOpen(true)} />
       <FileTable
-        data={combinedData}
+        data={folderItemsWithBackRow}
         columns={crateColumns({
           onDropToParent: handleDropToParent,
           onBackClick: () => handleNavigate(!data?.parentOfCurrentFolderId ? null : data.parentOfCurrentFolderId),
