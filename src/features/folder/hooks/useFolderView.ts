@@ -59,7 +59,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
     await Promise.all(ids.map((id) => handleDropFolder(id, parentId)));
   };
 
-  const combinedData = useMemo(() => {
+  const folderItemsWithBackRow = useMemo(() => {
     if (!data) return [];
     return injectBackRow(data.items, folderId, data.parentFolderId ?? null, crateId);
   }, [data, folderId, crateId]);
@@ -80,7 +80,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
     isLoading,
     error,
     refetch,
-    combinedData,
+    folderItemsWithBackRow,
     handleNavigate,
     handleCreateFolder,
     handleDropFolder,
