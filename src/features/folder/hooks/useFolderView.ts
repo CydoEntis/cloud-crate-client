@@ -6,6 +6,7 @@ import { useCreateFolder } from "./useCreateFolder";
 import { useMoveFolder } from "./useMoveFolder";
 import { FolderItemType } from "../types";
 import { getFolderPath } from "../utils/navigation";
+import { injectBackRow } from "../utils/folderItemTransformer";
 
 export function useFolderView(crateId: string, folderId: string | null) {
   const navigate = useNavigate();
@@ -60,26 +61,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
 
   const combinedData = useMemo(() => {
     if (!data) return [];
-    const items = data.items.filter((item) => item.id !== "__back");
-
-    if (folderId) {
-      const backFolderId = data.parentFolderId ?? null;
-      return [
-        {
-          id: "__back",
-          name: "..",
-          crateId,
-          parentFolderId: backFolderId,
-          type: FolderItemType.Folder,
-          isBackRow: true,
-          sizeInBytes: 0,
-          mimeType: undefined,
-        },
-        ...items,
-      ];
-    }
-
-    return items;
+    return injectBackRow(data.items, folderId, data.parentFolderId ?? null, crateId);
   }, [data, folderId, crateId]);
 
   useEffect(() => {

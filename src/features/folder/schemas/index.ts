@@ -36,6 +36,7 @@ export const FolderOrFileItemSchema = z.object({
   sizeInBytes: z.number().int().nullable().optional(),
   color: z.string().nullable().optional(),
   parentOfCurrentFolderId: z.string().uuid().nullable().optional(),
+  isBackRow: z.boolean().optional(),
 });
 
 export const FolderContentsResponseSchema = z.object({
