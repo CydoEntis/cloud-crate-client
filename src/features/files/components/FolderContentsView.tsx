@@ -2,7 +2,7 @@ import FileTable from "./FileTable";
 import FilePagination from "./FilePagination";
 import FileTableToolbar from "./FileTableToolbar";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
-import crateColumns from "@/features/crates/components/crate-columns";
+import folderFileTableColumns from "@/features/files/components/table/columns/folderFileTableColumns";
 import { FolderItemType } from "@/features/folder/types";
 import { useFolderView } from "@/features/folder/hooks/useFolderView";
 
@@ -38,7 +38,7 @@ function FolderContentsView({ crateId, folderId }: FileContentsViewProps) {
       <FileTableToolbar search={search} setSearch={setSearch} onOpenCreateFolder={() => setIsCreateFolderOpen(true)} />
       <FileTable
         data={folderItemsWithBackRow}
-        columns={crateColumns({
+        columns={folderFileTableColumns({
           onDropToParent: handleDropToParent,
           onBackClick: () => handleNavigate(!data?.parentOfCurrentFolderId ? null : data.parentOfCurrentFolderId),
           onFolderClick: handleNavigate,

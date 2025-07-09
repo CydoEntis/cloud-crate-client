@@ -13,8 +13,6 @@ function CrateDetailPage() {
 
   const currentFolderId = folderId ?? null;
 
-  const navigate = useNavigate();
-
   return (
     <section>
       <div className="flex justify-between items-center border-b border-gray-300 py-2">

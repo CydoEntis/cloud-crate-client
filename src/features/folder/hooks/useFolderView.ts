@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from "react";
 import { useFolderContents } from "./useFolderContents";
 import { useCreateFolder } from "./useCreateFolder";
 import { useMoveFolder } from "./useMoveFolder";
-import { getFolderPath } from "../utils/getFolderPath";
 import { injectBackRow } from "../utils/folderItemTransformer";
 import { navigateToFolder } from "../utils/navigateToFolder";
 

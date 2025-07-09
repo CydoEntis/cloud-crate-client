@@ -4,7 +4,7 @@ import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-tabl
 import { Button } from "./ui/button";
 import type { StoredFile } from "@/features/files/types";
 import { useFolderContents } from "@/features/folder/hooks";
-import crateColumns from "@/features/crates/components/crate-columns";
+import crateColumns from "@/features/files/components/table/columns/folderFileTableColumns";
 
 type FileTableProps = {
   crateId: string;
