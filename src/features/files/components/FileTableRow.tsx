@@ -1,44 +1,64 @@
 import { TableRow, TableCell } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
-import { FolderItemType, type FolderOrFileItem } from "@/features/folder";
+import { FolderItemType, type DragItemType, type FolderOrFileItem } from "@/features/folder";
 
 type FileTableRowProps = {
   row: any;
-  onClick?: (file: FolderOrFileItem) => void;
-  onDropFolder?: (sourceFolderId: string, targetFolderId: string) => void;
+  onNavigate?: (folderId: string | null) => void;
+  onDropItem?: (itemId: string, itemType: DragItemType, targetFolderId: string | null) => void;
 };
 
-function FileTableRow({ row, onClick, onDropFolder }: FileTableRowProps) {
+function FileTableRow({ row, onNavigate, onDropItem }: FileTableRowProps) {
   const rowData: FolderOrFileItem = row.original;
 
   const isFolder = rowData.type === FolderItemType.Folder;
+  const isBackRow = rowData.isBackRow;
 
   return (
     <TableRow
       key={row.id}
-      draggable={isFolder}
+      draggable
       onClick={(event) => {
-        if (isFolder && !(event.target as HTMLElement).closest(".actions-cell")) {
-          onClick?.(rowData);
+        if (!(event.target as HTMLElement).closest(".actions-cell")) {
+          if (isBackRow) {
+            console.log("[Click] Back row clicked. Navigating back to:", rowData.parentOfCurrentFolderId ?? null);
+            onNavigate?.(rowData.parentOfCurrentFolderId ?? null);
+          } else if (isFolder) {
+            console.log("[Click] Folder clicked. Navigating into:", rowData.id);
+            onNavigate?.(rowData.id);
+          }
         }
       }}
       onDragStart={(e) => {
-        if (isFolder) {
-          e.dataTransfer.setData("text/plain", rowData.id);
-        }
+        console.log("[DragStart] Dragging item:", rowData.id, "Type:", rowData.type);
+        e.dataTransfer.setData("application/json", JSON.stringify({ id: rowData.id, type: rowData.type }));
       }}
       onDragOver={(e) => {
-        if (isFolder) {
-          e.preventDefault();
-        }
+        e.preventDefault();
       }}
       onDrop={(e) => {
-        const draggedId = e.dataTransfer.getData("text/plain");
-        if (isFolder && draggedId && draggedId !== rowData.id) {
-          onDropFolder?.(draggedId, rowData.id);
+        e.preventDefault();
+        const data = e.dataTransfer.getData("application/json");
+        try {
+          const dragged = JSON.parse(data) as {
+            id: string;
+            type: DragItemType;
+          };
+
+          const targetFolderId = isBackRow ? (rowData.parentFolderId ?? null) : rowData.id;
+
+          console.log("[Drop] Dropped item:", dragged, "On target folder:", targetFolderId);
+
+          if (dragged.id !== rowData.id) {
+            onDropItem?.(dragged.id, dragged.type, targetFolderId);
+          } else {
+            console.log("[Drop] Ignored drop on self:", dragged.id);
+          }
+        } catch (err) {
+          console.error("[Drop] Failed to parse drag data:", err);
         }
       }}
-      className={isFolder ? "cursor-pointer hover:bg-muted/30" : ""}
+      className={isFolder || isBackRow ? "cursor-pointer hover:bg-muted/30" : ""}
     >
       {row.getVisibleCells().map((cell: any) => (
         <TableCell

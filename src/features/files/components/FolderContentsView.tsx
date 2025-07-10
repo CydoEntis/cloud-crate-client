@@ -24,8 +24,7 @@ function FolderContentsView({ crateId, folderId }: FileContentsViewProps) {
     isCreateFolderOpen,
     setIsCreateFolderOpen,
     handleCreateFolder,
-    handleDropFolder,
-    handleDropToParent,
+    handleDropItem,
     handleNavigate,
     data,
   } = useFolderView(crateId, folderId);
@@ -38,19 +37,9 @@ function FolderContentsView({ crateId, folderId }: FileContentsViewProps) {
       <FileTableToolbar search={search} setSearch={setSearch} onOpenCreateFolder={() => setIsCreateFolderOpen(true)} />
       <FileTable
         data={folderItemsWithBackRow}
-        columns={folderFileTableColumns({
-          onDropToParent: handleDropToParent,
-          onBackClick: () => handleNavigate(!data?.parentOfCurrentFolderId ? null : data.parentOfCurrentFolderId),
-          onFolderClick: handleNavigate,
-        })}
-        onRowClick={(row) => {
-          if ((row as any).isBackRow) {
-            handleNavigate(!data?.parentFolderId ? null : data.parentFolderId);
-          } else if (row.type === FolderItemType.Folder) {
-            handleNavigate(row.id);
-          }
-        }}
-        onDropFolder={handleDropFolder}
+        columns={folderFileTableColumns()}
+        onNavigate={handleNavigate}
+        onDropItem={handleDropItem}
       />
 
       <FilePagination page={page} pageSize={pageSize} totalCount={data?.totalCount ?? 0} onPageChange={setPage} />

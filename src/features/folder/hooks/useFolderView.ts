@@ -6,6 +6,7 @@ import { useMoveFolder } from "./useMoveFolder";
 import { injectBackRow } from "../utils/folderItemTransformer";
 import { navigateToFolder } from "../utils/navigateToFolder";
 import { useMoveFile } from "@/features/files/hooks/useMoveFile";
+import { FolderItemType, type DragItemType } from "../types";
 
 export function useFolderView(crateId: string, folderId: string | null) {
   const navigate = useNavigate();
@@ -43,26 +44,30 @@ export function useFolderView(crateId: string, folderId: string | null) {
     await refetch();
   };
 
-  const handleDropItem = async (itemId: string, itemType: "file" | "folder", targetFolderId: string | null) => {
-    if (itemType === "folder") {
+  const handleDropItem = async (itemId: string, itemType: DragItemType, targetFolderId: string | null) => {
+    console.log("Item id:", itemId);
+    console.log("Item type:", itemType);
+
+    if (itemType === "Folder") {
       await moveFolderMutation.mutateAsync({
         crateId,
         folderId: itemId,
         newParentId: targetFolderId,
       });
-    } else if (itemType === "file") {
+    } else if (itemType === "File") {
       await moveFileMutation.mutateAsync({
         crateId,
         fileId: itemId,
         newParentId: targetFolderId,
       });
     }
+
     await refetch();
   };
 
-  const handleDropToParent = async (items: { id: string; type: "file" | "folder" }[]) => {
+  const handleDropToParent = async (items: { id: string; type: FolderItemType }[]) => {
     const parentId = data?.parentFolderId ?? null;
-    await Promise.all(items.map((item) => handleDropItem(item.id, item.type, parentId)));
+    await Promise.all(items.map((item) => handleDropItem(item.id, mapFolderItemTypeToDragType(item.type), parentId)));
   };
 
   const folderItemsWithBackRow = useMemo(() => {
@@ -92,4 +97,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
     handleDropItem,
     handleDropToParent,
   };
+}
+function mapFolderItemTypeToDragType(type: FolderItemType): DragItemType {
+  throw new Error("Function not implemented.");
 }

@@ -25,3 +25,9 @@ export enum FolderItemType {
   Folder = "Folder",
   File = "File",
 }
+
+export type DragItemType = "File" | "Folder";
+
+function mapFolderItemTypeToDragType(type: FolderItemType): DragItemType {
+  return type;
+}

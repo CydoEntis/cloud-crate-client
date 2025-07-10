@@ -6,22 +6,11 @@ import ActionsCell from "./ActionsCell";
 
 const columnHelper = createColumnHelper<FolderOrFileItem>();
 
-const folderFileTableColumns = (options: {
-  onFolderClick?: (folderId: string) => void;
-  onBackClick?: (parentId: string | null) => void;
-  onDropToParent?: (itemIds: string[]) => void;
-}) => [
+const folderFileTableColumns = () => [
   columnHelper.accessor("name", {
     header: "Name",
     meta: { width: "60%" },
-    cell: (info) => (
-      <NameCell
-        row={info.row.original}
-        onBackClick={options.onBackClick}
-        onFolderClick={options.onFolderClick}
-        onDropToParent={options.onDropToParent}
-      />
-    ),
+    cell: (info) => <NameCell row={info.row.original} />,
   }),
 
   columnHelper.accessor("sizeInBytes", {
