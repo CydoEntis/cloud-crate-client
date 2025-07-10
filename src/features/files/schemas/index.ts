@@ -27,3 +27,7 @@ export const StoredFileSchema = z.object({
 });
 
 export const StoredFileListSchema = z.array(StoredFileSchema);
+
+export const MoveFileRequestSchema = z.object({
+  newParentId: z.string().nullable(),
+});

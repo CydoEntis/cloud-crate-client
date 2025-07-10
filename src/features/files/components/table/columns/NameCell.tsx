@@ -31,7 +31,7 @@ function NameCell({ row, onBackClick, onFolderClick, onDropToParent }: NameCellP
   return (
     <div
       className={`flex gap-2 items-center w-full px-2 py-1 rounded cursor-pointer ${
-        isBackRow ? "text-muted-foreground italic hover:bg-muted" : "hover:bg-accent"
+        isBackRow ? "text-muted-foreground italic" : ""
       }`}
       onClick={handleClick}
       onDragOver={(e) => isBackRow && e.preventDefault()}

@@ -5,6 +5,7 @@ import { useCreateFolder } from "./useCreateFolder";
 import { useMoveFolder } from "./useMoveFolder";
 import { injectBackRow } from "../utils/folderItemTransformer";
 import { navigateToFolder } from "../utils/navigateToFolder";
+import { useMoveFile } from "@/features/files/hooks/useMoveFile";
 
 export function useFolderView(crateId: string, folderId: string | null) {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
 
   const createFolderMutation = useCreateFolder();
   const moveFolderMutation = useMoveFolder();
+  const moveFileMutation = useMoveFile();
 
   const handleNavigate = (toFolderId: string | null) => {
     navigateToFolder(navigate, crateId, toFolderId);
@@ -41,19 +43,26 @@ export function useFolderView(crateId: string, folderId: string | null) {
     await refetch();
   };
 
-  const handleDropFolder = async (sourceFolderId: string, targetFolderId: string | null) => {
-    if (sourceFolderId === targetFolderId) return;
-    await moveFolderMutation.mutateAsync({
-      crateId,
-      folderId: sourceFolderId,
-      newParentId: targetFolderId,
-    });
+  const handleDropItem = async (itemId: string, itemType: "file" | "folder", targetFolderId: string | null) => {
+    if (itemType === "folder") {
+      await moveFolderMutation.mutateAsync({
+        crateId,
+        folderId: itemId,
+        newParentId: targetFolderId,
+      });
+    } else if (itemType === "file") {
+      await moveFileMutation.mutateAsync({
+        crateId,
+        fileId: itemId,
+        newParentId: targetFolderId,
+      });
+    }
     await refetch();
   };
 
-  const handleDropToParent = async (ids: string[]) => {
+  const handleDropToParent = async (items: { id: string; type: "file" | "folder" }[]) => {
     const parentId = data?.parentFolderId ?? null;
-    await Promise.all(ids.map((id) => handleDropFolder(id, parentId)));
+    await Promise.all(items.map((item) => handleDropItem(item.id, item.type, parentId)));
   };
 
   const folderItemsWithBackRow = useMemo(() => {
@@ -80,7 +89,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
     folderItemsWithBackRow,
     handleNavigate,
     handleCreateFolder,
-    handleDropFolder,
+    handleDropItem,
     handleDropToParent,
   };
 }

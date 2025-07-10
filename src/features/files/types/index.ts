@@ -26,3 +26,7 @@ export type FileItem = {
 export type RecentFilesProps = {
   files: FileItem[];
 };
+
+export type MoveFileRequest = {
+  newParentId: string | null;
+};
