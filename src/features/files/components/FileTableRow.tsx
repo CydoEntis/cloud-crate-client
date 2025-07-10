@@ -45,7 +45,7 @@ function FileTableRow({ row, onNavigate, onDropItem }: FileTableRowProps) {
             type: DragItemType;
           };
 
-          const targetFolderId = isBackRow ? (rowData.parentFolderId ?? null) : rowData.id;
+          const targetFolderId = isBackRow ? (rowData.parentOfCurrentFolderId ?? null) : rowData.id;
 
           console.log("[Drop] Dropped item:", dragged, "On target folder:", targetFolderId);
 
