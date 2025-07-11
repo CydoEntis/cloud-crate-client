@@ -1,23 +1,17 @@
-import type { FileTypeBreakdown } from "@/features/files/types";
-import { useCrateUsage } from "../hooks";
+import type { CrateDetailsResponse } from "@/features/crates/types";
 import AvailableStorageBar from "./AvailableStorageBar";
 
 const colors = ["bg-emerald-400", "bg-sky-400", "bg-indigo-400", "bg-pink-400", "bg-yellow-400", "bg-red-400"];
 
 type Props = {
-  crateId: string;
+  crate: CrateDetailsResponse;
 };
 
-const AvailableStorageIndicator = ({ crateId }: Props) => {
-  const { data, isLoading, error } = useCrateUsage(crateId);
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error || !data) return <p>Failed to load storage data</p>;
-
-  const { totalUsedStorage, storageLimit, remainingStorage, breakdownByType } = data;
+const AvailableStorageIndicator = ({ crate }: Props) => {
+  const { totalUsedStorage, storageLimit, remainingStorage, breakdownByType } = crate;
 
   const segments = [
-    ...breakdownByType.map((item: FileTypeBreakdown, i: number) => ({
+    ...breakdownByType.map((item, i) => ({
       id: `type-${item.type}`,
       name: item.type,
       usedStorage: item.sizeMb,
