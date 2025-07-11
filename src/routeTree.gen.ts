@@ -19,6 +19,7 @@ import { Route as protectedDashboardImport } from './routes/(protected)/dashboar
 import { Route as publicauthRouteImport } from './routes/(public)/(auth)/route'
 import { Route as publicauthRegisterImport } from './routes/(public)/(auth)/register'
 import { Route as publicauthLoginImport } from './routes/(public)/(auth)/login'
+import { Route as protectedCratesCrateIdRouteImport } from './routes/(protected)/crates/$crateId/route'
 import { Route as protectedCratesCrateIdIndexImport } from './routes/(protected)/crates/$crateId/index'
 import { Route as protectedCratesCrateIdFoldersFolderIdImport } from './routes/(protected)/crates/$crateId/folders/$folderId'
 
@@ -69,18 +70,25 @@ const publicauthLoginRoute = publicauthLoginImport.update({
   getParentRoute: () => publicauthRouteRoute,
 } as any)
 
+const protectedCratesCrateIdRouteRoute =
+  protectedCratesCrateIdRouteImport.update({
+    id: '/crates/$crateId',
+    path: '/crates/$crateId',
+    getParentRoute: () => protectedRouteRoute,
+  } as any)
+
 const protectedCratesCrateIdIndexRoute =
   protectedCratesCrateIdIndexImport.update({
-    id: '/crates/$crateId/',
-    path: '/crates/$crateId/',
-    getParentRoute: () => protectedRouteRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => protectedCratesCrateIdRouteRoute,
   } as any)
 
 const protectedCratesCrateIdFoldersFolderIdRoute =
   protectedCratesCrateIdFoldersFolderIdImport.update({
-    id: '/crates/$crateId/folders/$folderId',
-    path: '/crates/$crateId/folders/$folderId',
-    getParentRoute: () => protectedRouteRoute,
+    id: '/folders/$folderId',
+    path: '/folders/$folderId',
+    getParentRoute: () => protectedCratesCrateIdRouteRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -129,6 +137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedFilesImport
       parentRoute: typeof protectedRouteImport
     }
+    '/(protected)/crates/$crateId': {
+      id: '/(protected)/crates/$crateId'
+      path: '/crates/$crateId'
+      fullPath: '/crates/$crateId'
+      preLoaderRoute: typeof protectedCratesCrateIdRouteImport
+      parentRoute: typeof protectedRouteImport
+    }
     '/(public)/(auth)/login': {
       id: '/(public)/(auth)/login'
       path: '/login'
@@ -145,36 +160,51 @@ declare module '@tanstack/react-router' {
     }
     '/(protected)/crates/$crateId/': {
       id: '/(protected)/crates/$crateId/'
-      path: '/crates/$crateId'
-      fullPath: '/crates/$crateId'
+      path: '/'
+      fullPath: '/crates/$crateId/'
       preLoaderRoute: typeof protectedCratesCrateIdIndexImport
-      parentRoute: typeof protectedRouteImport
+      parentRoute: typeof protectedCratesCrateIdRouteImport
     }
     '/(protected)/crates/$crateId/folders/$folderId': {
       id: '/(protected)/crates/$crateId/folders/$folderId'
-      path: '/crates/$crateId/folders/$folderId'
+      path: '/folders/$folderId'
       fullPath: '/crates/$crateId/folders/$folderId'
       preLoaderRoute: typeof protectedCratesCrateIdFoldersFolderIdImport
-      parentRoute: typeof protectedRouteImport
+      parentRoute: typeof protectedCratesCrateIdRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface protectedCratesCrateIdRouteRouteChildren {
+  protectedCratesCrateIdIndexRoute: typeof protectedCratesCrateIdIndexRoute
+  protectedCratesCrateIdFoldersFolderIdRoute: typeof protectedCratesCrateIdFoldersFolderIdRoute
+}
+
+const protectedCratesCrateIdRouteRouteChildren: protectedCratesCrateIdRouteRouteChildren =
+  {
+    protectedCratesCrateIdIndexRoute: protectedCratesCrateIdIndexRoute,
+    protectedCratesCrateIdFoldersFolderIdRoute:
+      protectedCratesCrateIdFoldersFolderIdRoute,
+  }
+
+const protectedCratesCrateIdRouteRouteWithChildren =
+  protectedCratesCrateIdRouteRoute._addFileChildren(
+    protectedCratesCrateIdRouteRouteChildren,
+  )
+
 interface protectedRouteRouteChildren {
   protectedDashboardRoute: typeof protectedDashboardRoute
   protectedFilesRoute: typeof protectedFilesRoute
-  protectedCratesCrateIdIndexRoute: typeof protectedCratesCrateIdIndexRoute
-  protectedCratesCrateIdFoldersFolderIdRoute: typeof protectedCratesCrateIdFoldersFolderIdRoute
+  protectedCratesCrateIdRouteRoute: typeof protectedCratesCrateIdRouteRouteWithChildren
 }
 
 const protectedRouteRouteChildren: protectedRouteRouteChildren = {
   protectedDashboardRoute: protectedDashboardRoute,
   protectedFilesRoute: protectedFilesRoute,
-  protectedCratesCrateIdIndexRoute: protectedCratesCrateIdIndexRoute,
-  protectedCratesCrateIdFoldersFolderIdRoute:
-    protectedCratesCrateIdFoldersFolderIdRoute,
+  protectedCratesCrateIdRouteRoute:
+    protectedCratesCrateIdRouteRouteWithChildren,
 }
 
 const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(
@@ -211,9 +241,10 @@ export interface FileRoutesByFullPath {
   '/': typeof publicauthRouteRouteWithChildren
   '/dashboard': typeof protectedDashboardRoute
   '/files': typeof protectedFilesRoute
+  '/crates/$crateId': typeof protectedCratesCrateIdRouteRouteWithChildren
   '/login': typeof publicauthLoginRoute
   '/register': typeof publicauthRegisterRoute
-  '/crates/$crateId': typeof protectedCratesCrateIdIndexRoute
+  '/crates/$crateId/': typeof protectedCratesCrateIdIndexRoute
   '/crates/$crateId/folders/$folderId': typeof protectedCratesCrateIdFoldersFolderIdRoute
 }
 
@@ -235,6 +266,7 @@ export interface FileRoutesById {
   '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
   '/(protected)/dashboard': typeof protectedDashboardRoute
   '/(protected)/files': typeof protectedFilesRoute
+  '/(protected)/crates/$crateId': typeof protectedCratesCrateIdRouteRouteWithChildren
   '/(public)/(auth)/login': typeof publicauthLoginRoute
   '/(public)/(auth)/register': typeof publicauthRegisterRoute
   '/(protected)/crates/$crateId/': typeof protectedCratesCrateIdIndexRoute
@@ -247,9 +279,10 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/files'
+    | '/crates/$crateId'
     | '/login'
     | '/register'
-    | '/crates/$crateId'
+    | '/crates/$crateId/'
     | '/crates/$crateId/folders/$folderId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -268,6 +301,7 @@ export interface FileRouteTypes {
     | '/(public)/(auth)'
     | '/(protected)/dashboard'
     | '/(protected)/files'
+    | '/(protected)/crates/$crateId'
     | '/(public)/(auth)/login'
     | '/(public)/(auth)/register'
     | '/(protected)/crates/$crateId/'
@@ -310,8 +344,7 @@ export const routeTree = rootRoute
       "children": [
         "/(protected)/dashboard",
         "/(protected)/files",
-        "/(protected)/crates/$crateId/",
-        "/(protected)/crates/$crateId/folders/$folderId"
+        "/(protected)/crates/$crateId"
       ]
     },
     "/(public)": {
@@ -336,6 +369,14 @@ export const routeTree = rootRoute
       "filePath": "(protected)/files.tsx",
       "parent": "/(protected)"
     },
+    "/(protected)/crates/$crateId": {
+      "filePath": "(protected)/crates/$crateId/route.tsx",
+      "parent": "/(protected)",
+      "children": [
+        "/(protected)/crates/$crateId/",
+        "/(protected)/crates/$crateId/folders/$folderId"
+      ]
+    },
     "/(public)/(auth)/login": {
       "filePath": "(public)/(auth)/login.tsx",
       "parent": "/(public)/(auth)"
@@ -346,11 +387,11 @@ export const routeTree = rootRoute
     },
     "/(protected)/crates/$crateId/": {
       "filePath": "(protected)/crates/$crateId/index.tsx",
-      "parent": "/(protected)"
+      "parent": "/(protected)/crates/$crateId"
     },
     "/(protected)/crates/$crateId/folders/$folderId": {
       "filePath": "(protected)/crates/$crateId/folders/$folderId.tsx",
-      "parent": "/(protected)"
+      "parent": "/(protected)/crates/$crateId"
     }
   }
 }
