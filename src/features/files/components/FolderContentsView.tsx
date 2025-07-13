@@ -34,6 +34,7 @@ function FolderContentsView({ crateId, folderId }: FileContentsViewProps) {
 
   return (
     <div className="p-4 bg-white rounded-xl mt-8">
+      <h3>{data?.folderName}</h3>
       <FileTableToolbar search={search} setSearch={setSearch} onOpenCreateFolder={() => setIsCreateFolderOpen(true)} />
       <FileTable
         data={folderItemsWithBackRow}

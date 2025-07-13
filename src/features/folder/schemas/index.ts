@@ -46,4 +46,5 @@ export const FolderContentsResponseSchema = z.object({
   pageSize: z.number().int(),
   parentFolderId: z.string().uuid().nullable().optional(),
   parentOfCurrentFolderId: z.string().uuid().nullable().optional(),
+  folderName: z.string(),
 });
