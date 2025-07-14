@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
@@ -18,6 +18,11 @@ export default function SearchInputField({ value, onChange, label, placeholder =
     },
     [onChange]
   );
+
+  useEffect(() => {
+    // Focus input every time the value changes
+    inputRef.current?.focus();
+  }, [value]);
 
   return (
     <div className="relative w-full max-w-xs">

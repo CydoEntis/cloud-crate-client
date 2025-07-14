@@ -1,16 +1,18 @@
+import { useEffect, useState } from "react";
 import { useGetFolderContentsQuery, CreateFolderModal } from "@/features/folder";
-import { useFolderSearch } from "@/features/folder/hooks/useFolderSearch";
 import FilePagination from "./FilePagination";
 import FileTable from "./FileTable";
 import FileTableToolbar from "./FileTableToolbar";
 import folderFileTableColumns from "./table/columns/folderFileTableColumns";
 import { useFolderCreation } from "@/features/folder/hooks/useFolderCreation";
 
-export type FileContentsViewProps = {
+type FolderContentsViewProps = {
   crateId: string;
   folderId: string | null;
   page: number;
   pageSize: number;
+  search: string;
+  onSearchChange: (val: string) => void;
   onPageChange: (newPage: number) => void;
   onPageSizeChange: (newSize: number) => void;
 };
@@ -20,15 +22,27 @@ function FolderContentsView({
   folderId,
   page,
   pageSize,
+  search,
+  onSearchChange,
   onPageChange,
   onPageSizeChange,
-}: FileContentsViewProps) {
-  const { inputValue: search, debouncedValue: searchQuery, setSearch } = useFolderSearch();
+}: FolderContentsViewProps) {
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300); // debounce delay
+
+    return () => clearTimeout(handler);
+  }, [search]);
+
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
     crateId,
     folderId,
     () => refetchFolderContents()
   );
+
   const {
     data: folderContents,
     isLoading,
@@ -37,7 +51,7 @@ function FolderContentsView({
   } = useGetFolderContentsQuery(crateId, folderId, {
     page,
     pageSize,
-    search: searchQuery,
+    search: debouncedSearch,
   });
 
   if (isLoading) return <p>Loading...</p>;
@@ -47,7 +61,11 @@ function FolderContentsView({
     <div className="p-4 bg-white rounded-xl mt-8">
       <h3>{folderContents?.folderName}</h3>
 
-      <FileTableToolbar search={search} setSearch={setSearch} onOpenCreateFolder={() => setIsCreateFolderOpen(true)} />
+      <FileTableToolbar
+        search={search}
+        setSearch={onSearchChange}
+        onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
+      />
 
       <FileTable
         data={folderContents?.items || []}

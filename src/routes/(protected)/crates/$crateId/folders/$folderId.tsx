@@ -3,10 +3,10 @@ import { FolderContentsView } from "@/features/files";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
 
-// Same schema as CrateIndex
 const folderSearchSchema = z.object({
   page: z.number().int().positive().default(1),
   pageSize: z.number().int().positive().default(10),
+  search: z.string().optional().default(""),
 });
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
@@ -16,10 +16,30 @@ export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$fold
 
 function FolderPage() {
   const { crateId, folderId } = Route.useParams();
-  const { page, pageSize } = Route.useSearch();
+  const { page, pageSize, search } = Route.useSearch();
   const navigate = Route.useNavigate();
 
   const currentFolderId = folderId ?? null;
+
+  const handleSearchChange = (newSearch: string) => {
+    navigate({
+      search: (prev) => {
+        const { search, ...rest } = prev;
+        if (newSearch && newSearch.trim() !== "") {
+          return { ...rest, search: newSearch, page: 1 };
+        }
+        return { ...rest, page: 1 };
+      },
+    });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    navigate({ search: (prev) => ({ ...prev, page: newPage }) });
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    navigate({ search: (prev) => ({ ...prev, pageSize: newSize, page: 1 }) });
+  };
 
   return (
     <div>
@@ -28,8 +48,10 @@ function FolderPage() {
         folderId={currentFolderId}
         page={page}
         pageSize={pageSize}
-        onPageChange={(newPage) => navigate({ search: (prev) => ({ ...prev, page: newPage }) })}
-        onPageSizeChange={(newSize) => navigate({ search: (prev) => ({ ...prev, pageSize: newSize, page: 1 }) })}
+        search={search}
+        onSearchChange={handleSearchChange}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
       />
     </div>
   );
