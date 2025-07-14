@@ -11,18 +11,19 @@ const colorOptions = [
   { name: "Cyan", value: "#06B6D4" },
   { name: "Purple", value: "#A855F7" },
   { name: "Pink", value: "#EC4899" },
-  { name: "Yellow", value: "#FFBC2D" }, 
+  { name: "Yellow", value: "#FFBC2D" },
   { name: "Gray", value: "#374151" },
   { name: "Lime", value: "#6DCC55" },
-  { name: "Orange", value: "#FF6600" }, 
+  { name: "Orange", value: "#FF6600" },
 ];
 
 type ColorPickerProps = {
   control: Control<any>;
   name: string;
+  disabled: boolean;
 };
 
-export function ColorPicker({ control, name }: ColorPickerProps) {
+export function ColorPicker({ control, name, disabled }: ColorPickerProps) {
   const {
     field: { value, onChange },
   } = useController({ control, name });
@@ -49,6 +50,7 @@ export function ColorPicker({ control, name }: ColorPickerProps) {
               style={{ borderColor: selected ? color.value : "transparent" }}
             >
               <button
+                disabled={disabled}
                 type="button"
                 onClick={() => onChange(color.value)}
                 className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] rounded-sm flex items-center justify-center cursor-pointer"

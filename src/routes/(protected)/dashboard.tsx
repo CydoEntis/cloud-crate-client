@@ -1,4 +1,3 @@
-import FileTable from "@/components/FileTable";
 import PageHeader from "@/components/PageHeader";
 import QuickAccessCard from "@/components/QuickAccessCard";
 import SectionOverview from "@/components/SectionOverview";

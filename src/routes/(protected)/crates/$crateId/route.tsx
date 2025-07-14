@@ -1,4 +1,6 @@
+// routes/(protected)/crates/$crateId/route.tsx
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
 import { useCrateDetails } from "@/features/crates/hooks/useCrateDetails";
 import FileUpload from "@/features/files/components/FileUpload";

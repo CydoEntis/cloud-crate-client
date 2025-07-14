@@ -1,24 +1,25 @@
+// hooks/useFolderView.ts
 import { useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useMemo } from "react";
-import { useFolderContents } from "./useFolderContents";
-import { useCreateFolder } from "./useCreateFolder";
-import { useMoveFolder } from "./useMoveFolder";
+import { useGetFolderContentsQuery } from "./queries/useGetFolderContentsQuery";
+import { useCreateFolder } from "./mutations/useCreateFolderMutation";
+import { useMoveFolder } from "./mutations/useMoveFolderMutation";
 import { injectBackRow } from "../utils/folderItemTransformer";
 import { navigateToFolder } from "../utils/navigateToFolder";
 import { useMoveFile } from "@/features/files/hooks/useMoveFile";
 import { FolderItemType, type DragItemType } from "../types";
 
-export function useFolderView(crateId: string, folderId: string | null) {
+export function useFolderView(crateId: string, folderId: string | null, searchQuery: string) {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
 
-  const { data, isLoading, error, refetch } = useFolderContents(crateId, folderId, {
+  // Only this hook depends on searchQuery, so only this will re-render when search changes
+  const { data, isLoading, error, refetch } = useGetFolderContentsQuery(crateId, folderId, {
     page,
     pageSize,
-    search,
+    search: searchQuery,
   });
 
   const createFolderMutation = useCreateFolder();
@@ -45,9 +46,6 @@ export function useFolderView(crateId: string, folderId: string | null) {
   };
 
   const handleDropItem = async (itemId: string, itemType: DragItemType, targetFolderId: string | null) => {
-    console.log("Item id:", itemId);
-    console.log("Item type:", itemType);
-
     if (itemType === "Folder") {
       await moveFolderMutation.mutateAsync({
         crateId,
@@ -61,13 +59,7 @@ export function useFolderView(crateId: string, folderId: string | null) {
         newParentId: targetFolderId,
       });
     }
-
     await refetch();
-  };
-
-  const handleDropToParent = async (items: { id: string; type: FolderItemType }[]) => {
-    const parentId = data?.parentFolderId ?? null;
-    await Promise.all(items.map((item) => handleDropItem(item.id, mapFolderItemTypeToDragType(item.type), parentId)));
   };
 
   const folderItemsWithBackRow = useMemo(() => {
@@ -77,11 +69,9 @@ export function useFolderView(crateId: string, folderId: string | null) {
 
   useEffect(() => {
     setPage(1);
-  }, [search, folderId]);
+  }, [folderId]);
 
   return {
-    search,
-    setSearch,
     page,
     setPage,
     pageSize,
@@ -95,9 +85,5 @@ export function useFolderView(crateId: string, folderId: string | null) {
     handleNavigate,
     handleCreateFolder,
     handleDropItem,
-    handleDropToParent,
   };
-}
-function mapFolderItemTypeToDragType(type: FolderItemType): DragItemType {
-  throw new Error("Function not implemented.");
 }

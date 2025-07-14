@@ -27,6 +27,10 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
   const [progressList, setProgressList] = useState<{ id: string; fileName: string; percent: number }[]>([]);
 
   const onSubmit = (data: UploadFileInput) => {
+    console.log(
+      "Uploading files:",
+      data.files.map((f) => f.name)
+    );
     data.files.forEach((file) => {
       const id = crypto.randomUUID();
 

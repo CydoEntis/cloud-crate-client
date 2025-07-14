@@ -5,6 +5,7 @@ type FilePaginationProps = {
   pageSize: number;
   totalCount: number;
   onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
 };
 
 function FilePagination({ page, pageSize, totalCount, onPageChange }: FilePaginationProps) {
