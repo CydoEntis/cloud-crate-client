@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { useGetFolderContentsQuery, CreateFolderModal } from "@/features/folder";
+import { CreateFolderModal } from "@/features/folder";
 import FilePagination from "./FilePagination";
 import FileTable from "./FileTable";
 import FileTableToolbar from "./FileTableToolbar";
 import folderFileTableColumns from "./table/columns/folderFileTableColumns";
 import { useFolderCreation } from "@/features/folder/hooks/useFolderCreation";
+import { useFolderDragAndDrop } from "@/features/folder/hooks/useFolderDragAndDrop";
+import { useFolderNavigation } from "@/features/folder/hooks/useFolderNavigation";
+import { useFolderContents } from "@/features/folder/hooks/useFolderContents"; // <-- your new hook
 
 type FolderContentsViewProps = {
   crateId: string;
@@ -32,34 +35,34 @@ function FolderContentsView({
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-    }, 300); // debounce delay
+    }, 300);
 
     return () => clearTimeout(handler);
   }, [search]);
 
+  const { folderItemsWithBackRow, folderName, totalCount, isLoading, error, refetch } = useFolderContents(
+    crateId,
+    folderId,
+    page,
+    pageSize,
+    debouncedSearch
+  );
+
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
     crateId,
     folderId,
-    () => refetchFolderContents()
+    refetch
   );
 
-  const {
-    data: folderContents,
-    isLoading,
-    error,
-    refetch: refetchFolderContents,
-  } = useGetFolderContentsQuery(crateId, folderId, {
-    page,
-    pageSize,
-    search: debouncedSearch,
-  });
+  const { handleNavigate } = useFolderNavigation(crateId);
+  const { handleDropItem } = useFolderDragAndDrop(crateId);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading contents.</p>;
 
   return (
     <div className="p-4 bg-white rounded-xl mt-8">
-      <h3>{folderContents?.folderName}</h3>
+      <h3>{folderName}</h3>
 
       <FileTableToolbar
         search={search}
@@ -68,16 +71,16 @@ function FolderContentsView({
       />
 
       <FileTable
-        data={folderContents?.items || []}
+        data={folderItemsWithBackRow}
         columns={folderFileTableColumns()}
-        onNavigate={() => {}}
-        onDropItem={() => {}}
+        onNavigate={handleNavigate}
+        onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
       />
 
       <FilePagination
         page={page}
         pageSize={pageSize}
-        totalCount={folderContents?.totalCount ?? 0}
+        totalCount={totalCount}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
       />

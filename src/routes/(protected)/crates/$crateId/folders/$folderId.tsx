@@ -47,6 +47,8 @@ function FolderPage() {
     navigate({ search: (prev) => ({ ...prev, pageSize: newSize, page: 1 }) });
   };
 
+
+    console.log("In a folder?!??!")
   return (
     <div>
       <FolderContentsView
