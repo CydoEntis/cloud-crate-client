@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
-import { ImageUpload } from "@/components/ImageUpload";
 import { useCrateDetails } from "@/features/crates/hooks/useCrateDetails";
+import FileUpload from "@/features/files/components/FileUpload";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId")({
   component: CrateLayout,
@@ -22,7 +22,7 @@ function CrateLayout() {
 
       <div className="mb-4">
         <AvailableStorageIndicator crate={data} />
-        <ImageUpload crateId={crateId} />
+        <FileUpload crateId={crateId} />
       </div>
 
       <Outlet />

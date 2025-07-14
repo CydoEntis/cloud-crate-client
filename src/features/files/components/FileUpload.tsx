@@ -6,12 +6,12 @@ import type { UploadFileInput } from "@/features/files/types";
 import { useUploadFile } from "@/features/files/hooks";
 import { UploadFileSchema, UploadProgressItem } from "@/features/files";
 
-type ImageUploadProps = {
+type FileUploadProps = {
   crateId: string;
   folderId?: string;
 };
 
-export function ImageUpload({ crateId, folderId }: ImageUploadProps) {
+function FileUpload({ crateId, folderId }: FileUploadProps) {
   const { register, handleSubmit, setValue, watch, formState } = useForm<UploadFileInput>({
     resolver: zodResolver(UploadFileSchema),
     defaultValues: {
@@ -101,3 +101,5 @@ export function ImageUpload({ crateId, folderId }: ImageUploadProps) {
     </form>
   );
 }
+
+export default FileUpload;
