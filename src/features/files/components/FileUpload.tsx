@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Upload } from "lucide-react";
 import type { UploadFileInput } from "@/features/files/types";
 import { useUploadFile } from "@/features/files/hooks";
-import { UploadFileSchema, UploadProgressItem } from "@/features/files";
+import { ACCEPTED_EXTENSIONS, UploadFileSchema, UploadProgressItem } from "@/features/files";
 
 type FileUploadProps = {
   crateId: string;
@@ -52,8 +52,7 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
           inputRef.current = e;
         }}
         type="file"
-        className="hidden"
-        accept=".svg,.jpg,.jpeg,.png"
+        accept={ACCEPTED_EXTENSIONS.map((ext) => `.${ext}`).join(",")}
         multiple
         onChange={(e) => {
           const selectedFiles = Array.from(e.target.files ?? []);
@@ -77,10 +76,6 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
         </p>
         <p className="text-gray-400 text-sm text-center">Supported Formats: SVG, JPG, PNG (10mb each)</p>
       </div>
-
-      {/* {files?.length > 0 && (
-        <div className="text-sm mt-2 text-center text-gray-500">Selected: {files.map((f) => f.name).join(", ")}</div>
-      )} */}
 
       {formState.errors.files && (
         <div className="text-sm text-red-500 mt-1 text-center">{formState.errors.files.message}</div>
