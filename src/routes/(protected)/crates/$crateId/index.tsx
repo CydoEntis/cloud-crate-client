@@ -6,7 +6,7 @@ import z from "zod";
 const folderSearchSchema = z.object({
   page: z.number().int().positive().default(1),
   pageSize: z.number().int().positive().default(10),
-  search: z.string().optional().default(""),
+  search: z.string().optional(),
 });
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/")({
@@ -22,11 +22,17 @@ function CrateIndex() {
   const handleSearchChange = (newSearch: string) => {
     navigate({
       search: (prev) => {
-        const { search, ...rest } = prev;
+        const next = { ...prev };
+
         if (newSearch && newSearch.trim() !== "") {
-          return { ...rest, search: newSearch, page: 1 };
+          next.search = newSearch;
+          next.page = 1;
+        } else {
+          delete (next as any).search;
+          next.page = 1;
         }
-        return { ...rest, page: 1 };
+
+        return next;
       },
     });
   };
@@ -45,7 +51,7 @@ function CrateIndex() {
       folderId={null}
       page={page}
       pageSize={pageSize}
-      search={search}
+      search={search || ""}
       onSearchChange={handleSearchChange}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}
