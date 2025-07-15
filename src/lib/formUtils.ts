@@ -52,3 +52,22 @@ export function extractApiErrors<T extends FieldValues>(err: any, form?: UseForm
 
   return "An unknown error occurred";
 }
+
+export function setFieldErrorsFromValidationResponse<T extends FieldValues>(
+  form: UseFormReturn<T>,
+  errors: Record<string, string[]>
+) {
+  form.clearErrors();
+
+  for (const key in errors) {
+    const fieldName = key.toLowerCase();
+    const messages = errors[key];
+    if (messages.length > 0) {
+      form.setError(fieldName as Path<T>, { type: "server", message: messages[0] });
+    }
+  }
+}
+
+function isAxiosError(err: any): err is { response?: { data?: any } } {
+  return err && typeof err === "object" && "response" in err;
+}

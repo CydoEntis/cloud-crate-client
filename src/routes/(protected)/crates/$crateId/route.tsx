@@ -1,4 +1,3 @@
-// routes/(protected)/crates/$crateId/route.tsx
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
@@ -6,6 +5,8 @@ import { useCrateDetails } from "@/features/crates/hooks/useCrateDetails";
 import FileUpload from "@/features/files/components/FileUpload";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { CrateSettingsModal } from "@/features/crates";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId")({
   component: CrateLayout,
@@ -14,6 +15,8 @@ export const Route = createFileRoute("/(protected)/crates/$crateId")({
 function CrateLayout() {
   const { crateId } = Route.useParams();
   const { data: crate, isLoading, isError } = useCrateDetails(crateId);
+
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   if (isLoading) return <p>Loading crate info...</p>;
   if (isError || !crate) return <p>Failed to load crate info</p>;
@@ -24,7 +27,8 @@ function CrateLayout() {
         <h3 className="text-3xl font-bold">{crate.name}</h3>
         <Button
           variant="outline"
-          className="border-primary text-primary hover:bg-purple-50 cursor-pointer hover:text-pimary"
+          className="border-primary text-primary hover:bg-purple-50 cursor-pointer hover:text-primary"
+          onClick={() => setSettingsOpen(true)}
         >
           <Settings /> Settings
         </Button>
@@ -34,6 +38,14 @@ function CrateLayout() {
         <AvailableStorageIndicator crate={crate} />
         <FileUpload crateId={crateId} />
       </div>
+
+      <CrateSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        crateId={crateId}
+        initialName={crate.name}
+        initialColor={crate.color}
+      />
 
       <Outlet />
     </section>

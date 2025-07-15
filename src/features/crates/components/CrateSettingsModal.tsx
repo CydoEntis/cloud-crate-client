@@ -1,23 +1,24 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { setFieldErrorsFromValidationResponse } from "@/lib/formUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ColorPicker } from "@/components/ColorPicker";
+import { isAxiosError } from "axios";
 import { useState } from "react";
-
-import { extractApiErrors } from "@/lib/formUtils";
-import type { UpdateCrateRequest } from "../types";
-import { updateCrateSchema } from "../schemas";
+import { useForm } from "react-hook-form";
 import { useUpdateCrate } from "../hooks/useUpdateCrate";
+import { updateCrateSchema } from "../schemas";
+import type { UpdateCrateRequest } from "../types";
+import { ColorPicker } from "@/components/ColorPicker";
 
-interface CrateSettingsModalProps {
+type CrateSettingsModalProps = {
   isOpen: boolean;
   onClose: () => void;
   crateId: string;
   initialName: string;
   initialColor: string;
-}
+};
 
 function CrateSettingsModal({ isOpen, onClose, crateId, initialName, initialColor }: CrateSettingsModalProps) {
   const { mutateAsync: updateCrate, isPending } = useUpdateCrate();
@@ -25,10 +26,7 @@ function CrateSettingsModal({ isOpen, onClose, crateId, initialName, initialColo
 
   const form = useForm<UpdateCrateRequest>({
     resolver: zodResolver(updateCrateSchema),
-    defaultValues: {
-      name: initialName,
-      color: initialColor,
-    },
+    defaultValues: { name: initialName, color: initialColor },
   });
 
   const onSubmit = async (data: UpdateCrateRequest) => {
@@ -36,9 +34,23 @@ function CrateSettingsModal({ isOpen, onClose, crateId, initialName, initialColo
       await updateCrate({ crateId, ...data });
       onClose();
       form.reset(data);
-    } catch (err) {
-      const globalError = extractApiErrors(err, form);
-      if (globalError) setError(globalError);
+    } catch (err: unknown) {
+      console.log(err);
+      form.clearErrors();
+
+      if (isAxiosError(err)) {
+        const errors = err.response?.data?.errors;
+        if (errors && typeof errors === "object" && !Array.isArray(errors)) {
+          setFieldErrorsFromValidationResponse(form, errors);
+          setError("");
+          return;
+        }
+        setError(err.response?.data?.message || "An unknown error occurred");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
   };
 
@@ -49,15 +61,52 @@ function CrateSettingsModal({ isOpen, onClose, crateId, initialName, initialColo
           <DialogTitle>Crate Settings</DialogTitle>
           <DialogDescription>Change crate name and color</DialogDescription>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <Input {...form.register("name")} placeholder="Crate name" onChange={() => setError("")} />
-          <ColorPicker name="color" control={form.control} disabled={false} />
-          {error && <p className="text-sm text-red-500 font-medium -mt-1">{error}</p>}
-          <Button type="submit" disabled={isPending}>
-            Save Changes
-          </Button>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setError("");
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <ColorPicker control={form.control} name={field.name} disabled={false} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {error && <p className="text-sm text-red-500 font-medium -mt-1">{error}</p>}
+
+            <Button type="submit" disabled={isPending}>
+              Save Changes
+            </Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
 }
+
+export default CrateSettingsModal;

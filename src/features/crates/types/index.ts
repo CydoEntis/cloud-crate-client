@@ -13,6 +13,7 @@ export type Crate = {
 export type CrateDetailsResponse = {
   id: string;
   name: string;
+  color: string;
   totalUsedStorage: number;
   storageLimit: number;
   breakdownByType: FileTypeBreakdown[];
@@ -20,3 +21,9 @@ export type CrateDetailsResponse = {
 };
 
 export type UpdateCrateRequest = z.infer<typeof updateCrateSchema>;
+
+export type CrateResponse = {
+  id: string;
+  name: string;
+  color: string;
+};
