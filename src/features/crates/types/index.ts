@@ -1,5 +1,5 @@
 import type z from "zod";
-import type { createCrateSchema } from "../schemas";
+import type { createCrateSchema, updateCrateSchema } from "../schemas";
 import type { FileTypeBreakdown } from "@/features/files/types";
 
 export type CreateCrateRequest = z.infer<typeof createCrateSchema>;
@@ -18,3 +18,5 @@ export type CrateDetailsResponse = {
   breakdownByType: FileTypeBreakdown[];
   remainingStorage: number;
 };
+
+export type UpdateCrateRequest = z.infer<typeof updateCrateSchema>;

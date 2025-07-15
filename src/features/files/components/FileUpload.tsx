@@ -55,6 +55,7 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
           register("files").ref(e);
           inputRef.current = e;
         }}
+        className="sr-only"
         type="file"
         accept={ACCEPTED_EXTENSIONS.map((ext) => `.${ext}`).join(",")}
         multiple

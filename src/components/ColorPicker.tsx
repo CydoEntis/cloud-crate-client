@@ -20,7 +20,7 @@ const colorOptions = [
 type ColorPickerProps = {
   control: Control<any>;
   name: string;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 export function ColorPicker({ control, name, disabled }: ColorPickerProps) {
