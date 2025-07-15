@@ -9,6 +9,7 @@ import { useState } from "react";
 import { extractApiErrors } from "@/lib/formUtils";
 import type { UpdateCrateRequest } from "../types";
 import { updateCrateSchema } from "../schemas";
+import { useUpdateCrate } from "../hooks/useUpdateCrate";
 
 interface CrateSettingsModalProps {
   isOpen: boolean;
@@ -19,7 +20,7 @@ interface CrateSettingsModalProps {
 }
 
 function CrateSettingsModal({ isOpen, onClose, crateId, initialName, initialColor }: CrateSettingsModalProps) {
-  const { mutateAsync: updateCrate, isLoading } = useUpdateCrate();
+  const { mutateAsync: updateCrate, isPending } = useUpdateCrate();
   const [error, setError] = useState("");
 
   const form = useForm<UpdateCrateRequest>({
@@ -34,7 +35,7 @@ function CrateSettingsModal({ isOpen, onClose, crateId, initialName, initialColo
     try {
       await updateCrate({ crateId, ...data });
       onClose();
-      form.reset(data); // reset with latest values
+      form.reset(data);
     } catch (err) {
       const globalError = extractApiErrors(err, form);
       if (globalError) setError(globalError);
@@ -52,7 +53,7 @@ function CrateSettingsModal({ isOpen, onClose, crateId, initialName, initialColo
           <Input {...form.register("name")} placeholder="Crate name" onChange={() => setError("")} />
           <ColorPicker name="color" control={form.control} disabled={false} />
           {error && <p className="text-sm text-red-500 font-medium -mt-1">{error}</p>}
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isPending}>
             Save Changes
           </Button>
         </form>
