@@ -6,7 +6,7 @@ import FileUpload from "@/features/files/components/FileUpload";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { CrateSettingsModal } from "@/features/crates";
+import { CrateSettingsPanel } from "@/features/crates";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId")({
   component: CrateLayout,
@@ -39,7 +39,7 @@ function CrateLayout() {
         <FileUpload crateId={crateId} />
       </div>
 
-      <CrateSettingsModal
+      <CrateSettingsPanel
         isOpen={isSettingsOpen}
         onClose={() => setSettingsOpen(false)}
         crateId={crateId}
