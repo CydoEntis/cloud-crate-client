@@ -13,7 +13,6 @@ export type CreateFolderRequest = z.infer<typeof CreateFolderRequestSchema>;
 
 export type MoveFolderRequest = z.infer<typeof MoveFolderRequestSchema>;
 
-
 export type FolderOrFileItem = z.infer<typeof FolderOrFileItemSchema>;
 export type FolderContentsResponse = z.infer<typeof FolderContentsResponseSchema>;
 
@@ -27,3 +26,5 @@ export type DragItemType = "File" | "Folder";
 export function mapFolderItemTypeToDragType(type: FolderItemType): DragItemType {
   return type;
 }
+
+

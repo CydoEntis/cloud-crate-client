@@ -5,5 +5,5 @@ import type { CrateDetailsResponse } from "../types";
 
 export const getCrateDetails = async (crateId: string): Promise<CrateDetailsResponse> => {
   const response = await api.get<ApiResponse<CrateDetailsResponse>>(`/crates/${crateId}`);
-  return response.data.data!;
+  return response.data.value!;
 };

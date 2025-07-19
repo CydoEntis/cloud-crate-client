@@ -7,7 +7,7 @@ export type RegisterRequest = z.infer<typeof registerSchema>;
 
 export type ApiResponse<T> = {
   success: boolean;
-  data: T | null;
+  value: T | null;
   message?: string;
   statusCode: number;
   errors?: ApiError[];

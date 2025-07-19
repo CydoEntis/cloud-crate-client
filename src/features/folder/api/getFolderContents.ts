@@ -19,7 +19,7 @@ export const getFolderContents = async (
 
   try {
     const response = await api.get<ApiResponse<FolderContentsResponse>>(url);
-    return FolderContentsResponseSchema.parse(response.data.data);
+    return FolderContentsResponseSchema.parse(response.data.value);
   } catch (err) {
     console.error("Error fetching folder contents:", err);
     throw err instanceof Error ? err : new Error("Unknown error occurred while fetching folder contents");

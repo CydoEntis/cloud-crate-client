@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { deleteFolder } from "../api/deleteFolder";
+import { deleteFolder } from "../../api";
 
 export const useDeleteFolder = () => {
   const queryClient = useQueryClient();

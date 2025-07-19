@@ -4,7 +4,7 @@ import type { CrateDetailsResponse, CrateResponse, UpdateCrateRequest } from "..
 
 export const getCrateDetails = async (crateId: string): Promise<CrateDetailsResponse> => {
   const response = await api.get<ApiResponse<CrateDetailsResponse>>(`/crates/${crateId}`);
-  return response.data.data!;
+  return response.data.value!;
 };
 
 export const updateCrate = async ({
@@ -14,5 +14,5 @@ export const updateCrate = async ({
 }: UpdateCrateRequest & { crateId: string }): Promise<CrateResponse> => {
   const response = await api.put<ApiResponse<CrateResponse>>(`/crates/${crateId}`, { name, color });
   console.log(response);
-  return response.data.data!;
+  return response.data.value!;
 };
