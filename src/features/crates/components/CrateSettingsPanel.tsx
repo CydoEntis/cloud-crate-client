@@ -11,6 +11,7 @@ import type { UpdateCrateRequest } from "../types";
 import { useState } from "react";
 import { isAxiosError } from "axios";
 import { setFieldErrorsFromValidationResponse } from "@/lib/formUtils";
+import InviteCollaborators from "@/features/invites/components/InivteCollaborators";
 
 type CrateSettingsPanelProps = {
   isOpen: boolean;
@@ -52,7 +53,7 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="right" className="w-[420px] sm:w-[500px] px-4 py-8">
+      <SheetContent side="right" className="px-4 py-8">
         <SheetHeader className="p-0">
           <SheetTitle>Crate Settings</SheetTitle>
           <SheetDescription>Update crate info, manage collaborators, or delete this crate.</SheetDescription>
@@ -72,7 +73,7 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
                         {...field}
                         onChange={(e) => {
                           field.onChange(e);
-                          setError("");
+                          form.clearErrors("name");
                         }}
                       />
                     </FormControl>
@@ -106,6 +107,7 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
 
         {/* Additions below */}
         <div className="border-t mt-8 pt-6 space-y-4">
+          <InviteCollaborators crateId={crateId} />
           {/* Member management placeholder */}
           <div>
             <h4 className="text-sm font-semibold mb-1">Collaborators</h4>
