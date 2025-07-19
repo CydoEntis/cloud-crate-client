@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { CreateFolderModal } from "@/features/folder";
 import FilePagination from "./FilePagination";
 import FileTable from "./FileTable";
 import FileTableToolbar from "./FileTableToolbar";
@@ -8,6 +7,7 @@ import { useFolderCreation } from "@/features/folder/hooks/useFolderCreation";
 import { useFolderDragAndDrop } from "@/features/folder/hooks/useFolderDragAndDrop";
 import { useFolderNavigation } from "@/features/folder/hooks/useFolderNavigation";
 import { useFolderContents } from "@/features/folder/hooks/useFolderContents"; // <-- your new hook
+import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 
 type FolderContentsViewProps = {
   crateId: string;

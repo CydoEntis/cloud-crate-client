@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useGetFolderContentsQuery } from "./queries/useGetFolderContentsQuery";
 import { injectBackRow } from "../utils/folderItemTransformer";
+import { useGetFolderContents } from "./queries/useGetFolderContents";
 
 export function useFolderItems(
   crateId: string,
@@ -9,7 +9,7 @@ export function useFolderItems(
   pageSize: number,
   searchQuery: string
 ) {
-  const { data, isLoading, error, refetch } = useGetFolderContentsQuery(crateId, folderId, {
+  const { data, isLoading, error, refetch } = useGetFolderContents(crateId, folderId, {
     page,
     pageSize,
     search: searchQuery,

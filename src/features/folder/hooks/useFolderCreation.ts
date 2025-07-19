@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCreateFolder } from "./mutations/useCreateFolderMutation";
+import { useCreateFolder } from "./mutations/useCreateFolder";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import type { FolderContentsResponse, CreateFolderRequest } from "../types";
 

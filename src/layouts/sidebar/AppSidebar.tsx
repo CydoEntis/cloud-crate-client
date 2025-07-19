@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import UpgradeAccountButton from "@/features/account/components/UpgradeAccountButton";
 import { useAuthStore, useUserStore } from "@/features/auth";
 import CrateSidebarLinks from "@/features/crates/components/CrateSideBarLinks";
-import { AddCrateButton } from "@/features/crates";
+import AddCrateButton from "@/features/crates/components/AddCrateButton";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },

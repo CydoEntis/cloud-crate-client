@@ -1,8 +1,9 @@
 import { useCallback } from "react";
-import { useMoveFolder } from "./mutations/useMoveFolderMutation";
-import { useMoveFile } from "@/features/files/hooks/useMoveFile";
-import { type DragItemType, type FolderContentsResponse } from "../types";
+import { useMoveFolder } from "./mutations/useMoveFolder";
+import { useMoveFile } from "@/features/files/hooks/mutations/useMoveFile";
 import type { QueryObserverResult } from "@tanstack/react-query";
+import type { DragItemType } from "../types/FolderItemType";
+import type { FolderContentsResponse } from "../types/response/FolderContentsResponse";
 
 export function useFolderDragAndDrop(crateId: string) {
   const moveFolderMutation = useMoveFolder();

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { getFileColor, getFileExtension, getFileIcon } from "../util";
+import { getFileExtension } from "../util/getFileExtension";
+import { getFileColor } from "../util/getFileColor";
+import { getFileIcon } from "../util/getFileIcon";
 
 type UploadProgressItemProps = {
   fileName: string;

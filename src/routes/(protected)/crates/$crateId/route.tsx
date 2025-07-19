@@ -1,12 +1,12 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
-import { useCrateDetails } from "@/features/crates/hooks/useCrateDetails";
+import { useCrateDetails } from "@/features/crates/hooks/queries/useCrateDetails";
 import FileUpload from "@/features/files/components/FileUpload";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { CrateSettingsPanel } from "@/features/crates";
+import CrateSettingsPanel from "@/features/crates/components/CrateSettingsPanel";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId")({
   component: CrateLayout,

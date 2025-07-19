@@ -5,15 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { useInviteToCrate } from "../hooks/useInviteToCrate";
-import { CrateRole, type CrateInviteForm, type CrateInviteRequest } from "../types";
-import { crateInviteFormSchema } from "../schemas";
+import { useInviteToCrate } from "../hooks/mutations/useInviteToCrate";
+import { CrateInviteRequestSchema } from "../schemas/CrateInviteRequestSchema";
+import type { CrateInviteRequest } from "../types/CrateInviteRequest";
+import { CrateRole } from "../types/CrateRole";
 
 type InviteCollaboratorsProps = { crateId: string };
 
 export default function InviteCollaborators({ crateId }: InviteCollaboratorsProps) {
-  const form = useForm<CrateInviteForm>({
-    resolver: zodResolver(crateInviteFormSchema),
+  const form = useForm<CrateInviteRequest>({
+    resolver: zodResolver(CrateInviteRequestSchema),
     defaultValues: {
       email: "",
       role: CrateRole.Viewer,
@@ -23,7 +24,7 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
 
   const { mutateAsync: invite, isPending } = useInviteToCrate();
 
-  const onSubmit = async (data: CrateInviteForm) => {
+  const onSubmit = async (data: CrateInviteRequest) => {
     try {
       const expiresAtDate = new Date(Date.now() + data.expiresAt * 60 * 1000);
 

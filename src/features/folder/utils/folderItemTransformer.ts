@@ -1,5 +1,5 @@
-import { FolderItemType } from "@/features/folder/types";
-import type { FolderOrFileItem } from "@/features/folder/types";
+import { FolderItemType } from "../types/FolderItemType";
+import type { FolderOrFileItem } from "../types/FolderOrFileItem";
 
 export function injectBackRow(
   items: FolderOrFileItem[],

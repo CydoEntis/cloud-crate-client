@@ -1,5 +1,6 @@
 import FileIndicator from "@/components/FileIndicator";
-import { FolderItemType, type FolderOrFileItem } from "@/features/folder/types";
+import { FolderItemType } from "@/features/folder/types/FolderItemType";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 
 type NameCellProps = {
   row: FolderOrFileItem;

@@ -1,4 +1,5 @@
-import { getFileColor, getFileIcon } from "@/features/files/util";
+import { getFileColor } from "@/features/files/util/getFileColor";
+import { getFileIcon } from "@/features/files/util/getFileIcon";
 import { Folder } from "lucide-react";
 
 type FileIndicatorProps = {
@@ -12,7 +13,7 @@ const FileIndicator = ({ filename, isFolder, folderColor }: FileIndicatorProps) 
 
   const ext = filename.split(".").pop() ?? "";
   const bg = isFolder ? folderColor : getFileColor(ext);
-  const Icon = isFolder ? Folder : getFileIcon(ext); 
+  const Icon = isFolder ? Folder : getFileIcon(ext);
   return (
     <div className="p-2 rounded-md flex items-center justify-center" style={{ backgroundColor: bg }}>
       <Icon className="w-5 h-5 text-white" />

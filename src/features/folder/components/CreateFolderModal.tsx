@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { ColorPicker } from "@/components/ColorPicker";
-import { CreateFolderRequestSchema } from "@/features/folder/schemas";
-import type { CreateFolderRequest } from "@/features/folder/types";
+import type { CreateFolderRequest } from "../types/request/CreateFolderRequest";
+import { CreateFolderRequestSchema } from "../schemas/CreateFolderRequestSchema";
 
 type CreateFolderData = Pick<CreateFolderRequest, "name" | "color">;
 

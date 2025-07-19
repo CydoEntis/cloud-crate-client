@@ -3,15 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ColorPicker } from "@/components/ColorPicker";
-import { useUpdateCrate } from "../hooks/useUpdateCrate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { updateCrateSchema } from "../schemas";
-import type { UpdateCrateRequest } from "../types";
 import { useState } from "react";
 import { isAxiosError } from "axios";
 import { setFieldErrorsFromValidationResponse } from "@/lib/formUtils";
 import InviteCollaborators from "@/features/invites/components/InivteCollaborators";
+import { useUpdateCrate } from "../hooks/mutations/useUpdateCrate";
+import type { UpdateCrateRequest } from "../types/UpdateCrateRequest";
+import { UpdateCrateSchema } from "../schemas/UpdateCrateSchema";
 
 type CrateSettingsPanelProps = {
   isOpen: boolean;
@@ -26,7 +26,7 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
   const [error, setError] = useState("");
 
   const form = useForm<UpdateCrateRequest>({
-    resolver: zodResolver(updateCrateSchema),
+    resolver: zodResolver(UpdateCrateSchema),
     defaultValues: { name: initialName, color: initialColor },
   });
 

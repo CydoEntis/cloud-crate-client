@@ -1,5 +1,5 @@
+import FolderContentsView from "@/features/files/components/FolderContentsView";
 import { createFileRoute } from "@tanstack/react-router";
-import { FolderContentsView } from "@/features/files";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
 

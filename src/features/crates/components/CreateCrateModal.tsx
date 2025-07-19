@@ -3,20 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { createCrateSchema } from "../schemas";
-import type { CreateCrateRequest } from "../types";
 import { useCrateModalStore } from "../store/crateModalStore";
-import { useCreateCrate } from "../hooks";
 import { extractApiErrors } from "@/lib/formUtils";
 import { useState } from "react";
 import { ColorPicker } from "@/components/ColorPicker";
+import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
+import type { CreateCrateRequest } from "../types/CreateCrateRequest";
+import { CreateCrateSchema } from "../schemas/CreateCrateSchema";
 
 function CreateCrateModal() {
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
   const [error, setError] = useState("");
   const form = useForm<CreateCrateRequest>({
-    resolver: zodResolver(createCrateSchema),
+    resolver: zodResolver(CreateCrateSchema),
     defaultValues: { name: "", color: "" },
   });
 

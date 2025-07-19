@@ -3,8 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import { Upload } from "lucide-react";
 import type { UploadFileInput } from "@/features/files/types";
-import { useUploadFile } from "@/features/files/hooks";
-import { ACCEPTED_EXTENSIONS, UploadFileSchema, UploadProgressItem } from "@/features/files";
+import { UploadFileSchema } from "../schemas/UploadFileSchema";
+import { useUploadFile } from "../hooks/mutations/useUploadFile";
+import UploadProgressItem from "./UploadProgressItem";
+import { ACCEPTED_EXTENSIONS } from "../util/acceptedExtensions";
 
 type FileUploadProps = {
   crateId: string;
@@ -27,11 +29,7 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
   const [progressList, setProgressList] = useState<{ id: string; fileName: string; percent: number }[]>([]);
 
   const onSubmit = (data: UploadFileInput) => {
-    console.log(
-      "Uploading files:",
-      data.files.map((f) => f.name)
-    );
-    data.files.forEach((file) => {
+    data.files.forEach((file: any) => {
       const id = crypto.randomUUID();
 
       setProgressList((prev) => [...prev, { id, fileName: file.name, percent: 0 }]);

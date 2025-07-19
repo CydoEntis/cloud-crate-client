@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/features/auth";
 import api from "@/lib/api";
-import { FolderContentsResponseSchema } from "../schemas";
-import type { FolderContentsResponse } from "../types";
+import type { FolderContentsResponse } from "../types/response/FolderContentsResponse";
+import { FolderContentsResponseSchema } from "../schemas/FolderContentsResponseSchema";
 
 export const getFolderContents = async (
   crateId: string,

@@ -7,8 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { FolderItemType } from "@/features/folder/types/FolderItemType";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 import { MoreVertical } from "lucide-react";
-import { FolderItemType, type FolderOrFileItem } from "@/features/folder/types";
 
 function ActionsCell({ row }: { row: FolderOrFileItem }) {
   if ((row as any).isBackRow) return null;

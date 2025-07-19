@@ -1,5 +1,5 @@
 import { MoreVertical } from "lucide-react";
-import { getFileColor } from "../util";
+import { getFileColor } from "../util/getFileColor";
 
 type RecentFileProps = {
   name: string;

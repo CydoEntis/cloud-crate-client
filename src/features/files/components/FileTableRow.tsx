@@ -1,6 +1,7 @@
 import { TableRow, TableCell } from "@/components/ui/table";
+import { FolderItemType, type DragItemType } from "@/features/folder/types/FolderItemType";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 import { flexRender } from "@tanstack/react-table";
-import { FolderItemType, type DragItemType, type FolderOrFileItem } from "@/features/folder";
 
 type FileTableRowProps = {
   row: any;
