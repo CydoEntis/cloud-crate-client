@@ -12,6 +12,11 @@ import InviteCollaborators from "@/features/invites/components/InivteCollaborato
 import { useUpdateCrate } from "../hooks/mutations/useUpdateCrate";
 import type { UpdateCrateRequest } from "../types/UpdateCrateRequest";
 import { UpdateCrateSchema } from "../schemas/UpdateCrateSchema";
+import { Loader2, Check } from "lucide-react";
+import { toast } from "sonner";
+
+// ⏳ Helper to force wait
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 type CrateSettingsPanelProps = {
   isOpen: boolean;
@@ -22,8 +27,9 @@ type CrateSettingsPanelProps = {
 };
 
 function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColor }: CrateSettingsPanelProps) {
-  const { mutateAsync: updateCrate, isPending } = useUpdateCrate();
+  const { mutateAsync: updateCrate } = useUpdateCrate();
   const [error, setError] = useState("");
+  const [animationPhase, setAnimationPhase] = useState<"idle" | "loading" | "updated">("idle");
 
   const form = useForm<UpdateCrateRequest>({
     resolver: zodResolver(UpdateCrateSchema),
@@ -31,12 +37,17 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
   });
 
   const onSubmit = async (data: UpdateCrateRequest) => {
+    setAnimationPhase("loading");
     try {
-      await updateCrate({ crateId, ...data });
-      onClose();
+      await Promise.all([updateCrate({ crateId, ...data }), sleep(300)]);
       form.reset(data);
+      setAnimationPhase("updated");
+      toast.success("Crate updated successfully!");
+      setTimeout(() => setAnimationPhase("idle"), 1000);
     } catch (err) {
       form.clearErrors();
+      setAnimationPhase("idle");
+
       if (isAxiosError(err)) {
         const errors = err.response?.data?.errors;
         if (errors && typeof errors === "object" && !Array.isArray(errors)) {
@@ -70,6 +81,8 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={animationPhase !== "idle"}
+                        autoComplete="off"
                         {...field}
                         onChange={(e) => {
                           field.onChange(e);
@@ -89,7 +102,7 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
                   <FormItem>
                     <FormLabel>Color</FormLabel>
                     <FormControl>
-                      <ColorPicker control={form.control} name={field.name} disabled={false} />
+                      <ColorPicker control={form.control} name={field.name} disabled={animationPhase !== "idle"} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -98,8 +111,17 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
 
               {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
 
-              <Button type="submit" disabled={isPending}>
-                Save Changes
+              <Button type="submit" disabled={animationPhase !== "idle"} className="w-full">
+                {animationPhase === "loading" ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : animationPhase === "updated" ? (
+                  <div className="flex items-center gap-1">
+                    <Check className="h-8 w-8 text-white" />
+                    <span>Updated</span>
+                  </div>
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
             </form>
           </Form>
@@ -108,13 +130,12 @@ function CrateSettingsPanel({ isOpen, onClose, crateId, initialName, initialColo
         {/* Additions below */}
         <div className="border-t mt-8 pt-6 space-y-4">
           <InviteCollaborators crateId={crateId} />
-          {/* Member management placeholder */}
+
           <div>
             <h4 className="text-sm font-semibold mb-1">Collaborators</h4>
             <p className="text-xs text-muted-foreground">Coming soon: Invite or remove users.</p>
           </div>
 
-          {/* Danger zone */}
           <div>
             <h4 className="text-sm font-semibold text-destructive mb-1">Delete Crate</h4>
             <p className="text-xs text-muted-foreground mb-2">
