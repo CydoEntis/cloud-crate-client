@@ -1,5 +1,4 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
 import { useCrateDetails } from "@/features/crates/hooks/queries/useCrateDetails";
 import FileUpload from "@/features/files/components/FileUpload";

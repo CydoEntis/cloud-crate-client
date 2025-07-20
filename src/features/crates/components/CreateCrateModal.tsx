@@ -1,10 +1,11 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ColorPicker } from "@/components/ColorPicker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useCrateModalStore } from "../store/crateModalStore";
-import { ColorPicker } from "@/components/ColorPicker";
 import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import type { CreateCrateRequest } from "../types/CreateCrateRequest";
 import { CreateCrateSchema } from "../schemas/CreateCrateSchema";
@@ -21,6 +22,12 @@ function CreateCrateModal() {
 
   const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
 
+  const onClose = () => {
+    form.clearErrors();
+    form.reset();
+    close();
+  };
+
   const onSubmit = async (data: CreateCrateRequest) => {
     try {
       await createCrate(data);
@@ -32,32 +39,56 @@ function CreateCrateModal() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={close}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Your First Crate</DialogTitle>
           <DialogDescription>Enter a name and pick a color</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <Input
-            placeholder="Crate name"
-            {...form.register("name", {
-              onChange: (e) => {
-                form.setValue("name", e.target.value);
-                clearErrors();
-              },
-            })}
-          />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Crate Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        clearErrors();
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <ColorPicker name="color" control={form.control} />
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <ColorPicker control={form.control} name={field.name} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {globalError && <p className="text-sm text-red-500 font-medium -mt-1">{globalError}</p>}
+            {globalError && <p className="text-sm text-red-500 font-medium">{globalError}</p>}
 
-          <Button type="submit" disabled={isPending}>
-            Create Crate
-          </Button>
-        </form>
+            <Button type="submit" disabled={isPending}>
+              Create Crate
+            </Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
