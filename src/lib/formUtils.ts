@@ -33,21 +33,33 @@ export function setFormErrors<T extends FieldValues>(form: UseFormReturn<T>, err
   return globalError;
 }
 
-export function extractApiErrors<T extends FieldValues>(err: any, form?: UseFormReturn<T>): string | null {
-  const data = err?.response?.data;
-  if (data?.errors && Array.isArray(data.errors)) {
+export function extractApiErrors<T extends FieldValues>(err: unknown, form?: UseFormReturn<T>): string | null {
+  const data = (err as any)?.response?.data;
+
+  form?.clearErrors();
+
+  if (data?.errors && typeof data.errors === "object" && !Array.isArray(data.errors)) {
     if (form) {
-      return setFormErrors(form, data.errors);
+      setFieldErrorsFromValidationResponse(form, data.errors);
     }
-    return data.errors.find((e: ApiError) => !errorCodeToFieldMap[e.code])?.message ?? null;
+    return null;
   }
 
-  if (data?.message) {
+  if (Array.isArray(data?.errors)) {
+    if (form) {
+      const globalError = setFormErrors(form, data.errors);
+      return globalError;
+    }
+    const global = data.errors.find((e: ApiError) => !e.code || e.code.startsWith("ERR_"));
+    return global?.message ?? null;
+  }
+
+  if (typeof data?.message === "string") {
     return data.message;
   }
 
-  if (err.message) {
-    return err.message;
+  if (typeof (err as any)?.message === "string") {
+    return (err as any).message;
   }
 
   return "An unknown error occurred";
@@ -66,8 +78,4 @@ export function setFieldErrorsFromValidationResponse<T extends FieldValues>(
       form.setError(fieldName as Path<T>, { type: "server", message: messages[0] });
     }
   }
-}
-
-function isAxiosError(err: any): err is { response?: { data?: any } } {
-  return err && typeof err === "object" && "response" in err;
 }

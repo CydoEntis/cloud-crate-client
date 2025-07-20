@@ -10,8 +10,6 @@ export const useCreateCrate = () => {
       queryClient.invalidateQueries({ queryKey: ["crates"] });
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
-    onError: (error) => {
-      console.error(error);
-    },
+    onError: (error) => {},
   });
 };

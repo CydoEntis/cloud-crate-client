@@ -1,6 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore, useCurrentUser } from "@/features/auth";
+import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
 import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
@@ -22,6 +23,7 @@ function RouteComponent() {
 
   return (
     <SidebarProvider>
+      <CreateCrateModal />
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">

@@ -4,32 +4,30 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useCrateModalStore } from "../store/crateModalStore";
-import { extractApiErrors } from "@/lib/formUtils";
-import { useState } from "react";
 import { ColorPicker } from "@/components/ColorPicker";
 import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import type { CreateCrateRequest } from "../types/CreateCrateRequest";
 import { CreateCrateSchema } from "../schemas/CreateCrateSchema";
+import { useApiFormErrorHandler } from "@/hooks/useApiFromErrorHandler";
 
 function CreateCrateModal() {
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
-  const [error, setError] = useState("");
+
   const form = useForm<CreateCrateRequest>({
     resolver: zodResolver(CreateCrateSchema),
     defaultValues: { name: "", color: "" },
   });
 
+  const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
+
   const onSubmit = async (data: CreateCrateRequest) => {
     try {
       await createCrate(data);
-      close();
       form.reset();
+      close();
     } catch (err) {
-      const globalError = extractApiErrors(err, form);
-      if (globalError) {
-        setError(globalError);
-      }
+      handleApiError(err);
     }
   };
 
@@ -40,18 +38,22 @@ function CreateCrateModal() {
           <DialogTitle>Create Your First Crate</DialogTitle>
           <DialogDescription>Enter a name and pick a color</DialogDescription>
         </DialogHeader>
+
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <Input
             placeholder="Crate name"
             {...form.register("name", {
               onChange: (e) => {
                 form.setValue("name", e.target.value);
-                setError("");
+                clearErrors();
               },
             })}
           />
+
           <ColorPicker name="color" control={form.control} />
-          {error && <p className="text-sm text-red-500 font-medium -mt-1">{error}</p>}
+
+          {globalError && <p className="text-sm text-red-500 font-medium -mt-1">{globalError}</p>}
+
           <Button type="submit" disabled={isPending}>
             Create Crate
           </Button>
