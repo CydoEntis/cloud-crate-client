@@ -10,6 +10,7 @@ import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import type { CreateCrateRequest } from "../types/CreateCrateRequest";
 import { CreateCrateSchema } from "../schemas/CreateCrateSchema";
 import { useApiFormErrorHandler } from "@/hooks/useApiFromErrorHandler";
+import { toast } from "sonner";
 
 function CreateCrateModal() {
   const { isOpen, close } = useCrateModalStore();
@@ -33,6 +34,7 @@ function CreateCrateModal() {
       await createCrate(data);
       form.reset();
       close();
+      toast.success("Crate created successfully");
     } catch (err) {
       handleApiError(err);
     }
