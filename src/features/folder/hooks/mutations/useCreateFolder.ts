@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { createFolder } from "../../api/createFolder";
-import type { CreateFolderRequest } from "../../types";
+import type { CreateFolderRequest } from "../../types/request/CreateFolderRequest";
 
 export const useCreateFolder = () => {
   const queryClient = useQueryClient();

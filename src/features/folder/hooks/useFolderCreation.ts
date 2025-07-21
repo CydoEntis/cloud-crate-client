@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useCreateFolder } from "./mutations/useCreateFolder";
 import type { QueryObserverResult } from "@tanstack/react-query";
-import type { FolderContentsResponse, CreateFolderRequest } from "../types";
+import type { FolderContentsResponse } from "../types/response/FolderContentsResponse";
+import type { CreateFolderRequest } from "../types/request/CreateFolderRequest";
 
 export function useFolderCreation(
   crateId: string,
@@ -21,10 +22,7 @@ export function useFolderCreation(
       color,
     };
 
-    await createFolderMutation.mutateAsync({
-      crateId,
-      data: createFolderPayload,
-    });
+    await createFolderMutation.mutateAsync(createFolderPayload);
 
     setIsCreateFolderOpen(false);
     await refetch();
