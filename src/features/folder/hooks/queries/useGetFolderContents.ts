@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFolderContents } from "../../api/getFolderContents";
-import type { FolderContentsResponse } from "../../types";
+import type { FolderContentsResponse } from "../../types/response/FolderContentsResponse";
 
 export const useGetFolderContents = (
   crateId: string,
