@@ -4,9 +4,10 @@ interface AuthState {
   accessToken: string | null;
   setAuth: (token: string) => void;
   clearAuth: () => void;
+  isAuthenticated: () => boolean;
 }
 
-export const useAuthStore = create<AuthState>((set) => {
+export const useAuthStore = create<AuthState>((set, get) => {
   const token = localStorage.getItem("accessToken");
 
   return {
@@ -19,5 +20,6 @@ export const useAuthStore = create<AuthState>((set) => {
       localStorage.removeItem("accessToken");
       set({ accessToken: null });
     },
+    isAuthenticated: () => !!get().accessToken,
   };
 });

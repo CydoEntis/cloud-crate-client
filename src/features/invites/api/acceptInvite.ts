@@ -1,9 +1,6 @@
-// import type { ApiResponse } from "@/features/auth/types";
-// import api from "@/lib/api";
-// // import type { CreateCrateRequest, Crate } from "../types";
+import type { ApiResponse } from "@/features/auth";
+import api from "@/lib/api";
 
-// export const createCrate = async (data: CrateInviteRequest): Promise<Crate> => {
-//   const { data: result } = (await api.post<ApiResponse<Crate>>("/crates", data)).data;
-//   return result!;
-// };
-// ``
+export const acceptInvite = async (token: string): Promise<void> => {
+  await api.post<ApiResponse<void>>(`/invites/token/${token}/accept`);
+};
