@@ -1,4 +1,4 @@
-import type { ApiResponse } from "@/features/auth/types";
+import type { ApiResponse } from "@/features/auth";
 import api from "@/lib/api";
 
 export const declineInvite = async (token: string): Promise<void> => {

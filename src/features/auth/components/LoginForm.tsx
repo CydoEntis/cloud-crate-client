@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
@@ -19,6 +19,9 @@ import { useAuthStore } from "../store";
 
 function LoginForm() {
   const navigate = useNavigate();
+  const search = useSearch({ from: "/(public)/(auth)/login" });
+  const inviteToken = search.inviteToken;
+
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<LoginRequest>({
@@ -34,10 +37,15 @@ function LoginForm() {
 
   async function onSubmit(data: LoginRequest) {
     try {
-      const { accessToken } = await login(data);
+      const accessToken = await login(data);
       console.log(accessToken);
       setAuth(accessToken);
-      navigate({ to: "/" });
+
+      if (inviteToken) {
+        navigate({ to: `/invite/${inviteToken}` });
+      } else {
+        navigate({ to: "/" });
+      }
     } catch (err: unknown) {
       const globalError = extractApiErrors(err, form);
       setError(globalError);

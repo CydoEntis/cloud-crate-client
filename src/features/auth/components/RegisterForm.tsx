@@ -33,6 +33,7 @@ function RegisterForm() {
   async function onSubmit(data: RegisterRequest) {
     try {
       const { token } = await register(data);
+      console.log(token);
       setAuth(token);
       navigate({ to: "/" });
     } catch (err: any) {

@@ -409,7 +409,7 @@ export const routeTree = rootRoute
       "parent": "/(public)/(auth)"
     },
     "/(public)/invite/$token": {
-      "filePath": "(public)/invite/$token.ts",
+      "filePath": "(public)/invite/$token.tsx",
       "parent": "/(public)"
     },
     "/(protected)/crates/$crateId/": {
