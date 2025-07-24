@@ -40,18 +40,18 @@ export default function InviteHandlerPage() {
     }
   }, [token, isAuthenticated, navigate]);
 
+  console.log("INVITE: ", invite);
+
   if (isLoading) return <div>Loading invite...</div>;
   if (error || !invite) return <div>Invalid or expired invite.</div>;
 
-  if (invite.invitedUserEmail !== user?.email) {
-    return <div>This invite is not for your user account.</div>;
-  }
+  console.log("User: ", user);
 
   const handleAccept = async () => {
     try {
       await acceptAnimation.run(() => acceptInvite(token!));
       toast.success("Invite accepted!");
-      navigate({ to: `/crates/${invite.crateId}` });
+      navigate({ to: `/crates/${invite!.crateId}` });
     } catch {
       toast.error("Failed to accept invite.");
     }

@@ -28,13 +28,13 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
     try {
       const expiresAtDate = new Date(Date.now() + data.expiresAt * 60 * 1000);
 
-      await invite({
+      const inviteRequest = {
+        ...data,
+        expiresAt: expiresAtDate,
         crateId,
-        data: {
-          ...data,
-          expiresAt: expiresAtDate,
-        },
-      });
+      };
+
+      await invite(inviteRequest);
       form.reset();
     } catch (error) {
       form.setError("email", { message: "Failed to send invitation" });
