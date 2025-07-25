@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +18,8 @@ import { useAuthStore } from "../store";
 function RegisterForm() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const search = useSearch({ from: "/(public)/(auth)/register" });
+  const inviteToken = search.inviteToken;
 
   const form = useForm<RegisterRequest>({
     resolver: zodResolver(registerSchema),
@@ -35,7 +37,11 @@ function RegisterForm() {
       const { token } = await register(data);
       console.log(token);
       setAuth(token);
-      navigate({ to: "/" });
+      if (inviteToken) {
+        navigate({ to: `/invite/${inviteToken}` });
+      } else {
+        navigate({ to: "/" });
+      }
     } catch (err: any) {
       if (err.response?.data && Array.isArray(err.response.data)) {
         setError(null);
@@ -107,7 +113,11 @@ function RegisterForm() {
 
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to="/login" className="underline underline-offset-4 text-indigo-500 font-bold">
+            <Link
+              to="/login"
+              search={inviteToken ? { inviteToken } : undefined}
+              className="underline underline-offset-4 text-indigo-500 font-bold"
+            >
               Login
             </Link>
           </div>

@@ -6,15 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { useInviteToCrate } from "../hooks/mutations/useInviteToCrate";
-import { CrateInviteRequestSchema } from "../schemas/CrateInviteRequestSchema";
-import type { CrateInviteRequest } from "../types/CrateInviteRequest";
+
 import { CrateRole } from "../types/CrateRole";
+import type { CrateInviteApiRequest } from "../types/CrateInviteApiRequest";
+import type { CrateInviteFormValues } from "../types/CrateInviteRequest";
+import { crateInviteFormSchema } from "../schemas/crateInviteFormSchema";
 
 type InviteCollaboratorsProps = { crateId: string };
 
 export default function InviteCollaborators({ crateId }: InviteCollaboratorsProps) {
-  const form = useForm<CrateInviteRequest>({
-    resolver: zodResolver(CrateInviteRequestSchema),
+  const form = useForm<CrateInviteFormValues>({
+    resolver: zodResolver(crateInviteFormSchema),
     defaultValues: {
       email: "",
       role: CrateRole.Viewer,
@@ -24,14 +26,12 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
 
   const { mutateAsync: invite, isPending } = useInviteToCrate();
 
-  const onSubmit = async (data: CrateInviteRequest) => {
+  const onSubmit = async (data: CrateInviteFormValues) => {
     try {
-      const expiresAtDate = new Date(Date.now() + data.expiresAt * 60 * 1000);
-
-      const inviteRequest = {
+      const inviteRequest: CrateInviteApiRequest = {
         ...data,
-        expiresAt: expiresAtDate,
         crateId,
+        expiresAt: new Date(Date.now() + data.expiresAt * 60 * 1000),
       };
 
       await invite(inviteRequest);

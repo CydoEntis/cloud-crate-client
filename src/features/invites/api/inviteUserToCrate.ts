@@ -1,15 +1,8 @@
 import type { ApiResponse } from "@/features/auth";
 import api from "@/lib/api";
-import type { CrateInviteRequest } from "../types/CrateInviteRequest";
 import type { CrateRole } from "../types/CrateRole";
+import type { CrateInviteApiRequest } from "../types/CrateInviteApiRequest";
 
-export type InviteRequest = {
-  crateId: string;
-  email: string;
-  role: CrateRole;
-  expiresAt: Date;
-};
-
-export const inviteUserToCrate = async (data: InviteRequest): Promise<void> => {
+export const inviteUserToCrate = async (data: CrateInviteApiRequest): Promise<void> => {
   await api.post<ApiResponse<void>>(`/invite`, data);
 };

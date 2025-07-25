@@ -1,8 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { RegisterForm } from "@/features/auth";
+import z from "zod";
+import { zodValidator } from "@tanstack/zod-adapter";
+
+const loginSearchSchema = z.object({
+  inviteToken: z.string().optional(),
+});
 
 export const Route = createFileRoute("/(public)/(auth)/register")({
   component: RegisterPage,
+  validateSearch: zodValidator(loginSearchSchema),
 });
 
 function RegisterPage() {

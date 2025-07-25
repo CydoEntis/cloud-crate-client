@@ -1,4 +1,4 @@
 import type z from "zod";
-import type { CrateInviteRequestSchema } from "../schemas/CrateInviteRequestSchema";
+import type { crateInviteFormSchema } from "../schemas/crateInviteFormSchema";
 
-export type CrateInviteRequest = z.infer<typeof CrateInviteRequestSchema>;
+export type CrateInviteFormValues = z.infer<typeof crateInviteFormSchema>;

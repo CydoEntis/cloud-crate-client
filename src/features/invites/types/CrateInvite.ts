@@ -7,3 +7,12 @@ export type CrateInvite = {
   status: string;
   expiresAt?: string;
 };
+
+export type CrateInviteDetails = {
+  id: string;
+  crateId: string;
+  crateName: string;
+  invitedUserEmail: string;
+  role: string;
+  expiresAt?: string;
+};
