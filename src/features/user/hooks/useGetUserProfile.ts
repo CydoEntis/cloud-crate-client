@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getUser } from "../api";
-import type { UserResponse } from "../types";
-import { useUserStore } from "../store";
+import { getUserProfile } from "../api/getUserProfile";
+import type { UserProfileResponse } from "../types/UserProfileResponse";
+import { useUserStore } from "@/features/auth";
 
-export function useCurrentUser() {
+export function useGetCurrentUserProfile() {
   const setUser = useUserStore((state) => state.setUser);
   const clearUser = useUserStore((state) => state.clearUser);
 
-  const query = useQuery<UserResponse, Error>({
+  const query = useQuery<UserProfileResponse, Error>({
     queryKey: ["currentUser"],
-    queryFn: getUser,
+    queryFn: getUserProfile,
     retry: false,
   });
 

@@ -1,8 +1,8 @@
-import type { FolderOrFileItem } from "@/features/folder/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import NameCell from "./NameCell";
 import SizeCell from "./SizeCell";
 import ActionsCell from "./ActionsCell";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 
 const columnHelper = createColumnHelper<FolderOrFileItem>();
 

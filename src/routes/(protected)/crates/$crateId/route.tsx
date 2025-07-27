@@ -6,6 +6,7 @@ import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import CrateSettingsPanel from "@/features/crates/components/CrateSettingsPanel";
+import { CrateRole } from "@/features/invites/types/CrateRole";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId")({
   component: CrateLayout,
@@ -14,7 +15,6 @@ export const Route = createFileRoute("/(protected)/crates/$crateId")({
 function CrateLayout() {
   const { crateId } = Route.useParams();
   const { data: crate, isLoading, isError } = useCrateDetails(crateId);
-
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   if (isLoading) return <p>Loading crate info...</p>;
@@ -24,13 +24,15 @@ function CrateLayout() {
     <section>
       <div className="flex justify-between items-center border-b border-gray-300 py-2">
         <h3 className="text-3xl font-bold">{crate.name}</h3>
-        <Button
-          variant="outline"
-          className="border-primary text-primary hover:bg-purple-50 cursor-pointer hover:text-primary"
-          onClick={() => setSettingsOpen(true)}
-        >
-          <Settings /> Settings
-        </Button>
+        {crate.role !== CrateRole.Viewer ? (
+          <Button
+            variant="outline"
+            className="border-primary text-primary hover:bg-purple-50 cursor-pointer hover:text-primary"
+            onClick={() => setSettingsOpen(true)}
+          >
+            <Settings /> Settings
+          </Button>
+        ) : null}
       </div>
 
       <div className="mb-4">
@@ -39,6 +41,7 @@ function CrateLayout() {
       </div>
 
       <CrateSettingsPanel
+        role={crate.role}
         isOpen={isSettingsOpen}
         onClose={() => setSettingsOpen(false)}
         crateId={crateId}

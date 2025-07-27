@@ -1,8 +1,9 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { useAuthStore, useCurrentUser } from "@/features/auth";
+import { useAuthStore } from "@/features/auth";
 import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
 import { InviteModal } from "@/features/invites/components/inviteModal";
+import { useGetCurrentUserProfile } from "@/features/user/hooks/useGetUserProfile";
 import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/(protected)")({
 });
 
 function RouteComponent() {
-  const { isLoading, isError, data: user } = useCurrentUser();
+  const { isLoading, isError, data: user } = useGetCurrentUserProfile();
 
   if (isLoading) return <div>Loading user data...</div>;
   if (isError) return <div>Failed to load user data</div>;

@@ -25,6 +25,7 @@ export function InviteModal() {
 
   const handleAccept = async () => {
     try {
+      console.log(token);
       await acceptAnimation.run(() => acceptInvite(token!));
       toast.success("Invite accepted!");
       clearToken();
@@ -57,7 +58,7 @@ export function InviteModal() {
           <div className="p-6 text-center">Invalid or expired invite.</div>
         ) : (
           <>
-            <DialogHeader className="text-lg font-semibold text-center">You have been invited to join</DialogHeader>
+            <h3 className="text-lg font-semibold text-center flex justify-center w-full">You have been invited to join</h3>
             <div className="w-full flex justify-center items-center gap-2">
               <div
                 className="rounded-md p-1 flex items-center justify-center"

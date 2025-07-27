@@ -2,7 +2,8 @@ import { useReactTable, getCoreRowModel, type ColumnDef } from "@tanstack/react-
 import { Table, TableBody } from "@/components/ui/table";
 import FileTableHeader from "./FileTableHeader";
 import FileTableRow from "./FileTableRow";
-import type { DragItemType, FolderOrFileItem } from "@/features/folder/types";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
+import type { DragItemType } from "@/features/folder/types/FolderItemType";
 
 type FileTableProps = {
   data: FolderOrFileItem[];

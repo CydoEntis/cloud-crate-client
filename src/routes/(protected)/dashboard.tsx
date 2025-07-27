@@ -27,12 +27,6 @@ function RouteComponent() {
   const { data: crates, isLoading } = useGetUserCrates();
   const { open } = useCrateModalStore();
 
-  useEffect(() => {
-    if (!isLoading && crates && crates.length === 0) {
-      open();
-    }
-  }, [crates, isLoading, open]);
-
   const headerActions = (
     <div className="flex gap-2">
       <Button>

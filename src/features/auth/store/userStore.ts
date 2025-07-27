@@ -1,9 +1,10 @@
 import { create } from "zustand";
 import type { UserResponse } from "@/features/auth/types";
+import type { UserProfileResponse } from "@/features/user/types/UserProfileResponse";
 
 interface UserStore {
-  user: UserResponse | null;
-  setUser: (user: UserResponse) => void;
+  user: UserProfileResponse | null;
+  setUser: (user: UserProfileResponse) => void;
   clearUser: () => void;
 }
 
