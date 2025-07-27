@@ -1,7 +1,7 @@
 import { useReactTable, getCoreRowModel, type ColumnDef } from "@tanstack/react-table";
 import { Table, TableBody } from "@/components/ui/table";
-import { FileTableHeader } from "@/features/files/components";
-import CrateTableRow from "./CrateTableRow";
+import GenericTableHeader from "@/components/GenericTableHeader"; // Use your generic header
+import GenericTableRow from "@/components/GenericTableRow";
 import type { Crate } from "../types/Crate";
 
 type CrateTableProps = {
@@ -16,12 +16,14 @@ function CrateTable({ data, columns }: CrateTableProps) {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const getRowClass = () => "hover:bg-muted/20";
+
   return (
-    <Table>
-      <FileTableHeader table={table} />
+    <Table className="border-separate border-spacing-y-2">
+      <GenericTableHeader table={table} />
       <TableBody>
         {table.getRowModel().rows.map((row) => (
-          <CrateTableRow key={row.id} row={row} />
+          <GenericTableRow<Crate> key={row.id} row={row} className={getRowClass()} />
         ))}
       </TableBody>
     </Table>
