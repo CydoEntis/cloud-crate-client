@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserCrates } from "../../api";
-import type { Crate } from "../../types/crate";
+import type { UserCratesResponse } from "../../types/UserCratesResponse";
 
 export const useGetUserCrates = () =>
-  useQuery<Crate[]>({
+  useQuery<UserCratesResponse>({
     queryKey: ["crates"],
     queryFn: getUserCrates,
   });
