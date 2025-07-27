@@ -7,10 +7,10 @@ import { useUserStore } from "@/features/auth";
 function AddCrateButton() {
   const { open } = useCrateModalStore();
   const { user } = useUserStore();
+  console.log(user);
+  // const canAddCrate = (user?.crateCount ?? 0) < (user?.crateLimit ?? 1);
 
-  const canAddCrate = (user?.crateCount ?? 0) < (user?.crateLimit ?? 1);
-
-  if (!canAddCrate) return null;
+  // if (!canAddCrate) return null;
 
   return (
     <SidebarMenuItem className="mx-4">

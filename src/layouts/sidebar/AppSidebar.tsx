@@ -13,7 +13,7 @@ import AddCrateButton from "@/features/crates/components/AddCrateButton";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
-  { id: 2, text: "Files", to: "/files", icon: <Files /> },
+  { id: 2, text: "Crates", to: "/crates", icon: <Box /> },
   { id: 3, text: "Members", to: "/members", icon: <Users2 /> },
   { id: 4, text: "Favorites", to: "/favorites", icon: <Star /> },
   { id: 5, text: "Deleted Files", to: "/deleted", icon: <Trash2 /> },
@@ -50,14 +50,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             ))}
           </SidebarMenu>
 
-          {/* Divider */}
-          <div className="px-4 mt-6 mb-2 text-xs font-semibold text-gray-500">
-            Your Crates ({user?.crateCount}/{user?.crateLimit})
-          </div>
 
-          {/* Crate Navigation */}
           <SidebarMenu>
-            <CrateSidebarLinks />
             <AddCrateButton />
           </SidebarMenu>
         </div>
