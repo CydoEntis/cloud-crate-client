@@ -26,6 +26,7 @@ function RegisterForm() {
     defaultValues: {
       email: "",
       password: "",
+      displayName: "", // ✅ added
     },
   });
 
@@ -33,9 +34,14 @@ function RegisterForm() {
   const setAuth = useAuthStore((state) => state.setAuth);
 
   async function onSubmit(data: RegisterRequest) {
+    const avatarUrl = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(data.displayName)}`;
+
     try {
-      const { token } = await register(data);
-      console.log(token);
+      const { token } = await register({
+        ...data,
+        profilePictureUrl: avatarUrl,
+      });
+
       setAuth(token);
       if (inviteToken) {
         navigate({ to: `/invite/${inviteToken}` });
@@ -68,6 +74,20 @@ function RegisterForm() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
               <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="displayName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Display Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. coolcoder123" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="email"

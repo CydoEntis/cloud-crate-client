@@ -3,7 +3,6 @@ import type { ApiError } from "@/lib/formUtils";
 import type { loginSchema, registerSchema } from "../schemas";
 
 export type LoginRequest = z.infer<typeof loginSchema>;
-export type RegisterRequest = z.infer<typeof registerSchema>;
 
 export type ApiResponse<T> = {
   success: boolean;
@@ -13,16 +12,15 @@ export type ApiResponse<T> = {
   errors?: ApiError[];
 };
 
-export type UserResponse = {
-  id: string;
+
+export type RegisterRequest = {
+  displayName: string;
   email: string;
-  plan: "Free" | "Pro";
-  crateLimit: number;
-  crateCount: number;
-  usedStorage: number;
+  password: string;
+  profilePictureUrl?: string;
 };
 
-export type RegisterResponse = {
+
+export type AuthResponse = {
   token: string;
-  userId: string;
 };
