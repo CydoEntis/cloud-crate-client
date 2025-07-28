@@ -5,6 +5,7 @@ import { Box } from "lucide-react";
 export const crateTableColumns: ColumnDef<Crate>[] = [
   {
     accessorKey: "name",
+    size: 50,
     header: "Name",
     cell: ({ row }) => (
       <div className="flex gap-2">
@@ -20,16 +21,22 @@ export const crateTableColumns: ColumnDef<Crate>[] = [
   },
   {
     accessorKey: "owner",
+    size: 30,
     header: "Owner",
     cell: ({ row }) => (
-      <div className="flex items-center space-x-2">
+      <div className="text-right">
         <span>{row.original.owner}</span>
       </div>
     ),
   },
   {
     accessorKey: "createdAt",
+    size: 20,
     header: "Created",
-    cell: ({ row }) => new Date(row.original.name).toLocaleDateString(),
+    cell: ({ row }) => (
+      <div className="text-right">
+        {new Date(row.original.name).toLocaleDateString()}
+      </div>
+    ),
   },
 ];

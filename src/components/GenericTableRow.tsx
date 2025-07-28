@@ -47,7 +47,11 @@ function GenericTableRow<TData>({
         >
           <div className="flex">
             {row.getVisibleCells().map((cell) => (
-              <div key={cell.id} className={clsx("p-4 flex-1", cell.column.id === "controls" && "justify-end flex")}>
+              <div
+                key={cell.id}
+                className={clsx("p-4", cell.column.id === "controls" && "justify-end flex")}
+                style={{ width: `${cell.column.getSize()}%` }}
+              >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </div>
             ))}

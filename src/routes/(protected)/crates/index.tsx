@@ -3,7 +3,7 @@ import { crateTableColumns } from "@/features/crates/components/crateTableColumn
 import { useGetUserCrates } from "@/features/crates/hooks/queries/useGetUserCrates";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(protected)/crates")({
+export const Route = createFileRoute("/(protected)/crates/")({
   component: CratesPage,
 });
 

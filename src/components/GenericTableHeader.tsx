@@ -16,7 +16,11 @@ function GenericTableHeader<TData>({ table, className }: GenericTableHeaderProps
             <div className={clsx("bg-white rounded-lg shadow border border-gray-200", className)}>
               <div className="flex">
                 {headerGroup.headers.map((header, index) => (
-                  <div key={header.id} className={clsx("p-4 flex-1", index === 0 ? "text-left" : "text-right")}>
+                  <div
+                    key={header.id}
+                    className={clsx("p-4", index === 0 ? "text-left flex-1" : "text-right")}
+                    style={{ width: `${header.column.getSize()}%` }}
+                  >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </div>
                 ))}
