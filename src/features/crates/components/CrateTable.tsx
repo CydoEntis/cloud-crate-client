@@ -16,6 +16,12 @@ function CrateTable({ data, columns }: CrateTableProps) {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: "onChange",
+    columnResizeDirection: "ltr",
+    enableColumnResizing: true,
+    defaultColumn: {
+      size: 10,
+    },
   });
 
   const onNavigateToCrate = (crateId: string) => {

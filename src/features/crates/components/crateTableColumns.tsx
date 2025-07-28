@@ -6,6 +6,7 @@ export const crateTableColumns: ColumnDef<Crate>[] = [
   {
     accessorKey: "name",
     size: 50,
+    minSize: 30, // ensures it doesn't collapse
     header: "Name",
     cell: ({ row }) => (
       <div className="flex gap-2">
@@ -22,6 +23,7 @@ export const crateTableColumns: ColumnDef<Crate>[] = [
   {
     accessorKey: "owner",
     size: 30,
+    minSize: 20,
     header: "Owner",
     cell: ({ row }) => (
       <div className="text-right">
@@ -30,13 +32,17 @@ export const crateTableColumns: ColumnDef<Crate>[] = [
     ),
   },
   {
+    accessorKey: "storage",
+    size: 10,
+    minSize: 10,
+    header: "Storage",
+    cell: ({ row }) => <div className="text-right">{row.original.totalStorageUsed}</div>,
+  },
+  {
     accessorKey: "createdAt",
-    size: 20,
+    size: 10,
+    minSize: 10,
     header: "Created",
-    cell: ({ row }) => (
-      <div className="text-right">
-        {new Date(row.original.name).toLocaleDateString()}
-      </div>
-    ),
+    cell: ({ row }) => <div className="text-right">{new Date(row.original.color).toLocaleDateString()}</div>,
   },
 ];

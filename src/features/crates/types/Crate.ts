@@ -7,7 +7,7 @@ export type Crate = {
   color: string;
   owner: string;
   role: CrateRole;
-  totalStorageUserd: number;
+  totalStorageUsed: number;
   memberCount: number;
   firstThreeMembers: Member[];
 };

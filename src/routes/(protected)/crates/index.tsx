@@ -9,7 +9,9 @@ export const Route = createFileRoute("/(protected)/crates/")({
 
 function CratesPage() {
   const { data, isLoading } = useGetUserCrates();
-  console.log(data);
+
+
+  console.log("Crates: ", data);
   if (isLoading) return <p>Loading crates...</p>;
 
   return (
