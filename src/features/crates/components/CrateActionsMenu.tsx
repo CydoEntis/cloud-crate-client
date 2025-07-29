@@ -8,14 +8,14 @@ import {
 import { MoreVertical } from "lucide-react";
 import { useUserStore } from "@/features/auth";
 import type { Crate } from "../types/Crate";
-import { useUpdateCrate } from "../hooks/mutations/useUpdateCrate";
 
 type CrateActionsMenuProps = {
   crate: Crate;
   onEdit: (crate: Crate) => void;
+  onDelete: (crateId: string) => void;
 };
 
-function CrateActionsMenu({ crate, onEdit }: CrateActionsMenuProps) {
+function CrateActionsMenu({ crate, onEdit, onDelete }: CrateActionsMenuProps) {
   const { user } = useUserStore();
   const isOwner = user?.email === crate.owner.email;
 
@@ -27,6 +27,7 @@ function CrateActionsMenu({ crate, onEdit }: CrateActionsMenuProps) {
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     console.log("delete", crate.id);
+    onDelete(crate.id);
   };
 
   const handleLeave = (e: React.MouseEvent) => {

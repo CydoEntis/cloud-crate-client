@@ -5,6 +5,7 @@ import { useGetUserCrates } from "@/features/crates/hooks/queries/useGetUserCrat
 import { createFileRoute } from "@tanstack/react-router";
 import UpdateCrateModal from "@/features/crates/components/UpdateCrateModal";
 import type { Crate } from "@/features/crates/types/Crate";
+import { useDeleteCrate } from "@/features/crates/hooks/mutations/useDeleteCrate";
 
 export const Route = createFileRoute("/(protected)/crates/")({
   component: CratesPage,
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/(protected)/crates/")({
 function CratesPage() {
   const { data, isLoading } = useGetUserCrates();
   const [editingCrate, setEditingCrate] = useState<Crate | null>(null);
+  const {mutateAsync: deleteCrate} = useDeleteCrate();
 
   const handleEdit = (crate: Crate) => {
     setEditingCrate(crate);
@@ -32,7 +34,7 @@ function CratesPage() {
           data={data ?? []}
           columns={crateTableColumns({
             onEdit: handleEdit,
-            onDelete: (crate) => console.log("delete", crate.id),
+            onDelete: deleteCrate,
             onLeave: (crate) => console.log("leave", crate.id),
           })}
         />

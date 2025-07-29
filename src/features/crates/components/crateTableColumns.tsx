@@ -19,7 +19,7 @@ export function crateTableColumns({
   onLeave,
 }: {
   onEdit: (crate: Crate) => void;
-  onDelete: (crate: Crate) => void;
+  onDelete: (crateId: string) => void;
   onLeave: (crate: Crate) => void;
 }): ColumnDef<Crate>[] {
   return [
@@ -93,7 +93,7 @@ export function crateTableColumns({
       minSize: 5,
       cell: ({ row }) => {
         const crate = row.original;
-        return <CrateActionsMenu crate={crate} onEdit={onEdit} />;
+        return <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete}/>;
       },
     },
   ];
