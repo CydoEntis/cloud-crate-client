@@ -45,7 +45,7 @@ function GenericTableRow<TData>({
             typeof className === "function" ? className(row) : className
           )}
         >
-          <div className="flex">
+          <div className="flex items-center">
             {row.getVisibleCells().map((cell) => (
               <div
                 key={cell.id}
