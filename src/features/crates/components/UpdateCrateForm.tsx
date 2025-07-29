@@ -14,13 +14,14 @@ import type { UpdateCrateRequest } from "../types/UpdateCrateRequest";
 import { useAnimatedAction } from "@/hooks/useAnimationAction";
 import { useApiFormErrorHandler } from "@/hooks/useApiFromErrorHandler";
 
-type Props = {
+type UpdateCrateFormProps = {
   crateId: string;
   initialName: string;
   initialColor: string;
+  onSuccess?: () => void;
 };
 
-function UpdateCrateForm({ crateId, initialName, initialColor }: Props) {
+function UpdateCrateForm({ crateId, initialName, initialColor, onSuccess }: UpdateCrateFormProps) {
   const { mutateAsync: updateCrate } = useUpdateCrate();
   const { phase, run } = useAnimatedAction();
 
@@ -36,6 +37,7 @@ function UpdateCrateForm({ crateId, initialName, initialColor }: Props) {
       await run(() => updateCrate({ crateId, ...data }));
       form.reset(data);
       toast.success("Crate updated successfully!");
+      onSuccess?.();
     } catch (err) {
       form.reset(data);
       handleApiError(err);

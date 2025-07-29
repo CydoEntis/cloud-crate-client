@@ -6,6 +6,6 @@ export type Crate = {
   name: string;
   color: string;
   owner: Member;
-  totalStorageUsed: number;
+  usedStorage: number;
   joinedAt: Date;
 };

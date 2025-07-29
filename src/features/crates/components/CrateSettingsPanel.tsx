@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import InviteCollaborators from "@/features/invites/components/InivteCollaborators";
 import DeleteCrate from "./DeleteCrate";
 import type { CrateRole } from "@/features/invites/types/CrateRole";
+import UpdateCrateForm from "./UpdateCrateForm";
 
 type CrateSettingsPanelProps = {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export default function CrateSettingsPanel({
         <SheetHeader className="p-0">
           <SheetTitle>Crate Settings</SheetTitle>
           <SheetDescription>Update crate info, manage collaborators, or delete this crate.</SheetDescription>
+          <UpdateCrateForm crateId={crateId} initialName={initialName} initialColor={initialColor} />
         </SheetHeader>
 
         <div className="border-t mt-8 pt-6 space-y-4">
