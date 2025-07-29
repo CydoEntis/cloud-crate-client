@@ -3,7 +3,7 @@ import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/compone
 import { Link, useNavigate } from "@tanstack/react-router";
 import logo from "@/assets/cloud-crate-logo.png";
 import SidebarNavlink from "./SidebarNavlink";
-import { Files, LayoutDashboard, Settings, Star, Trash2, Users2, Plus, Box, Award } from "lucide-react";
+import { Files, LayoutDashboard, Settings, Star, Trash2, Users2, Plus, Box, Award, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import UpgradeAccountButton from "@/features/user/components/UpgradeAccountButton";
@@ -50,7 +50,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             ))}
           </SidebarMenu>
 
-
           <SidebarMenu>
             <AddCrateButton />
           </SidebarMenu>
@@ -58,14 +57,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* Logout Button */}
         <div className="pb-6 px-4 space-y-4">
-          <UpgradeAccountButton />
-          <Button
-            onClick={logout}
-            className="w-full py-2 px-4 rounded-xl text-center border-gray-500 hover:border-primary text-gray-500 cursor-pointer hover:bg-indigo-50 hover:text-primary"
-            variant="outline"
-          >
-            Log Out
-          </Button>
+          {/* <UpgradeAccountButton /> */}
+
+          <div className="border-t-1 py-4 flex justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <div className="w-9 h-9 rounded-md overflow-hidden">
+                <img src={user?.profilePicture} />
+              </div>
+              <div>
+                <p className="font-semibold">{user?.displayName}</p>
+                <p className="text-sm text-muted-foreground">{user?.email}</p>
+              </div>
+            </div>
+            <Button
+              onClick={logout}
+              className="py-2 px-4 rounded-md text-center hover:text-primary hover:bg-violet-100 text-gray-500 cursor-pointer "
+              variant="ghost"
+            >
+              <LogOut />
+            </Button>
+          </div>
         </div>
       </SidebarContent>
     </Sidebar>

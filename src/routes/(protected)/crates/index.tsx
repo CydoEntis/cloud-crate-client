@@ -10,7 +10,6 @@ export const Route = createFileRoute("/(protected)/crates/")({
 function CratesPage() {
   const { data, isLoading } = useGetUserCrates();
 
-
   console.log("Crates: ", data);
   if (isLoading) return <p>Loading crates...</p>;
 
@@ -18,12 +17,7 @@ function CratesPage() {
     <div className="space-y-12 p-6">
       <section>
         <h2 className="text-xl font-semibold mb-4">My Crates</h2>
-        <CrateTable data={data?.owned ?? []} columns={crateTableColumns} />
-      </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Joined Crates</h2>
-        <CrateTable data={data?.joined ?? []} columns={crateTableColumns} />
+        <CrateTable data={data ?? []} columns={crateTableColumns} />
       </section>
     </div>
   );

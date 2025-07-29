@@ -1,6 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Crate } from "../types/Crate";
 import { Box } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const crateTableColumns: ColumnDef<Crate>[] = [
   {
@@ -25,11 +27,28 @@ export const crateTableColumns: ColumnDef<Crate>[] = [
     size: 30,
     minSize: 20,
     header: "Owner",
-    cell: ({ row }) => (
-      <div className="text-right">
-        <span>{row.original.owner}</span>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const { displayName, profilePicture } = row.original.owner;
+
+      return (
+        <div className="flex justify-end items-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Avatar className="h-6 w-6 cursor-pointer">
+                {profilePicture ? (
+                  <AvatarImage src={profilePicture} alt={displayName} />
+                ) : (
+                  <AvatarFallback>{displayName?.[0] ?? "?"}</AvatarFallback>
+                )}
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              <p>{displayName}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "storage",
@@ -42,7 +61,7 @@ export const crateTableColumns: ColumnDef<Crate>[] = [
     accessorKey: "createdAt",
     size: 10,
     minSize: 10,
-    header: "Created",
-    cell: ({ row }) => <div className="text-right">{new Date(row.original.color).toLocaleDateString()}</div>,
+    header: "Joined",
+    cell: ({ row }) => <div className="text-right">{new Date(row.original.joinedAt).toLocaleDateString()}</div>,
   },
 ];
