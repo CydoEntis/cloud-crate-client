@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CrateActionsMenu from "./CrateActionsMenu";
+import UserAvatar from "@/components/UserAvatar";
 
 export function crateTableColumns({
   onEdit,
@@ -47,29 +48,7 @@ export function crateTableColumns({
       header: "Owner",
       cell: ({ row }) => {
         const { displayName, profilePicture, email } = row.original.owner;
-        const { user } = useUserStore.getState();
-
-        return (
-          <div className="flex justify-end items-center">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-1">
-                  <Avatar className="h-6 w-6 cursor-pointer">
-                    {profilePicture ? (
-                      <AvatarImage src={profilePicture} alt={displayName} />
-                    ) : (
-                      <AvatarFallback>{displayName?.[0] ?? "?"}</AvatarFallback>
-                    )}
-                  </Avatar>
-                  {user?.email === email && <span className="text-xs text-muted-foreground">(me)</span>}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>{displayName}</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        );
+        return <UserAvatar displayName={displayName} profilePictureUrl={profilePicture} email={email} />;
       },
     },
     {
@@ -93,7 +72,7 @@ export function crateTableColumns({
       minSize: 5,
       cell: ({ row }) => {
         const crate = row.original;
-        return <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete}/>;
+        return <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete} />;
       },
     },
   ];
