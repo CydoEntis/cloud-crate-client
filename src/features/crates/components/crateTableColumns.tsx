@@ -14,6 +14,7 @@ import {
 import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/components/UserAvatar";
 import StorageDisplay from "@/components/StorageDisplay";
+import CrateIndicator from "./CrateIndicator";
 
 export function crateTableColumns({
   onEdit,
@@ -30,17 +31,7 @@ export function crateTableColumns({
       size: 55,
       minSize: 30,
       header: "Name",
-      cell: ({ row }) => (
-        <div className="flex gap-2 items-center">
-          <div
-            className="rounded-md p-1 flex items-center justify-center"
-            style={{ backgroundColor: row.original.color, width: 24, height: 24 }}
-          >
-            <Box size={16} className="text-white" />
-          </div>
-          <h3 className="font-semibold">{row.original.name}</h3>
-        </div>
-      ),
+      cell: ({ row }) => <CrateIndicator crateColor={row.original.color} crateName={row.original.name} />,
     },
     {
       accessorKey: "owner",
@@ -57,10 +48,10 @@ export function crateTableColumns({
       size: 10,
       minSize: 10,
       header: "Storage",
-      cell: ({ row }) => (<StorageDisplay storage={row.original.usedStorage} />),
+      cell: ({ row }) => <StorageDisplay storage={row.original.usedStorage} />,
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "joinedAt",
       size: 10,
       minSize: 10,
       header: "Joined",
