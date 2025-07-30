@@ -37,10 +37,12 @@ function CrateActionsMenu({ crate, onEdit, onDelete }: CrateActionsMenuProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="p-1 hover:bg-muted rounded" onClick={(e) => e.stopPropagation()}>
-          <MoreVertical className="w-5 h-5 text-muted-foreground" />
-        </button>
+      <DropdownMenuTrigger asChild className="">
+        <div className="flex justify-end w-full">
+          <button className="p-1 hover:bg-muted rounded cursor-pointer" onClick={(e) => e.stopPropagation()}>
+            <MoreVertical className="w-5 h-5 text-muted-foreground" />
+          </button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
