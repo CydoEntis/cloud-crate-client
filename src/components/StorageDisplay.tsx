@@ -9,7 +9,7 @@ function StorageDisplay({ storage }: StorageDisplayProps) {
   return (
     <div className="text-right flex justify-end items-center gap-2">
       <HardDrive className="w-4 h-4 text-muted-foreground" />
-      {formatBytes(storage)}
+      <p className="text-muted-foreground">{formatBytes(storage)}</p>
     </div>
   );
 }

@@ -1,20 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Crate } from "../types/Crate";
-import { Box, MoreVertical } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserStore } from "@/features/auth";
-import { formatBytes } from "@/lib/formatBytes";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/components/UserAvatar";
 import StorageDisplay from "@/components/StorageDisplay";
 import CrateIndicator from "./CrateIndicator";
+import DateIndicator from "@/components/DateIndicator";
 
 export function crateTableColumns({
   onEdit,
@@ -55,7 +45,7 @@ export function crateTableColumns({
       size: 10,
       minSize: 10,
       header: "Joined",
-      cell: ({ row }) => <div className="text-right">{new Date(row.original.joinedAt).toLocaleDateString()}</div>,
+      cell: ({ row }) => <DateIndicator date={row.original.joinedAt} />,
     },
     {
       id: "actions",
