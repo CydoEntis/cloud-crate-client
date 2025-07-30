@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/components/UserAvatar";
+import StorageDisplay from "@/components/StorageDisplay";
 
 export function crateTableColumns({
   onEdit,
@@ -56,7 +57,7 @@ export function crateTableColumns({
       size: 10,
       minSize: 10,
       header: "Storage",
-      cell: ({ row }) => <div className="text-right">{formatBytes(row.original.usedStorage)}</div>,
+      cell: ({ row }) => (<StorageDisplay storage={row.original.usedStorage} />),
     },
     {
       accessorKey: "createdAt",
