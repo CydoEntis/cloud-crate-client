@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import FilePagination from "./FilePagination";
+import FilePagination from "../../../components/PaginationControls";
 import FileTable from "./FileTable";
 import FileTableToolbar from "./FileTableToolbar";
 import folderFileTableColumns from "./table/columns/folderFileTableColumns";

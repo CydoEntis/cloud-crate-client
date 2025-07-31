@@ -1,6 +1,6 @@
 export { default as FileCard } from "./FileCard";
 export { default as FileCardList } from "./FileCardList";
-export { default as FilePagination } from "./FilePagination";
+export { default as FilePagination } from "../../../components/PaginationControls";
 export { default as FileTable } from "./FileTable";
 export { default as FileTableHeader } from "../../../components/GenericTableHeader";
 export { default as FileTableRow } from "./FileTableRow";
