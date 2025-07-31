@@ -15,6 +15,7 @@ import type { Crate } from "@/features/crates/types/Crate";
 
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import PaginationControls from "@/components/PaginationControls";
 
 // ------------------
 // Types & helpers
@@ -40,6 +41,8 @@ const crateSearchSchema = z.object({
   searchTerm: z.string().optional(),
   sortBy: z.enum(allowedSortByValues).optional(),
   orderBy: z.enum(allowedOrderByValues).optional(),
+  page: z.coerce.number().optional().default(1),
+  pageSize: z.coerce.number().optional().default(1),
 });
 
 export const Route = createFileRoute("/(protected)/crates/")({
@@ -58,7 +61,8 @@ function CratesPage() {
   const sortBy = isSortBy(search.sortBy) ? search.sortBy : undefined;
   const orderBy = isOrderBy(search.orderBy) ? search.orderBy : "Desc";
   const searchTerm = search.searchTerm ?? "";
-  const sortDescending = orderBy === "Desc";
+  const page = search.page ?? 1;
+  const pageSize = search.pageSize ?? 10;
 
   const setSearchParams = (params: Partial<typeof search>) => {
     navigate({
@@ -73,6 +77,8 @@ function CratesPage() {
     searchTerm,
     sortBy,
     orderBy,
+    page,
+    pageSize,
   });
   const [editingCrate, setEditingCrate] = useState<Crate | null>(null);
   const { mutateAsync: deleteCrate } = useDeleteCrate();
@@ -139,7 +145,7 @@ function CratesPage() {
       </div>
 
       <CrateTable
-        data={data ?? []}
+        data={data?.items ?? []}
         columns={crateTableColumns({
           onEdit: handleEdit,
           onDelete: deleteCrate,
@@ -147,6 +153,14 @@ function CratesPage() {
         })}
       />
 
+      {data && data.items.length > 0 && (
+        <PaginationControls
+          page={data.page}
+          pageSize={data.pageSize}
+          totalCount={data.totalCount}
+          onPageChange={(newPage: number) => setSearchParams({ page: newPage })}
+        />
+      )}
       {editingCrate && (
         <UpdateCrateModal
           open
