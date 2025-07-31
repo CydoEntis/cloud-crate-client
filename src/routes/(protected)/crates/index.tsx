@@ -95,7 +95,7 @@ function CratesPage() {
       <div className="flex flex-wrap items-end gap-4">
         <SearchInputField
           value={searchTerm}
-          onChange={(val) => setSearchParams({ searchTerm: val })}
+          onChange={(val) => setSearchParams({ searchTerm: val, page: 1 })}
           placeholder="Search crates by name..."
         />
 
