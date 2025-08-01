@@ -8,6 +8,7 @@ import {
 import { MoreVertical } from "lucide-react";
 import { useUserStore } from "@/features/auth";
 import type { Crate } from "../types/Crate";
+import { useLeaveCrate } from "../hooks/mutations/useLeaveCrate";
 
 type CrateActionsMenuProps = {
   crate: Crate;
@@ -17,6 +18,8 @@ type CrateActionsMenuProps = {
 
 function CrateActionsMenu({ crate, onEdit, onDelete }: CrateActionsMenuProps) {
   const { user } = useUserStore();
+  const { mutate: leaveCrate } = useLeaveCrate();
+
   const isOwner = user?.email === crate.owner.email;
 
   const handleEdit = (e: React.MouseEvent) => {
@@ -32,7 +35,7 @@ function CrateActionsMenu({ crate, onEdit, onDelete }: CrateActionsMenuProps) {
 
   const handleLeave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("leave", crate.id);
+    leaveCrate(crate.id);
   };
 
   return (
