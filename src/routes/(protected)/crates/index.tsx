@@ -74,7 +74,7 @@ function CratesPage() {
     });
   };
 
-  const { data, isLoading } = useGetUserCrates({
+  const { data, isPending } = useGetUserCrates({
     searchTerm,
     sortBy,
     orderBy,
@@ -87,8 +87,6 @@ function CratesPage() {
 
   const handleEdit = (crate: Crate) => setEditingCrate(crate);
   const handleClose = () => setEditingCrate(null);
-
-  if (isLoading) return <p>Loading crates...</p>;
 
   return (
     <div className="space-y-6 p-6">
@@ -150,8 +148,9 @@ function CratesPage() {
         columns={crateTableColumns({
           onEdit: handleEdit,
           onDelete: deleteCrate,
-          onLeave: (crate) => leaveCrate,
+          onLeave: leaveCrate,
         })}
+        isLoading={isPending}
       />
 
       {data && data.items.length > 0 && (

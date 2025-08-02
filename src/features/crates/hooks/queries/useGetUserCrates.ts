@@ -5,7 +5,7 @@ import type { GetUserCratesParams } from "../../types/GetUserCrateParams";
 import type { PaginatedResult } from "@/features/auth";
 
 export const useGetUserCrates = (params: GetUserCratesParams = {}) => {
-  return useQuery<PaginatedResult<Crate>>({
+  return useQuery<PaginatedResult<Crate>, Error, PaginatedResult<Crate>, any[]>({
     queryKey: ["crates", params],
     queryFn: () => getUserCrates(params),
   });
