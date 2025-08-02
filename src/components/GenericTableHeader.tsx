@@ -11,14 +11,14 @@ function GenericTableHeader<TData>({ table, className }: GenericTableHeaderProps
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow key={headerGroup.id} className="p-0 border-none">
-          <TableCell colSpan={headerGroup.headers.length} className="p-0 border-none">
-            <div className={clsx("bg-white rounded-lg shadow border border-gray-200", className)}>
+        <TableRow key={headerGroup.id} className="p-0 border-none hover:bg-none">
+          <TableCell colSpan={headerGroup.headers.length} className="p-0 border-none hover:bg-none">
+            <div className={clsx("border-b hover:bg-transparent", className)}>
               <div className="flex">
                 {headerGroup.headers.map((header, index) => (
                   <div
                     key={header.id}
-                    className={clsx("p-4 font-semibold", index === 0 ? "text-left flex-1" : "text-right")}
+                    className={clsx("p-4 font-semibold hover:bg-none", index === 0 ? "text-left flex-1" : "text-right")}
                     style={{ width: `${header.column.getSize()}%` }}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}

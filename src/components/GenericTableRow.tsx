@@ -41,7 +41,7 @@ function GenericTableRow<TData>({
       <TableCell colSpan={row.getVisibleCells().length} className="p-0 border-none">
         <div
           className={clsx(
-            "bg-white rounded-lg shadow border border-gray-200 transition-colors hover:bg-muted/20",
+            "border-b transition-colors hover:bg-muted/5 cursor-pointer",
             typeof className === "function" ? className(row) : className
           )}
         >
