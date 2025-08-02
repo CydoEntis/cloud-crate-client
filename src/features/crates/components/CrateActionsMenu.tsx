@@ -14,11 +14,11 @@ type CrateActionsMenuProps = {
   crate: Crate;
   onEdit: (crate: Crate) => void;
   onDelete: (crateId: string) => void;
+  onLeave: (crateId: string) => void;
 };
 
-function CrateActionsMenu({ crate, onEdit, onDelete }: CrateActionsMenuProps) {
+function CrateActionsMenu({ crate, onEdit, onDelete, onLeave }: CrateActionsMenuProps) {
   const { user } = useUserStore();
-  const { mutate: leaveCrate } = useLeaveCrate();
 
   const isOwner = user?.email === crate.owner.email;
 
@@ -35,7 +35,7 @@ function CrateActionsMenu({ crate, onEdit, onDelete }: CrateActionsMenuProps) {
 
   const handleLeave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    leaveCrate(crate.id);
+    onLeave(crate.id);
   };
 
   return (

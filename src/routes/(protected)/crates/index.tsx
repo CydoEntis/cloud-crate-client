@@ -16,6 +16,7 @@ import type { Crate } from "@/features/crates/types/Crate";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import PaginationControls from "@/components/PaginationControls";
+import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
 
 // ------------------
 // Types & helpers
@@ -82,6 +83,7 @@ function CratesPage() {
   });
   const [editingCrate, setEditingCrate] = useState<Crate | null>(null);
   const { mutateAsync: deleteCrate } = useDeleteCrate();
+  const { mutateAsync: leaveCrate } = useLeaveCrate();
 
   const handleEdit = (crate: Crate) => setEditingCrate(crate);
   const handleClose = () => setEditingCrate(null);
@@ -103,10 +105,10 @@ function CratesPage() {
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium">Sort By</label>
           <Select
-            value={sortBy ?? "none"}
+            value={sortBy ?? "Name"}
             onValueChange={(val) =>
               setSearchParams({
-                sortBy: val === "none" ? undefined : (val as SortByType),
+                sortBy: val as SortByType,
               })
             }
           >
@@ -114,10 +116,9 @@ function CratesPage() {
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">None</SelectItem>
-              {allowedSortByValues.map((v) => (
-                <SelectItem key={v} value={v}>
-                  {v}
+              {allowedSortByValues.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {value}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -149,7 +150,7 @@ function CratesPage() {
         columns={crateTableColumns({
           onEdit: handleEdit,
           onDelete: deleteCrate,
-          onLeave: (crate) => console.log("leave", crate.id),
+          onLeave: (crate) => leaveCrate,
         })}
       />
 
