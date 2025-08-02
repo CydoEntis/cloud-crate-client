@@ -3,13 +3,14 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { ArrowUpNarrowWide, ArrowUpWideNarrow } from "lucide-react";
 
-type SortByType = "Name" | "JoinedAt" | "UsedStorage" | "Owned" | "Joined";
+type SortByType = string; // now generic
 type OrderByType = "Asc" | "Desc";
 
 type SortOrderControlsProps = {
   sortBy: SortByType;
   orderBy: OrderByType;
-  allowedSortByValues: SortByType[];
+  allowedSortByValues: readonly SortByType[];
+  sortByLabels: Record<SortByType, string>;
   onSortByChange: (val: SortByType) => void;
   onOrderByChange: (val: OrderByType) => void;
 };
@@ -18,6 +19,7 @@ export default function SortOrderControls({
   sortBy,
   orderBy,
   allowedSortByValues,
+  sortByLabels,
   onSortByChange,
   onOrderByChange,
 }: SortOrderControlsProps) {
@@ -27,27 +29,25 @@ export default function SortOrderControls({
       <div className="flex flex-col gap-1">
         <Select value={sortBy} onValueChange={(val) => onSortByChange(val as SortByType)}>
           <SelectTrigger className="w-[160px] border-none shadow-none">
-            <SelectValue placeholder="Sort By" />
+            <SelectValue placeholder="Sort By">{sortByLabels[sortBy]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {allowedSortByValues.map((value) => (
               <SelectItem key={value} value={value}>
-                {value}
+                {sortByLabels[value]}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      {/* Sort direction */}
+      {/* Sort Direction */}
       <div className="flex flex-col gap-1">
         <Button
           variant="ghost"
           className="p-2"
           size="icon"
-          onClick={() => {
-            onOrderByChange(orderBy === "Asc" ? "Desc" : "Asc");
-          }}
+          onClick={() => onOrderByChange(orderBy === "Asc" ? "Desc" : "Asc")}
           aria-label={`Sort order: ${orderBy === "Asc" ? "Ascending" : "Descending"}`}
         >
           {orderBy === "Asc" ? (

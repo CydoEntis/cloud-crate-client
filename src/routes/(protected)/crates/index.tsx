@@ -11,7 +11,6 @@ import SearchInputField from "@/components/SearchInputField";
 import SortOrderControls from "@/components/SortOrderControls";
 import { useDeleteCrate } from "@/features/crates/hooks/mutations/useDeleteCrate";
 import type { Crate } from "@/features/crates/types/Crate";
-
 import PaginationControls from "@/components/PaginationControls";
 import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
 
@@ -19,14 +18,22 @@ import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
 // Types & helpers
 // ------------------
 
-const allowedSortByValues = ["Name", "JoinedAt", "UsedStorage", "Owned", "Joined"] as const;
+const allowedSortByValues = ["Name", "JoinedAt", "UsedStorage"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
+
+const sortByLabels: Record<SortByType, string> = {
+  Name: "Name",
+  JoinedAt: "Joined",
+  UsedStorage: "Storage",
+};
+
 function isSortBy(value: unknown): value is SortByType {
   return typeof value === "string" && allowedSortByValues.includes(value as SortByType);
 }
 
 const allowedOrderByValues = ["Asc", "Desc"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];
+
 function isOrderBy(value: unknown): value is OrderByType {
   return typeof value === "string" && allowedOrderByValues.includes(value as OrderByType);
 }
@@ -68,7 +75,6 @@ function CratesPage() {
   };
 
   useEffect(() => {
-    // Set missing defaults in URL if not present
     const missingDefaults: Partial<typeof search> = {};
     if (!search.sortBy) missingDefaults.sortBy = "Name";
     if (!search.orderBy) missingDefaults.orderBy = "Desc";
@@ -109,9 +115,10 @@ function CratesPage() {
         <SortOrderControls
           sortBy={sortBy}
           orderBy={orderBy}
-          allowedSortByValues={allowedSortByValues as unknown as SortByType[]}
-          onSortByChange={(val) => setSearchParams({ sortBy: val, page: 1 })}
-          onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
+          sortByLabels={sortByLabels}
+          allowedSortByValues={allowedSortByValues}
+          onSortByChange={(val) => setSearchParams({ sortBy: val as SortByType, page: 1 })}
+          onOrderByChange={(val) => setSearchParams({ orderBy: val as OrderByType, page: 1 })}
         />
       </div>
 
