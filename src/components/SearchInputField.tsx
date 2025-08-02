@@ -33,7 +33,7 @@ export default function SearchInputField({ value, onChange, label, placeholder =
           value={value}
           onChange={handleInputChange}
           placeholder={placeholder}
-          className="pl-12 bg-slate-200 border-none h-full text-2xl rounded-xl py-3"
+          className="pl-12 bg-gray-100 border-none h-full text-2xl rounded-lg py-3"
           type="text"
           autoComplete="off"
         />

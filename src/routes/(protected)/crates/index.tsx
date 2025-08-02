@@ -8,14 +8,12 @@ import { crateTableColumns } from "@/features/crates/components/crateTableColumn
 import { useGetUserCrates } from "@/features/crates/hooks/queries/useGetUserCrates";
 import UpdateCrateModal from "@/features/crates/components/UpdateCrateModal";
 import SearchInputField from "@/components/SearchInputField";
+import SortOrderControls from "@/components/SortOrderControls";
 import { useDeleteCrate } from "@/features/crates/hooks/mutations/useDeleteCrate";
 import type { Crate } from "@/features/crates/types/Crate";
 
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import PaginationControls from "@/components/PaginationControls";
 import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
-import { ArrowUpNarrowWide, ArrowUpWideNarrow } from "lucide-react";
 
 // ------------------
 // Types & helpers
@@ -37,13 +35,12 @@ function isOrderBy(value: unknown): value is OrderByType {
 // Search Schema
 // ------------------
 
-// Changed pageSize default from 1 to 10 to match UI default
 const crateSearchSchema = z.object({
   searchTerm: z.string().optional(),
   sortBy: z.enum(allowedSortByValues).optional(),
   orderBy: z.enum(allowedOrderByValues).optional(),
   page: z.coerce.number().optional().default(1),
-  pageSize: z.coerce.number().optional().default(10), // <-- fixed default here
+  pageSize: z.coerce.number().optional().default(10),
 });
 
 export const Route = createFileRoute("/(protected)/crates/")({
@@ -51,17 +48,12 @@ export const Route = createFileRoute("/(protected)/crates/")({
   component: CratesPage,
 });
 
-// ------------------
-// Component
-// ------------------
-
 function CratesPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  // Use validated values or fallback defaults
-  const sortBy = isSortBy(search.sortBy) ? search.sortBy : "Name"; // default to "Name"
-  const orderBy = isOrderBy(search.orderBy) ? search.orderBy : "Desc"; // default to Desc
+  const sortBy = isSortBy(search.sortBy) ? search.sortBy : "Name";
+  const orderBy = isOrderBy(search.orderBy) ? search.orderBy : "Desc";
   const searchTerm = search.searchTerm ?? "";
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
@@ -75,8 +67,8 @@ function CratesPage() {
     });
   };
 
-  // On mount, set missing default params in URL if not present
   useEffect(() => {
+    // Set missing defaults in URL if not present
     const missingDefaults: Partial<typeof search> = {};
     if (!search.sortBy) missingDefaults.sortBy = "Name";
     if (!search.orderBy) missingDefaults.orderBy = "Desc";
@@ -114,54 +106,13 @@ function CratesPage() {
           onChange={(val) => setSearchParams({ searchTerm: val, page: 1 })}
           placeholder="Search crates by name..."
         />
-        <div className="flex items-end gap-2">
-          {/* Sort by */}
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Sort By</label>
-            <Select
-              value={sortBy}
-              onValueChange={(val) =>
-                setSearchParams({
-                  sortBy: val as SortByType,
-                  page: 1, 
-                })
-              }
-            >
-              <SelectTrigger className="w-[160px]">
-                <SelectValue placeholder="Sort By" />
-              </SelectTrigger>
-              <SelectContent>
-                {allowedSortByValues.map((value) => (
-                  <SelectItem key={value} value={value}>
-                    {value}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Sort direction */}
-          <div className="flex flex-col gap-1">
-            <Button
-              variant="ghost"
-              className="p-2 cursor-pointer"
-              size="icon"
-              onClick={() =>
-                setSearchParams({
-                  orderBy: orderBy === "Asc" ? "Desc" : "Asc",
-                  page: 1, 
-                })
-              }
-              aria-label={`Sort order: ${orderBy === "Asc" ? "Ascending" : "Descending"}`}
-            >
-              {orderBy === "Asc" ? (
-                <ArrowUpWideNarrow className="w-10 h-10 text-muted-foreground" />
-              ) : (
-                <ArrowUpNarrowWide className="w-10 h-10 text-muted-foreground" />
-              )}
-            </Button>
-          </div>
-        </div>
+        <SortOrderControls
+          sortBy={sortBy}
+          orderBy={orderBy}
+          allowedSortByValues={allowedSortByValues as unknown as SortByType[]}
+          onSortByChange={(val) => setSearchParams({ sortBy: val, page: 1 })}
+          onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
+        />
       </div>
 
       <CrateTable
