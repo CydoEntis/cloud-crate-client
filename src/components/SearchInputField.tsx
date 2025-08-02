@@ -20,21 +20,20 @@ export default function SearchInputField({ value, onChange, label, placeholder =
   );
 
   useEffect(() => {
-    // Focus input every time the value changes
     inputRef.current?.focus();
   }, [value]);
 
   return (
-    <div className="relative w-full max-w-xs">
-      {label && <label className="block mb-1 font-medium">{label}</label>}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
+    <div className="relative w-full max-w-[800px]">
+      {label && <label className="block mb-2 text-lg font-semibold">{label}</label>}
+      <div className="relative h-12">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary w-5 h-5 pointer-events-none" />{" "}
         <Input
           ref={inputRef}
           value={value}
           onChange={handleInputChange}
           placeholder={placeholder}
-          className="pl-9"
+          className="pl-12 bg-slate-200 border-none h-full text-2xl rounded-xl py-3"
           type="text"
           autoComplete="off"
         />

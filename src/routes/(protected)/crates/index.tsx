@@ -92,13 +92,14 @@ function CratesPage() {
     <div className="space-y-6 p-6">
       <h2 className="text-2xl font-semibold">My Crates</h2>
 
-      <div className="flex flex-wrap items-end gap-4">
+      <div className="flex justify-center items-center w-full ">
         <SearchInputField
           value={searchTerm}
           onChange={(val) => setSearchParams({ searchTerm: val, page: 1 })}
           placeholder="Search crates by name..."
         />
-
+      </div>
+      <div className="flex flex-wrap items-end gap-4 justify-center">
         {/* Sort by */}
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium">Sort By</label>
