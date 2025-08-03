@@ -133,9 +133,9 @@ function RouteComponent() {
   return (
     <>
       <CreateCrateModal />
-      <section>
+      <section className="">
         <header>
-          <p>{accessToken ? "Logged In" : "Logged Out"}</p>
+          <p className="">{accessToken ? "Logged In" : "Logged Out"}</p>
         </header>
         <PageHeader title="Welcome back, Demo User" actions={headerActions} />
         <main className="grid grid-cols-5 gap-8">

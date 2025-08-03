@@ -4,7 +4,7 @@ import GenericTableHeader from "@/components/GenericTableHeader";
 import GenericTableRow from "@/components/GenericTableRow";
 import type { Crate } from "../types/Crate";
 import { useNavigate } from "@tanstack/react-router";
-import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have this component
+import { Skeleton } from "@/components/ui/skeleton";
 
 type CrateTableProps = {
   data: Crate[];
@@ -34,7 +34,7 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
   const getRowClass = () => "hover:bg-muted/20";
   console.log(isLoading)
   return (
-    <Table className="border-separate border-spacing-y-2">
+    <Table className="">
       <GenericTableHeader table={table} />
       <TableBody>
         {isLoading

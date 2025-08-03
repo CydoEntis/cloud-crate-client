@@ -13,7 +13,6 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as publicRouteImport } from './routes/(public)/route'
 import { Route as protectedRouteImport } from './routes/(protected)/route'
-import { Route as IndexImport } from './routes/index'
 import { Route as protectedFilesImport } from './routes/(protected)/files'
 import { Route as protectedDashboardImport } from './routes/(protected)/dashboard'
 import { Route as publicauthRouteImport } from './routes/(public)/(auth)/route'
@@ -34,12 +33,6 @@ const publicRouteRoute = publicRouteImport.update({
 
 const protectedRouteRoute = protectedRouteImport.update({
   id: '/(protected)',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -109,13 +102,6 @@ const protectedCratesCrateIdFoldersFolderIdRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
     '/(protected)': {
       id: '/(protected)'
       path: '/'
@@ -296,7 +282,6 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
   '/(protected)': typeof protectedRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
@@ -337,7 +322,6 @@ export interface FileRouteTypes {
     | '/crates/$crateId/folders/$folderId'
   id:
     | '__root__'
-    | '/'
     | '/(protected)'
     | '/(public)'
     | '/(public)/(auth)'
@@ -354,13 +338,11 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   protectedRouteRoute: typeof protectedRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   protectedRouteRoute: protectedRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
 }
@@ -375,13 +357,9 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
         "/(protected)",
         "/(public)"
       ]
-    },
-    "/": {
-      "filePath": "index.tsx"
     },
     "/(protected)": {
       "filePath": "(protected)/route.tsx",

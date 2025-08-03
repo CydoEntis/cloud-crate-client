@@ -10,6 +10,7 @@ import UpgradeAccountButton from "@/features/user/components/UpgradeAccountButto
 import { useAuthStore, useUserStore } from "@/features/auth";
 import CrateSidebarLinks from "@/features/crates/components/CrateSideBarLinks";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navlinks = [
   { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
@@ -28,16 +29,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     useAuthStore.getState().clearAuth();
     navigate({ to: "/login" });
   };
+
   return (
-    <Sidebar {...props}>
-      <SidebarContent className="flex flex-col justify-between h-full">
+    <Sidebar {...props} className="border-r">
+      <SidebarContent className=" flex flex-col justify-between h-full">
         {/* Top Section */}
         <div>
           {/* Logo */}
           <div className="py-6">
             <Link to="/" className="flex justify-center items-center gap-2">
               <img src={logo} alt="Cloud Crate Logo" className="h-10 w-10" />
-              <h3 className="font-bold text-3xl text-indigo-500">Cloud Crate</h3>
+              <h3 className="font-bold text-3xl text-primary">Cloud Crate</h3>
             </Link>
           </div>
 
@@ -55,11 +57,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </div>
 
-        {/* Logout Button */}
+        {/* Bottom Section */}
         <div className="pb-6 px-4 space-y-4">
-          {/* <UpgradeAccountButton /> */}
+          <ThemeToggle />
 
-          <div className="border-t-1 py-4 flex justify-between items-center">
+          <div className="border-t pt-4 flex justify-between items-center">
             <div className="flex gap-2 items-center">
               <div className="w-9 h-9 rounded-md overflow-hidden">
                 <img src={user?.profilePicture} />
@@ -71,10 +73,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </div>
             <Button
               onClick={logout}
-              className="py-2 px-4 rounded-md text-center hover:text-primary hover:bg-violet-100 text-gray-500 cursor-pointer "
+              className="p-2 hover:bg-accent hover:text-accent-foreground text-muted-foreground"
               variant="ghost"
             >
-              <LogOut />
+              <LogOut className="w-5 h-5" />
             </Button>
           </div>
         </div>

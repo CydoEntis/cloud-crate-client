@@ -1,14 +1,15 @@
-/** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
-  },
-  plugins: [],
-  variants: {
     extend: {
-      textColor: ["selection"],
-      backgroundColor: ["selection"],
+      borderRadius: {
+        DEFAULT: "var(--radius)",
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", "sans-serif"],
+      },
     },
   },
+plugins: [],
 };
