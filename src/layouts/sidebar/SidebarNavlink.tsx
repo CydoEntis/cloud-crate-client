@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import clsx from "clsx";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
@@ -37,20 +38,20 @@ const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
       <Link
         to={to}
         ref={ref}
-        className="px-4 py-2 pr-5 rounded-lg font-medium relative z-10 flex items-center justify-between h-10"
+        className="px-4 py-2 pr-5 rounded-lg font-medium relative z-10 flex items-center justify-between h-10 "
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <motion.span
           initial={{ x: 0 }}
-          animate={{
-            x: isActive || isHovered ? slideX : 0,
-            color: isActive ? "#7C86FF" : isHovered ? "#7C86FF" : "#6b7280",
-          }}
+          animate={{ x: isActive || isHovered ? slideX : 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="font-medium flex items-center gap-4"
+          className={clsx(
+            "font-medium flex items-center gap-4 transition-colors duration-200",
+            isActive || isHovered ? "text-primary" : "text-sidebar-accent-foreground"
+          )}
         >
-          <>{icon}</>
+          {icon}
           {text}
         </motion.span>
       </Link>
