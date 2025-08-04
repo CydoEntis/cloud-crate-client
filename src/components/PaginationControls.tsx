@@ -28,6 +28,7 @@ function PaginationControls({ page, pageSize, totalCount, onPageChange }: Pagina
         pages.push(
           <PaginationItem key={i}>
             <PaginationLink
+              className="text-foreground"
               isActive={i === page}
               href="#"
               onClick={(e) => {
@@ -57,6 +58,7 @@ function PaginationControls({ page, pageSize, totalCount, onPageChange }: Pagina
         {page > 1 && (
           <PaginationItem>
             <PaginationPrevious
+              className="text-foreground"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -71,6 +73,7 @@ function PaginationControls({ page, pageSize, totalCount, onPageChange }: Pagina
         {page < totalPages && (
           <PaginationItem>
             <PaginationNext
+              className="text-foreground"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
