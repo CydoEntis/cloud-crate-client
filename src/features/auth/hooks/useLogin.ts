@@ -5,7 +5,4 @@ import { useAuthStore } from "../store";
 export const useLogin = () =>
   useMutation({
     mutationFn: login,
-    onSuccess: ({ accessToken }) => {
-      useAuthStore.getState().setAuth(accessToken);
-    },
   });

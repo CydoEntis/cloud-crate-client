@@ -4,6 +4,7 @@ import clsx from "clsx";
 
 type GenericTableRowProps<TData> = {
   row: Row<TData>;
+  rowIndex: number; // 🆕 Add row index prop
   onClickRow?: (row: Row<TData>, e: React.MouseEvent) => void;
   onDragStartRow?: (row: Row<TData>, e: React.DragEvent) => void;
   onDropOnRow?: (row: Row<TData>, droppedData: any) => void;
@@ -12,6 +13,7 @@ type GenericTableRowProps<TData> = {
 
 function GenericTableRow<TData>({
   row,
+  rowIndex,
   onClickRow,
   onDragStartRow,
   onDropOnRow,
@@ -38,10 +40,11 @@ function GenericTableRow<TData>({
       onDrop={handleDrop}
       className="p-0 border-none"
     >
-      <TableCell colSpan={row.getVisibleCells().length} className="p-0 border-none">
+      <TableCell colSpan={row.getVisibleCells().length} className="p-0 border-none text-foreground">
         <div
           className={clsx(
-            "border-b transition-colors hover:bg-muted/5 cursor-pointer",
+            "transition-colors hover:bg-muted/5 cursor-pointer",
+            rowIndex % 2 === 0 ? "bg-input/50" : "bg-card/50", 
             typeof className === "function" ? className(row) : className
           )}
         >

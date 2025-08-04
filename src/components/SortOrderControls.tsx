@@ -26,12 +26,12 @@ export default function SortOrderControls({
   return (
     <div className="flex items-end gap-4">
       {/* Sort By */}
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 bg-input rounded-xl">
         <Select value={sortBy} onValueChange={(val) => onSortByChange(val as SortByType)}>
           <SelectTrigger className="w-[160px] border-none bg-input text-foreground">
             <SelectValue placeholder="Sort By">{sortByLabels[sortBy]}</SelectValue>
           </SelectTrigger>
-          <SelectContent className="border-none shadow-md">
+          <SelectContent className="border-none shadow-md rounded-xl bg-card">
             {allowedSortByValues.map((value) => (
               <SelectItem key={value} value={value}>
                 {sortByLabels[value]}

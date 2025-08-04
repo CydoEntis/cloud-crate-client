@@ -23,6 +23,7 @@ export class ApiService {
     this.api.interceptors.request.use(
       (config) => {
         const token = useAuthStore.getState().accessToken;
+        console.log(token);
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }

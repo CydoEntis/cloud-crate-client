@@ -11,9 +11,9 @@ function GenericTableHeader<TData>({ table, className }: GenericTableHeaderProps
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow key={headerGroup.id} className="p-0 border-none hover:bg-none">
-          <TableCell colSpan={headerGroup.headers.length} className="p-0 border-none hover:bg-none">
-            <div className={clsx("border-b hover:bg-transparent", className)}>
+        <TableRow key={headerGroup.id} className="p-0 border-none hover:bg-none text-foreground bg-input">
+          <TableCell colSpan={headerGroup.headers.length} className="p-0 border-none hover:bg-none rounded-t-xl">
+            <div className={clsx("border-b border-input hover:bg-transparent", className)}>
               <div className="flex">
                 {headerGroup.headers.map((header, index) => (
                   <div

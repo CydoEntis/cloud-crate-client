@@ -104,7 +104,7 @@ function CratesPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <h2 className="text-2xl font-semibold">My Crates</h2>
+      <h2 className="text-2xl font-semibold text-foreground">My Crates</h2>
 
       <div className="flex flex-wrap items-end gap-4 justify-between">
         <SearchInputField

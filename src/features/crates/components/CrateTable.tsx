@@ -39,18 +39,19 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
       <TableBody>
         {isLoading
           ? Array.from({ length: 20 }).map((_, i) => (
-              <tr key={i} className="h-10">
+              <tr key={i} className="h-10 ">
                 <td colSpan={columns.length}>
-                  <Skeleton className="w-full h-10" />
+                  <Skeleton className="w-full h-10 mt-2" />
                 </td>
               </tr>
             ))
           : table
               .getRowModel()
-              .rows.map((row) => (
+              .rows.map((row, index) => (
                 <GenericTableRow<Crate>
                   key={row.id}
                   row={row}
+                  rowIndex={index}
                   className={getRowClass()}
                   onClickRow={() => onNavigateToCrate(row.original.id)}
                 />

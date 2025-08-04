@@ -24,7 +24,7 @@ export default function SearchInputField({ value, onChange, label, placeholder =
   }, [value]);
 
   return (
-    <div className="relative w-full max-w-[800px]">
+    <div className="relative w-full max-w-[800px] bg-input rounded-xl">
       {label && <label className="block mb-2 text-lg font-semibold">{label}</label>}
       <div className="relative h-12">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-5 h-5 pointer-events-none" />{" "}
@@ -35,7 +35,7 @@ export default function SearchInputField({ value, onChange, label, placeholder =
           placeholder={placeholder}
           type="text"
           autoComplete="off"
-          className="border-none pl-12 h-full text-2xl rounded-lg py-3 text-foreground bg-input 
+          className="border-none pl-12 h-full text-2xl rounded-lg py-3 text-foreground 
              focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
         />
       </div>
