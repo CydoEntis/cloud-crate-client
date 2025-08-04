@@ -28,10 +28,10 @@ export default function SortOrderControls({
       {/* Sort By */}
       <div className="flex flex-col gap-1">
         <Select value={sortBy} onValueChange={(val) => onSortByChange(val as SortByType)}>
-          <SelectTrigger className="w-[160px] border-none shadow-none">
+          <SelectTrigger className="w-[160px] border-none bg-input text-foreground">
             <SelectValue placeholder="Sort By">{sortByLabels[sortBy]}</SelectValue>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border-none shadow-md">
             {allowedSortByValues.map((value) => (
               <SelectItem key={value} value={value}>
                 {sortByLabels[value]}
@@ -45,7 +45,7 @@ export default function SortOrderControls({
       <div className="flex flex-col gap-1">
         <Button
           variant="ghost"
-          className="p-2"
+          className="p-2 cursor-pointer"
           size="icon"
           onClick={() => onOrderByChange(orderBy === "Asc" ? "Desc" : "Asc")}
           aria-label={`Sort order: ${orderBy === "Asc" ? "Ascending" : "Descending"}`}
