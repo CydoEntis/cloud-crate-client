@@ -133,10 +133,7 @@ function RouteComponent() {
   return (
     <>
       <CreateCrateModal />
-      <section className="">
-        <header>
-          <p className="">{accessToken ? "Logged In" : "Logged Out"}</p>
-        </header>
+      <section className="bg-background">
         <PageHeader title="Welcome back, Demo User" actions={headerActions} />
         <main className="grid grid-cols-5 gap-8">
           <section className="col-span-4 flex flex-col gap-8">
@@ -144,7 +141,7 @@ function RouteComponent() {
               {folders.map((folder) => (
                 <div
                   key={folder.id}
-                  className="flex justify-between items-center w-[300px] border rounded-xl p-4 shadow-sm"
+                  className="flex justify-between items-center w-[300px] rounded-xl p-4 shadow-sm bg-card text-foreground"
                 >
                   <div className="flex items-center gap-4">
                     <div className="p-4 rounded-xl" style={{ backgroundColor: folder.color }}>
@@ -172,7 +169,7 @@ function RouteComponent() {
           </section>
           <aside className="col-span-1 flex flex-col gap-4">
             <div className="flex flex-col gap-4">
-              <h3 className="font-bold text-lg">Quick Access</h3>
+              <h3 className="font-bold text-lg text-foreground">Quick Access</h3>
               {folders.map((folder) => (
                 <QuickAccessCard key={folder.id} folder={folder} />
               ))}

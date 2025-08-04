@@ -24,11 +24,11 @@ declare module "@tanstack/react-router" {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Toaster position="top-right" richColors />
-      <ThemeProvider defaultTheme="dark" >
+    <ThemeProvider defaultTheme="dark">
+      <QueryClientProvider client={queryClient}>
+        <Toaster position="top-right" richColors />
         <RouterProvider router={router} />
-      </ThemeProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   </StrictMode>
 );

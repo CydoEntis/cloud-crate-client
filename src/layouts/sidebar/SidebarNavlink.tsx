@@ -45,7 +45,7 @@ const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
           initial={{ x: 0 }}
           animate={{
             x: isActive || isHovered ? slideX : 0,
-            color: isActive ? "#4f46e5" : isHovered ? "#374151" : "#6b7280",
+            color: isActive ? "#7C86FF" : isHovered ? "#7C86FF" : "#6b7280",
           }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="font-medium flex items-center gap-4"
