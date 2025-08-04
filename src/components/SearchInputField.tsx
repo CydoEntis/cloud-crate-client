@@ -27,15 +27,16 @@ export default function SearchInputField({ value, onChange, label, placeholder =
     <div className="relative w-full max-w-[800px]">
       {label && <label className="block mb-2 text-lg font-semibold">{label}</label>}
       <div className="relative h-12">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary w-5 h-5 pointer-events-none" />{" "}
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-5 h-5 pointer-events-none" />{" "}
         <Input
           ref={inputRef}
           value={value}
           onChange={handleInputChange}
           placeholder={placeholder}
-          className="pl-12 bg-gray-100 border-none h-full text-2xl rounded-lg py-3"
           type="text"
           autoComplete="off"
+          className="border-none pl-12 h-full text-2xl rounded-lg py-3 text-foreground bg-input 
+             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
         />
       </div>
     </div>
