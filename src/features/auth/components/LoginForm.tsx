@@ -54,7 +54,7 @@ function LoginForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Card className="shadow-md">
+      <Card className="shadow-md border-none bg-card">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Login</CardTitle>
           <CardDescription className="text-sm">Enter your account details</CardDescription>

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/(public)/(auth)")({
 
 function RouteComponent() {
   return (
-    <div className="relative min-h-svh overflow-hidden bg-white">
+    <div className="relative min-h-svh overflow-hidden bg-background">
       <img
         src={clouds}
         alt="Cloud background"
@@ -26,7 +26,7 @@ function RouteComponent() {
         <div className="flex justify-center">
           <div className="flex justify-center items-center gap-2">
             <img src={logo} alt="Cloud Crate Logo" className="h-16 w-16" />
-            <h3 className="font-bold text-4xl text-indigo-500">Cloud Crate</h3>
+            <h3 className="font-bold text-4xl text-primary">Cloud Crate</h3>
           </div>
         </div>
         <Outlet />
