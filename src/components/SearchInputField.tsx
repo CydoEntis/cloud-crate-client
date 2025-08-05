@@ -19,10 +19,6 @@ export default function SearchInputField({ value, onChange, label, placeholder =
     [onChange]
   );
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [value]);
-
   return (
     <div className="relative w-full max-w-[800px] bg-input rounded-xl">
       {label && <label className="block mb-2 text-lg font-semibold">{label}</label>}
