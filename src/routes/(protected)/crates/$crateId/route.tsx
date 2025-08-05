@@ -22,12 +22,12 @@ function CrateLayout() {
 
   return (
     <section>
-      <div className="flex justify-between items-center border-b border-gray-300 py-2">
-        <h3 className="text-3xl font-bold">{crate.name}</h3>
+      <div className="flex justify-between items-center  py-2">
+        <h3 className="text-3xl font-bold text-foreground">{crate.name}</h3>
         {crate.role !== CrateRole.Viewer ? (
           <Button
             variant="outline"
-            className="border-primary text-primary hover:bg-purple-50 cursor-pointer hover:text-primary"
+            className="border-primary text-primary hover:bg-primary/30 cursor-pointer hover:text-primary"
             onClick={() => setSettingsOpen(true)}
           >
             <Settings /> Settings

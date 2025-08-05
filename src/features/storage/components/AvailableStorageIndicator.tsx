@@ -1,10 +1,10 @@
-import type { CrateDetailsResponse } from "@/features/crates/types";
+import type { CrateDetails } from "@/features/crates/types/CrateDetails";
 import AvailableStorageBar from "./AvailableStorageBar";
 
 const colors = ["bg-emerald-400", "bg-sky-400", "bg-indigo-400", "bg-pink-400", "bg-yellow-400", "bg-red-400"];
 
 type Props = {
-  crate: CrateDetailsResponse;
+  crate: CrateDetails;
 };
 
 const AvailableStorageIndicator = ({ crate }: Props) => {
@@ -21,7 +21,7 @@ const AvailableStorageIndicator = ({ crate }: Props) => {
       id: "available",
       name: "Available",
       usedStorage: remainingStorage,
-      color: "bg-gray-200 dark:bg-gray-700",
+      color: "bg-input",
     },
   ];
 
