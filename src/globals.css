@@ -158,6 +158,11 @@
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
 } */
 
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
 body {
   letter-spacing: var(--tracking-normal);
   font-family:
