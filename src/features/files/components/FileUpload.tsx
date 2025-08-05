@@ -68,9 +68,9 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
 
       <div
         onClick={() => inputRef.current?.click()}
-        className="cursor-pointer p-6 w-full flex flex-col justify-center items-center gap-5 rounded-xl border-2 border-input my-6 outline-4 outline-input/60 outline-offset-2 hover:bg-input/10 transition"
+        className="cursor-pointer p-6 w-full flex flex-col justify-center items-center gap-5 rounded-xl border-2 border-primary my-6 outline-4 outline-primary/60 outline-offset-2 hover:bg-primary/10 transition"
       >
-        <div className="rounded-full bg-input/80 p-4">
+        <div className="rounded-full bg-primary/20 p-4">
           <Upload className="text-primary" />
         </div>
         <p className="text-foreground">

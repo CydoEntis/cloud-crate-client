@@ -61,7 +61,7 @@ function FolderContentsView({
   if (error) return <p>Error loading contents.</p>;
 
   return (
-    <div className="p-4 bg-white rounded-xl mt-8">
+    <div className="p-4">
       <h3>{folderName}</h3>
 
       <FileTableToolbar

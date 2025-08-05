@@ -53,7 +53,7 @@ function FileTable({ data, columns, onNavigate, onDropItem }: FileTableProps) {
     <Table>
       <GenericTableHeader table={table} />
       <TableBody>
-        {table.getRowModel().rows.map((row) => (
+        {table.getRowModel().rows.map((row, index) => (
           <GenericTableRow<FolderOrFileItem>
             key={row.id}
             row={row}
@@ -61,6 +61,7 @@ function FileTable({ data, columns, onNavigate, onDropItem }: FileTableProps) {
             onClickRow={handleClickRow}
             onDragStartRow={handleDragStartRow}
             onDropOnRow={handleDropOnRow}
+            rowIndex={index}
           />
         ))}
       </TableBody>
