@@ -23,7 +23,6 @@ declare module "@tanstack/react-router" {
   }
 }
 
-// ✅ This hydrates auth state on first load
 function AuthHydrator({ children }: { children: React.ReactNode }) {
   const setAuth = useAuthStore((s) => s.setAuth);
 

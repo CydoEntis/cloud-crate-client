@@ -31,7 +31,7 @@ function ThemeToggle() {
   return (
     <>
       {transition}
-      <Button ref={buttonRef} variant="outline" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+      <Button ref={buttonRef} variant="outline" size="icon" onClick={toggleTheme} aria-label="Toggle theme" className="text-foreground">
         {isDark ? (
           <Moon className="h-[1.2rem] w-[1.2rem] transition-all" />
         ) : (
