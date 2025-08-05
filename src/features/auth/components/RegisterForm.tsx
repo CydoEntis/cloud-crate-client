@@ -64,8 +64,8 @@ function RegisterForm() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card className="shadow-md">
+    <div className="flex flex-col gap-6 ">
+      <Card className="shadow-md border-none bg-card">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Register</CardTitle>
           <CardDescription className="text-sm">Enter your details to create an account</CardDescription>
