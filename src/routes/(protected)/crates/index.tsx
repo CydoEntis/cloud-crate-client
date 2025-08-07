@@ -13,6 +13,7 @@ import { useDeleteCrate } from "@/features/crates/hooks/mutations/useDeleteCrate
 import type { Crate } from "@/features/crates/types/Crate";
 import PaginationControls from "@/components/PaginationControls";
 import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
+import { Button } from "@/components/ui/button";
 
 // ------------------
 // Types & helpers
@@ -38,6 +39,13 @@ function isOrderBy(value: unknown): value is OrderByType {
   return typeof value === "string" && allowedOrderByValues.includes(value as OrderByType);
 }
 
+const allowedMemberTypes = ["All", "Owner", "Joined"] as const;
+type MemberType = (typeof allowedMemberTypes)[number];
+
+function isMemberType(value: unknown): value is MemberType {
+  return typeof value === "string" && allowedMemberTypes.includes(value as MemberType);
+}
+
 // ------------------
 // Search Schema
 // ------------------
@@ -48,6 +56,7 @@ const crateSearchSchema = z.object({
   orderBy: z.enum(allowedOrderByValues).optional(),
   page: z.coerce.number().optional().default(1),
   pageSize: z.coerce.number().optional().default(10),
+  memberType: z.enum(allowedMemberTypes).optional().default("All"),
 });
 
 export const Route = createFileRoute("/(protected)/crates/")({
@@ -64,6 +73,7 @@ function CratesPage() {
   const searchTerm = search.searchTerm ?? "";
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
+  const memberType = isMemberType(search.memberType) ? search.memberType : "All";
 
   const setSearchParams = (params: Partial<typeof search>) => {
     navigate({
@@ -80,6 +90,7 @@ function CratesPage() {
     if (!search.orderBy) missingDefaults.orderBy = "Desc";
     if (!search.page) missingDefaults.page = 1;
     if (!search.pageSize) missingDefaults.pageSize = 10;
+    if (!search.memberType) missingDefaults.memberType = "All";
 
     if (Object.keys(missingDefaults).length > 0) {
       setSearchParams(missingDefaults);
@@ -93,6 +104,7 @@ function CratesPage() {
     orderBy,
     page,
     pageSize,
+    memberType,
   });
 
   const [editingCrate, setEditingCrate] = useState<Crate | null>(null);
@@ -120,6 +132,18 @@ function CratesPage() {
           onSortByChange={(val) => setSearchParams({ sortBy: val as SortByType, page: 1 })}
           onOrderByChange={(val) => setSearchParams({ orderBy: val as OrderByType, page: 1 })}
         />
+      </div>
+
+      <div className="flex gap-2">
+        {allowedMemberTypes.map((type) => (
+          <Button
+            key={type}
+            variant={memberType === type ? "default" : "outline"}
+            onClick={() => setSearchParams({ memberType: type, page: 1 })}
+          >
+            {type === "Owner" ? "Owned" : type}
+          </Button>
+        ))}
       </div>
 
       <CrateTable

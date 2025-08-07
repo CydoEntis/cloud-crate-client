@@ -8,7 +8,8 @@ export const getUserCrates = async ({
   sortBy,
   orderBy = "Desc",
   page = 1,
-  pageSize = 1,
+  pageSize = 10,
+  memberType = "All",
 }: GetUserCratesParams = {}): Promise<PaginatedResult<Crate>> => {
   const params = new URLSearchParams();
 
@@ -17,10 +18,11 @@ export const getUserCrates = async ({
   if (orderBy) params.append("OrderBy", orderBy);
   if (page) params.append("Page", page.toString());
   if (pageSize) params.append("PageSize", pageSize.toString());
+  if (memberType) params.append("MemberType", memberType);
 
   console.log(`/crates?${params.toString()}`);
 
-  await new Promise((res) => setTimeout(res, 1500)); 
+  await new Promise((res) => setTimeout(res, 1500)); // simulate latency
   const { data } = await api.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
   return data.value!;
 };
