@@ -14,6 +14,7 @@ import type { Crate } from "@/features/crates/types/Crate";
 import PaginationControls from "@/components/PaginationControls";
 import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
 import { Button } from "@/components/ui/button";
+import CrateMemberTabs from "@/features/crates/components/CrateMemberTabs";
 
 // ------------------
 // Types & helpers
@@ -117,13 +118,12 @@ function CratesPage() {
   return (
     <div className="space-y-6 p-6">
       <h2 className="text-2xl font-semibold text-foreground">My Crates</h2>
-
-      <div className="flex flex-wrap items-end gap-4 justify-between">
-        <SearchInputField
-          value={searchTerm}
-          onChange={(val) => setSearchParams({ searchTerm: val, page: 1 })}
-          placeholder="Search crates by name..."
-        />
+      <SearchInputField
+        value={searchTerm}
+        onChange={(val) => setSearchParams({ searchTerm: val, page: 1 })}
+        placeholder="Search crates by name..."
+      />
+      <div className="flex flex-wrap items-end gap-4 ">
         <SortOrderControls
           sortBy={sortBy}
           orderBy={orderBy}
@@ -132,9 +132,10 @@ function CratesPage() {
           onSortByChange={(val) => setSearchParams({ sortBy: val as SortByType, page: 1 })}
           onOrderByChange={(val) => setSearchParams({ orderBy: val as OrderByType, page: 1 })}
         />
+        <CrateMemberTabs value={memberType} onChange={(type) => setSearchParams({ memberType: type, page: 1 })} />
       </div>
 
-      <div className="flex gap-2">
+      {/* <div className="flex gap-2">
         {allowedMemberTypes.map((type) => (
           <Button
             key={type}
@@ -144,7 +145,7 @@ function CratesPage() {
             {type === "Owner" ? "Owned" : type}
           </Button>
         ))}
-      </div>
+      </div> */}
 
       <CrateTable
         data={data?.items ?? []}
