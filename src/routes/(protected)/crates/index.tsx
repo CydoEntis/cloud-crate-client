@@ -108,7 +108,10 @@ function CratesPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <h2 className="text-2xl font-semibold text-foreground">My Crates</h2>
+      <div className="flex flex-col gap-1 ">
+        <h2 className="text-2xl font-semibold text-foreground">My Crates</h2>
+        <p className="text-muted-foreground text-sm">Manage, your owned and joined crates.</p>
+      </div>
       <SearchInputField
         value={searchTerm}
         onChange={(val) => setSearchParams({ searchTerm: val, page: 1 })}

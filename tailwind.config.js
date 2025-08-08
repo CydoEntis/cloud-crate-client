@@ -9,7 +9,9 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)", "sans-serif"],
       },
+      backgroundColor: ["data-state"],
+      textColor: ["data-state"],
     },
   },
-plugins: [],
+  plugins: [],
 };
