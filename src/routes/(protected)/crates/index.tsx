@@ -8,17 +8,13 @@ import { crateTableColumns } from "@/features/crates/components/crateTableColumn
 import { useGetUserCrates } from "@/features/crates/hooks/queries/useGetUserCrates";
 import UpdateCrateModal from "@/features/crates/components/UpdateCrateModal";
 import SearchInputField from "@/components/SearchInputField";
-import SortOrderControls from "@/components/SortOrderControls";
+import OrderToggle from "@/components/OrderToggle";
 import { useDeleteCrate } from "@/features/crates/hooks/mutations/useDeleteCrate";
 import type { Crate } from "@/features/crates/types/Crate";
 import PaginationControls from "@/components/PaginationControls";
 import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
-import { Button } from "@/components/ui/button";
 import CrateMemberTabs from "@/features/crates/components/CrateMemberTabs";
-
-// ------------------
-// Types & helpers
-// ------------------
+import SortBySelect from "@/components/SortyBySelect";
 
 const allowedSortByValues = ["Name", "JoinedAt", "UsedStorage"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
@@ -46,10 +42,6 @@ type MemberType = (typeof allowedMemberTypes)[number];
 function isMemberType(value: unknown): value is MemberType {
   return typeof value === "string" && allowedMemberTypes.includes(value as MemberType);
 }
-
-// ------------------
-// Search Schema
-// ------------------
 
 const crateSearchSchema = z.object({
   searchTerm: z.string().optional(),
@@ -96,7 +88,6 @@ function CratesPage() {
     if (Object.keys(missingDefaults).length > 0) {
       setSearchParams(missingDefaults);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { data, isPending } = useGetUserCrates({
@@ -123,29 +114,18 @@ function CratesPage() {
         onChange={(val) => setSearchParams({ searchTerm: val, page: 1 })}
         placeholder="Search crates by name..."
       />
-      <div className="flex flex-wrap items-end gap-4 ">
-        <SortOrderControls
-          sortBy={sortBy}
-          orderBy={orderBy}
-          sortByLabels={sortByLabels}
-          allowedSortByValues={allowedSortByValues}
-          onSortByChange={(val) => setSearchParams({ sortBy: val as SortByType, page: 1 })}
-          onOrderByChange={(val) => setSearchParams({ orderBy: val as OrderByType, page: 1 })}
-        />
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <CrateMemberTabs value={memberType} onChange={(type) => setSearchParams({ memberType: type, page: 1 })} />
+        <div className="flex gap-2">
+          <SortBySelect
+            value={sortBy}
+            onChange={(val) => setSearchParams({ sortBy: val, page: 1 })}
+            allowedValues={allowedSortByValues}
+            labels={sortByLabels}
+          />
+          <OrderToggle value={orderBy} onChange={(val) => setSearchParams({ orderBy: val, page: 1 })} />
+        </div>
       </div>
-
-      {/* <div className="flex gap-2">
-        {allowedMemberTypes.map((type) => (
-          <Button
-            key={type}
-            variant={memberType === type ? "default" : "outline"}
-            onClick={() => setSearchParams({ memberType: type, page: 1 })}
-          >
-            {type === "Owner" ? "Owned" : type}
-          </Button>
-        ))}
-      </div> */}
 
       <CrateTable
         data={data?.items ?? []}
