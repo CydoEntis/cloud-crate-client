@@ -20,9 +20,9 @@ const allowedSortByValues = ["Name", "JoinedAt", "UsedStorage"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
 
 const sortByLabels: Record<SortByType, string> = {
-  Name: "Name",
-  JoinedAt: "Joined",
-  UsedStorage: "Storage",
+  Name: "Crate Name",
+  JoinedAt: "Join Date",
+  UsedStorage: "Used Storage",
 };
 
 function isSortBy(value: unknown): value is SortByType {
@@ -110,7 +110,7 @@ function CratesPage() {
     <div className="space-y-6 p-6">
       <div className="flex flex-col gap-1 ">
         <h2 className="text-2xl font-semibold text-foreground">My Crates</h2>
-        <p className="text-muted-foreground text-sm">Manage, your owned and joined crates.</p>
+        <p className="text-muted-foreground text-sm">Manage your owned and joined crates.</p>
       </div>
       <SearchInputField
         value={searchTerm}
