@@ -42,7 +42,7 @@ function CreateCrateModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="border-none shadow bg-card text-foreground">
         <DialogHeader>
           <DialogTitle>Create Your First Crate</DialogTitle>
           <DialogDescription>Enter a name and pick a color</DialogDescription>
@@ -63,6 +63,8 @@ function CreateCrateModal() {
                         field.onChange(e);
                         clearErrors();
                       }}
+                      className="border-none h-full text-xl rounded-lg py-2 text-foreground 
+             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -86,7 +88,7 @@ function CreateCrateModal() {
 
             {globalError && <p className="text-sm text-red-500 font-medium">{globalError}</p>}
 
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="text-secondary">
               Create Crate
             </Button>
           </form>
