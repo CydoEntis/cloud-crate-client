@@ -62,7 +62,8 @@ function UpdateCrateForm({ crateId, initialName, initialColor, onSuccess }: Upda
                     field.onChange(e);
                     form.clearErrors("name");
                   }}
-
+                  className="border-none h-full text-xl rounded-lg py-2 text-foreground 
+             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
                 />
               </FormControl>
               <FormMessage />
