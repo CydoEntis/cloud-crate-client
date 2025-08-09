@@ -56,7 +56,7 @@ function CreateFolderModal({ isOpen, onClose, onCreate, isLoading }: CreateFolde
         }
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md border-none shadow bg-card text-foreground">
         <DialogHeader>
           <DialogTitle>Create New Folder</DialogTitle>
         </DialogHeader>
@@ -72,6 +72,8 @@ function CreateFolderModal({ isOpen, onClose, onCreate, isLoading }: CreateFolde
               placeholder="Enter folder name"
               onChange={() => setError("")}
               disabled={isLoading || isSubmitting}
+              className="border-none h-full text-xl rounded-lg py-2 text-foreground 
+             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
             />
             {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
           </div>
@@ -86,7 +88,7 @@ function CreateFolderModal({ isOpen, onClose, onCreate, isLoading }: CreateFolde
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading || isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading || isSubmitting}>
+            <Button type="submit" disabled={isLoading || isSubmitting} className="text-secondary">
               {isLoading || isSubmitting ? "Creating..." : "Create Folder"}
             </Button>
           </DialogFooter>
