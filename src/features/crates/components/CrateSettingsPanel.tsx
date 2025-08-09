@@ -23,8 +23,8 @@ export default function CrateSettingsPanel({
   role,
 }: CrateSettingsPanelProps) {
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="right" className="px-4 py-8">
+    <Sheet open={isOpen} onOpenChange={onClose} >
+      <SheetContent side="right" className="px-4 py-8 border-none shadow bg-card text-foreground" >
         <SheetHeader className="p-0">
           <SheetTitle>Crate Settings</SheetTitle>
           <SheetDescription>Update crate info, manage collaborators, or delete this crate.</SheetDescription>

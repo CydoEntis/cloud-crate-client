@@ -62,6 +62,7 @@ function UpdateCrateForm({ crateId, initialName, initialColor, onSuccess }: Upda
                     field.onChange(e);
                     form.clearErrors("name");
                   }}
+
                 />
               </FormControl>
               <FormMessage />
