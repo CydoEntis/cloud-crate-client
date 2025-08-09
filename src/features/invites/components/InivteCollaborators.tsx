@@ -52,7 +52,12 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Enter email to invite" />
+                <Input
+                  {...field}
+                  placeholder="Enter email to invite"
+                  className="border-none h-full text-xl rounded-lg py-2 text-foreground 
+             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
