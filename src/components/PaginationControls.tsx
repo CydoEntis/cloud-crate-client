@@ -13,6 +13,7 @@ type PaginationControlsProps = {
   pageSize: number;
   totalCount: number;
   onPageChange: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
 };
 
 function PaginationControls({ page, pageSize, totalCount, onPageChange }: PaginationControlsProps) {
