@@ -54,18 +54,26 @@ function RootFolderPage() {
   }, []);
 
   // Fetch folder contents
-  const { folderItemsWithBackRow, folderName, totalCount, isLoading, error, refetch } =
-    useFolderContents(crateId, null, page, pageSize, searchTerm);
+  const { folderItemsWithBackRow, folderName, totalCount, isLoading, error, refetch } = useFolderContents(
+    crateId,
+    null,
+    page,
+    pageSize,
+    searchTerm
+  );
 
   // Hooks for folder actions
-  const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } =
-    useFolderCreation(crateId, null, refetch);
+  const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
+    crateId,
+    null,
+    refetch
+  );
 
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading contents.</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error loading contents.</p>;
 
   return (
     <div className="space-y-6 p-6">
@@ -83,9 +91,8 @@ function RootFolderPage() {
         data={folderItemsWithBackRow}
         columns={folderFileTableColumns()}
         onNavigate={handleNavigate}
-        onDropItem={(itemId, itemType, targetFolderId) =>
-          handleDropItem(itemId, itemType, targetFolderId, refetch)
-        }
+        onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
+        isLoading={isLoading}
       />
 
       {totalCount > 0 && (

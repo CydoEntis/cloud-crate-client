@@ -22,7 +22,7 @@ export const getUserCrates = async ({
 
   console.log(`/crates?${params.toString()}`);
 
-  await new Promise((res) => setTimeout(res, 1500)); // simulate latency
+  await new Promise((res) => setTimeout(res, 1500)); // Remove eventually
   const { data } = await api.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
   return data.value!;
 };

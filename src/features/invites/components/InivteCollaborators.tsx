@@ -44,7 +44,6 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-4">
-        {/* Email Input */}
         <FormField
           control={form.control}
           name="email"
@@ -64,7 +63,6 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
           )}
         />
         <div className="flex gap-2 items-end">
-          {/* Role Select */}
           <FormField
             control={form.control}
             name="role"
@@ -87,7 +85,6 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
             )}
           />
 
-          {/* ExpiresAt Select */}
           <FormField
             control={form.control}
             name="expiresAt"
@@ -97,7 +94,6 @@ export default function InviteCollaborators({ crateId }: InviteCollaboratorsProp
                 <FormControl>
                   <Select
                     onValueChange={(value) => {
-                      // Select returns string, convert to number for minutes
                       field.onChange(Number(value));
                     }}
                     value={String(field.value)}

@@ -19,6 +19,9 @@ export const getFolderContents = async (
 
   try {
     const response = await api.get<ApiResponse<FolderContentsResponse>>(url);
+
+    await new Promise((res) => setTimeout(res, 1500)); // Remove eventually
+
     return FolderContentsResponseSchema.parse(response.data.value);
   } catch (err) {
     console.error("Error fetching folder contents:", err);

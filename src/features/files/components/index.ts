@@ -5,6 +5,5 @@ export { default as FileTable } from "./FileTable";
 export { default as FileTableHeader } from "../../../components/GenericTableHeader";
 export { default as FileTableRow } from "./FileTableRow";
 export { default as FileTableToolbar } from "./FileTableToolbar";
-export { default as FolderContentsView } from "./FolderContentsView";
 export { default as UploadProgressItem } from "./UploadProgressItem";
 export { default as RecentFile } from "./RecentFile";
