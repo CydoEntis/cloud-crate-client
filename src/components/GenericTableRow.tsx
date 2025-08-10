@@ -6,6 +6,7 @@ type GenericTableRowProps<TData> = {
   row: Row<TData>;
   rowIndex: number; // 🆕 Add row index prop
   onClickRow?: (row: Row<TData>, e: React.MouseEvent) => void;
+  onDoubleClickRow?: (row: Row<TData>, e: React.MouseEvent) => void;
   onDragStartRow?: (row: Row<TData>, e: React.DragEvent) => void;
   onDropOnRow?: (row: Row<TData>, droppedData: any) => void;
   className?: string | ((row: Row<TData>) => string);
@@ -15,6 +16,7 @@ function GenericTableRow<TData>({
   row,
   rowIndex,
   onClickRow,
+  onDoubleClickRow,
   onDragStartRow,
   onDropOnRow,
   className,
@@ -35,6 +37,7 @@ function GenericTableRow<TData>({
       key={row.id}
       draggable={!!onDragStartRow}
       onClick={(e) => onClickRow?.(row, e)}
+      onDoubleClick={(e) => onDoubleClickRow?.(row, e)}
       onDragStart={(e) => onDragStartRow?.(row, e)}
       onDragOver={(e) => onDropOnRow && e.preventDefault()}
       onDrop={handleDrop}
@@ -44,7 +47,7 @@ function GenericTableRow<TData>({
         <div
           className={clsx(
             "transition-colors hover:bg-muted/5 cursor-pointer",
-            rowIndex % 2 === 0 ? "bg-input/50" : "bg-card/50", 
+            rowIndex % 2 === 0 ? "bg-input/50" : "bg-card/50",
             typeof className === "function" ? className(row) : className
           )}
         >

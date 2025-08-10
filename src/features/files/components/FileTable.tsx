@@ -28,12 +28,22 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading }: FileTab
 
   const handleClickRow = (row: Row<FolderOrFileItem>, e: React.MouseEvent) => {
     const data = row.original;
-    if (!(e.target as HTMLElement).closest(".actions-cell")) {
-      if (data.isBackRow) {
-        onNavigate?.(data.parentOfCurrentFolderId ?? null);
-      } else if (data.type === FolderItemType.Folder) {
-        onNavigate?.(data.id);
-      }
+    if ((e.target as HTMLElement).closest(".actions-cell")) return;
+
+    if (data.type === FolderItemType.File && !data.isBackRow) {
+      // onPreviewFile?.(data);
+      console.log("Will show file preview")
+    }
+  };
+
+  const handleDoubleClickRow = (row: Row<FolderOrFileItem>, e: React.MouseEvent) => {
+    const data = row.original;
+    if ((e.target as HTMLElement).closest(".actions-cell")) return;
+
+    if (data.isBackRow) {
+      onNavigate?.(data.parentOfCurrentFolderId ?? null);
+    } else if (data.type === FolderItemType.Folder) {
+      onNavigate?.(data.id);
     }
   };
 
@@ -71,6 +81,7 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading }: FileTab
                   row={row}
                   className={getRowClass(row)}
                   onClickRow={handleClickRow}
+                  onDoubleClickRow={handleDoubleClickRow}
                   onDragStartRow={handleDragStartRow}
                   onDropOnRow={handleDropOnRow}
                   rowIndex={index}
