@@ -11,4 +11,5 @@ export const StoredFileSchema = z.object({
   uploadedBy: z.string().optional().default(""),
   isFolder: z.boolean().optional(),
   folderColor: z.string().optional(),
+  fileUrl: z.string().optional(),
 });

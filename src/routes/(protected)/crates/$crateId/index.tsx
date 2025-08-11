@@ -14,6 +14,7 @@ import folderFileTableColumns from "@/features/files/components/table/columns/fo
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import FileTableToolbar from "@/features/files/components/FileTableToolbar";
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
+import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
 
 const folderSearchSchema = z.object({
   page: z.coerce.number().optional().default(1),
@@ -113,6 +114,10 @@ function RootFolderPage() {
           onCreate={handleCreateFolder}
           isLoading={isCreating}
         />
+      )}
+
+      {previewFile && (
+        <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />
       )}
     </div>
   );
