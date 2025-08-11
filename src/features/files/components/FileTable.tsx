@@ -12,9 +12,10 @@ type FileTableProps = {
   onNavigate?: (folderId: string | null) => void;
   onDropItem?: (itemId: string, itemType: DragItemType, targetFolderId: string | null) => void;
   isLoading?: boolean;
+  onPreviewFile?: (file: FolderOrFileItem) => void;
 };
 
-function FileTable({ data, columns, onNavigate, onDropItem, isLoading }: FileTableProps) {
+function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreviewFile }: FileTableProps) {
   const table = useReactTable<FolderOrFileItem>({
     data,
     columns,
@@ -31,8 +32,7 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading }: FileTab
     if ((e.target as HTMLElement).closest(".actions-cell")) return;
 
     if (data.type === FolderItemType.File && !data.isBackRow) {
-      // onPreviewFile?.(data);
-      console.log("Will show file preview")
+      onPreviewFile?.(data);
     }
   };
 

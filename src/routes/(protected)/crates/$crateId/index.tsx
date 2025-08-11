@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
@@ -13,6 +13,7 @@ import FileTable from "@/features/files/components/FileTable";
 import folderFileTableColumns from "@/features/files/components/table/columns/folderFileTableColumns";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import FileTableToolbar from "@/features/files/components/FileTableToolbar";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 
 const folderSearchSchema = z.object({
   page: z.coerce.number().optional().default(1),
@@ -72,8 +73,7 @@ function RootFolderPage() {
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
 
-  // if (isLoading) return <p>Loading...</p>;
-  // if (error) return <p>Error loading contents.</p>;
+  const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
   return (
     <div className="space-y-6 p-6">
@@ -93,6 +93,7 @@ function RootFolderPage() {
         onNavigate={handleNavigate}
         onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
         isLoading={isLoading}
+        onPreviewFile={setPreviewFile}
       />
 
       {totalCount > 0 && (
