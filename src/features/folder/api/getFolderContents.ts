@@ -20,7 +20,7 @@ export const getFolderContents = async (
   try {
     const response = await api.get<ApiResponse<FolderContentsResponse>>(url);
 
-    await new Promise((res) => setTimeout(res, 1500)); // Remove eventually
+    await new Promise((res) => setTimeout(res, 1500)); 
 
     return FolderContentsResponseSchema.parse(response.data.value);
   } catch (err) {

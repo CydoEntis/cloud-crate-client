@@ -12,4 +12,11 @@ export const FolderOrFileItemSchema = z.object({
   color: z.string().nullable().optional(),
   parentOfCurrentFolderId: z.string().uuid().nullable().optional(),
   isBackRow: z.boolean().optional(),
+
+  uploadedByUserId: z.string(),
+  uploadedByDisplayName: z.string(),
+  uploadedByEmail: z.string().email(),
+  uploadedByProfilePictureUrl: z.string().url(),
+  createdAt: z.string()
 });
+

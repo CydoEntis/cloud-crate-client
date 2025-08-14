@@ -22,6 +22,8 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
     getCoreRowModel: getCoreRowModel(),
   });
 
+  console.log(data);
+
   const getRowClass = (row: Row<FolderOrFileItem>) => {
     const data = row.original;
     return data.type === FolderItemType.Folder || data.isBackRow ? "cursor-pointer hover:bg-muted/30" : "";
