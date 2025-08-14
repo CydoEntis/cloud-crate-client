@@ -42,7 +42,10 @@ function CreateCrateModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="border-none shadow bg-card text-foreground">
+      <DialogContent
+        className="border-none shadow bg-card text-foreground"
+        style={{ top: "25%", transform: "translate(0, 0)" }}
+      >
         <DialogHeader>
           <DialogTitle>Create Your First Crate</DialogTitle>
           <DialogDescription>Enter a name and pick a color</DialogDescription>

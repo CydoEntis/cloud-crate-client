@@ -48,13 +48,13 @@ function CrateActionsMenu({ crate, onEdit, onDelete, onLeave }: CrateActionsMenu
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-secondary border-none ">
-        <DropdownMenuItem className="hover:bg-card cursor-pointer transition-all duration-300" onClick={handleEdit}>Edit</DropdownMenuItem>
+        <DropdownMenuItem className="hover:bg-background cursor-pointer transition-all duration-300" onClick={handleEdit}>Edit</DropdownMenuItem>
         {isOwner ? (
-          <DropdownMenuItem className="hover:bg-card cursor-pointer transition-all duration-300 text-destructive" onClick={handleDelete}>
+          <DropdownMenuItem className="hover:bg-background cursor-pointer transition-all duration-300 text-destructive" onClick={handleDelete}>
             Delete
           </DropdownMenuItem>
         ) : (
-          <DropdownMenuItem className="hover:bg-card cursor-pointer transition-all duration-300 text-destructive" onClick={handleLeave}>
+          <DropdownMenuItem className="hover:bg-background cursor-pointer transition-all duration-300 text-destructive" onClick={handleLeave}>
             Leave
           </DropdownMenuItem>
         )}

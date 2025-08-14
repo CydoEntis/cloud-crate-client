@@ -13,7 +13,7 @@ function UpdateCrateModal({ open, onOpenChange, crateId, initialName, initialCol
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="mt-10 max-w-lg" 
+        className="mt-10 max-w-lg text-foreground bg-card border-none" 
         onClick={(e) => e.stopPropagation()}
         style={{ top: "25%", transform: "translate(0, 0)" }} 
       >

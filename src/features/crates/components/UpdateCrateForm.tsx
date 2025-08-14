@@ -46,7 +46,7 @@ function UpdateCrateForm({ crateId, initialName, initialColor, onSuccess }: Upda
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 text-foreground" noValidate>
         <FormField
           control={form.control}
           name="name"
