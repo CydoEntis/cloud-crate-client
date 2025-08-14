@@ -1,7 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import NameCell from "./NameCell";
 import SizeCell from "./SizeCell";
-import ActionsCell from "./ActionsCell";
+import FolderOrFileActionsMenu from "../../FolderOrFileActionsMenu";
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 import UserAvatar from "@/components/UserAvatar";
 import DateIndicator from "@/components/DateIndicator";
@@ -51,7 +51,7 @@ const folderFileTableColumns = () => [
     header: "",
     size: 5,
     minSize: 5,
-    cell: (info) => <ActionsCell row={info.row.original} />,
+    cell: (info) => <FolderOrFileActionsMenu row={info.row.original} />,
   }),
 ];
 
