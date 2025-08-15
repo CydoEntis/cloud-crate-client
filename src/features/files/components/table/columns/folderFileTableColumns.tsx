@@ -1,6 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import NameCell from "./NameCell";
-import SizeCell from "./SizeCell";
 import FolderOrFileActionsMenu from "../../FolderOrFileActionsMenu";
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 import UserAvatar from "@/components/UserAvatar";
@@ -22,6 +21,13 @@ const folderFileTableColumns = () => [
     size: 20,
     minSize: 20,
     cell: ({ row }) => {
+      if (row.original.isBackRow)
+        return (
+          <div className="text-right flex justify-end items-center gap-2">
+            <p>-</p>
+          </div>
+        );
+
       return (
         <UserAvatar
           displayName={row.original.uploadedByDisplayName}
@@ -36,14 +42,28 @@ const folderFileTableColumns = () => [
     header: "Uploaded At",
     size: 10,
     minSize: 10,
-    cell: ({ row }) => <DateIndicator date={row.original.createdAt} />,
+    cell: ({ row }) =>
+      row.original.isBackRow ? (
+        <div className="text-right flex justify-end items-center gap-2">
+          <p>-</p>
+        </div>
+      ) : (
+        <DateIndicator date={row.original.createdAt} />
+      ),
   }),
 
   columnHelper.accessor("sizeInBytes", {
     header: "Size",
     size: 10,
     minSize: 10,
-    cell: ({row}) => <StorageDisplay storage={row.original.sizeInBytes!} />,
+    cell: ({ row }) =>
+      row.original.isBackRow ? (
+        <div className="text-right flex justify-end items-center gap-2">
+          <p>-</p>
+        </div>
+      ) : (
+        <StorageDisplay storage={row.original.sizeInBytes!} />
+      ),
   }),
 
   columnHelper.display({

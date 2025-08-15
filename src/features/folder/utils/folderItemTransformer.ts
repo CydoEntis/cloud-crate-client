@@ -14,13 +14,20 @@ export function injectBackRow(
   return [
     {
       id: "__back",
-      name: "..",
+      name: "Go Back",
       crateId,
       parentFolderId,
       type: FolderItemType.Folder,
       isBackRow: true,
       sizeInBytes: 0,
-      mimeType: undefined,
+      mimeType: null,
+      color: null,
+      uploadedByUserId: "",
+      uploadedByDisplayName: "-",
+      uploadedByEmail: "",
+      uploadedByProfilePictureUrl: "",
+      createdAt: "",
+      parentOfCurrentFolderId: null,
     },
     ...cleaned,
   ];

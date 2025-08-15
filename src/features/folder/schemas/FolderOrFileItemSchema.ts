@@ -8,15 +8,14 @@ export const FolderOrFileItemSchema = z.object({
   crateId: z.string().uuid(),
   parentFolderId: z.string().uuid().nullable().optional(),
   mimeType: z.string().nullable().optional(),
-  sizeInBytes: z.number().int().nullable().optional(),
+  sizeInBytes: z.number().int().optional(),
   color: z.string().nullable().optional(),
   parentOfCurrentFolderId: z.string().uuid().nullable().optional(),
   isBackRow: z.boolean().optional(),
 
   uploadedByUserId: z.string(),
   uploadedByDisplayName: z.string(),
-  uploadedByEmail: z.string().email(),
-  uploadedByProfilePictureUrl: z.string().url(),
-  createdAt: z.string()
+  uploadedByEmail: z.string(),
+  uploadedByProfilePictureUrl: z.string(),
+  createdAt: z.string(),
 });
-

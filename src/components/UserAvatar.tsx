@@ -12,7 +12,6 @@ type UserAvatarProps = {
 function UserAvatar({ displayName, email, profilePictureUrl }: UserAvatarProps) {
   const { user } = useUserStore.getState();
 
-  // TODO: Potentially add sizes for uses in different components.
   return (
     <div className="flex justify-end items-center">
       <Tooltip>

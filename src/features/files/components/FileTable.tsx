@@ -22,7 +22,6 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
     getCoreRowModel: getCoreRowModel(),
   });
 
-  console.log(data);
 
   const getRowClass = (row: Row<FolderOrFileItem>) => {
     const data = row.original;
