@@ -1,16 +1,15 @@
-import type { ApiResponse } from "@/features/auth/types";
+import type { ApiResponse } from "@/features/auth";
 import api from "@/lib/api";
-import { FolderOrFileItemSchema } from "@/features/folder/schemas/FolderOrFileItemSchema";
-import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
+import { StoredFileSchema } from "../schemas/StoredFileSchema";
+import type { StoredFile } from "../types";
 
-export const getFile = async (crateId: string, fileId: string): Promise<FolderOrFileItem> => {
-  const response = await api.get<ApiResponse<unknown>>(
-    `/crates/${crateId}/files/${fileId}`
-  );
+export const getFile = async (crateId: string, fileId: string): Promise<StoredFile> => {
+  const response = await api.get<ApiResponse<StoredFile>>(`/crates/${crateId}/files/${fileId}`);
 
   const fileData = response.data?.value;
+  if (!fileData) {
+    throw new Error("File not found in API response");
+  }
   console.log(fileData);
-
-  // ✅ validate and coerce into correct type
-  return FolderOrFileItemSchema.parse(fileData);
+  return StoredFileSchema.parse(fileData);
 };
