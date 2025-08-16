@@ -1,5 +1,6 @@
 import type z from "zod";
-import type { StoredFileSchema, UploadFileSchema } from "../schemas";
+import type { UploadFileSchema } from "../schemas/UploadFileSchema";
+import type { StoredFileSchema } from "../schemas/StoredFileSchema";
 
 export type UploadFileInput = z.infer<typeof UploadFileSchema>;
 export type StoredFile = z.infer<typeof StoredFileSchema>;

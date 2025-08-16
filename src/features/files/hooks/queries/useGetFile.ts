@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import type { StoredFile } from "../../types";
 import { getFile } from "../../api/getFile";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 
 export const useGetFile = (crateId: string, fileId: string | null) => {
-  return useQuery<StoredFile, Error>({
+  return useQuery<FolderOrFileItem, Error>({
     queryKey: ["file", crateId, fileId],
     queryFn: () => {
       if (!fileId) throw new Error("No file ID provided");
