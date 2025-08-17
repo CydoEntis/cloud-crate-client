@@ -1,4 +1,4 @@
-import { TableHeader, TableRow, TableCell } from "@/components/ui/table";
+import { TableHeader, TableRow, TableHead } from "@/components/ui/table";
 import { flexRender, type Table } from "@tanstack/react-table";
 import clsx from "clsx";
 
@@ -11,22 +11,22 @@ function GenericTableHeader<TData>({ table, className }: GenericTableHeaderProps
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow key={headerGroup.id} className="p-0 border-none hover:bg-none text-foreground bg-input">
-          <TableCell colSpan={headerGroup.headers.length} className="p-0 border-none hover:bg-none rounded-t-xl">
-            <div className={clsx("border-b border-input hover:bg-transparent", className)}>
-              <div className="flex">
-                {headerGroup.headers.map((header, index) => (
-                  <div
-                    key={header.id}
-                    className={clsx("p-4 font-semibold hover:bg-none", index === 0 ? "text-left flex-1" : "text-right")}
-                    style={{ width: `${header.column.getSize()}%` }}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </TableCell>
+        <TableRow key={headerGroup.id} className="p-0 border-none text-foreground bg-input">
+          {headerGroup.headers.map((header, index) => {
+            if (header.isPlaceholder) return null; 
+
+            return (
+              <TableHead
+                key={header.id}
+                className={clsx("p-4 font-semibold", index === 0 ? "text-left" : "text-right", className)}
+                style={{
+                  width: header.getSize() ? `${header.getSize()}%` : undefined,
+                }}
+              >
+                {flexRender(header.column.columnDef.header, header.getContext())}
+              </TableHead>
+            );
+          })}
         </TableRow>
       ))}
     </TableHeader>

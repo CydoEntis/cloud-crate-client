@@ -20,14 +20,18 @@ export function crateTableColumns({
       accessorKey: "name",
       size: 55,
       minSize: 30,
-      header: "Name",
-      cell: ({ row }) => <CrateIndicator crateColor={row.original.color} crateName={row.original.name} />,
+      header: () => <div className="text-left">Name</div>,
+      cell: ({ row }) => (
+        <div className="text-left flex items-center gap-2">
+          <CrateIndicator crateColor={row.original.color} crateName={row.original.name} />
+        </div>
+      ),
     },
     {
       accessorKey: "owner",
       size: 20,
       minSize: 20,
-      header: "Owner",
+      header: () => <div className="text-right">Owner</div>,
       cell: ({ row }) => {
         const { displayName, profilePicture, email } = row.original.owner;
         return (
@@ -41,7 +45,7 @@ export function crateTableColumns({
       accessorKey: "storage",
       size: 10,
       minSize: 10,
-      header: "Storage",
+      header: () => <div className="text-right">Storage</div>,
       cell: ({ row }) => (
         <div className="text-right flex justify-end items-center gap-2">
           <StorageDisplay storage={row.original.usedStorage} />
@@ -52,7 +56,7 @@ export function crateTableColumns({
       accessorKey: "joinedAt",
       size: 10,
       minSize: 10,
-      header: "Joined",
+      header: () => <div className="text-right">Joined</div>,
       cell: ({ row }) => (
         <div className="text-right flex justify-end items-center gap-2">
           <DateIndicator date={row.original.joinedAt} />
@@ -61,12 +65,16 @@ export function crateTableColumns({
     },
     {
       id: "actions",
-      header: "",
+      header: () => <div className="text-right"> </div>, // always right aligned
       size: 5,
       minSize: 5,
       cell: ({ row }) => {
         const crate = row.original;
-        return <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete} onLeave={onLeave} />
+        return (
+          <div className="text-right flex justify-end">
+            <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete} onLeave={onLeave} />
+          </div>
+        );
       },
     },
   ];

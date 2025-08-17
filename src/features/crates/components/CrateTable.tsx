@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef } from "@tanstack/react-table";
 import { Table, TableBody } from "@/components/ui/table";
 import GenericTableHeader from "@/components/GenericTableHeader";
@@ -5,6 +6,7 @@ import GenericTableRow from "@/components/GenericTableRow";
 import type { Crate } from "../types/Crate";
 import { useNavigate } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMediaQuery } from "usehooks-ts"; // 👈 helper hook
 
 type CrateTableProps = {
   data: Crate[];
@@ -15,9 +17,49 @@ type CrateTableProps = {
 function CrateTable({ data, columns, isLoading }: CrateTableProps) {
   const navigate = useNavigate();
 
+  // 👇 breakpoints
+  const isMobile = useMediaQuery("(max-width: 719px)");
+  const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
+  const isDesktop = useMediaQuery("(min-width: 1200px)");
+
+  const [columnVisibility, setColumnVisibility] = useState({});
+
+  useEffect(() => {
+    if (isMobile) {
+      // mobile → name + actions
+      setColumnVisibility({
+        name: true,
+        owner: false,
+        storage: false,
+        joinedAt: false,
+        actions: true,
+      });
+    } else if (isTablet) {
+      // tablet → name + owner + actions
+      setColumnVisibility({
+        name: true,
+        owner: true,
+        storage: false,
+        joinedAt: false,
+        actions: true,
+      });
+    } else if (isDesktop) {
+      // desktop → all
+      setColumnVisibility({
+        name: true,
+        owner: true,
+        storage: true,
+        joinedAt: true,
+        actions: true,
+      });
+    }
+  }, [isMobile, isTablet, isDesktop]);
+
   const table = useReactTable<Crate>({
     data,
     columns,
+    state: { columnVisibility },
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: "onChange",
     columnResizeDirection: "ltr",
@@ -32,14 +74,14 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
   };
 
   const getRowClass = () => "hover:bg-muted/20";
-  console.log(isLoading)
+
   return (
-    <Table className="">
+    <Table>
       <GenericTableHeader table={table} />
       <TableBody>
         {isLoading
           ? Array.from({ length: 20 }).map((_, i) => (
-              <tr key={i} className="h-10 ">
+              <tr key={i} className="h-10">
                 <td colSpan={columns.length}>
                   <Skeleton className="w-full h-10 mt-2" />
                 </td>

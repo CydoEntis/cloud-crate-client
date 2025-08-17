@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 type GenericTableRowProps<TData> = {
   row: Row<TData>;
-  rowIndex: number; // 🆕 Add row index prop
+  rowIndex: number;
   onClickRow?: (row: Row<TData>, e: React.MouseEvent) => void;
   onDoubleClickRow?: (row: Row<TData>, e: React.MouseEvent) => void;
   onDragStartRow?: (row: Row<TData>, e: React.DragEvent) => void;
@@ -32,6 +32,12 @@ function GenericTableRow<TData>({
     }
   };
 
+  const rowClassName = clsx(
+    "transition-colors cursor-pointer",
+    rowIndex % 2 === 0 ? "bg-input/50" : "bg-card/50",
+    typeof className === "function" ? className(row) : className
+  );
+
   return (
     <TableRow
       key={row.id}
@@ -41,29 +47,13 @@ function GenericTableRow<TData>({
       onDragStart={(e) => onDragStartRow?.(row, e)}
       onDragOver={(e) => onDropOnRow && e.preventDefault()}
       onDrop={handleDrop}
-      className="p-0 border-none"
+      className={rowClassName}
     >
-      <TableCell colSpan={row.getVisibleCells().length} className="p-0 border-none text-foreground">
-        <div
-          className={clsx(
-            "transition-colors hover:bg-muted/5 cursor-pointer",
-            rowIndex % 2 === 0 ? "bg-input/50" : "bg-card/50",
-            typeof className === "function" ? className(row) : className
-          )}
-        >
-          <div className="flex items-center">
-            {row.getVisibleCells().map((cell) => (
-              <div
-                key={cell.id}
-                className={clsx("p-4", cell.column.id === "controls" && "justify-end flex")}
-                style={{ width: `${cell.column.getSize()}%` }}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </div>
-            ))}
-          </div>
-        </div>
-      </TableCell>
+      {row.getVisibleCells().map((cell) => (
+        <TableCell key={cell.id} className={clsx("p-4 text-foreground", cell.column.id === "actions" && "justify-end flex")}>
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </TableCell>
+      ))}
     </TableRow>
   );
 }
