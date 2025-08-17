@@ -6,7 +6,7 @@ type DateIndicatorProps = {
 
 function DateIndicator({ date }: DateIndicatorProps) {
   return (
-    <div className="flex justify-end items-center gap-2">
+    <div className="flex  items-center gap-2">
       <Calendar className="w-4 h-4 text-muted-foreground" />{" "}
       <p className="text-muted-foreground">{new Date(date).toLocaleDateString()}</p>
     </div>

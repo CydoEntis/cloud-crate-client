@@ -30,7 +30,11 @@ export function crateTableColumns({
       header: "Owner",
       cell: ({ row }) => {
         const { displayName, profilePicture, email } = row.original.owner;
-        return <UserAvatar displayName={displayName} profilePictureUrl={profilePicture} email={email} />;
+        return (
+          <div className="text-right flex justify-end items-center gap-2">
+            <UserAvatar displayName={displayName} profilePictureUrl={profilePicture} email={email} />
+          </div>
+        );
       },
     },
     {
@@ -38,14 +42,22 @@ export function crateTableColumns({
       size: 10,
       minSize: 10,
       header: "Storage",
-      cell: ({ row }) => <StorageDisplay storage={row.original.usedStorage} />,
+      cell: ({ row }) => (
+        <div className="text-right flex justify-end items-center gap-2">
+          <StorageDisplay storage={row.original.usedStorage} />
+        </div>
+      ),
     },
     {
       accessorKey: "joinedAt",
       size: 10,
       minSize: 10,
       header: "Joined",
-      cell: ({ row }) => <DateIndicator date={row.original.joinedAt} />,
+      cell: ({ row }) => (
+        <div className="text-right flex justify-end items-center gap-2">
+          <DateIndicator date={row.original.joinedAt} />
+        </div>
+      ),
     },
     {
       id: "actions",
@@ -54,7 +66,7 @@ export function crateTableColumns({
       minSize: 5,
       cell: ({ row }) => {
         const crate = row.original;
-        return <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete} onLeave={onLeave}/>;
+        return <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete} onLeave={onLeave} />
       },
     },
   ];

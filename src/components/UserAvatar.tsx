@@ -13,7 +13,7 @@ function UserAvatar({ displayName, email, profilePictureUrl }: UserAvatarProps) 
   const { user } = useUserStore.getState();
 
   return (
-    <div className="flex justify-end items-center">
+    <div className="flex items-center">
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex items-center gap-1">

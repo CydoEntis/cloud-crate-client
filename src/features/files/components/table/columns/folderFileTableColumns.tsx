@@ -29,11 +29,13 @@ const folderFileTableColumns = () => [
         );
 
       return (
-        <UserAvatar
-          displayName={row.original.uploadedByDisplayName}
-          profilePictureUrl={row.original.uploadedByProfilePictureUrl}
-          email={row.original.uploadedByEmail}
-        />
+        <div className="text-right flex justify-end items-center gap-2">
+          <UserAvatar
+            displayName={row.original.uploadedByDisplayName}
+            profilePictureUrl={row.original.uploadedByProfilePictureUrl}
+            email={row.original.uploadedByEmail}
+          />
+        </div>
       );
     },
   }),
@@ -48,7 +50,9 @@ const folderFileTableColumns = () => [
           <p>-</p>
         </div>
       ) : (
-        <DateIndicator date={row.original.createdAt} />
+        <div className="text-right flex justify-end items-center gap-2">
+          <DateIndicator date={row.original.createdAt} />
+        </div>
       ),
   }),
 
@@ -62,7 +66,9 @@ const folderFileTableColumns = () => [
           <p>-</p>
         </div>
       ) : (
-        <StorageDisplay storage={row.original.sizeInBytes!} />
+        <div className="text-right flex justify-end items-center gap-2">
+          <StorageDisplay storage={row.original.sizeInBytes!} />
+        </div>
       ),
   }),
 
