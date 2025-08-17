@@ -45,16 +45,30 @@ export default function FilePreviewPanel({ crateId, fileId, onClose }: FilePrevi
               <ScrollArea className="p-4 flex-1">
                 <DialogHeader className="p-0 mb-4">
                   <DialogTitle className="break-words">{file.name}</DialogTitle>
-                  <DialogDescription>{file.mimeType}</DialogDescription>
                 </DialogHeader>
 
-                <StorageDisplay storage={file.sizeInBytes} />
-                <DateIndicator date={new Date(file.createdAt!)} />
-                <UserAvatar
-                  displayName={file.uploadedByDisplayName ?? ""}
-                  email={file.uploadedByEmail ?? ""}
-                  profilePictureUrl={file.uploadedByProfilePictureUrl ?? ""}
-                />
+                <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+                  <div className="flex gap-2">
+                    <h3>Uploader:</h3>
+                    <UserAvatar
+                      displayName={file.uploadedByDisplayName ?? ""}
+                      email={file.uploadedByEmail ?? ""}
+                      profilePictureUrl={file.uploadedByProfilePictureUrl ?? ""}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <h3>Upload Date:</h3>
+                    <DateIndicator date={new Date(file.createdAt!)} />
+                  </div>
+                  <div className="flex gap-2">
+                    <h3>File Type:</h3>
+                    <DialogDescription>{file.mimeType}</DialogDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <h3>File Size:</h3>
+                    <StorageDisplay storage={file.sizeInBytes} />
+                  </div>
+                </div>
               </ScrollArea>
 
               {/* Actions */}
