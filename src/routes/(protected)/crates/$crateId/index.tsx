@@ -77,7 +77,7 @@ function RootFolderPage() {
   const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-4 sm:p-6 md:p-8 lg:p-12">
       <div className="flex flex-col gap-1">
         <h2 className="text-2xl font-semibold text-foreground">{folderName}</h2>
       </div>
