@@ -7,7 +7,6 @@ type FilePreviewProps = {
 };
 
 export function FilePreview({ file }: FilePreviewProps) {
-  console.log("FILE PREVIEW: ", file)
   const { url, mimeType, name } = file;
 
   if (mimeType.startsWith("image/")) {

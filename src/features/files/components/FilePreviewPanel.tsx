@@ -4,6 +4,9 @@ import { useGetFile } from "../hooks/queries/useGetFile";
 import { FilePreview } from "./FilePreview";
 import { DownloadButton } from "@/components/DownloadButton";
 import { formatBytes } from "@/lib/formatBytes";
+import StorageDisplay from "@/components/StorageDisplay";
+import DateIndicator from "@/components/DateIndicator";
+import UserAvatar from "@/components/UserAvatar";
 
 type FilePreviewPanelProps = {
   crateId: string;
@@ -13,7 +16,7 @@ type FilePreviewPanelProps = {
 
 export default function FilePreviewPanel({ crateId, fileId, onClose }: FilePreviewPanelProps) {
   const { data: file, isLoading, isError } = useGetFile(crateId, fileId);
-
+  console.log(file);
   if (!fileId) return null;
 
   return (
@@ -45,10 +48,13 @@ export default function FilePreviewPanel({ crateId, fileId, onClose }: FilePrevi
                   <DialogDescription>{file.mimeType}</DialogDescription>
                 </DialogHeader>
 
-                <div className="text-sm text-muted-foreground space-y-2">
-                  <p>Size: {formatBytes(file.sizeInBytes)}</p>
-                  {file.uploadDate! && <p>Last modified: {new Date(file.uploadDate!).toLocaleString()}</p>}
-                </div>
+                <StorageDisplay storage={file.sizeInBytes} />
+                <DateIndicator date={new Date(file.createdAt!)} />
+                <UserAvatar
+                  displayName={file.uploadedByDisplayName ?? ""}
+                  email={file.uploadedByEmail ?? ""}
+                  profilePictureUrl={file.uploadedByProfilePictureUrl ?? ""}
+                />
               </ScrollArea>
 
               {/* Actions */}

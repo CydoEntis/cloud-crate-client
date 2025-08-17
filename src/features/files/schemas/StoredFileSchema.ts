@@ -15,4 +15,5 @@ export const StoredFileSchema = z.object({
   isFolder: z.boolean().optional(),
   folderColor: z.string().optional(),
   fileUrl: z.string().optional(),
+  createdAt: z.string().optional(),
 });

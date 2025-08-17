@@ -10,6 +10,6 @@ export const getFile = async (crateId: string, fileId: string): Promise<StoredFi
   if (!fileData) {
     throw new Error("File not found in API response");
   }
-  console.log(fileData);
+  console.log("RETRIEVED FILE: ", fileData);
   return StoredFileSchema.parse(fileData);
 };
