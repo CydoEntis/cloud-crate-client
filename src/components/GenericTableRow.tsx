@@ -33,7 +33,7 @@ function GenericTableRow<TData>({
   };
 
   const rowClassName = clsx(
-    "transition-colors cursor-pointer",
+    "transition-colors cursor-pointer border-transparent",
     rowIndex % 2 === 0 ? "bg-input/50" : "bg-card/50",
     typeof className === "function" ? className(row) : className
   );
