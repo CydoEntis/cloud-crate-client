@@ -9,7 +9,7 @@ type FileTableToolbarProps = {
 
 function FileTableToolbar({ search, setSearch, onOpenCreateFolder }: FileTableToolbarProps) {
   return (
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
       <SearchInputField value={search} onChange={setSearch} placeholder="Search files or folders..." />
       <Button onClick={onOpenCreateFolder}>+ New Folder</Button>
     </div>

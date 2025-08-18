@@ -31,7 +31,7 @@ export default function SearchInputField({ value, onChange, label, placeholder =
           placeholder={placeholder}
           type="text"
           autoComplete="off"
-          className="border-none pl-12 h-full text-2xl rounded-lg py-3 text-foreground 
+          className="border-none pl-12 h-full  rounded-lg py-3 text-foreground 
              focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
         />
       </div>

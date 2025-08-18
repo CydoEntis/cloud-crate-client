@@ -15,7 +15,10 @@ const FileIndicator = ({ filename, isFolder, folderColor }: FileIndicatorProps) 
   const bg = isFolder ? folderColor : getFileColor(ext);
   const Icon = isFolder ? Folder : getFileIcon(ext);
   return (
-    <div className="p-2 rounded-md flex items-center justify-center" style={{ backgroundColor: bg }}>
+    <div
+      className="rounded-md p-1 flex items-center justify-center"
+      style={{ backgroundColor: bg, width: 24, height: 24 }}
+    >
       <Icon className="w-5 h-5 text-white" />
     </div>
   );

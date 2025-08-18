@@ -26,7 +26,6 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
 
   useEffect(() => {
     if (isMobile) {
-      // mobile → name + actions
       setColumnVisibility({
         name: true,
         owner: false,
@@ -35,7 +34,6 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
         actions: true,
       });
     } else if (isTablet) {
-      // tablet → name + owner + actions
       setColumnVisibility({
         name: true,
         owner: true,
@@ -44,7 +42,6 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
         actions: true,
       });
     } else if (isDesktop) {
-      // desktop → all
       setColumnVisibility({
         name: true,
         owner: true,

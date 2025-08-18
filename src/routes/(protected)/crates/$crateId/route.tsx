@@ -21,8 +21,8 @@ function CrateLayout() {
   if (isError || !crate) return <p>Failed to load crate info</p>;
 
   return (
-    <section>
-      <div className="flex justify-between items-center  py-2">
+    <section className="p-2 border-2 border-orange-500">
+      {/* <div className="flex justify-between items-center  py-2">
         <h3 className="text-3xl font-bold text-foreground">{crate.name}</h3>
         {crate.role !== CrateRole.Viewer ? (
           <Button
@@ -33,11 +33,11 @@ function CrateLayout() {
             <Settings /> Settings
           </Button>
         ) : null}
-      </div>
+      </div> */}
 
       <div className="mb-4">
-        <AvailableStorageIndicator crate={crate} />
-        <FileUpload crateId={crateId} />
+        {/* <AvailableStorageIndicator crate={crate} /> */}
+        {/* <FileUpload crateId={crateId} /> */}
       </div>
 
       <CrateSettingsPanel

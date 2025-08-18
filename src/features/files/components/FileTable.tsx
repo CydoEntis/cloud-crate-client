@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanstack/react-table";
 import { Table, TableBody } from "@/components/ui/table";
 import GenericTableHeader from "@/components/GenericTableHeader";
@@ -5,6 +6,7 @@ import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem"
 import { FolderItemType, type DragItemType } from "@/features/folder/types/FolderItemType";
 import GenericTableRow from "@/components/GenericTableRow";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMediaQuery } from "usehooks-ts"; // 👈 same as CrateTable
 
 type FileTableProps = {
   data: FolderOrFileItem[];
@@ -16,16 +18,59 @@ type FileTableProps = {
 };
 
 function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreviewFile }: FileTableProps) {
+  const isMobile = useMediaQuery("(max-width: 719px)");
+  const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
+  const isDesktop = useMediaQuery("(min-width: 1200px)");
+
+  const [columnVisibility, setColumnVisibility] = useState({});
+
+  useEffect(() => {
+    if (isMobile) {
+      setColumnVisibility({
+        name: true,
+        uploadedByDisplayName: false,
+        createdAt: false,
+        sizeInBytes: false,
+        controls: true,
+      });
+    } else if (isTablet) {
+      setColumnVisibility({
+        name: true,
+        uploadedByDisplayName: true,
+        createdAt: false,
+        sizeInBytes: false,
+        controls: true,
+      });
+    } else if (isDesktop) {
+      setColumnVisibility({
+        name: true,
+        uploadedByDisplayName: true,
+        createdAt: true,
+        sizeInBytes: true,
+        controls: true,
+      });
+    }
+  }, [isMobile, isTablet, isDesktop]);
+
   const table = useReactTable<FolderOrFileItem>({
     data,
     columns,
+    state: { columnVisibility },
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: "onChange",
+    columnResizeDirection: "ltr",
+    enableColumnResizing: true,
+    defaultColumn: {
+      size: 10,
+    },
   });
-
 
   const getRowClass = (row: Row<FolderOrFileItem>) => {
     const data = row.original;
-    return data.type === FolderItemType.Folder || data.isBackRow ? "cursor-pointer hover:bg-muted/30" : "";
+    return data.type === FolderItemType.Folder || data.isBackRow
+      ? "cursor-pointer hover:bg-muted/30"
+      : "";
   };
 
   const handleClickRow = (row: Row<FolderOrFileItem>, e: React.MouseEvent) => {
@@ -55,7 +100,9 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
 
   const handleDropOnRow = (targetRow: Row<FolderOrFileItem>, dragged: { id: string; type: string }) => {
     const targetData = targetRow.original;
-    const targetFolderId = targetData.isBackRow ? (targetData.parentOfCurrentFolderId ?? null) : targetData.id;
+    const targetFolderId = targetData.isBackRow
+      ? targetData.parentOfCurrentFolderId ?? null
+      : targetData.id;
 
     if (dragged.id !== targetData.id) {
       onDropItem?.(dragged.id, dragged.type as DragItemType, targetFolderId);
@@ -74,20 +121,18 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
                 </td>
               </tr>
             ))
-          : table
-              .getRowModel()
-              .rows.map((row, index) => (
-                <GenericTableRow<FolderOrFileItem>
-                  key={row.id}
-                  row={row}
-                  className={getRowClass(row)}
-                  onClickRow={handleClickRow}
-                  onDoubleClickRow={handleDoubleClickRow}
-                  onDragStartRow={handleDragStartRow}
-                  onDropOnRow={handleDropOnRow}
-                  rowIndex={index}
-                />
-              ))}
+          : table.getRowModel().rows.map((row, index) => (
+              <GenericTableRow<FolderOrFileItem>
+                key={row.id}
+                row={row}
+                className={getRowClass(row)}
+                onClickRow={handleClickRow}
+                onDoubleClickRow={handleDoubleClickRow}
+                onDragStartRow={handleDragStartRow}
+                onDropOnRow={handleDropOnRow}
+                rowIndex={index}
+              />
+            ))}
       </TableBody>
     </Table>
   );
