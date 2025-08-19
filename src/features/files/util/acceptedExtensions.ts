@@ -35,14 +35,6 @@ export const fileTypeBackgrounds: Record<string, string> = {
   ogg: "#EC4899",
   m4a: "#EC4899",
 
-  // 🎥 Video
-  mp4: "#0EA5E9",
-  mov: "#0EA5E9",
-  avi: "#0EA5E9",
-  mkv: "#0EA5E9",
-  webm: "#0EA5E9",
-
-
   // ⚙️ Config / Build
   json: "#292929",
   xml: "#FF6600",
