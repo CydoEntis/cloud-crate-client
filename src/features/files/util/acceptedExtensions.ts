@@ -42,13 +42,6 @@ export const fileTypeBackgrounds: Record<string, string> = {
   mkv: "#0EA5E9",
   webm: "#0EA5E9",
 
-  // 🗜️ Archives
-  zip: "#F59E0B",
-  rar: "#F59E0B",
-  "7z": "#F59E0B",
-  tar: "#F59E0B",
-  gz: "#F59E0B",
-  bz2: "#F59E0B",
 
   // ⚙️ Config / Build
   json: "#292929",
