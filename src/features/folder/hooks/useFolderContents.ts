@@ -7,17 +7,32 @@ export function useFolderContents(
   folderId: string | null,
   page: number,
   pageSize: number,
-  search: string
+  search: string,
+  sortBy: "Name" | "CreatedAt" | "SizeInBytes",
+  orderBy: "Asc" | "Desc",
+  searchSubfolders: boolean
 ) {
-  const { data, isLoading, error, refetch } = useGetFolderContents(crateId, folderId, {
-    page,
-    pageSize,
-    search,
-  });
+  const { data, isLoading, error, refetch } = useGetFolderContents(
+    crateId,
+    folderId,
+    {
+      page,
+      pageSize,
+      search,
+      sortBy,
+      orderBy,
+      searchSubfolders,
+    }
+  );
 
   const folderItemsWithBackRow = useMemo(() => {
     if (!data) return [];
-    return injectBackRow(data.items, folderId, data.parentFolderId ?? null, crateId);
+    return injectBackRow(
+      data.items,
+      folderId,
+      data.parentFolderId ?? null,
+      crateId
+    );
   }, [data, folderId, crateId]);
 
   return {

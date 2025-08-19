@@ -5,12 +5,28 @@ import type { FolderContentsResponse } from "../../types/response/FolderContents
 export const useGetFolderContents = (
   crateId: string,
   folderId: string | null,
-  params: { page: number; pageSize: number; search: string }
+  params: {
+    page: number;
+    pageSize: number;
+    search: string;
+    sortBy: "Name" | "CreatedAt" | "SizeInBytes";
+    orderBy: "Asc" | "Desc";
+    searchSubfolders: boolean;
+  }
 ) => {
   const key = folderId ?? "root";
-
   return useQuery<FolderContentsResponse>({
-    queryKey: ["folderContents", crateId, key, params.page, params.pageSize, params.search],
+    queryKey: [
+      "folderContents",
+      crateId,
+      key,
+      params.page,
+      params.pageSize,
+      params.search,
+      params.sortBy,
+      params.orderBy,
+      params.searchSubfolders,
+    ],
     queryFn: () => getFolderContents(crateId, folderId, params),
     enabled: !!crateId,
   });
