@@ -1,12 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
-import { Upload } from "lucide-react";
+import { HelpCircle, Upload } from "lucide-react";
 import type { UploadFileInput } from "@/features/files/types";
 import { UploadFileSchema } from "../schemas/UploadFileSchema";
 import { useUploadFile } from "../hooks/mutations/useUploadFile";
 import UploadProgressItem from "./UploadProgressItem";
 import { ACCEPTED_EXTENSIONS } from "../util/acceptedExtensions";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type FileUploadProps = {
   crateId: string;
@@ -77,9 +78,21 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
           <span className="text-primary font-medium">Click here</span> to upload or{" "}
           <span className="text-primary font-medium">drag and drop</span> your file
         </p>
-        <p className="text-muted-foreground text-sm text-center">Supported Formats: SVG, JPG, PNG (10mb each)</p>
+        {/* <p className="text-muted-foreground text-sm text-center">Supported Formats: SVG, JPG, PNG (10mb each)</p> */}
       </div>
-
+      <details className="text-sm text-muted-foreground w-full mx-auto mt-2">
+        <summary className="cursor-pointer text-foreground font-medium hover:text-primary transition">
+          Supported file types & size
+        </summary>
+        <div className="flex flex-wrap mt-2  gap-1">
+          {ACCEPTED_EXTENSIONS.map((ext) => (
+            <span key={ext} className="px-2 py-1 rounded-md bg-secondary text-foreground text-xs text-center">
+              {ext.toUpperCase()}
+            </span>
+          ))}
+        </div>
+        <p className="text-xs">Max size: 10MB</p>
+      </details>
       {formState.errors.files && (
         <div className="text-sm text-red-500 mt-1 text-center">{formState.errors.files.message}</div>
       )}

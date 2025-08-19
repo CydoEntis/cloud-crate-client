@@ -22,7 +22,7 @@ const AvailableStorageIndicator = ({ crate }: Props) => {
       id: "available",
       name: "Available",
       usedStorage: remainingStorage,
-      color: "#E5E7EB", 
+      color: "var(--color-secondary)",
     },
   ];
 
