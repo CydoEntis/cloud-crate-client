@@ -6,7 +6,7 @@ import GenericTableRow from "@/components/GenericTableRow";
 import type { Crate } from "../types/Crate";
 import { useNavigate } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMediaQuery } from "usehooks-ts"; // 👈 helper hook
+import { useMediaQuery } from "usehooks-ts";
 
 type CrateTableProps = {
   data: Crate[];
@@ -17,7 +17,6 @@ type CrateTableProps = {
 function CrateTable({ data, columns, isLoading }: CrateTableProps) {
   const navigate = useNavigate();
 
-  // 👇 breakpoints
   const isMobile = useMediaQuery("(max-width: 719px)");
   const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
   const isDesktop = useMediaQuery("(min-width: 1200px)");
