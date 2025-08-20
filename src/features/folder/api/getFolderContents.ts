@@ -18,8 +18,8 @@ export const getFolderContents = async (
   if (params.orderBy) queryParams.append("OrderBy", params.orderBy);
 
   const url = folderId
-    ? `/api/crates/${crateId}/folders/contents/${folderId}?${queryParams.toString()}`
-    : `/api/crates/${crateId}/folders/contents?${queryParams.toString()}`;
+    ? `/crates/${crateId}/folders/contents/${folderId}?${queryParams.toString()}`
+    : `/crates/${crateId}/folders/contents?${queryParams.toString()}`;
 
   try {
     const response =
