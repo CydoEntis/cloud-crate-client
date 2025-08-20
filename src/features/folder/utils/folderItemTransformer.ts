@@ -3,20 +3,20 @@ import type { FolderOrFileItem } from "../types/FolderOrFileItem";
 
 export function injectBackRow(
   items: FolderOrFileItem[],
-  folderId: string | null,
-  parentFolderId: string | null,
-  crateId: string
+  crateId: string,
+  currentFolderName?: string | null,
+  currentFolderId?: string | null
 ): FolderOrFileItem[] {
-  const cleaned = items.filter((item) => item.id !== "__back");
+  if (!items.length) return [];
 
-  if (!folderId) return cleaned;
+  if (!currentFolderName || !currentFolderId) return items;
 
   return [
     {
       id: "__back",
-      name: "Go Back",
+      name: currentFolderName,
       crateId,
-      parentFolderId,
+      parentFolderId: currentFolderId,
       type: FolderItemType.Folder,
       isBackRow: true,
       sizeInBytes: 0,
@@ -29,6 +29,6 @@ export function injectBackRow(
       createdAt: "",
       parentOfCurrentFolderId: null,
     },
-    ...cleaned,
+    ...items,
   ];
 }

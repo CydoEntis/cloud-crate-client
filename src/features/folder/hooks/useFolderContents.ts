@@ -21,8 +21,8 @@ export function useFolderContents(
 
   const folderItemsWithBackRow = useMemo(() => {
     if (!data) return [];
-    return injectBackRow(data.items, folderId, null, crateId);
-  }, [data, folderId, crateId]);
+    return injectBackRow(data.items, crateId, data.folderName, data.parentFolderId ?? null);
+  }, [data, crateId]);
 
   return {
     folderItemsWithBackRow,

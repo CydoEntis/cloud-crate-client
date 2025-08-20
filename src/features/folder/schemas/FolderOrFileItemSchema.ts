@@ -18,6 +18,6 @@ export const FolderOrFileItemSchema = z.object({
   uploadedByEmail: z.string(),
   uploadedByProfilePictureUrl: z.string(),
   createdAt: z.string(),
-
+  parentFolderName: z.string().nullable().optional(),
   fileUrl: z.string().url().nullable().optional(),
 });
