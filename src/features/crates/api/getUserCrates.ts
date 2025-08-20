@@ -20,8 +20,6 @@ export const getUserCrates = async ({
   if (pageSize) params.append("PageSize", pageSize.toString());
   if (memberType) params.append("MemberType", memberType);
 
-  console.log(`/crates?${params.toString()}`);
-
   await new Promise((res) => setTimeout(res, 1500)); // Remove eventually
   const { data } = await api.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
   return data.value!;

@@ -10,7 +10,6 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
   setAuth: (token: string) => {
-    console.log("TOKEN: ", token)
     localStorage.setItem("accessToken", token);
     set({ accessToken: token });
   },

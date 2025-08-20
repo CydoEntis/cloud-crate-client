@@ -8,7 +8,6 @@ type StorageProps = {
 };
 
 function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: StorageProps) {
-  console.log(segments);
   return (
     <div className="py-4 flex flex-col">
       <h5 className="text-lg sm:text-md text-muted-foreground font-semibold mb-1">Storage</h5>
