@@ -18,7 +18,7 @@ export const useGetFolderContents = (
       key,
       params.page,
       params.pageSize,
-      params.search,
+      params.searchTerm,
       params.sortBy,
       params.orderBy,
     ],

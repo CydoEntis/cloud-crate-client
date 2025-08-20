@@ -1,7 +1,7 @@
 export type GetFolderContentsParams = {
   page?: number;
   pageSize?: number;
-  search?: string;
+  searchTerm?: string; 
   sortBy?: "Name" | "CreatedAt" | "Size";
   orderBy?: "Asc" | "Desc";
   searchSubfolders?: boolean;

@@ -7,14 +7,14 @@ export function useFolderContents(
   folderId: string | null,
   page: number,
   pageSize: number,
-  search: string,
+  searchTerm: string,
   sortBy: "Name" | "CreatedAt" | "Size",
   orderBy: "Asc" | "Desc"
 ) {
   const { data, isLoading, error, refetch } = useGetFolderContents(crateId, folderId, {
     page,
     pageSize,
-    search,
+    searchTerm,
     sortBy,
     orderBy,
   });

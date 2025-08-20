@@ -11,11 +11,12 @@ export const getFolderContents = async (
   params: GetFolderContentsParams = {}
 ): Promise<PaginatedResult<FolderOrFileItem> & { folderName: string; parentFolderId?: string | null }> => {
   const queryParams = new URLSearchParams();
-  queryParams.append("CrateId", crateId);
   queryParams.append("Page", String(params.page ?? 1));
   queryParams.append("PageSize", String(params.pageSize ?? 20));
+
   if (params.sortBy) queryParams.append("SortBy", params.sortBy);
   if (params.orderBy) queryParams.append("OrderBy", params.orderBy);
+  if (params.searchTerm) queryParams.append("SearchTerm", params.searchTerm); // <-- added search term
 
   const url = folderId
     ? `/crates/${crateId}/folders/contents/${folderId}?${queryParams.toString()}`
@@ -35,6 +36,8 @@ export const getFolderContents = async (
       folderName: z.string(),
       parentFolderId: z.string().uuid().nullable().optional(),
     });
+
+    console.log("FOLDER CONTENTS: ", response.data.value);
 
     return PaginatedFolderSchema.parse(response.data.value);
   } catch (err) {
