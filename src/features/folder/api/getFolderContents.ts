@@ -1,40 +1,44 @@
-import type { ApiResponse } from "@/features/auth";
+import type { ApiResponse, PaginatedResult } from "@/features/auth";
+import type { FolderOrFileItem } from "../types/FolderOrFileItem";
+import { FolderOrFileItemSchema } from "../schemas/FolderOrFileItemSchema";
+import z from "zod";
 import api from "@/lib/api";
-import type { FolderContentsResponse } from "../types/response/FolderContentsResponse";
-import { FolderContentsResponseSchema } from "../schemas/FolderContentsResponseSchema";
+import type { GetFolderContentsParams } from "../types/GetFolderContentsParams";
 
 export const getFolderContents = async (
   crateId: string,
   folderId: string | null,
-  params: {
-    page: number;
-    pageSize: number;
-    search: string;
-    sortBy: "Name" | "CreatedAt" | "SizeInBytes";
-    orderBy: "Asc" | "Desc";
-    searchSubfolders: boolean;
-  }
-): Promise<FolderContentsResponse> => {
+  params: GetFolderContentsParams = {}
+): Promise<PaginatedResult<FolderOrFileItem> & { folderName: string; parentFolderId?: string | null }> => {
   const queryParams = new URLSearchParams();
-  if (params.page) queryParams.append("page", params.page.toString());
-  if (params.pageSize) queryParams.append("pageSize", params.pageSize.toString());
-  if (params.search) queryParams.append("search", params.search);
-  if (params.sortBy) queryParams.append("sortBy", params.sortBy);
-  if (params.orderBy) queryParams.append("orderBy", params.orderBy);
-  if (typeof params.searchSubfolders === "boolean") {
-    queryParams.append("searchSubfolders", String(params.searchSubfolders));
-  }
+  queryParams.append("CrateId", crateId);
+  queryParams.append("Page", String(params.page ?? 1));
+  queryParams.append("PageSize", String(params.pageSize ?? 20));
+  if (params.sortBy) queryParams.append("SortBy", params.sortBy);
+  if (params.orderBy) queryParams.append("OrderBy", params.orderBy);
 
-  const folderSegment = folderId ? `contents/${folderId}` : "contents";
-  const url = `/crates/${crateId}/folders/${folderSegment}?${queryParams.toString()}`;
+  const url = folderId
+    ? `/api/crates/${crateId}/folders/contents/${folderId}?${queryParams.toString()}`
+    : `/api/crates/${crateId}/folders/contents?${queryParams.toString()}`;
 
   try {
-    const response = await api.get<ApiResponse<FolderContentsResponse>>(url);
-    // simulate latency if you want:
-    // await new Promise((res) => setTimeout(res, 1500));
-    return FolderContentsResponseSchema.parse(response.data.value);
+    const response =
+      await api.get<
+        ApiResponse<PaginatedResult<FolderOrFileItem> & { folderName: string; parentFolderId?: string | null }>
+      >(url);
+
+    const PaginatedFolderSchema = z.object({
+      items: z.array(FolderOrFileItemSchema),
+      totalCount: z.number().int(),
+      page: z.number().int(),
+      pageSize: z.number().int(),
+      folderName: z.string(),
+      parentFolderId: z.string().uuid().nullable().optional(),
+    });
+
+    return PaginatedFolderSchema.parse(response.data.value);
   } catch (err) {
     console.error("Error fetching folder contents:", err);
-    throw err instanceof Error ? err : new Error("Unknown error occurred while fetching folder contents");
+    throw err instanceof Error ? err : new Error("Unknown error fetching folder contents");
   }
 };

@@ -1,21 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFolderContents } from "../../api/getFolderContents";
-import type { FolderContentsResponse } from "../../types/response/FolderContentsResponse";
+import type { PaginatedResult } from "@/features/auth";
+import type { FolderOrFileItem } from "../../types/FolderOrFileItem";
+import type { GetFolderContentsParams } from "../../types/GetFolderContentsParams";
 
 export const useGetFolderContents = (
   crateId: string,
   folderId: string | null,
-  params: {
-    page: number;
-    pageSize: number;
-    search: string;
-    sortBy: "Name" | "CreatedAt" | "SizeInBytes";
-    orderBy: "Asc" | "Desc";
-    searchSubfolders: boolean;
-  }
+  params: GetFolderContentsParams = {}
 ) => {
   const key = folderId ?? "root";
-  return useQuery<FolderContentsResponse>({
+
+  return useQuery<PaginatedResult<FolderOrFileItem>>({
     queryKey: [
       "folderContents",
       crateId,
@@ -25,7 +21,6 @@ export const useGetFolderContents = (
       params.search,
       params.sortBy,
       params.orderBy,
-      params.searchSubfolders,
     ],
     queryFn: () => getFolderContents(crateId, folderId, params),
     enabled: !!crateId,

@@ -13,9 +13,10 @@ import FileTable from "@/features/files/components/FileTable";
 import folderFileTableColumns from "@/features/files/components/table/columns/folderFileTableColumns";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
+import FileTableToolbar from "@/features/files/components/FileTableToolbar";
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 
-// ⬇️ new: sort/order constants
-const allowedSortByValues = ["Name", "CreatedAt", "SizeInBytes"] as const;
+const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
 
 const allowedOrderByValues = ["Asc", "Desc"] as const;
@@ -27,7 +28,6 @@ const folderSearchSchema = z.object({
   search: z.string().optional(),
   sortBy: z.enum(allowedSortByValues).optional().default("Name"),
   orderBy: z.enum(allowedOrderByValues).optional().default("Asc"),
-  // ⬇️ new: search across subfolders
   searchSubfolders: z.coerce.boolean().optional().default(false),
 });
 
@@ -35,9 +35,6 @@ export const Route = createFileRoute("/(protected)/crates/$crateId/")({
   validateSearch: zodValidator(folderSearchSchema),
   component: RootFolderPage,
 });
-
-import FileTableToolbar from "@/features/files/components/FileTableToolbar"; // updated component below
-import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 
 function RootFolderPage() {
   const { crateId } = Route.useParams();
@@ -49,7 +46,6 @@ function RootFolderPage() {
   const searchTerm = search.search ?? "";
   const sortBy = (search.sortBy ?? "Name") as SortByType;
   const orderBy = (search.orderBy ?? "Asc") as OrderByType;
-  const searchSubfolders = Boolean(search.searchSubfolders);
 
   const setSearchParams = (params: Partial<typeof search>) => {
     navigate({
@@ -63,7 +59,6 @@ function RootFolderPage() {
     if (!("pageSize" in search)) missingDefaults.pageSize = 10;
     if (!("sortBy" in search)) missingDefaults.sortBy = "Name";
     if (!("orderBy" in search)) missingDefaults.orderBy = "Asc";
-    if (!("searchSubfolders" in search)) missingDefaults.searchSubfolders = false;
 
     if (Object.keys(missingDefaults).length > 0) {
       setSearchParams(missingDefaults);
@@ -71,8 +66,7 @@ function RootFolderPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch folder contents
-  const { folderItemsWithBackRow, folderName, totalCount, isLoading, error, refetch } = useFolderContents(
+  const { folderItemsWithBackRow, totalCount, isLoading, error, refetch } = useFolderContents(
     crateId,
     null,
     page,
@@ -80,10 +74,8 @@ function RootFolderPage() {
     searchTerm,
     sortBy,
     orderBy,
-    searchSubfolders
   );
 
-  // Hooks for folder actions
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
     crateId,
     null,
@@ -96,11 +88,7 @@ function RootFolderPage() {
   const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
   return (
-    <div className="space-y-6 ">
-      <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-semibold text-foreground">{folderName}</h2>
-      </div>
-
+    <div className="space-y-6">
       <FileTableToolbar
         search={searchTerm}
         onSearchChange={(val) => setSearchParams({ search: val, page: 1 })}
@@ -108,8 +96,6 @@ function RootFolderPage() {
         onSortByChange={(val) => setSearchParams({ sortBy: val, page: 1 })}
         orderBy={orderBy}
         onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
-        searchSubfolders={searchSubfolders}
-        onToggleSearchSubfolders={(val) => setSearchParams({ searchSubfolders: val, page: 1 })}
         onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
         allowedSortByValues={allowedSortByValues}
       />
