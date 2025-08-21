@@ -10,7 +10,7 @@ export const useGetFolderContents = (
   params: GetFolderContentsParams = {}
 ) => {
   const key = folderId ?? "root";
-  return useQuery<PaginatedResult<FolderOrFileItem> & { folderName: string; parentFolderId?: string | null }>({
+  return useQuery<PaginatedResult<FolderOrFileItem>>({
     queryKey: [
       "folderContents",
       crateId,
