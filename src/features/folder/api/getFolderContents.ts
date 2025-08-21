@@ -1,15 +1,13 @@
-import type { ApiResponse, PaginatedResult } from "@/features/auth";
-import type { FolderOrFileItem } from "../types/FolderOrFileItem";
-import { FolderOrFileItemSchema } from "../schemas/FolderOrFileItemSchema";
-import z from "zod";
+import type { ApiResponse } from "@/features/auth";
 import api from "@/lib/api";
 import type { GetFolderContentsParams } from "../types/GetFolderContentsParams";
+import { FolderContentsResultSchema, type FolderContentsResult } from "../schemas/FolderContentsSchema";
 
 export const getFolderContents = async (
   crateId: string,
   folderId: string | null,
   params: GetFolderContentsParams = {}
-): Promise<PaginatedResult<FolderOrFileItem>> => {
+): Promise<FolderContentsResult> => {
   const queryParams = new URLSearchParams();
   queryParams.append("Page", String(params.page ?? 1));
   queryParams.append("PageSize", String(params.pageSize ?? 20));
@@ -23,18 +21,10 @@ export const getFolderContents = async (
     : `/crates/${crateId}/folders/contents?${queryParams.toString()}`;
 
   try {
-    const response = await api.get<ApiResponse<PaginatedResult<FolderOrFileItem>>>(url);
-
-    const PaginatedFolderSchema = z.object({
-      items: z.array(FolderOrFileItemSchema),
-      totalCount: z.number().int(),
-      page: z.number().int(),
-      pageSize: z.number().int(),
-    });
-
-    console.log("FOLDER CONTENTS: ", response.data.value);
-
-    return PaginatedFolderSchema.parse(response.data.value);
+    const response = await api.get<ApiResponse<any>>(url);
+    const data = FolderContentsResultSchema.parse(response.data.value);
+    console.log("Folder contents:", data);
+    return data;
   } catch (err) {
     console.error("Error fetching folder contents:", err);
     throw err instanceof Error ? err : new Error("Unknown error fetching folder contents");

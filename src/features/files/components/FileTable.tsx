@@ -68,9 +68,7 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
 
   const getRowClass = (row: Row<FolderOrFileItem>) => {
     const data = row.original;
-    return data.type === FolderItemType.Folder || data.isBackRow
-      ? "cursor-pointer hover:bg-muted/30"
-      : "";
+    return data.type === FolderItemType.Folder || data.isBackRow ? "cursor-pointer hover:bg-muted/30" : "";
   };
 
   const handleClickRow = (row: Row<FolderOrFileItem>, e: React.MouseEvent) => {
@@ -87,7 +85,7 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
     if ((e.target as HTMLElement).closest(".actions-cell")) return;
 
     if (data.isBackRow) {
-      onNavigate?.(data.parentOfCurrentFolderId ?? null);
+      onNavigate?.(data.parentFolderId ?? null);
     } else if (data.type === FolderItemType.Folder) {
       onNavigate?.(data.id);
     }
@@ -100,9 +98,7 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
 
   const handleDropOnRow = (targetRow: Row<FolderOrFileItem>, dragged: { id: string; type: string }) => {
     const targetData = targetRow.original;
-    const targetFolderId = targetData.isBackRow
-      ? targetData.parentOfCurrentFolderId ?? null
-      : targetData.id;
+    const targetFolderId = targetData.isBackRow ? (targetData.parentOfCurrentFolderId ?? null) : targetData.id;
 
     if (dragged.id !== targetData.id) {
       onDropItem?.(dragged.id, dragged.type as DragItemType, targetFolderId);
@@ -121,18 +117,20 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
                 </td>
               </tr>
             ))
-          : table.getRowModel().rows.map((row, index) => (
-              <GenericTableRow<FolderOrFileItem>
-                key={row.id}
-                row={row}
-                className={getRowClass(row)}
-                onClickRow={handleClickRow}
-                onDoubleClickRow={handleDoubleClickRow}
-                onDragStartRow={handleDragStartRow}
-                onDropOnRow={handleDropOnRow}
-                rowIndex={index}
-              />
-            ))}
+          : table
+              .getRowModel()
+              .rows.map((row, index) => (
+                <GenericTableRow<FolderOrFileItem>
+                  key={row.id}
+                  row={row}
+                  className={getRowClass(row)}
+                  onClickRow={handleClickRow}
+                  onDoubleClickRow={handleDoubleClickRow}
+                  onDragStartRow={handleDragStartRow}
+                  onDropOnRow={handleDropOnRow}
+                  rowIndex={index}
+                />
+              ))}
       </TableBody>
     </Table>
   );

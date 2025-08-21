@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
@@ -13,11 +13,22 @@ import FileTable from "@/features/files/components/FileTable";
 import folderFileTableColumns from "@/features/files/components/table/columns/folderFileTableColumns";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import FileTableToolbar from "@/features/files/components/FileTableToolbar";
+import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
+
+import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
+
+const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
+type SortByType = (typeof allowedSortByValues)[number];
+
+const allowedOrderByValues = ["Asc", "Desc"] as const;
+type OrderByType = (typeof allowedOrderByValues)[number];
 
 const folderSearchSchema = z.object({
   page: z.coerce.number().optional().default(1),
   pageSize: z.coerce.number().optional().default(10),
   search: z.string().optional(),
+  sortBy: z.enum(allowedSortByValues).optional().default("Name"),
+  orderBy: z.enum(allowedOrderByValues).optional().default("Asc"),
 });
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
@@ -33,32 +44,35 @@ function FolderPage() {
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
   const searchTerm = search.search ?? "";
+  const sortBy = (search.sortBy ?? "Name") as SortByType;
+  const orderBy = (search.orderBy ?? "Asc") as OrderByType;
 
   const setSearchParams = (params: Partial<typeof search>) => {
     navigate({
-      search: (old) => ({
-        ...old,
-        ...params,
-      }),
+      search: (old) => ({ ...old, ...params }),
     });
   };
 
   useEffect(() => {
     const missingDefaults: Partial<typeof search> = {};
-    if (!search.page) missingDefaults.page = 1;
-    if (!search.pageSize) missingDefaults.pageSize = 10;
+    if (!("page" in search)) missingDefaults.page = 1;
+    if (!("pageSize" in search)) missingDefaults.pageSize = 10;
+    if (!("sortBy" in search)) missingDefaults.sortBy = "Name";
+    if (!("orderBy" in search)) missingDefaults.orderBy = "Asc";
 
     if (Object.keys(missingDefaults).length > 0) {
       setSearchParams(missingDefaults);
     }
   }, []);
 
-  const { folderItemsWithBackRow, folderName, totalCount, isLoading, error, refetch } = useFolderContents(
+  const { folderItemsWithBackRow, totalCount, isLoading, error, refetch } = useFolderContents(
     crateId,
     folderId,
     page,
     pageSize,
-    searchTerm
+    searchTerm,
+    sortBy,
+    orderBy
   );
 
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
@@ -69,20 +83,22 @@ function FolderPage() {
 
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
+  const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading contents.</p>;
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-semibold text-foreground">{folderName}</h2>
-      </div>
-
+    <div className="space-y-6">
       <FileTableToolbar
         search={searchTerm}
-        setSearch={(val) => setSearchParams({ search: val, page: 1 })}
+        onSearchChange={(val) => setSearchParams({ search: val, page: 1 })}
+        sortBy={sortBy}
+        onSortByChange={(val) => setSearchParams({ sortBy: val, page: 1 })}
+        orderBy={orderBy}
+        onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
         onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
+        allowedSortByValues={allowedSortByValues}
       />
 
       <FileTable
@@ -90,6 +106,8 @@ function FolderPage() {
         columns={folderFileTableColumns()}
         onNavigate={handleNavigate}
         onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
+        onPreviewFile={setPreviewFile}
+        isLoading={isLoading}
       />
 
       {totalCount > 0 && (
@@ -109,6 +127,10 @@ function FolderPage() {
           onCreate={handleCreateFolder}
           isLoading={isCreating}
         />
+      )}
+
+      {previewFile && (
+        <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />
       )}
     </div>
   );
