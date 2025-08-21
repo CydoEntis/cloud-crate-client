@@ -8,6 +8,7 @@ export const FolderContentsResultSchema = z.object({
     z.object({
       id: z.string().uuid(),
       name: z.string(),
+      color: z.string(),
     })
   ),
   items: z.array(FolderOrFileItemSchema),

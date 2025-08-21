@@ -14,30 +14,28 @@ export function injectBackRow(
   crateId: string,
   breadcrumbs: FolderBreadcrumb[]
 ): FolderOrFileItem[] {
-  if (!breadcrumbs || breadcrumbs.length === 0) return items; // Already at root, nothing to go back to
+  if (!breadcrumbs || breadcrumbs.length === 0) return items;
 
-  // Immediate parent folder (or root if directly under root)
   const parentFolder =
-    breadcrumbs.length > 1
-      ? breadcrumbs[breadcrumbs.length - 2] // parent of current folder
-      : { id: null, name: "Root" };
+    breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2] : { id: null, name: "Root", color: "#9CA3AF" };
 
+  const parentFolderItem = items.find((i) => i.id === parentFolder.id);
   const backRow: FolderOrFileItem = {
     id: "__back",
     name: parentFolder.name,
     crateId,
-    parentFolderId: parentFolder.id, // navigate **up** to parent
+    parentFolderId: parentFolder.id,
     type: FolderItemType.Folder,
     isBackRow: true,
     sizeInBytes: 0,
     mimeType: null,
-    color: null,
+    color: parentFolder.color ?? "#9CA3AF",
     uploadedByUserId: "",
     uploadedByDisplayName: "-",
     uploadedByEmail: "",
     uploadedByProfilePictureUrl: "",
     createdAt: "",
-    parentOfCurrentFolderId: breadcrumbs[breadcrumbs.length - 1].id, // optional, metadata
+    parentOfCurrentFolderId: breadcrumbs[breadcrumbs.length - 1].id,
   };
 
   return [backRow, ...items];
