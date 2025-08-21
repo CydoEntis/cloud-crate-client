@@ -65,15 +65,8 @@ function FolderPage() {
     }
   }, []);
 
-  const { folderItemsWithBackRow, totalCount, isLoading, error, refetch } = useFolderContents(
-    crateId,
-    folderId,
-    page,
-    pageSize,
-    searchTerm,
-    sortBy,
-    orderBy
-  );
+  const { folderItemsWithBackRow, breadcrumbs, folderName, parentFolderId, totalCount, isLoading, error, refetch } =
+    useFolderContents(crateId, folderId, page, pageSize, searchTerm, sortBy, orderBy);
 
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
     crateId,
@@ -102,12 +95,14 @@ function FolderPage() {
       />
 
       <FileTable
+        breadcrumbs={breadcrumbs}
         data={folderItemsWithBackRow}
         columns={folderFileTableColumns()}
         onNavigate={handleNavigate}
         onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
         onPreviewFile={setPreviewFile}
         isLoading={isLoading}
+        crateId={crateId}
       />
 
       {totalCount > 0 && (

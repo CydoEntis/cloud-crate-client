@@ -21,12 +21,14 @@ export function useFolderContents(
 
   const folderItemsWithBackRow = useMemo(() => {
     if (!data) return [];
-
     return injectBackRow(data.items, crateId, data.breadcrumbs);
   }, [data, crateId]);
 
   return {
     folderItemsWithBackRow,
+    breadcrumbs: data?.breadcrumbs ?? [],
+    folderName: data?.folderName ?? null,
+    parentFolderId: data?.parentFolderId ?? null,
     totalCount: data?.totalCount ?? 0,
     page: data?.page ?? 1,
     pageSize: data?.pageSize ?? 20,

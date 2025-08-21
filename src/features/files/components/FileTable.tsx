@@ -6,18 +6,38 @@ import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem"
 import { FolderItemType, type DragItemType } from "@/features/folder/types/FolderItemType";
 import GenericTableRow from "@/components/GenericTableRow";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMediaQuery } from "usehooks-ts"; // 👈 same as CrateTable
+import { useMediaQuery } from "usehooks-ts";
+import { FileBreadcrumbs } from "./FileBreadcrumbs";
+
+type Breadcrumb = {
+  id: string;
+  name: string;
+  color: string;
+};
 
 type FileTableProps = {
+  crateId: string;
+  breadcrumbs: Breadcrumb[];
   data: FolderOrFileItem[];
   columns: ColumnDef<FolderOrFileItem, any>[];
   onNavigate?: (folderId: string | null) => void;
   onDropItem?: (itemId: string, itemType: DragItemType, targetFolderId: string | null) => void;
   isLoading?: boolean;
   onPreviewFile?: (file: FolderOrFileItem) => void;
+  onBreadcrumbAction?: (action: string, folderId: string) => void;
 };
 
-function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreviewFile }: FileTableProps) {
+function FileTable({
+  crateId,
+  breadcrumbs,
+  data,
+  columns,
+  onNavigate,
+  onDropItem,
+  isLoading,
+  onPreviewFile,
+  onBreadcrumbAction,
+}: FileTableProps) {
   const isMobile = useMediaQuery("(max-width: 719px)");
   const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
   const isDesktop = useMediaQuery("(min-width: 1200px)");
@@ -106,33 +126,37 @@ function FileTable({ data, columns, onNavigate, onDropItem, isLoading, onPreview
   };
 
   return (
-    <Table>
-      <GenericTableHeader table={table} />
-      <TableBody>
-        {isLoading
-          ? Array.from({ length: 10 }).map((_, i) => (
-              <tr key={i} className="h-10">
-                <td colSpan={columns.length}>
-                  <Skeleton className="w-full h-10 mt-2" />
-                </td>
-              </tr>
-            ))
-          : table
-              .getRowModel()
-              .rows.map((row, index) => (
-                <GenericTableRow<FolderOrFileItem>
-                  key={row.id}
-                  row={row}
-                  className={getRowClass(row)}
-                  onClickRow={handleClickRow}
-                  onDoubleClickRow={handleDoubleClickRow}
-                  onDragStartRow={handleDragStartRow}
-                  onDropOnRow={handleDropOnRow}
-                  rowIndex={index}
-                />
-              ))}
-      </TableBody>
-    </Table>
+    <div className="space-y-4">
+      <FileBreadcrumbs crateId={crateId} breadcrumbs={breadcrumbs} onAction={onBreadcrumbAction} />
+
+      <Table>
+        <GenericTableHeader table={table} />
+        <TableBody>
+          {isLoading
+            ? Array.from({ length: 10 }).map((_, i) => (
+                <tr key={i} className="h-10">
+                  <td colSpan={columns.length}>
+                    <Skeleton className="w-full h-10 mt-2" />
+                  </td>
+                </tr>
+              ))
+            : table
+                .getRowModel()
+                .rows.map((row, index) => (
+                  <GenericTableRow<FolderOrFileItem>
+                    key={row.id}
+                    row={row}
+                    className={getRowClass(row)}
+                    onClickRow={handleClickRow}
+                    onDoubleClickRow={handleDoubleClickRow}
+                    onDragStartRow={handleDragStartRow}
+                    onDropOnRow={handleDropOnRow}
+                    rowIndex={index}
+                  />
+                ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 
