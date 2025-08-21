@@ -42,8 +42,6 @@ export default function FileTableToolbar({
   onOpenCreateFolder,
   allowedSortByValues,
 }: Props) {
-  const switchId = useId();
-
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
