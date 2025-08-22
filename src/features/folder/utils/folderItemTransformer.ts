@@ -35,7 +35,7 @@ export function injectBackRow(
     uploadedByEmail: "",
     uploadedByProfilePictureUrl: "",
     createdAt: "",
-    parentOfCurrentFolderId: breadcrumbs[breadcrumbs.length - 1].id,
+    parentOfCurrentFolderId: parentFolder.id,
   };
 
   return [backRow, ...items];
