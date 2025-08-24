@@ -6,13 +6,21 @@ import UserAvatar from "@/components/UserAvatar";
 import DateIndicator from "@/components/DateIndicator";
 import StorageDisplay from "@/components/StorageDisplay";
 
+import SelectCell from "./SelectCell";
+
 const columnHelper = createColumnHelper<FolderOrFileItem>();
 
 const folderFileTableColumns = () => [
+  columnHelper.display({
+    id: "select",
+    size: 2,
+    minSize: 2,
+    cell: (info) => <SelectCell row={info.row} />,
+  }),
   columnHelper.accessor("name", {
-    header: "Name",
-    size: 55,
-    minSize: 30,
+    header: () => <div className="text-left">Name</div>,
+    size: 53,
+    minSize: 28,
     cell: (info) => <NameCell row={info.row.original} />,
   }),
 

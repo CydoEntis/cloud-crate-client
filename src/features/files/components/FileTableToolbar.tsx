@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import SearchInputField from "@/components/SearchInputField";
 import SortBySelect from "@/components/SortyBySelect";
 import OrderToggle from "@/components/OrderToggle";
+import BulkActionsToolBar from "@/features/bulk/components/BulkActionsToolbar";
 
 type SortBy = "Name" | "CreatedAt" | "Size";
 type OrderBy = "Asc" | "Desc";

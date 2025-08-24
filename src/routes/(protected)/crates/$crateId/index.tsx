@@ -15,6 +15,7 @@ import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
 import FileTableToolbar from "@/features/files/components/FileTableToolbar";
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
+import BulkActionsToolBar from "@/features/bulk/components/BulkActionsToolbar";
 
 const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
@@ -66,15 +67,8 @@ function RootFolderPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { folderItemsWithBackRow, totalCount, isLoading, error, refetch } = useFolderContents(
-    crateId,
-    null,
-    page,
-    pageSize,
-    searchTerm,
-    sortBy,
-    orderBy,
-  );
+  const { folderItemsWithBackRow, breadcrumbs, folderName, parentFolderId, totalCount, isLoading, error, refetch } =
+    useFolderContents(crateId, null, page, pageSize, searchTerm, sortBy, orderBy);
 
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
     crateId,
@@ -99,6 +93,7 @@ function RootFolderPage() {
         onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
         allowedSortByValues={allowedSortByValues}
       />
+      <BulkActionsToolBar crateId={crateId} />
 
       <FileTable
         data={folderItemsWithBackRow}
@@ -107,6 +102,8 @@ function RootFolderPage() {
         onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
         isLoading={isLoading}
         onPreviewFile={setPreviewFile}
+        crateId={crateId}
+        breadcrumbs={breadcrumbs}
       />
 
       {totalCount > 0 && (
