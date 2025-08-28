@@ -1,9 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { bulkMove } from "../api/bulk.api";
 import type { BulkMoveRequest } from "../types/BulkMoveRequest";
+import { bulkMove } from "../api/bulkMove";
 
 export const useBulkMove = (crateId: string) =>
   useMutation({
-    mutationFn: (payload: BulkMoveRequest) =>
-      bulkMove(crateId, payload),
+    mutationFn: (payload: BulkMoveRequest) => bulkMove(crateId, payload),
   });
