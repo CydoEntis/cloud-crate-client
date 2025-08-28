@@ -1,4 +1,6 @@
-import { useBulkDelete, useBulkMove, useBulkRestore } from "../hooks/bulk.hooks";
+import { useBulkDelete } from "../hooks/useBulkDelete";
+import { useBulkMove } from "../hooks/useBulkMove";
+import { useBulkRestore } from "../hooks/useBulkRestore";
 import { useSelectionStore } from "../store/useSelectionStore";
 import { Button } from "@/components/ui/button";
 

@@ -1,4 +1,4 @@
 export type BulkItemRequest = {
-  fieldIds: string[];
+  fileIds: string[];
   folderIds: string[];
 };
