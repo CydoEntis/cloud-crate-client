@@ -1,8 +1,22 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { BulkMoveRequest } from "../types/BulkMoveRequest";
 import { bulkMove } from "../api/bulkMove";
 
-export const useBulkMove = (crateId: string) =>
-  useMutation({
+export const useBulkMove = (crateId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: (payload: BulkMoveRequest) => bulkMove(crateId, payload),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: ["folderContents", crateId, payload.sourceFolderId ?? "root"],
+      });
+
+      if (payload.newParentId) {
+        queryClient.invalidateQueries({
+          queryKey: ["folderContents", crateId, payload.newParentId],
+        });
+      }
+    },
   });
+};
