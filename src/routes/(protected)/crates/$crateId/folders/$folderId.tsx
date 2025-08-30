@@ -12,9 +12,8 @@ import PaginationControls from "@/components/PaginationControls";
 import FileTable from "@/features/files/components/FileTable";
 import folderFileTableColumns from "@/features/files/components/table/columns/folderFileTableColumns";
 import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
-import FileTableToolbar from "@/features/files/components/FileTableToolbar";
 import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
-
+import FileTableToolbar from "@/features/files/components/FileTableToolbar";
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 import BulkActionsToolBar from "@/features/bulk/components/BulkActionsToolbar";
 
@@ -48,10 +47,11 @@ function FolderPage() {
   const sortBy = (search.sortBy ?? "Name") as SortByType;
   const orderBy = (search.orderBy ?? "Asc") as OrderByType;
 
+  const [selectMode, setSelectMode] = useState(false);
+  const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
+
   const setSearchParams = (params: Partial<typeof search>) => {
-    navigate({
-      search: (old) => ({ ...old, ...params }),
-    });
+    navigate({ search: (old) => ({ ...old, ...params }) });
   };
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function FolderPage() {
     }
   }, []);
 
-  const { folderItemsWithBackRow, breadcrumbs, folderName, parentFolderId, totalCount, isLoading, error, refetch } =
+  const { folderItemsWithBackRow, breadcrumbs, totalCount, isLoading, error, refetch } =
     useFolderContents(crateId, folderId, page, pageSize, searchTerm, sortBy, orderBy);
 
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
@@ -77,14 +77,18 @@ function FolderPage() {
 
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
-  const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading contents.</p>;
 
   return (
     <div className="space-y-6">
-      <BulkActionsToolBar crateId={crateId} folderId={folderId} />
+      {selectMode && (
+        <div className="flex gap-2 mb-2">
+          <button className="btn btn-destructive">Delete Selected</button>
+          <button className="btn">Move Selected</button>
+        </div>
+      )}
 
       <FileTableToolbar
         search={searchTerm}
@@ -95,12 +99,17 @@ function FolderPage() {
         onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
         onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
         allowedSortByValues={allowedSortByValues}
+        selectMode={selectMode}
+        onToggleSelectMode={setSelectMode}
+        crateId={crateId}
       />
+
+      {/* <BulkActionsToolBar crateId={crateId} folderId={folderId} /> */}
 
       <FileTable
         breadcrumbs={breadcrumbs}
         data={folderItemsWithBackRow}
-        columns={folderFileTableColumns()}
+        columns={folderFileTableColumns(selectMode)}
         onNavigate={handleNavigate}
         onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
         onPreviewFile={setPreviewFile}
@@ -127,9 +136,7 @@ function FolderPage() {
         />
       )}
 
-      {previewFile && (
-        <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />
-      )}
+      {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />}
     </div>
   );
 }

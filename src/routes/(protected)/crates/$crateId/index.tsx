@@ -15,7 +15,7 @@ import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
 import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
 import FileTableToolbar from "@/features/files/components/FileTableToolbar";
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
-import BulkActionsToolBar from "@/features/bulk/components/BulkActionsToolbar";
+import { useAvailableMoveTargets } from "@/features/folder/hooks/useAvailableMoveTargets";
 
 const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
@@ -29,7 +29,6 @@ const folderSearchSchema = z.object({
   search: z.string().optional(),
   sortBy: z.enum(allowedSortByValues).optional().default("Name"),
   orderBy: z.enum(allowedOrderByValues).optional().default("Asc"),
-  searchSubfolders: z.coerce.boolean().optional().default(false),
 });
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/")({
@@ -47,11 +46,12 @@ function RootFolderPage() {
   const searchTerm = search.search ?? "";
   const sortBy = (search.sortBy ?? "Name") as SortByType;
   const orderBy = (search.orderBy ?? "Asc") as OrderByType;
+  const { data: availableFolders } = useAvailableMoveTargets(crateId);
+  const [selectMode, setSelectMode] = useState(false);
+  const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
   const setSearchParams = (params: Partial<typeof search>) => {
-    navigate({
-      search: (old) => ({ ...old, ...params }),
-    });
+    navigate({ search: (old) => ({ ...old, ...params }) });
   };
 
   useEffect(() => {
@@ -64,11 +64,17 @@ function RootFolderPage() {
     if (Object.keys(missingDefaults).length > 0) {
       setSearchParams(missingDefaults);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { folderItemsWithBackRow, breadcrumbs, folderName, parentFolderId, totalCount, isLoading, error, refetch } =
-    useFolderContents(crateId, null, page, pageSize, searchTerm, sortBy, orderBy);
+  const { folderItemsWithBackRow, breadcrumbs, totalCount, isLoading, error, refetch } = useFolderContents(
+    crateId,
+    null,
+    page,
+    pageSize,
+    searchTerm,
+    sortBy,
+    orderBy
+  );
 
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
     crateId,
@@ -78,8 +84,6 @@ function RootFolderPage() {
 
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
-
-  const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
   return (
     <div className="space-y-6">
@@ -92,12 +96,15 @@ function RootFolderPage() {
         onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
         onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
         allowedSortByValues={allowedSortByValues}
+        selectMode={selectMode}
+        onToggleSelectMode={setSelectMode}
+        folderDestinations={availableFolders}
+        crateId={crateId}
       />
-      <BulkActionsToolBar crateId={crateId} />
 
       <FileTable
         data={folderItemsWithBackRow}
-        columns={folderFileTableColumns()}
+        columns={folderFileTableColumns(selectMode)}
         onNavigate={handleNavigate}
         onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
         isLoading={isLoading}

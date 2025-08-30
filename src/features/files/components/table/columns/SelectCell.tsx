@@ -14,6 +14,7 @@ function SelectCell({ row }: { row: Row<FolderOrFileItem> }) {
 
   return (
     <Checkbox
+      className="border-muted-foreground"
       checked={isSelected}
       onCheckedChange={() => (item.type === FolderItemType.Folder ? toggleFolder(item.id) : toggleFile(item.id))}
     />
