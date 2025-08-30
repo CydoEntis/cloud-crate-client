@@ -18,6 +18,7 @@ function BulkActionsToolBar({ crateId }: BulkActionsToolBarProps) {
   if (fileIds.size === 0 && folderIds.size === 0) return null;
 
   const selection = {
+    // Using Array.from() instead of spreading into an array to avoid duplicate file and folder ids.
     fileIds: Array.from(fileIds),
     folderIds: Array.from(folderIds),
   };
