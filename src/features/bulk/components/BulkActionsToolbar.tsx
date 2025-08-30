@@ -11,14 +11,10 @@ import { useParams } from "@tanstack/react-router";
 
 type BulkActionsToolBarProps = {
   crateId: string;
+  folderId?: string | null;
 };
 
-function BulkActionsToolBar({ crateId }: BulkActionsToolBarProps) {
-  const paramsWithFolder = useParams({ from: "/(protected)/crates/$crateId/folders/$folderId" });
-  const paramsWithoutFolder = useParams({ from: "/(protected)/crates/$crateId/" });
-
-  const folderId = paramsWithFolder?.folderId ?? null;
-  
+function BulkActionsToolBar({ crateId, folderId = null }: BulkActionsToolBarProps) {
   const { fileIds, folderIds, clearSelection } = useSelectionStore();
 
   const moveMutation = useBulkMove(crateId);
@@ -28,7 +24,7 @@ function BulkActionsToolBar({ crateId }: BulkActionsToolBarProps) {
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
 
-  const { data: folders = [], isLoading } = useAvailableMoveTargets(crateId, folderId ?? null);
+  const { data: folders = [], isLoading } = useAvailableMoveTargets(crateId, folderId);
   if (fileIds.size === 0 && folderIds.size === 0) return null;
 
   const selection = {

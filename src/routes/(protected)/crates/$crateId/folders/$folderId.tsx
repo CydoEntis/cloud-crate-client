@@ -16,6 +16,7 @@ import FileTableToolbar from "@/features/files/components/FileTableToolbar";
 import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
 
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
+import BulkActionsToolBar from "@/features/bulk/components/BulkActionsToolbar";
 
 const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
@@ -83,6 +84,8 @@ function FolderPage() {
 
   return (
     <div className="space-y-6">
+      <BulkActionsToolBar crateId={crateId} folderId={folderId} />
+
       <FileTableToolbar
         search={searchTerm}
         onSearchChange={(val) => setSearchParams({ search: val, page: 1 })}
