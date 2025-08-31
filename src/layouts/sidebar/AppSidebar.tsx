@@ -11,11 +11,12 @@ import { useAuthStore, useUserStore } from "@/features/auth";
 import CrateSidebarLinks from "@/features/crates/components/CrateSideBarLinks";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import ThemeToggle from "@/components/ThemeToggle";
+import GetMoreStorage from "@/components/GetMoreStorage";
 
 const navlinks = [
-  { id: 2, text: "Crates", to: "/crates", icon: <Box /> },
-  { id: 5, text: "Deleted Files", to: "/deleted", icon: <Trash2 /> },
-  { id: 6, text: "Settings", to: "/settings", icon: <Settings /> },
+  { id: 1, text: "Crates", to: "/crates", icon: <Box /> },
+  { id: 2, text: "Deleted Files", to: "/deleted", icon: <Trash2 /> },
+  { id: 3, text: "Settings", to: "/settings", icon: <Settings /> },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -50,13 +51,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
+          <SidebarMenu className="pt-4 pb-8 px-5">
+            <ThemeToggle />
+          </SidebarMenu>
         </div>
 
         {/* Bottom Section */}
         <div className="pb-6 px-4 space-y-4">
-          <ThemeToggle />
-
-          <div className="border-t pt-4 flex justify-between items-center">
+          {user && <GetMoreStorage user={user} />}
+          <div className="border-t border-secondary pt-4 flex justify-between items-center">
             <div className="flex gap-2 items-center">
               <div className="w-9 h-9 rounded-md overflow-hidden">
                 <img src={user?.profilePicture} />
