@@ -46,6 +46,7 @@ function RootFolderPage() {
   const searchTerm = search.search ?? "";
   const sortBy = (search.sortBy ?? "Name") as SortByType;
   const orderBy = (search.orderBy ?? "Asc") as OrderByType;
+
   const { data: availableFolders } = useAvailableMoveTargets(crateId);
   const [selectMode, setSelectMode] = useState(false);
   const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
@@ -98,8 +99,10 @@ function RootFolderPage() {
         allowedSortByValues={allowedSortByValues}
         selectMode={selectMode}
         onToggleSelectMode={setSelectMode}
-        folderDestinations={availableFolders}
         crateId={crateId}
+        folderId={null} // Root folder
+        folderDestinations={availableFolders}
+        refetch={refetch}
       />
 
       <FileTable

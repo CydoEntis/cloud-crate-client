@@ -16,6 +16,7 @@ import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
 import FileTableToolbar from "@/features/files/components/FileTableToolbar";
 import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
 import BulkActionsToolBar from "@/features/bulk/components/BulkActionsToolbar";
+import { useAvailableMoveTargets } from "@/features/folder/hooks/useAvailableMoveTargets";
 
 const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
@@ -47,6 +48,7 @@ function FolderPage() {
   const sortBy = (search.sortBy ?? "Name") as SortByType;
   const orderBy = (search.orderBy ?? "Asc") as OrderByType;
 
+  const { data: availableFolders } = useAvailableMoveTargets(crateId);
   const [selectMode, setSelectMode] = useState(false);
   const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
 
@@ -66,8 +68,15 @@ function FolderPage() {
     }
   }, []);
 
-  const { folderItemsWithBackRow, breadcrumbs, totalCount, isLoading, error, refetch } =
-    useFolderContents(crateId, folderId, page, pageSize, searchTerm, sortBy, orderBy);
+  const { folderItemsWithBackRow, breadcrumbs, totalCount, isLoading, error, refetch } = useFolderContents(
+    crateId,
+    folderId,
+    page,
+    pageSize,
+    searchTerm,
+    sortBy,
+    orderBy
+  );
 
   const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
     crateId,
@@ -83,13 +92,6 @@ function FolderPage() {
 
   return (
     <div className="space-y-6">
-      {selectMode && (
-        <div className="flex gap-2 mb-2">
-          <button className="btn btn-destructive">Delete Selected</button>
-          <button className="btn">Move Selected</button>
-        </div>
-      )}
-
       <FileTableToolbar
         search={searchTerm}
         onSearchChange={(val) => setSearchParams({ search: val, page: 1 })}
@@ -102,9 +104,10 @@ function FolderPage() {
         selectMode={selectMode}
         onToggleSelectMode={setSelectMode}
         crateId={crateId}
+        folderId={folderId ?? null}
+        folderDestinations={availableFolders}
+        refetch={refetch}
       />
-
-      {/* <BulkActionsToolBar crateId={crateId} folderId={folderId} /> */}
 
       <FileTable
         breadcrumbs={breadcrumbs}
@@ -136,7 +139,9 @@ function FolderPage() {
         />
       )}
 
-      {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />}
+      {previewFile && (
+        <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />
+      )}
     </div>
   );
 }

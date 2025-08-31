@@ -8,8 +8,8 @@ import OrderToggle from "@/components/OrderToggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { useBulkMove } from "@/features/bulk/hooks/useBulkMove";
-import { useBulkDelete } from "@/features/bulk/hooks/useBulkDelete";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
+import { useBulkDelete } from "@/features/bulk/hooks/useBulkDelete";
 
 type SortBy = "Name" | "CreatedAt" | "Size";
 type OrderBy = "Asc" | "Desc";
@@ -26,6 +26,7 @@ type SelectedItem = {
 
 type Props = {
   crateId: string;
+  folderId?: string | null;
   search: string;
   onSearchChange: (val: string) => void;
   sortBy: SortBy;
@@ -48,6 +49,7 @@ const sortByLabels: Record<SortBy, string> = {
 
 export default function FileTableToolbar({
   crateId,
+  folderId,
   search,
   onSearchChange,
   sortBy,
@@ -64,10 +66,9 @@ export default function FileTableToolbar({
   const [moveTarget, setMoveTarget] = useState<string>("");
 
   const { fileIds, folderIds, getFinalMoveSelection, clearSelection } = useSelectionStore();
-  const bulkMove = useBulkMove(crateId);
-  const bulkDelete = useBulkDelete(crateId);
+  const bulkMove = useBulkMove(crateId, folderId);
+  const bulkDelete = useBulkDelete(crateId, folderId);
 
-  // Compute selectedItems from store
   const selectedItems: SelectedItem[] = [
     ...Array.from(fileIds).map((id) => ({ id, type: "file" as const })),
     ...Array.from(folderIds).map((id) => ({ id, type: "folder" as const })),
@@ -80,6 +81,7 @@ export default function FileTableToolbar({
 
     await bulkMove.mutateAsync({
       crateId,
+      sourceFolderId: folderId ?? null,
       newParentId: moveTarget,
       fileIds,
       folderIds,
@@ -95,7 +97,13 @@ export default function FileTableToolbar({
 
     const { fileIds, folderIds } = getFinalMoveSelection();
 
-    await bulkDelete.mutateAsync({ fileIds, folderIds });
+    if (fileIds.length === 0 && folderIds.length === 0) return;
+
+    await bulkDelete.mutateAsync({
+      fileIds: fileIds.map((id) => id),
+      folderIds: folderIds.map((id) => id),
+    });
+
     clearSelection();
     refetch?.();
   };
