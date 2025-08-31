@@ -12,13 +12,19 @@ function SelectCell({ row }: { row: Row<FolderOrFileItem> }) {
 
   const isSelected = item.type === FolderItemType.Folder ? isFolderSelected(item.id) : isFileSelected(item.id);
 
+  const handleChange = () => {
+    if (item.type === FolderItemType.Folder) {
+      toggleFolder(item.id);
+    } else {
+      toggleFile(item.id);
+    }
+  };
+
   return (
-    <Checkbox
-      className="border-muted-foreground"
-      checked={isSelected}
-      onCheckedChange={() => (item.type === FolderItemType.Folder ? toggleFolder(item.id) : toggleFile(item.id))}
-    />
+    <div onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+      <Checkbox className="border-muted-foreground" checked={isSelected} onCheckedChange={handleChange} />
+    </div>
   );
-};
+}
 
 export default SelectCell;
