@@ -13,10 +13,7 @@ import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navlinks = [
-  { id: 1, text: "Dashboard", to: "/dashboard", icon: <LayoutDashboard /> },
   { id: 2, text: "Crates", to: "/crates", icon: <Box /> },
-  { id: 3, text: "Members", to: "/members", icon: <Users2 /> },
-  { id: 4, text: "Favorites", to: "/favorites", icon: <Star /> },
   { id: 5, text: "Deleted Files", to: "/deleted", icon: <Trash2 /> },
   { id: 6, text: "Settings", to: "/settings", icon: <Settings /> },
 ];
@@ -42,7 +39,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <h3 className="font-bold text-3xl text-primary">Cloud Crate</h3>
             </Link>
           </div>
-
+          <SidebarMenu className="pt-4 pb-8">
+            <AddCrateButton />
+          </SidebarMenu>
           {/* Main Navigation */}
           <SidebarMenu>
             {navlinks.map((link) => (
@@ -50,10 +49,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
               </SidebarMenuItem>
             ))}
-          </SidebarMenu>
-
-          <SidebarMenu>
-            <AddCrateButton />
           </SidebarMenu>
         </div>
 
