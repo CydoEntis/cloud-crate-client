@@ -38,7 +38,6 @@ function LoginForm() {
   async function onSubmit(data: LoginRequest) {
     try {
       const {token} = await login(data);
-      console.log("IS THIS TOKEN: ", token)
       setAuth(token);
 
       if (inviteToken) {
