@@ -1,12 +1,13 @@
+import { createFolder } from "@/features/folder-contents/api/folder";
+import type { CreateFolder } from "@/features/folder-contents/types/folder/request/CreateFolder";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { createFolder } from "../../api/createFolder";
-import type { CreateFolderRequest } from "../../../types/folder/request/CreateFolder";
+
 
 export const useCreateFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateFolderRequest) => createFolder(data),
+    mutationFn: (data: CreateFolder) => createFolder(data),
     onSuccess: (result, data) => {
       const parentFolderKey = data.parentFolderId ?? "root";
 

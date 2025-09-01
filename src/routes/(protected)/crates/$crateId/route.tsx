@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
 import { useCrateDetails } from "@/features/crates/hooks/queries/useCrateDetails";
-import FileUpload from "@/features/files/components/FileUpload";
+import FileUpload from "@/features/folder-contents/components/file/FileUpload";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

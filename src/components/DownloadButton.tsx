@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useDownloadFile } from "@/features/files/hooks/mutations/useDownloadFile";
+import { useDownloadFile } from "@/features/folder-contents/hooks/file/mutations/useDownloadFile";
 
 export function DownloadButton({ crateId, fileId, fileName }: { crateId: string; fileId: string; fileName: string }) {
   const downloadMutation = useDownloadFile();

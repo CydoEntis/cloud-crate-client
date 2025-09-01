@@ -3,23 +3,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
 
-import { useFolderContents } from "@/features/folder/hooks/useFolderContents";
-import { useFolderCreation } from "@/features/folder/hooks/useFolderCreation";
-import { useFolderDragAndDrop } from "@/features/folder/hooks/useFolderDragAndDrop";
-import { useFolderNavigation } from "@/features/folder/hooks/useFolderNavigation";
+import { useFolderContents } from "@/features/folder-contents/hooks/folder/useFolderContents";
+import { useFolderCreation } from "@/features/folder-contents/hooks/folder/useFolderCreation";
+import { useFolderDragAndDrop } from "@/features/folder-contents/hooks/folder/useFolderDragAndDrop";
+import { useFolderNavigation } from "@/features/folder-contents/hooks/folder/useFolderNavigation";
+import { useAvailableMoveTargets } from "@/features/folder-contents/hooks/folder/useAvailableMoveTargets";
 
 import PaginationControls from "@/components/PaginationControls";
-import FileTable from "@/features/files/components/FileTable";
-import folderFileTableColumns from "@/features/files/components/table/columns/folderFileTableColumns";
-import CreateFolderModal from "@/features/folder/components/CreateFolderModal";
-import FilePreviewPanel from "@/features/files/components/FilePreviewPanel";
-import FileTableToolbar from "@/features/files/components/FileTableToolbar";
-import type { FolderOrFileItem } from "@/features/folder/types/FolderOrFileItem";
-import { useAvailableMoveTargets } from "@/features/folder/hooks/useAvailableMoveTargets";
+import FileTable from "@/features/folder-contents/components/file/FileTable";
+import folderFileTableColumns from "@/features/folder-contents/components/file/table/columns/folderFileTableColumns";
+import FilePreviewPanel from "@/features/folder-contents/components/file/FilePreviewPanel";
+import FileTableToolbar from "@/features/folder-contents/components/file/FileTableToolbar";
+import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
+import { CreateFolderModal } from "@/features/folder-contents/components/folder";
 
 const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
-
 const allowedOrderByValues = ["Asc", "Desc"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];
 
@@ -49,7 +48,7 @@ function RootFolderPage() {
 
   const { data: availableFolders } = useAvailableMoveTargets(crateId);
   const [selectMode, setSelectMode] = useState(false);
-  const [previewFile, setPreviewFile] = useState<FolderOrFileItem | null>(null);
+  const [previewFile, setPreviewFile] = useState<CrateFile | null>(null);
 
   const setSearchParams = (params: Partial<typeof search>) => {
     navigate({ search: (old) => ({ ...old, ...params }) });
@@ -61,13 +60,11 @@ function RootFolderPage() {
     if (!("pageSize" in search)) missingDefaults.pageSize = 10;
     if (!("sortBy" in search)) missingDefaults.sortBy = "Name";
     if (!("orderBy" in search)) missingDefaults.orderBy = "Asc";
-
-    if (Object.keys(missingDefaults).length > 0) {
-      setSearchParams(missingDefaults);
-    }
+    if (Object.keys(missingDefaults).length > 0) setSearchParams(missingDefaults);
   }, []);
 
-  const { folderItemsWithBackRow, breadcrumbs, totalCount, isLoading, error, refetch } = useFolderContents(
+  // ✅ Use updated useFolderContents
+  const { folderContents, breadcrumbs, totalFiles, totalFolders, isLoading, error, refetch } = useFolderContents(
     crateId,
     null,
     page,
@@ -106,21 +103,21 @@ function RootFolderPage() {
       />
 
       <FileTable
-        data={folderItemsWithBackRow}
+        crateId={crateId}
+        data={folderContents}
         columns={folderFileTableColumns(selectMode)}
+        breadcrumbs={breadcrumbs}
         onNavigate={handleNavigate}
         onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
-        isLoading={isLoading}
         onPreviewFile={setPreviewFile}
-        crateId={crateId}
-        breadcrumbs={breadcrumbs}
+        isLoading={isLoading}
       />
 
-      {totalCount > 0 && (
+      {totalFiles + totalFolders > 0 && (
         <PaginationControls
           page={page}
           pageSize={pageSize}
-          totalCount={totalCount}
+          totalCount={totalFiles + totalFolders}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
           onPageSizeChange={(newSize) => setSearchParams({ pageSize: newSize, page: 1 })}
         />
