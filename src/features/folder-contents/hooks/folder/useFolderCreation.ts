@@ -15,17 +15,20 @@ export function useFolderCreation(
   const handleCreateFolder = async (name: string, color: string) => {
     if (!name.trim()) return;
 
-    const createFolderPayload: CreateFolder = {
+    const payload: CreateFolder = {
       name,
       crateId,
       parentFolderId: folderId === "root" ? null : folderId,
       color,
     };
 
-    await createFolderMutation.mutateAsync(createFolderPayload);
-
-    setIsCreateFolderOpen(false);
-    await refetch();
+    try {
+      await createFolderMutation.mutateAsync(payload);
+      await refetch(); // fetch updated folder contents first
+      setIsCreateFolderOpen(false); // close modal after everything
+    } catch (err) {
+      console.error("Failed to create folder:", err);
+    }
   };
 
   return {

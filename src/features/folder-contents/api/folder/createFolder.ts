@@ -9,7 +9,5 @@ export const createFolder = async (data: CreateFolder): Promise<void> => {
     parentFolderId: data.parentFolderId === "root" ? null : (data.parentFolderId ?? null),
   };
 
-  console.log(payload);
-  const d = await api.post(`/crates/${data.crateId}/folders`, payload);
-  console.log(d);
+  await api.post(`/crates/${data.crateId}/folders`, payload);
 };

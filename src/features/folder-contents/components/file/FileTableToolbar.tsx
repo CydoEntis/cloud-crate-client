@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, SquareCheck, Trash2, X } from "lucide-react";
 
 import SearchInputField from "@/components/SearchInputField";
-import SortBySelect from "@/components/SortyBySelect";
+import SortBySelect from "@/components/OrderBySelect";
 import OrderToggle from "@/components/OrderToggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -11,8 +11,7 @@ import { useBulkMove } from "@/features/bulk/hooks/useBulkMove";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import { useBulkDelete } from "@/features/bulk/hooks/useBulkDelete";
 
-type SortBy = "Name" | "CreatedAt" | "Size";
-type OrderBy = "Asc" | "Desc";
+type OrderBy = "Name" | "CreatedAt" | "Size";
 
 export type FolderDestination = {
   id: string;
@@ -29,19 +28,19 @@ type Props = {
   folderId?: string | null;
   search: string;
   onSearchChange: (val: string) => void;
-  sortBy: SortBy;
-  onSortByChange: (val: SortBy) => void;
   orderBy: OrderBy;
   onOrderByChange: (val: OrderBy) => void;
+  ascending: boolean;
+  onAscendingChange: (val: boolean) => void;
   onOpenCreateFolder: () => void;
-  allowedSortByValues: readonly SortBy[];
+  allowedOrderByValues: readonly OrderBy[];
   selectMode: boolean;
   onToggleSelectMode: (enabled: boolean) => void;
   folderDestinations?: FolderDestination[];
   refetch?: () => void;
 };
 
-const sortByLabels: Record<SortBy, string> = {
+const orderByLabels: Record<OrderBy, string> = {
   Name: "File Name",
   CreatedAt: "Created Date",
   Size: "Size",
@@ -52,12 +51,12 @@ export default function FileTableToolbar({
   folderId,
   search,
   onSearchChange,
-  sortBy,
-  onSortByChange,
   orderBy,
   onOrderByChange,
+  ascending,
+  onAscendingChange,
   onOpenCreateFolder,
-  allowedSortByValues,
+  allowedOrderByValues,
   selectMode,
   onToggleSelectMode,
   folderDestinations = [],
@@ -114,12 +113,12 @@ export default function FileTableToolbar({
         <SearchInputField value={search} onChange={onSearchChange} placeholder="Search files & folders..." />
         <div className="flex items-center gap-2">
           <SortBySelect
-            value={sortBy}
-            onChange={onSortByChange}
-            allowedValues={allowedSortByValues}
-            labels={sortByLabels}
+            value={orderBy}
+            onChange={onOrderByChange}
+            allowedValues={allowedOrderByValues}
+            labels={orderByLabels}
           />
-          <OrderToggle value={orderBy} onChange={onOrderByChange} />
+          <OrderToggle ascending={ascending} onChange={onAscendingChange} />
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
@@ -16,18 +16,19 @@ import FilePreviewPanel from "@/features/folder-contents/components/file/FilePre
 import FileTableToolbar from "@/features/folder-contents/components/file/FileTableToolbar";
 import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
 import { CreateFolderModal } from "@/features/folder-contents/components/folder";
+import { Button } from "@/components/ui/button";
+import AddCrateButton from "@/features/crates/components/AddCrateButton";
+import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
 
-const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
-type SortByType = (typeof allowedSortByValues)[number];
-const allowedOrderByValues = ["Asc", "Desc"] as const;
+const allowedOrderByValues = ["Name", "CreatedAt", "Size"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];
 
 const folderSearchSchema = z.object({
   page: z.coerce.number().optional().default(1),
   pageSize: z.coerce.number().optional().default(10),
   search: z.string().optional(),
-  sortBy: z.enum(allowedSortByValues).optional().default("Name"),
-  orderBy: z.enum(allowedOrderByValues).optional().default("Asc"),
+  orderBy: z.enum(allowedOrderByValues).optional().default("Name"),
+  ascending: z.boolean().default(false),
 });
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/")({
@@ -43,8 +44,8 @@ function RootFolderPage() {
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
   const searchTerm = search.search ?? "";
-  const sortBy = (search.sortBy ?? "Name") as SortByType;
-  const orderBy = (search.orderBy ?? "Asc") as OrderByType;
+  const orderBy = (search.orderBy ?? "Name") as OrderByType;
+  const ascending = search.ascending;
 
   const { data: availableFolders } = useAvailableMoveTargets(crateId);
   const [selectMode, setSelectMode] = useState(false);
@@ -54,61 +55,43 @@ function RootFolderPage() {
     navigate({ search: (old) => ({ ...old, ...params }) });
   };
 
-  useEffect(() => {
-    const missingDefaults: Partial<typeof search> = {};
-    if (!("page" in search)) missingDefaults.page = 1;
-    if (!("pageSize" in search)) missingDefaults.pageSize = 10;
-    if (!("sortBy" in search)) missingDefaults.sortBy = "Name";
-    if (!("orderBy" in search)) missingDefaults.orderBy = "Asc";
-    if (Object.keys(missingDefaults).length > 0) setSearchParams(missingDefaults);
-  }, []);
-
-  // ✅ Use updated useFolderContents
   const { folderContents, breadcrumbs, totalFiles, totalFolders, isLoading, error, refetch } = useFolderContents(
     crateId,
     null,
     page,
     pageSize,
     searchTerm,
-    sortBy,
-    orderBy
+    orderBy,
+    ascending
   );
 
-  const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
-    crateId,
-    null,
-    refetch
-  );
+  // const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
+  //   crateId,
+  //   null,
+  //   refetch
+  // );
 
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
 
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
+
+const columns = useMemo(() => folderFileTableColumns(selectMode), [selectMode]);
   return (
     <div className="space-y-6">
-      <FileTableToolbar
-        search={searchTerm}
-        onSearchChange={(val) => setSearchParams({ search: val, page: 1 })}
-        sortBy={sortBy}
-        onSortByChange={(val) => setSearchParams({ sortBy: val, page: 1 })}
-        orderBy={orderBy}
-        onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
-        onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
-        allowedSortByValues={allowedSortByValues}
-        selectMode={selectMode}
-        onToggleSelectMode={setSelectMode}
-        crateId={crateId}
-        folderId={null} // Root folder
-        folderDestinations={availableFolders}
-        refetch={refetch}
-      />
+      <Button onClick={() => setIsCreateFolderOpen(true)}>Open Modal</Button>
+
+      <CreateFolderModal isOpen={isCreateFolderOpen} onClose={() => setIsCreateFolderOpen(false)} crateId={crateId} />
 
       <FileTable
         crateId={crateId}
         data={folderContents}
-        columns={folderFileTableColumns(selectMode)}
+        columns={columns}
         breadcrumbs={breadcrumbs}
         onNavigate={handleNavigate}
-        onDropItem={(itemId, itemType, targetFolderId) => handleDropItem(itemId, itemType, targetFolderId, refetch)}
+        onDropItem={(item, targetFolderId) =>
+          handleDropItem({ id: item.id, isFolder: item.isFolder }, targetFolderId, refetch)
+        }
         onPreviewFile={setPreviewFile}
         isLoading={isLoading}
       />
@@ -120,15 +103,6 @@ function RootFolderPage() {
           totalCount={totalFiles + totalFolders}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
           onPageSizeChange={(newSize) => setSearchParams({ pageSize: newSize, page: 1 })}
-        />
-      )}
-
-      {isCreateFolderOpen && (
-        <CreateFolderModal
-          isOpen={isCreateFolderOpen}
-          onClose={() => setIsCreateFolderOpen(false)}
-          onCreate={handleCreateFolder}
-          isLoading={isCreating}
         />
       )}
 

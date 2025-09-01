@@ -1,15 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { ArrowUpNarrowWide, ArrowUpWideNarrow } from "lucide-react";
 
-type OrderByType = "Asc" | "Desc";
-
 type OrderToggleProps = {
-  value: OrderByType;
-  onChange: (val: OrderByType) => void;
+  ascending: boolean;
+  onChange: (val: boolean) => void;
   label?: string;
 };
 
-export default function OrderToggle({ value, onChange, label }: OrderToggleProps) {
+export default function OrderToggle({ ascending, onChange, label }: OrderToggleProps) {
   return (
     <div className="flex flex-col gap-1">
       {label && <span className="text-sm text-muted-foreground px-1">{label}</span>}
@@ -17,10 +15,10 @@ export default function OrderToggle({ value, onChange, label }: OrderToggleProps
         variant="secondary"
         className="p-2 cursor-pointer rounded-xl"
         size="icon"
-        onClick={() => onChange(value === "Asc" ? "Desc" : "Asc")}
-        aria-label={`Sort order: ${value === "Asc" ? "Ascending" : "Descending"}`}
+        onClick={() => onChange(ascending)}
+        aria-label={`Sort order: ${ascending ? "Ascending" : "Descending"}`}
       >
-        {value === "Asc" ? (
+        {ascending ? (
           <ArrowUpWideNarrow className="w-6 h-6 text-muted-foreground" />
         ) : (
           <ArrowUpNarrowWide className="w-6 h-6 text-muted-foreground" />

@@ -1,6 +1,6 @@
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
-type SortBySelectProps<T extends string> = {
+type OrderBySelectProps<T extends string> = {
   value: T;
   allowedValues: readonly T[];
   labels: Record<T, string>;
@@ -8,13 +8,13 @@ type SortBySelectProps<T extends string> = {
   onChange: (val: T) => void;
 };
 
-export default function SortBySelect<T extends string>({
+function OrderBySelect<T extends string>({
   value,
   allowedValues,
   labels,
   label,
   onChange,
-}: SortBySelectProps<T>) {
+}: OrderBySelectProps<T>) {
   return (
     <div className="flex flex-col gap-1 bg-input rounded-xl">
       {label && <span className="text-sm text-muted-foreground px-1">{label}</span>}
@@ -33,3 +33,5 @@ export default function SortBySelect<T extends string>({
     </div>
   );
 }
+
+export default OrderBySelect;

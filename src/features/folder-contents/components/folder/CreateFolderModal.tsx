@@ -1,48 +1,45 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { ColorPicker } from "@/components/ColorPicker";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useCreateFolder } from "../../hooks/folder/mutations/useCreateFolder";
 import type { CreateFolder } from "../../types/folder/request/CreateFolder";
 import { CreateFolderSchema } from "../../schemas/folder/CreateFolderSchema";
-
-
-type CreateFolderData = Pick<CreateFolder, "name" | "color">;
 
 type CreateFolderModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (name: string, color: string) => Promise<void>;
-  isLoading: boolean;
+  crateId: string;
+  parentFolderId?: string | null;
 };
 
-function CreateFolderModal({ isOpen, onClose, onCreate, isLoading }: CreateFolderModalProps) {
-  const [error, setError] = useState("");
+type FormValues = Pick<CreateFolder, "name" | "color">;
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<CreateFolderData>({
+export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: CreateFolderModalProps) {
+  const { mutateAsync: createFolder, isPending } = useCreateFolder();
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(CreateFolderSchema.pick({ name: true, color: true })),
-    defaultValues: {
-      name: "",
-      color: "#4ade80",
-    },
+    defaultValues: { name: "", color: "#4ade80" },
   });
 
-  const onSubmit = async (data: CreateFolderData) => {
+  const onSubmit = async (data: FormValues) => {
     try {
-      setError("");
-      await onCreate(data.name, data.color);
-      reset();
+      await createFolder({
+        crateId,
+        parentFolderId: parentFolderId ?? "root",
+        name: data.name,
+        color: data.color,
+      });
+      form.reset();
       onClose();
+      toast.success("Folder created successfully");
     } catch (err: any) {
-      setError(err?.message || "Failed to create folder");
+      toast.error(err?.message || "Failed to create folder");
     }
   };
 
@@ -50,11 +47,7 @@ function CreateFolderModal({ isOpen, onClose, onCreate, isLoading }: CreateFolde
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
-        if (!open) {
-          reset();
-          setError("");
-          onClose();
-        }
+        if (!open) onClose(); // only close on user interaction
       }}
     >
       <DialogContent className="sm:max-w-md border-none shadow bg-card text-foreground">
@@ -62,38 +55,46 @@ function CreateFolderModal({ isOpen, onClose, onCreate, isLoading }: CreateFolde
           <DialogTitle>Create New Folder</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block mb-1 font-medium">
-              Folder Name
-            </label>
-            <Input
-              id="name"
-              {...register("name")}
-              placeholder="Enter folder name"
-              onChange={() => setError("")}
-              disabled={isLoading || isSubmitting}
-              className="border-none h-full text-xl rounded-lg py-2 text-foreground 
-             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Folder Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={isPending} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
-          </div>
 
-          <div>
-            <ColorPicker name="color" control={control} disabled={isLoading || isSubmitting} />
-          </div>
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <ColorPicker control={form.control} name={field.name} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
-
-          <DialogFooter className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isLoading || isSubmitting}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading || isSubmitting} className="text-secondary">
-              {isLoading || isSubmitting ? "Creating..." : "Create Folder"}
-            </Button>
-          </DialogFooter>
-        </form>
+            <div className="flex justify-end space-x-2 mt-4">
+              <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Creating..." : "Create Folder"}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

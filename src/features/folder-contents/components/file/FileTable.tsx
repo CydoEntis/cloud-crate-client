@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanstack/react-table";
 import { Table, TableBody } from "@/components/ui/table";
 import GenericTableHeader from "@/components/GenericTableHeader";
@@ -18,7 +18,7 @@ type FileTableProps = {
   breadcrumbs: FolderBreadcrumb[];
   isLoading?: boolean;
   onNavigate?: (folderId: string | null) => void;
-  onDropItem?: (itemId: string, itemType: "file" | "folder", targetFolderId: string | null) => void;
+  onDropItem?: (item: { id: string; isFolder: boolean }, targetFolderId: string | null) => void;
   onPreviewFile?: (file: CrateFile) => void;
   onBreadcrumbAction?: (action: string, folderId: string) => void;
 };
@@ -67,7 +67,7 @@ function FileTable({
     }
   }, [isMobile, isTablet, isDesktop]);
 
-  const items = [...data.folders, ...data.files];
+  const items = useMemo(() => [...data.folders, ...data.files], [data.folders, data.files]);
 
   const table = useReactTable({
     data: items,
@@ -104,7 +104,7 @@ function FileTable({
 
   const handleDropOnRow = (targetRow: Row<any>, dragged: { id: string; type: "file" | "folder" }) => {
     if (dragged.id !== targetRow.original.id && targetRow.original.isFolder) {
-      onDropItem?.(dragged.id, dragged.type, targetRow.original.id);
+      onDropItem?.({ id: dragged.id, isFolder: dragged.type === "folder" }, targetRow.original.id);
     }
   };
 

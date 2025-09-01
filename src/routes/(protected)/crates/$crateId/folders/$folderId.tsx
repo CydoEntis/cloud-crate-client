@@ -14,20 +14,18 @@ import FileTableToolbar from "@/features/folder-contents/components/file/FileTab
 import PaginationControls from "@/components/PaginationControls";
 import { CreateFolderModal } from "@/features/folder-contents/components/folder";
 import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
+import folderFileTableColumns from "@/features/folder-contents/components/file/table/columns/folderFileTableColumns";
 import FilePreviewPanel from "@/features/folder-contents/components/file/FilePreviewPanel";
 
-const allowedSortByValues = ["Name", "CreatedAt", "Size"] as const;
-type SortByType = (typeof allowedSortByValues)[number];
-
-const allowedOrderByValues = ["Asc", "Desc"] as const;
+const allowedOrderByValues = ["Name", "CreatedAt", "Size"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];
 
 const folderSearchSchema = z.object({
   page: z.coerce.number().optional().default(1),
   pageSize: z.coerce.number().optional().default(10),
   search: z.string().optional(),
-  sortBy: z.enum(allowedSortByValues).optional().default("Name"),
-  orderBy: z.enum(allowedOrderByValues).optional().default("Asc"),
+  orderBy: z.enum(allowedOrderByValues).optional().default("Name"),
+  ascending: z.boolean().default(false),
 });
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
@@ -43,11 +41,18 @@ function FolderPage() {
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
   const searchTerm = search.search ?? "";
-  const sortBy = (search.sortBy ?? "Name") as SortByType;
-  const orderBy = (search.orderBy ?? "Asc") as OrderByType;
+  const orderBy = (search.orderBy ?? "Name") as OrderByType;
+  const ascending = search.ascending;
 
-  const { folderContents, breadcrumbs, totalFiles, totalFolders, isLoading, error, refetch } =
-    useFolderContents(crateId, folderId, page, pageSize, searchTerm, sortBy, orderBy);
+  const { folderContents, breadcrumbs, totalFiles, totalFolders, isLoading, error, refetch } = useFolderContents(
+    crateId,
+    folderId,
+    page,
+    pageSize,
+    searchTerm,
+    orderBy,
+    ascending
+  );
 
   const { data: availableFolders } = useAvailableMoveTargets(crateId);
   const [selectMode, setSelectMode] = useState(false);
@@ -61,14 +66,16 @@ function FolderPage() {
     const missingDefaults: Partial<typeof search> = {};
     if (!("page" in search)) missingDefaults.page = 1;
     if (!("pageSize" in search)) missingDefaults.pageSize = 10;
-    if (!("sortBy" in search)) missingDefaults.sortBy = "Name";
-    if (!("orderBy" in search)) missingDefaults.orderBy = "Asc";
-
+    if (!("orderBy" in search)) missingDefaults.orderBy = "Name";
     if (Object.keys(missingDefaults).length > 0) setSearchParams(missingDefaults);
+    if (!("ascneding" in search)) missingDefaults.ascending = false;
   }, []);
 
-  const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } =
-    useFolderCreation(crateId, folderId, refetch);
+  const { isCreateFolderOpen, setIsCreateFolderOpen, handleCreateFolder, isCreating } = useFolderCreation(
+    crateId,
+    folderId,
+    refetch
+  );
 
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
@@ -81,12 +88,12 @@ function FolderPage() {
       <FileTableToolbar
         search={searchTerm}
         onSearchChange={(val) => setSearchParams({ search: val, page: 1 })}
-        sortBy={sortBy}
-        onSortByChange={(val) => setSearchParams({ sortBy: val, page: 1 })}
+        ascending={ascending}
+        onAscendingChange={(val) => setSearchParams({ ascending: val, page: 1 })}
         orderBy={orderBy}
         onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
         onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
-        allowedSortByValues={allowedSortByValues}
+        allowedOrderByValues={allowedOrderByValues}
         selectMode={selectMode}
         onToggleSelectMode={setSelectMode}
         crateId={crateId}
@@ -98,14 +105,17 @@ function FolderPage() {
       <FileTable
         crateId={crateId}
         data={folderContents}
-        columns={[] /* pass your column defs here */}
+        columns={folderFileTableColumns(selectMode)}
         breadcrumbs={breadcrumbs}
         onNavigate={handleNavigate}
-        onDropItem={(itemId, type, targetFolderId) => handleDropItem(itemId, type, targetFolderId, refetch)}
+        onDropItem={(item, targetFolderId) =>
+          handleDropItem({ id: item.id, isFolder: item.isFolder }, targetFolderId, refetch)
+        }
         onPreviewFile={setPreviewFile}
+        isLoading={isLoading}
       />
 
-      {(totalFiles + totalFolders) > 0 && (
+      {totalFiles + totalFolders > 0 && (
         <PaginationControls
           page={page}
           pageSize={pageSize}
@@ -124,7 +134,9 @@ function FolderPage() {
         />
       )}
 
-      {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />}
+      {previewFile && (
+        <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ import type { Crate } from "@/features/crates/types/Crate";
 import PaginationControls from "@/components/PaginationControls";
 import { useLeaveCrate } from "@/features/crates/hooks/mutations/useLeaveCrate";
 import CrateMemberTabs from "@/features/crates/components/CrateMemberTabs";
-import SortBySelect from "@/components/SortyBySelect";
+import SortBySelect from "@/components/OrderBySelect";
 
 const allowedSortByValues = ["Name", "JoinedAt", "UsedStorage"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
