@@ -47,7 +47,7 @@ export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: 
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
-        if (!open) onClose(); // only close on user interaction
+        if (!open) onClose();
       }}
     >
       <DialogContent className="sm:max-w-md border-none shadow bg-card text-foreground">

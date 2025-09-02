@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import CrateSettingsPanel from "@/features/crates/components/CrateSettingsPanel";
 import { CrateRole } from "@/features/invites/types/CrateRole";
+import { useFolderModalStore } from "@/features/folder-contents/store/useFolderModalStore";
+import { CreateFolderModal } from "@/features/folder-contents/components/folder";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId")({
   component: CrateLayout,
@@ -16,6 +18,7 @@ function CrateLayout() {
   const { crateId } = Route.useParams();
   const { data: crate, isLoading, isError } = useCrateDetails(crateId);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const { isOpen, close } = useFolderModalStore();
 
   if (isLoading) return <p>Loading crate info...</p>;
   if (isError || !crate) return <p>Failed to load crate info</p>;
@@ -50,6 +53,7 @@ function CrateLayout() {
       />
 
       <Outlet />
+      <CreateFolderModal isOpen={isOpen} onClose={close} crateId={crateId} />
     </section>
   );
 }

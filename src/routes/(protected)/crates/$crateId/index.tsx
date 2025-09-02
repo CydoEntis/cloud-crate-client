@@ -19,6 +19,7 @@ import { CreateFolderModal } from "@/features/folder-contents/components/folder"
 import { Button } from "@/components/ui/button";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
+import FolderContentsToolbar from "@/features/folder-contents/components/FolderContentsToolbar";
 
 const allowedOrderByValues = ["Name", "CreatedAt", "Size"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];
@@ -74,14 +75,11 @@ function RootFolderPage() {
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
 
-  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
 
 const columns = useMemo(() => folderFileTableColumns(selectMode), [selectMode]);
   return (
     <div className="space-y-6">
-      <Button onClick={() => setIsCreateFolderOpen(true)}>Open Modal</Button>
-
-      <CreateFolderModal isOpen={isCreateFolderOpen} onClose={() => setIsCreateFolderOpen(false)} crateId={crateId} />
+      <FolderContentsToolbar crateId={crateId} />
 
       <FileTable
         crateId={crateId}

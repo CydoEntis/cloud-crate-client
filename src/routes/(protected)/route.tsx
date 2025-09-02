@@ -2,6 +2,8 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/features/auth";
 import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
+import { CreateFolderModal } from "@/features/folder-contents/components/folder";
+import { useFolderModalStore } from "@/features/folder-contents/store/useFolderModalStore";
 import { InviteModal } from "@/features/invites/components/inviteModal";
 import { useGetCurrentUserProfile } from "@/features/user/hooks/useGetUserProfile";
 import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
@@ -25,7 +27,7 @@ function RouteComponent() {
   if (isError) return <div>Failed to load user data</div>;
 
   return (
-    <SidebarProvider >
+    <SidebarProvider>
       <CreateCrateModal />
       <InviteModal />
       <AppSidebar />
