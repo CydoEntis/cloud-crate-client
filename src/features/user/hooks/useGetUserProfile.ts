@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getUserProfile } from "../api/getUserProfile";
-import type { UserProfileResponse } from "../types/UserProfileResponse";
+import type { UserProfileResponse } from "../types/User";
 import { useUserStore } from "@/features/auth";
 
 export function useGetCurrentUserProfile() {

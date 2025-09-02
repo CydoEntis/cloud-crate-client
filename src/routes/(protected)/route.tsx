@@ -28,7 +28,7 @@ function RouteComponent() {
 
   return (
     <SidebarProvider>
-      <CreateCrateModal />
+      <CreateCrateModal user={user}/>
       <InviteModal />
       <AppSidebar />
       <SidebarInset className="md:py-4 md:pr-4 bg-background md:bg-sidebar">

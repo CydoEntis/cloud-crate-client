@@ -1,4 +1,4 @@
 import type z from "zod";
-import type { CreateCrateSchema } from "../schemas/CreateCrateSchema";
+import type { StorageDetails, createCreateCrateSchema } from "../schemas/CreateCrateSchema";
 
-export type CreateCrateRequest = z.infer<typeof CreateCrateSchema>;
+export type CreateCrateRequest<T extends StorageDetails> = z.infer<ReturnType<typeof createCreateCrateSchema>>;

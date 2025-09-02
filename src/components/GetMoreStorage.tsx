@@ -1,4 +1,4 @@
-import type { UserProfileResponse } from "@/features/user/types/UserProfileResponse";
+import type { UserProfileResponse } from "@/features/user/types/User";
 import { formatBytes } from "@/lib/formatBytes";
 import React from "react";
 import { Button } from "./ui/button";

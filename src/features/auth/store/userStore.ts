@@ -1,9 +1,9 @@
+import type { User } from "@/features/user/types/User";
 import { create } from "zustand";
-import type { UserProfileResponse } from "@/features/user/types/UserProfileResponse";
 
 interface UserStore {
-  user: UserProfileResponse | null;
-  setUser: (user: UserProfileResponse) => void;
+  user: User | null;
+  setUser: (user: User) => void;
   clearUser: () => void;
 }
 

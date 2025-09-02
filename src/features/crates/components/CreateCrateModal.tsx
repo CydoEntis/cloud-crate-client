@@ -3,38 +3,59 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ColorPicker } from "@/components/ColorPicker";
+import { Slider } from "@/components/ui/slider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useCrateModalStore } from "../store/crateModalStore";
 import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
-import type { CreateCrateRequest } from "../types/CreateCrateRequest";
-import { CreateCrateSchema } from "../schemas/CreateCrateSchema";
 import { useApiFormErrorHandler } from "@/hooks/useApiFromErrorHandler";
 import { toast } from "sonner";
+import { createCreateCrateSchema, type StorageDetails } from "../schemas/CreateCrateSchema";
+import type z from "zod";
+import type { User } from "@/features/user/types/User";
 
-function CreateCrateModal() {
+type CreateCrateModalProps = {
+  user: User;
+};
+
+export default function CreateCrateModal({ user }: CreateCrateModalProps) {
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
+  const BytesPerGb = 1024;
 
-  const form = useForm<CreateCrateRequest>({
-    resolver: zodResolver(CreateCrateSchema),
-    defaultValues: { name: "", color: "" },
+  const storage: StorageDetails = {
+    usedStorageMb: user.usedStorageMb,
+    maxStorageMb: user.maxStorageMb,
+  };
+
+  const schema = createCreateCrateSchema(storage);
+  type FormValues = z.infer<typeof schema>;
+
+  const minAlloc = Math.max(1024, user.usedStorageMb);
+  const maxAlloc = user.maxStorageMb;
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      color: "#ffffff",
+      allocatedStorageMb: minAlloc, // default to minimum allowed
+    },
   });
 
   const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
 
   const onClose = () => {
-    form.clearErrors();
     form.reset();
+    clearErrors();
     close();
   };
 
-  const onSubmit = async (data: CreateCrateRequest) => {
+  const onSubmit = async (data: FormValues) => {
     try {
       await createCrate(data);
-      form.reset();
-      close();
       toast.success("Crate created successfully");
+      onClose();
     } catch (err) {
       handleApiError(err);
     }
@@ -47,12 +68,13 @@ function CreateCrateModal() {
         style={{ top: "25%", transform: "translate(0, 0)" }}
       >
         <DialogHeader>
-          <DialogTitle>Create Your First Crate</DialogTitle>
-          <DialogDescription>Enter a name and pick a color</DialogDescription>
+          <DialogTitle>Create Your Crate</DialogTitle>
+          <DialogDescription>Enter a name, pick a color, and allocate storage</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+            {/* Crate Name */}
             <FormField
               control={form.control}
               name="name"
@@ -66,8 +88,7 @@ function CreateCrateModal() {
                         field.onChange(e);
                         clearErrors();
                       }}
-                      className="border-none h-full text-xl rounded-lg py-2 text-foreground 
-             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+                      className="border-none h-full text-xl rounded-lg py-2 text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -75,6 +96,7 @@ function CreateCrateModal() {
               )}
             />
 
+            {/* Color Picker */}
             <FormField
               control={form.control}
               name="color"
@@ -83,6 +105,32 @@ function CreateCrateModal() {
                   <FormLabel>Color</FormLabel>
                   <FormControl>
                     <ColorPicker control={form.control} name={field.name} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Storage Slider */}
+            <Controller
+              name="allocatedStorageMb"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Allocate Storage (GB)</FormLabel>
+                  <FormControl>
+                    <div className="flex flex-col">
+                      <Slider
+                        value={[field.value]} // Slider expects an array
+                        min={minAlloc}
+                        max={maxAlloc}
+                        step={1024}
+                        onValueChange={(val) => field.onChange(val[0])} // Convert back to number
+                      />
+                      <div className="mt-2 text-sm text-muted-foreground">
+                        {Math.round(field.value / BytesPerGb)} GB selected
+                      </div>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,5 +148,3 @@ function CreateCrateModal() {
     </Dialog>
   );
 }
-
-export default CreateCrateModal;

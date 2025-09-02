@@ -1,14 +1,18 @@
 import type { SubscriptionPlan } from "./SubscriptionPlan";
 
-export type UserProfileResponse = {
-  userId: string;
+export type User = {
+  id: string; 
   email: string;
   displayName: string;
-  profilePicture: string;
+  profilePictureUrl?: string;
+
   plan: SubscriptionPlan;
-  totalStorageMb: number;
-  usedStorageMb: number;
+
+  maxStorageMb: number; 
+  usedStorageMb: number; 
+  createdAt: string;
+  updatedAt: string;
+
   canCreateMoreCrates: boolean;
-  crateLimit: number;
   crateCount: number;
 };
