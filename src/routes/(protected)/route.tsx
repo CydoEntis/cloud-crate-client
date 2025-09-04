@@ -2,10 +2,8 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/features/auth";
 import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
-import { CreateFolderModal } from "@/features/folder-contents/components/folder";
-import { useFolderModalStore } from "@/features/folder-contents/store/useFolderModalStore";
 import { InviteModal } from "@/features/invites/components/inviteModal";
-import { useGetCurrentUserProfile } from "@/features/user/hooks/useGetUserProfile";
+import { useGetUser } from "@/features/user/hooks/useGetUser";
 import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
@@ -21,14 +19,14 @@ export const Route = createFileRoute("/(protected)")({
 });
 
 function RouteComponent() {
-  const { isLoading, isError, data: user } = useGetCurrentUserProfile();
+  const { isLoading, isError, data: user } = useGetUser();
 
   if (isLoading) return <div>Loading user data...</div>;
   if (isError) return <div>Failed to load user data</div>;
 
   return (
     <SidebarProvider>
-      <CreateCrateModal user={user}/>
+      {user && <CreateCrateModal user={user} />}
       <InviteModal />
       <AppSidebar />
       <SidebarInset className="md:py-4 md:pr-4 bg-background md:bg-sidebar">

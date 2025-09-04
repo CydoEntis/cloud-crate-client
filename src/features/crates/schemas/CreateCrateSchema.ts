@@ -1,14 +1,22 @@
+// src/features/crates/schemas/CreateCrateSchema.ts
 import z from "zod";
 
 export type StorageDetails = {
-  usedStorageMb: number;      // how much storage the user has already used
-  maxStorageMb: number;       // total storage allowed by their plan
+  usedStorageBytes: number;
+  maxStorageBytes: number;
 };
 
+/**
+ * Schema now validates allocatedStorageGb (number, in GB).
+ * The storage param is still provided in bytes so we compute GB min/max.
+ */
 export const createCreateCrateSchema = (storage: StorageDetails) => {
-  const remainingAllocatableMb = storage.maxStorageMb - storage.usedStorageMb;
-  const minStorageMb = Math.max(storage.usedStorageMb, 1024); // can't go below 1 GB or used
-  const maxStorageMb = storage.usedStorageMb + remainingAllocatableMb;
+  const BytesPerGb = 1024 * 1024 * 1024;
+  const usedGb = Math.ceil(storage.usedStorageBytes / BytesPerGb);
+  const maxGb = Math.floor(storage.maxStorageBytes / BytesPerGb);
+
+  // Minimum 1 GB, and at least usedGb
+  const minGb = Math.max(1, usedGb);
 
   return z.object({
     name: z
@@ -20,12 +28,15 @@ export const createCreateCrateSchema = (storage: StorageDetails) => {
       .string()
       .min(1, { message: "Color is required." })
       .regex(/^#([0-9A-Fa-f]{6})$/, { message: "Color is invalid." }),
-    allocatedStorageMb: z
+    // NOTE: field name is allocatedStorageGb and message uses GB units
+    allocatedStorageGb: z
       .number({
         required_error: "Allocated storage is required",
         invalid_type_error: "Allocated storage must be a number",
       })
-      .min(minStorageMb, { message: `Allocated storage cannot be less than ${minStorageMb / 1024} GB` })
-      .max(maxStorageMb, { message: `Allocated storage cannot exceed ${maxStorageMb / 1024} GB` }),
+      .min(minGb, { message: `Allocated storage cannot be less than ${minGb} GB` })
+      .max(maxGb, { message: `Allocated storage cannot exceed ${maxGb} GB` }),
   });
 };
+
+export type CreateCrateSchema = ReturnType<typeof createCreateCrateSchema>;

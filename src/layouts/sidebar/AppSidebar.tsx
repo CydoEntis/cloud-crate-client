@@ -12,6 +12,7 @@ import CrateSidebarLinks from "@/features/crates/components/CrateSideBarLinks";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import GetMoreStorage from "@/components/GetMoreStorage";
+import CurrentUserDisplay from "@/features/user/components/CurrentUserDisplay";
 
 const navlinks = [
   { id: 1, text: "Crates", to: "/crates", icon: <Box /> },
@@ -58,25 +59,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* Bottom Section */}
         <div className="pb-6 px-4 space-y-4">
-          {user && <GetMoreStorage user={user} />}
-          <div className="border-t border-secondary pt-4 flex justify-between items-center">
-            <div className="flex gap-2 items-center">
-              <div className="w-9 h-9 rounded-md overflow-hidden">
-                <img src={user?.profilePicture} />
+          {user && (
+            <>
+              <GetMoreStorage user={user} />
+              <div className="border-t border-secondary pt-4 flex justify-between items-center">
+                <CurrentUserDisplay user={user} />
+                <Button
+                  onClick={logout}
+                  className="p-2 hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                  variant="ghost"
+                >
+                  <LogOut className="w-5 h-5" />
+                </Button>
               </div>
-              <div>
-                <p className="font-semibold">{user?.displayName}</p>
-                <p className="text-sm text-muted-foreground">{user?.email}</p>
-              </div>
-            </div>
-            <Button
-              onClick={logout}
-              className="p-2 hover:bg-accent hover:text-accent-foreground text-muted-foreground"
-              variant="ghost"
-            >
-              <LogOut className="w-5 h-5" />
-            </Button>
-          </div>
+            </>
+          )}
         </div>
       </SidebarContent>
     </Sidebar>

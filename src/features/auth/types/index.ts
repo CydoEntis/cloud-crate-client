@@ -12,12 +12,14 @@ export type PaginatedResult<T> = {
 };
 
 export type ApiResponse<T> = {
-  success: boolean;
+  isSuccess: boolean;
   value: T | null;
   message?: string;
   statusCode: number;
-  errors?: ApiError[];
+  errors?: ApiError[];  
+  timestamp: string;
 };
+
 
 export type RegisterRequest = {
   displayName: string;

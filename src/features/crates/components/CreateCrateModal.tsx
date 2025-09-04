@@ -10,7 +10,7 @@ import { useCrateModalStore } from "../store/crateModalStore";
 import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import { useApiFormErrorHandler } from "@/hooks/useApiFromErrorHandler";
 import { toast } from "sonner";
-import { createCreateCrateSchema, type StorageDetails } from "../schemas/CreateCrateSchema";
+import { createCreateCrateSchema } from "../schemas/CreateCrateSchema";
 import type z from "zod";
 import type { User } from "@/features/user/types/User";
 
@@ -21,25 +21,28 @@ type CreateCrateModalProps = {
 export default function CreateCrateModal({ user }: CreateCrateModalProps) {
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
-  const BytesPerGb = 1024;
 
-  const storage: StorageDetails = {
-    usedStorageMb: user.usedStorageMb,
-    maxStorageMb: user.maxStorageMb,
+  const BytesPerGb = 1024 * 1024 * 1024;
+
+  // Normalize user storage into GB
+  const minAlloc = Math.max(1, Math.ceil(user.usedStorageBytes / BytesPerGb)); // in GB
+  const maxAlloc = Math.floor(user.maxStorageBytes / BytesPerGb); // in GB
+
+  // Adjust schema: still validates allocatedStorage in GB
+  const schema = createCreateCrateSchema({
+    usedStorageBytes: user.usedStorageBytes,
+    maxStorageBytes: user.maxStorageBytes,
+  });
+  type FormValues = z.infer<typeof schema> & {
+    allocatedStorageGb: number;
   };
-
-  const schema = createCreateCrateSchema(storage);
-  type FormValues = z.infer<typeof schema>;
-
-  const minAlloc = Math.max(1024, user.usedStorageMb);
-  const maxAlloc = user.maxStorageMb;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       color: "#ffffff",
-      allocatedStorageMb: minAlloc, // default to minimum allowed
+      allocatedStorageGb: minAlloc, // default in GB
     },
   });
 
@@ -53,7 +56,11 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await createCrate(data);
+      await createCrate({
+        ...data,
+        // Convert GB → MB for API if needed
+        allocatedStorageMb: data.allocatedStorageGb * 1024,
+      });
       toast.success("Crate created successfully");
       onClose();
     } catch (err) {
@@ -101,7 +108,7 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
               control={form.control}
               name="color"
               render={({ field }) => (
-                <FormItem>
+                <FormItem>  
                   <FormLabel>Color</FormLabel>
                   <FormControl>
                     <ColorPicker control={form.control} name={field.name} />
@@ -111,9 +118,9 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
               )}
             />
 
-            {/* Storage Slider */}
+            {/* Storage Slider in GB */}
             <Controller
-              name="allocatedStorageMb"
+              name="allocatedStorageGb"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -121,14 +128,14 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
                   <FormControl>
                     <div className="flex flex-col">
                       <Slider
-                        value={[field.value]} // Slider expects an array
+                        value={[field.value ?? minAlloc]} // always a number
                         min={minAlloc}
                         max={maxAlloc}
-                        step={1024}
-                        onValueChange={(val) => field.onChange(val[0])} // Convert back to number
+                        step={1} // GB increments
+                        onValueChange={(val) => field.onChange(val[0])}
                       />
                       <div className="mt-2 text-sm text-muted-foreground">
-                        {Math.round(field.value / BytesPerGb)} GB selected
+                        {field.value} GB selected
                       </div>
                     </div>
                   </FormControl>

@@ -35,6 +35,7 @@ export class ApiService {
     this.api.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
+        console.log(error);
         const originalRequest = error.config as any;
 
         if (error.response?.status === 401 && !originalRequest._retry) {

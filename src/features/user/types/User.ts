@@ -8,8 +8,8 @@ export type User = {
 
   plan: SubscriptionPlan;
 
-  maxStorageMb: number; 
-  usedStorageMb: number; 
+  maxStorageBytes: number; 
+  usedStorageBytes: number; 
   createdAt: string;
   updatedAt: string;
 
