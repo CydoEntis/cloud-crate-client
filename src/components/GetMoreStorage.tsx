@@ -1,10 +1,9 @@
-import type { UserProfileResponse } from "@/features/user/types/User";
 import { formatBytes } from "@/lib/formatBytes";
-import React from "react";
 import { Button } from "./ui/button";
+import type { User } from "@/features/user/types/User";
 
 type GetMoreStorageProps = {
-  user: UserProfileResponse;
+  user: User;
 };
 
 function GetMoreStorage({ user }: GetMoreStorageProps) {

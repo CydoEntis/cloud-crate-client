@@ -7,6 +7,7 @@ import UserAvatar from "@/components/UserAvatar";
 import DateIndicator from "@/components/DateIndicator";
 import StorageDisplay from "@/components/StorageDisplay";
 import SelectCell from "./SelectCell";
+import FolderContentsActionMenu from "../../FolderContentsActionMenu";
 
 type FolderContentRowItem = CrateFile | CrateFolder;
 
@@ -89,7 +90,7 @@ const folderFileTableColumns = (selectMode: boolean) => {
       header: "",
       size: 5,
       minSize: 5,
-      cell: (info) => <p>Placeholder</p>//<FolderOrFileActionsMenu row={info.row.original} />,
+      cell: (info) => <FolderContentsActionMenu row={info.row.original} />,
     }),
   ];
 
