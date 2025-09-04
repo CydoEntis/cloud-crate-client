@@ -8,20 +8,20 @@ import {
 import type { FolderContentRowItem } from "@/features/folder-contents/types/FolderContentRowItem";
 import { MoreVertical } from "lucide-react";
 import { useDeleteFolder } from "../../hooks/folder/mutations/useDeleteFolder";
-import { useDeleteFile } from "../../hooks/file/mutations/useDeleteFile";
+import { useSoftDeleteFile } from "../../hooks/file/mutations/useSoftDeleteFile";
 
 function FolderContentsActionMenu({ row }: { row: FolderContentRowItem }) {
   if ((row as any).isBackRow) return null;
 
-  const deleteFolderMutation = useDeleteFolder();
-  const deleteFileMutation = useDeleteFile();
+  const softDeleteFolderMutation = useDeleteFolder();
+  const softDeleteFileMutation = useSoftDeleteFile();
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleSoftDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (row.isFolder) {
-      deleteFolderMutation.mutate(row.id);
+      softDeleteFolderMutation.mutate(row.id);
     } else {
-      deleteFileMutation.mutate({ fileId: row.id, crateId: row.crateId });
+      softDeleteFileMutation.mutate({ fileId: row.id, crateId: row.crateId });
     }
   };
 
@@ -49,7 +49,7 @@ function FolderContentsActionMenu({ row }: { row: FolderContentRowItem }) {
         )}
         <DropdownMenuItem
           className="hover:bg-background cursor-pointer transition-all duration-300 text-destructive"
-          onClick={handleDelete}
+          onClick={handleSoftDelete}
         >
           Delete
         </DropdownMenuItem>

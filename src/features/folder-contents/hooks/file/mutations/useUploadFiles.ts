@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { uploadFile, type SingleUploadFile } from "@/features/folder-contents/api/file";
+import { uploadFiles } from "@/features/folder-contents/api/file/uploadFiles";
 
-export const useUploadFile = () => {
+export const useUploadFiles = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: SingleUploadFile) => uploadFile(params),
+    mutationFn: uploadFiles,
     onSuccess: (_, variables) => {
       const parentFolderKey = variables.folderId ?? "root";
 
@@ -18,7 +18,17 @@ export const useUploadFile = () => {
       });
 
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+
+      // Show toast
+      const message =
+        variables.files.length === 1
+          ? `${variables.files[0].name} uploaded successfully`
+          : `${variables.files.length} files uploaded successfully`;
+      import("sonner").then(({ toast }) => toast.success(message));
     },
-    onError: (err) => console.error("Upload failed", err),
+    onError: (err: any) => {
+      import("sonner").then(({ toast }) => toast.error("Failed to upload files"));
+      console.error(err);
+    },
   });
 };
