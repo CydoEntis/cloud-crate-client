@@ -21,5 +21,6 @@ export const getUserCrates = async ({
   if (memberType) params.append("MemberType", memberType);
 
   const { data } = await api.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
+  console.log(data);
   return data.value!;
 };

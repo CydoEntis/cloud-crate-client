@@ -8,7 +8,7 @@ type Props = {
 
 const AvailableStorageIndicator = ({ crate }: Props) => {
   const { totalUsedStorage, storageLimit, remainingStorage, breakdownByType } = crate;
-
+  console.log(crate);
   const segments = [
     ...breakdownByType.map((item) => {
       return {

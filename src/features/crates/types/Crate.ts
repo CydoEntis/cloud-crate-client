@@ -1,4 +1,3 @@
-import type { CrateRole } from "@/features/invites/types/CrateRole";
 import type { Member } from "./Member";
 
 export type Crate = {
@@ -6,6 +5,7 @@ export type Crate = {
   name: string;
   color: string;
   owner: Member;
-  usedStorage: number;
+  usedStorageBytes: number;
+  totalStorageBytes: number;
   joinedAt: Date;
 };

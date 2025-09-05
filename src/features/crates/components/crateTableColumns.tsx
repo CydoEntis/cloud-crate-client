@@ -2,9 +2,9 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Crate } from "../types/Crate";
 import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/components/UserAvatar";
-import StorageDisplay from "@/components/StorageDisplay";
 import CrateIndicator from "./CrateIndicator";
 import DateIndicator from "@/components/DateIndicator";
+import StorageRadialProgress from "@/components/StorageProgressbar";
 
 export function crateTableColumns({
   onEdit,
@@ -48,7 +48,12 @@ export function crateTableColumns({
       header: () => <div className="text-right">Storage</div>,
       cell: ({ row }) => (
         <div className="text-right flex justify-end items-center gap-2">
-          <StorageDisplay storage={row.original.usedStorage} />
+          <StorageRadialProgress
+            used={row.original.usedStorageBytes}
+            total={row.original.totalStorageBytes}
+            size={40}
+            strokeWidth={6}
+          />
         </div>
       ),
     },
