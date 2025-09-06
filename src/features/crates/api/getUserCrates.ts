@@ -6,7 +6,7 @@ import api from "@/lib/api";
 export const getUserCrates = async ({
   searchTerm,
   sortBy,
-  orderBy = "Desc",
+  ascending = false,  
   page = 1,
   pageSize = 10,
   memberType = "All",
@@ -15,12 +15,12 @@ export const getUserCrates = async ({
 
   if (searchTerm) params.append("SearchTerm", searchTerm);
   if (sortBy) params.append("SortBy", sortBy);
-  if (orderBy) params.append("OrderBy", orderBy);
-  if (page) params.append("Page", page.toString());
-  if (pageSize) params.append("PageSize", pageSize.toString());
+  params.append("Ascending", ascending.toString()); 
+  params.append("Page", page.toString());
+  params.append("PageSize", pageSize.toString());
   if (memberType) params.append("MemberType", memberType);
 
   const { data } = await api.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
-  console.log(data);
+  console.log(data.value);
   return data.value!;
 };

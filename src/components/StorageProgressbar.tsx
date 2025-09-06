@@ -22,13 +22,10 @@ function StorageRadialProgress({
 }: StorageRadialProgressProps) {
   let rawPercent = total > 0 ? (used / total) * 100 : 0;
 
-  // Clamp actual percent (for text)
   const actualPercent = rawPercent > 0 && rawPercent < 1 ? 1 : rawPercent;
 
-  // Clamp display percent (for arc fill)
   const displayPercent = rawPercent > 0 && rawPercent < 5 ? 5 : rawPercent;
 
-  // ✅ Correct radius calculation so stroke is fully visible
   const radius = size / 2 - strokeWidth / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (displayPercent / 100) * circumference;

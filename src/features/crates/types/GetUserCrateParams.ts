@@ -1,7 +1,7 @@
 export type GetUserCratesParams = {
   searchTerm?: string;
   sortBy?: "Name" | "JoinedAt" | "UsedStorage";
-  orderBy?: "Asc" | "Desc";
+  ascending?: boolean;
   page?: number;
   pageSize?: number;
   memberType?: "All" | "Owner" | "Joined";
