@@ -17,6 +17,9 @@ export const Route = createFileRoute("/(protected)/crates/$crateId")({
 function CrateLayout() {
   const { crateId } = Route.useParams();
   const { data: crate, isLoading, isError } = useCrateDetails(crateId);
+  console.log("CRATE: ", crate);
+
+  
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const { isOpen, close } = useFolderModalStore();
 
