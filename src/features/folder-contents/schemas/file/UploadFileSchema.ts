@@ -2,7 +2,7 @@ import z from "zod";
 import { ACCEPTED_EXTENSIONS } from "../../utils/file/acceptedExtensions";
 
 export const UploadFileSchema = z.object({
-  folderId: z.string().optional(),
+  folderId: z.string(),
   files: z
     .array(z.instanceof(File))
     .min(1, { message: "Please select at least one file." })

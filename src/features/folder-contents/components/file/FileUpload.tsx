@@ -9,7 +9,7 @@ import { ACCEPTED_EXTENSIONS } from "../../utils/file/acceptedExtensions";
 
 type FileUploadProps = {
   crateId: string;
-  folderId?: string;
+  folderId: string;
 }
 
 function FileUpload({ crateId, folderId }: FileUploadProps) {

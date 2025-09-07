@@ -1,4 +1,4 @@
-import type { FileTypeBreakdown } from "@/features/files/types/FileTypeBreakdown";
+import type { FileTypeBreakdown } from "@/features/folder-contents/types/file";
 import type { CrateRole } from "@/features/invites/types/CrateRole";
 
 export type CrateDetails = {
@@ -10,4 +10,5 @@ export type CrateDetails = {
   storageLimit: number;
   breakdownByType: FileTypeBreakdown[];
   remainingStorage: number;
+  rootFolderId: string;
 };

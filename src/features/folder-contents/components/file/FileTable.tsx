@@ -5,11 +5,11 @@ import GenericTableHeader from "@/components/GenericTableHeader";
 import GenericTableRow from "@/components/GenericTableRow";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMediaQuery } from "usehooks-ts";
-import { FileBreadcrumbs } from "./FileBreadcrumbs";
 import type { CrateFile } from "../../types/file/CrateFile";
 import type { CrateFolder } from "../../types/folder/CrateFolder";
 import type { FolderContents } from "../../types/FolderContents";
-import type { FolderBreadcrumb } from "../../types/folder/FolderBreadcrumbs";
+import FolderBreadcrumbs from "../folder/FolderBreadcrumbs";
+import type { FolderBreadcrumb } from "../../types/folder/FolderBreadcrumb";
 
 type FileTableProps = {
   crateId: string;
@@ -110,7 +110,7 @@ function FileTable({
 
   return (
     <div className="space-y-4">
-      <FileBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
+      <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
 
       <Table>
         <GenericTableHeader table={table} />
