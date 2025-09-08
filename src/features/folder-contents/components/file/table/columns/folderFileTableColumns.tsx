@@ -50,11 +50,11 @@ const folderFileTableColumns = (selectMode: boolean, folderContents: FolderConte
       minSize: 20,
       cell: ({ row }) =>
         row.original.isFolder ? (
-          <div className="text-right flex justify-end items-center gap-2">
+          <div className=" flex justify-start items-center gap-2">
             <p>-</p>
           </div>
         ) : (
-          <div className="text-right flex justify-end items-center gap-2">
+          <div className=" flex justify-start items-center gap-2">
             <UserAvatar
               displayName={row.original.uploader.displayName}
               profilePictureUrl={row.original.uploader.profilePictureUrl!}
@@ -70,11 +70,11 @@ const folderFileTableColumns = (selectMode: boolean, folderContents: FolderConte
       minSize: 10,
       cell: ({ row }) =>
         row.original.isFolder ? (
-          <div className="text-right flex justify-end items-center gap-2">
+          <div className=" flex justify-start items-center gap-2">
             <p>-</p>
           </div>
         ) : (
-          <div className="text-right flex justify-end items-center gap-2">
+          <div className=" flex justify-start items-center gap-2">
             <DateIndicator date={row.original.createdAt} />
           </div>
         ),
@@ -86,11 +86,11 @@ const folderFileTableColumns = (selectMode: boolean, folderContents: FolderConte
       minSize: 10,
       cell: ({ row }) =>
         row.original.isFolder ? (
-          <div className="text-right flex justify-end items-center gap-2">
+          <div className=" flex justify-start items-center gap-2">
             <p>-</p>
           </div>
         ) : (
-          <div className="text-right flex justify-end items-center gap-2">
+          <div className=" flex justify-start items-center gap-2">
             <StorageDisplay storage={row.original.sizeInBytes ?? 0} />
           </div>
         ),
