@@ -1,14 +1,15 @@
 export const mimeCategoryColors: Record<string, string> = {
-  Images: "#A855F7", // purple
-  Videos: "#0EA5E9", // blue
-  Audio: "#EC4899", // pink
-  PDF: "#EF4444", // red
-  Text: "#3B82F6", // light blue
-  Spreadsheets: "#10B981", // green
-  Code: "#F7DF1E", // yellow
-  Archives: "#F59E0B", // orange
-  Other: "#374151", // gray fallback
+  Images: "#D783FF",        // purple (from your palette)
+  Videos: "#7BC4FD",        // blue
+  Audio: "#FFCE8E",         // orange/yellow
+   PDF: "#FF6B6B",           // red
+  Text: "#A0D4FF",          // lighter blue
+  Spreadsheets: "#9CEFB2",  // lighter green
+  Code: "#FFE0B3",          // lighter orange
+  Archives: "#C55CFF",      // darker purple
+  Other: "#374151",          // gray fallback
 };
+
 
 export function getMimeCategory(mimeType: string): string {
   if (!mimeType) return "Other";

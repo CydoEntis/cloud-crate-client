@@ -42,10 +42,10 @@ export default function SearchInputField({
   );
 
   return (
-    <div className="relative w-full max-w-[800px] bg-card rounded-xl">
+    <div className="relative w-full max-w-[800px] bg-background rounded-md">
       {label && <label className="block mb-2 text-lg font-semibold">{label}</label>}
-      <div className="relative h-12">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-5 h-5 pointer-events-none" />
+      <div className="relative h-9">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-4 h-4 pointer-events-none" />
         <Input
           ref={inputRef}
           value={internalValue}
@@ -53,7 +53,7 @@ export default function SearchInputField({
           placeholder={placeholder}
           type="text"
           autoComplete="off"
-          className="border-input pl-12 h-full rounded-lg py-3 text-foreground 
+          className="border-input pl-12 h-full rounded-lg py-3 text-foreground  
              focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0"
         />
       </div>
