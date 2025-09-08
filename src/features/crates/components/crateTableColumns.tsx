@@ -31,11 +31,11 @@ export function crateTableColumns({
       accessorKey: "owner",
       size: 20,
       minSize: 20,
-      header: () => <div className="text-right">Owner</div>,
+      header: () => <div className="text-left">Owner</div>,
       cell: ({ row }) => {
         const { displayName, profilePicture, email } = row.original.owner;
         return (
-          <div className="text-right flex justify-end items-center gap-2">
+          <div className="text-left flex justify-start items-center gap-2">
             <UserAvatar displayName={displayName} profilePictureUrl={profilePicture} email={email} />
           </div>
         );
@@ -45,9 +45,9 @@ export function crateTableColumns({
       accessorKey: "storage",
       size: 10,
       minSize: 10,
-      header: () => <div className="text-right">Storage</div>,
+      header: () => <div className="text-left">Storage</div>,
       cell: ({ row }) => (
-        <div className="text-right flex justify-end items-center gap-2">
+        <div className="text-left flex justify-start items-center gap-2">
           <StorageProgressbar used={300000000} total={row.original.totalStorageBytes} />
         </div>
       ),
@@ -56,9 +56,9 @@ export function crateTableColumns({
       accessorKey: "joinedAt",
       size: 10,
       minSize: 10,
-      header: () => <div className="text-right">Joined</div>,
+      header: () => <div className="text-left">Joined</div>,
       cell: ({ row }) => (
-        <div className="text-right flex justify-end items-center gap-2">
+        <div className="text-left flex justify-start items-center gap-2">
           <DateIndicator date={row.original.owner.joinedAt} />
         </div>
       ),

@@ -12,8 +12,8 @@ export default function OrderToggle({ ascending, onChange, label }: OrderToggleP
     <div className="flex flex-col gap-1">
       {label && <span className="text-sm text-muted-foreground px-1">{label}</span>}
       <Button
-        variant="secondary"
-        className="p-2 cursor-pointer rounded-xl"
+        variant="outline"
+        className="p-2 cursor-pointer rounded-md border-input"
         size="icon"
         onClick={() => onChange(ascending)}
         aria-label={`Sort order: ${ascending ? "Ascending" : "Descending"}`}

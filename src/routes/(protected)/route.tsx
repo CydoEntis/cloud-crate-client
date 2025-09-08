@@ -29,18 +29,14 @@ function RouteComponent() {
       {user && <CreateCrateModal user={user} />}
       <InviteModal />
       <AppSidebar />
-      <SidebarInset className="md:py-4 md:pr-4 bg-background">
+      <SidebarInset className="md:py-4 md:pr-4 bg-sidebar">
         <header className="flex h-12 rounded-t-xl shrink-0 items-center gap-2  px-4 bg-background">
           <SidebarTrigger className="-ml-1 text-foreground" />
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
         </header>
-<div
-            className="flex flex-1 flex-col gap-4 sm:p-2 lg:p-10 
-               bg-sidebar rounded-xl"
-  
-          >
-            <Outlet />
-          </div>
+        <div className="flex flex-1 flex-col gap-4 sm:p-2 lg:p-10  bg-background">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

@@ -11,7 +11,7 @@ function GenericTableHeader<TData>({ table, className }: GenericTableHeaderProps
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow key={headerGroup.id} className="p-0 border-none text-foreground bg-background">
+        <TableRow key={headerGroup.id} className="p-0 border-none text-foreground hover:bg-transparent">
           {headerGroup.headers.map((header, index) => {
             if (header.isPlaceholder) return null;
 
@@ -19,10 +19,7 @@ function GenericTableHeader<TData>({ table, className }: GenericTableHeaderProps
               <TableHead
                 key={header.id}
                 className={clsx(
-                  "px-4 py-2 font-semibold bg-background",
-                  index === 0 && "rounded-tl-xl", // left-most cell
-                  index === headerGroup.headers.length - 1 && "rounded-tr-xl", // right-most cell
-                  index === 0 ? "text-left" : "text-right",
+                  "px-4 py-2 font-semibold text-muted-foreground border-b border-accent hover:bg-transparent",
                   className
                 )}
                 style={{

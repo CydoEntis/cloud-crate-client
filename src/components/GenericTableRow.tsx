@@ -33,9 +33,8 @@ function GenericTableRow<TData>({
   };
 
   const rowClassName = clsx(
-    "transition-colors cursor-pointer border-transparent border-b-2 !border-b-background !bg-accent/30",
-
-    "hover:!bg-background/50",
+    "transition-colors cursor-pointer border-transparent !border-b border-accent",
+    "hover:!bg-muted/50",
     typeof className === "function" ? className(row) : className
   );
 
@@ -51,7 +50,7 @@ function GenericTableRow<TData>({
       className={rowClassName}
     >
       {row.getVisibleCells().map((cell) => (
-        <TableCell key={cell.id} className={clsx("p-4 text-foreground", cell.column.id === "actions" && "justify-end flex")}>
+        <TableCell key={cell.id} className={clsx("px-4 py-3 text-foreground", cell.column.id === "actions" && "justify-end flex")}>
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </TableCell>
       ))}

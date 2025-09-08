@@ -7,6 +7,7 @@ import type { Crate } from "../types/Crate";
 import { useNavigate } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMediaQuery } from "usehooks-ts";
+import { Card } from "@/components/ui/card";
 
 type CrateTableProps = {
   data: Crate[];
@@ -72,14 +73,14 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
   const getRowClass = () => "hover:bg-muted/20";
 
   return (
-    <Table>
+    <Table className="">
       <GenericTableHeader table={table} />
       <TableBody>
         {isLoading
           ? Array.from({ length: 20 }).map((_, i) => (
               <tr key={i} className="h-10">
                 <td colSpan={columns.length}>
-                  <Skeleton className="w-full h-10 mt-2" />
+                  <Skeleton className="w-full h-10 mt-2 bg-accent" />
                 </td>
               </tr>
             ))
