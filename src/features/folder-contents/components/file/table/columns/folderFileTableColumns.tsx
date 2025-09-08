@@ -1,6 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import NameCell from "./NameCell";
-// import FolderOrFileActionsMenu from "../../FolderOrFileActionsMenu";
 import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
 import type { CrateFolder } from "@/features/folder-contents/types/folder/CrateFolder";
 import UserAvatar from "@/components/UserAvatar";
@@ -8,23 +7,35 @@ import DateIndicator from "@/components/DateIndicator";
 import StorageDisplay from "@/components/StorageDisplay";
 import SelectCell from "./SelectCell";
 import FolderContentsActionMenu from "../../FolderContentsActionMenu";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 
-type FolderContentRowItem = CrateFile | CrateFolder;
+export type FolderContentRowItem = CrateFile | CrateFolder;
 
 const columnHelper = createColumnHelper<FolderContentRowItem>();
 
-const folderFileTableColumns = (selectMode: boolean) => {
+const folderFileTableColumns = (selectMode: boolean, folderContents: FolderContentRowItem[]) => {
   const columns = [
-    ...(selectMode
-      ? [
-          columnHelper.display({
-            id: "select",
-            size: 2,
-            minSize: 2,
-            cell: (info) => <SelectCell row={info.row} />,
-          }),
-        ]
-      : []),
+    columnHelper.display({
+      id: "select",
+      size: 2,
+      minSize: 2,
+      header: () => {
+        const { fileIds, folderIds, selectAll, deselectAll } = useSelectionStore();
+
+        const allSelected =
+          folderContents.length > 0 &&
+          folderContents.every((item) => (item.isFolder ? folderIds.has(item.id) : fileIds.has(item.id)));
+
+        const handleToggleAll = () => {
+          if (allSelected) deselectAll();
+          else selectAll(folderContents);
+        };
+
+        return <Checkbox checked={allSelected} onCheckedChange={handleToggleAll} />;
+      },
+      cell: (info) => <SelectCell row={info.row} />,
+    }),
 
     columnHelper.accessor("name", {
       header: () => <div className="text-left">Name</div>,

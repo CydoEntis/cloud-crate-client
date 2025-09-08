@@ -1,6 +1,11 @@
 // src/features/folder/store/useSelectionStore.ts
 import { create } from "zustand";
 
+interface FolderContentRowItem {
+  id: string;
+  isFolder: boolean;
+}
+
 interface SelectionState {
   fileIds: Set<string>;
   folderIds: Set<string>;
@@ -8,6 +13,9 @@ interface SelectionState {
   toggleFile: (id: string) => void;
   toggleFolder: (id: string) => void;
   clearSelection: () => void;
+
+  selectAll: (items: FolderContentRowItem[]) => void;
+  deselectAll: () => void;
 
   isFileSelected: (id: string) => boolean;
   isFolderSelected: (id: string) => boolean;
@@ -37,6 +45,15 @@ export const useSelectionStore = create<SelectionState>((set, get) => ({
     }),
 
   clearSelection: () => set({ fileIds: new Set(), folderIds: new Set() }),
+
+  selectAll: (items: FolderContentRowItem[]) =>
+    set(() => {
+      const fileIds = new Set(items.filter((i) => !i.isFolder).map((i) => i.id));
+      const folderIds = new Set(items.filter((i) => i.isFolder).map((i) => i.id));
+      return { fileIds, folderIds };
+    }),
+
+  deselectAll: () => set({ fileIds: new Set(), folderIds: new Set() }),
 
   isFileSelected: (id) => get().fileIds.has(id),
   isFolderSelected: (id) => get().folderIds.has(id),

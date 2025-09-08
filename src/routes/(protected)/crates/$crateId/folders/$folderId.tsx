@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
@@ -24,6 +24,8 @@ import CrateSettingsPanel from "@/features/crates/components/CrateSettingsPanel"
 import { CrateRole } from "@/features/invites/types/CrateRole";
 import { useFolderModalStore } from "@/features/folder-contents/store/useFolderModalStore";
 import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
+import type { CrateFolder } from "@/features/folder-contents/types/folder/CrateFolder";
+import BulkActionBar from "@/features/bulk/components/BulkActionToolbar";
 
 const allowedOrderByValues = ["Name", "CreatedAt", "Size"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];
@@ -97,7 +99,13 @@ function CrateFolderPage() {
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
 
-  console.log(isOpen);
+  // Flatten contents for table columns
+  const flattenedContents = useMemo<(CrateFile | CrateFolder)[]>(() => {
+    return [...(folderContents.folders ?? []), ...(folderContents.files ?? [])];
+  }, [folderContents]);
+
+  // Memoized columns
+  const columns = useMemo(() => folderFileTableColumns(selectMode, flattenedContents), [selectMode, flattenedContents]);
 
   if (isCrateLoading || isLoading) return <p>Loading...</p>;
   if (isCrateError || !crate || error) return <p>Failed to load crate or folder info</p>;
@@ -134,8 +142,6 @@ function CrateFolderPage() {
         onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
         onOpenCreateFolder={() => setIsCreateFolderOpen(true)}
         allowedOrderByValues={allowedOrderByValues}
-        selectMode={selectMode}
-        onToggleSelectMode={setSelectMode}
         crateId={crateId}
         folderId={folderId}
         folderDestinations={availableFolders}
@@ -145,7 +151,7 @@ function CrateFolderPage() {
       <FileTable
         crateId={crateId}
         data={folderContents}
-        columns={folderFileTableColumns(selectMode)}
+        columns={columns}
         breadcrumbs={breadcrumbs}
         onNavigate={handleNavigate}
         onDropItem={(item, targetFolderId) =>
@@ -165,8 +171,14 @@ function CrateFolderPage() {
           onPageSizeChange={(newSize) => setSearchParams({ pageSize: newSize, page: 1 })}
         />
       )}
+
       {/* Modals */}
-      <CreateFolderModal isOpen={isCreateFolderOpen} onClose={() => setIsCreateFolderOpen(false)} crateId={crateId} parentFolderId={folderId}/>
+      <CreateFolderModal
+        isOpen={isCreateFolderOpen}
+        onClose={() => setIsCreateFolderOpen(false)}
+        crateId={crateId}
+        parentFolderId={folderId}
+      />
       {previewFile && (
         <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />
       )}
@@ -178,6 +190,7 @@ function CrateFolderPage() {
         initialName={crate.name}
         initialColor={crate.color}
       />
+      <BulkActionBar crateId={crateId} folderId={folderId} folderDestinations={availableFolders} refetch={refetch} />
     </section>
   );
 }

@@ -10,11 +10,8 @@ function SelectCell({ row }: { row: Row<FolderContentRowItem> }) {
   const isSelected = item.isFolder ? isFolderSelected(item.id) : isFileSelected(item.id);
 
   const handleChange = () => {
-    if (item.isFolder) {
-      toggleFolder(item.id);
-    } else {
-      toggleFile(item.id);
-    }
+    if (item.isFolder) toggleFolder(item.id);
+    else toggleFile(item.id);
   };
 
   return (

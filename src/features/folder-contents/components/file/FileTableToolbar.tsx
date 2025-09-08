@@ -34,8 +34,6 @@ type Props = {
   onAscendingChange: (val: boolean) => void;
   onOpenCreateFolder: () => void;
   allowedOrderByValues: readonly OrderBy[];
-  selectMode: boolean;
-  onToggleSelectMode: (enabled: boolean) => void;
   folderDestinations?: FolderDestination[];
   refetch?: () => void;
 };
@@ -57,12 +55,9 @@ export default function FileTableToolbar({
   onAscendingChange,
   onOpenCreateFolder,
   allowedOrderByValues,
-  selectMode,
-  onToggleSelectMode,
   folderDestinations = [],
   refetch,
 }: Props) {
-
   console.log(folderId);
   const [moveTarget, setMoveTarget] = useState<string>("");
 
@@ -125,45 +120,9 @@ export default function FileTableToolbar({
       </div>
 
       <div className="flex items-center gap-2">
-        {selectMode && selectedItems.length > 0 && (
-          <div className="flex items-center gap-2">
-            {folderDestinations.length > 0 && (
-              <div className="flex items-center gap-1">
-                <Select value={moveTarget} onValueChange={setMoveTarget}>
-                  <SelectTrigger className="w-[180px] border-none bg-input text-foreground">
-                    <SelectValue placeholder="Move to..." />
-                  </SelectTrigger>
-                  <SelectContent className="border-none shadow-md rounded-xl bg-card">
-                    {folderDestinations.map((f) => (
-                      <SelectItem key={f.id} value={f.id}>
-                        {f.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button className="text-foreground bg-secondary" onClick={handleMove} disabled={!moveTarget}>
-                  Move
-                </Button>
-              </div>
-            )}
-
-            <Button variant="secondary" onClick={handleDelete}>
-              <Trash2 />
-            </Button>
-          </div>
-        )}
-
         <Button onClick={onOpenCreateFolder}>
           <Plus className="mr-2 h-4 w-4" />
           New Folder
-        </Button>
-
-        <Button
-          className="bg-secondary text-foreground"
-          variant="default"
-          onClick={() => onToggleSelectMode(!selectMode)}
-        >
-          {selectMode ? <X /> : <SquareCheck />}
         </Button>
       </div>
     </div>

@@ -1,13 +1,13 @@
 export const mimeCategoryColors: Record<string, string> = {
-  Images: "#D783FF",        // purple (from your palette)
-  Videos: "#7BC4FD",        // blue
-  Audio: "#FFCE8E",         // orange/yellow
-   PDF: "#FF6B6B",           // red
-  Text: "#A0D4FF",          // lighter blue
-  Spreadsheets: "#9CEFB2",  // lighter green
-  Code: "#FFE0B3",          // lighter orange
-  Archives: "#C55CFF",      // darker purple
-  Other: "#374151",          // gray fallback
+  Images: "#773bbf",        // purple (matches your palette)
+  Videos: "#fad937",        // yellow
+  Audio: "#faa032",         // orange
+  PDF: "#f53141",           // red 
+  Text: "#1793e6",          // lighter variant of blue
+  Spreadsheets: "#55b33b",  // green
+  Code: "#586ac4",          // lighter variant of orange
+  Archives: "#7a5e37",      // darker purple variant
+  Other: "#374151",         // gray fallback
 };
 
 

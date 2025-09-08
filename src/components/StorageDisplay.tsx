@@ -8,8 +8,8 @@ type StorageDisplayProps = {
 function StorageDisplay({ storage }: StorageDisplayProps) {
   return (
     <div className="text-right flex items-center gap-2">
-      <HardDrive className="w-4 h-4 text-muted-foreground" />
       <p className="text-muted-foreground">{formatBytes(storage)}</p>
+      <HardDrive className="w-4 h-4 text-muted-foreground" />
     </div>
   );
 }
