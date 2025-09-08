@@ -29,7 +29,6 @@ function CreateCrateModal({ user }: CreateCrateModalProps) {
   const maxGb = Math.floor(user.allocatedStorageLimitBytes / BytesPerGb);
   const remainingGb = Math.floor(user.remainingAllocatableBytes / BytesPerGb);
 
-  console.log("Remaining allocatable storage: ", remainingGb);
 
   // Minimum allocation is always 1GB if there is enough remaining space
   const minAlloc = remainingGb >= 1 ? 1 : remainingGb > 0 ? remainingGb : 0;

@@ -1,48 +1,78 @@
 import { motion } from "framer-motion";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatBytes } from "@/lib/formatBytes";
 
-type StorageRadialProgressProps = {
+type StorageProgressProps = {
   used: number;
   total: number;
-  size?: number; // overall px size of circle
-  strokeWidth?: number; // thickness of circle
+  width?: number; 
+  size?: number;
+  strokeWidth?: number; 
+  variant?: "linear" | "radial";
 };
 
-function StorageRadialProgress({
+export default function StorageProgress({
   used,
   total,
-  size = 48,
-  strokeWidth = 6,
-}: StorageRadialProgressProps) {
-  let rawPercent = total > 0 ? (used / total) * 100 : 0;
+  width = 100,
+  size = 36,
+  strokeWidth = 4,
+  variant = "radial",
+}: StorageProgressProps) {
+  const rawPercent = total > 0 ? (used / total) * 100 : 0;
 
-  const actualPercent = rawPercent > 0 && rawPercent < 1 ? 1 : rawPercent;
-
+  // Ensure small usage is still visible
   const displayPercent = rawPercent > 0 && rawPercent < 5 ? 5 : rawPercent;
+  const percent = Math.min(displayPercent, 100);
 
+  const remaining = total - used;
+
+  if (variant === "linear") {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div style={{ width }} className="relative">
+              <div className="flex items-center gap-2">
+                <Progress value={percent} className="h-1.5 rounded-md bg-secondary" />
+                <span className="text-xs font-semibold text-foreground">{Math.round(rawPercent)}%</span>
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="text-xs">{formatBytes(remaining)} remaining</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  // Radial variant
   const radius = size / 2 - strokeWidth / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (displayPercent / 100) * circumference;
+  const offset = circumference - (percent / 100) * circumference;
 
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div
-            className="relative flex items-center justify-center"
-            style={{ width: size, height: size }}
-          >
-            {/* Background track */}
-            <CircleSvg size={size} radius={radius} strokeWidth={strokeWidth} />
+          <div className="relative" style={{ width: size, height: size }}>
+            {/* Background circle */}
+            <svg width={size} height={size} className="absolute rotate-[-90deg]">
+              <circle
+                cx={size / 2}
+                cy={size / 2}
+                r={radius}
+                stroke="currentColor"
+                strokeWidth={strokeWidth}
+                className="text-secondary"
+                fill="transparent"
+              />
+            </svg>
 
-            {/* Animated progress arc */}
-            <svg width={size} height={size} className="rotate-[-90deg] absolute">
+            {/* Animated progress */}
+            <svg width={size} height={size} className="absolute rotate-[-90deg]">
               <motion.circle
                 cx={size / 2}
                 cy={size / 2}
@@ -60,44 +90,16 @@ function StorageRadialProgress({
               />
             </svg>
 
-            {/* Centered percent text */}
-            <span className="absolute text-[11px] font-bold text-foreground">
-              {Math.round(actualPercent)}%
+            {/* Percent text */}
+            <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-foreground">
+              {Math.round(rawPercent)}%
             </span>
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>
-            {formatBytes(used)} / {formatBytes(total)}
-          </p>
+          <p className="text-xs">{formatBytes(remaining)} remaining</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  );
-}
-
-export default StorageRadialProgress;
-
-function CircleSvg({
-  size,
-  radius,
-  strokeWidth,
-}: {
-  size: number;
-  radius: number;
-  strokeWidth: number;
-}) {
-  return (
-    <svg width={size} height={size} className="rotate-[-90deg] absolute">
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-        className="text-secondary"
-        fill="transparent"
-      />
-    </svg>
   );
 }

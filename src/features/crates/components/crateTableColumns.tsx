@@ -4,7 +4,7 @@ import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/components/UserAvatar";
 import CrateIndicator from "./CrateIndicator";
 import DateIndicator from "@/components/DateIndicator";
-import StorageRadialProgress from "@/components/StorageProgressbar";
+import StorageProgressbar from "@/components/StorageProgressbar";
 
 export function crateTableColumns({
   onEdit,
@@ -48,12 +48,7 @@ export function crateTableColumns({
       header: () => <div className="text-right">Storage</div>,
       cell: ({ row }) => (
         <div className="text-right flex justify-end items-center gap-2">
-          <StorageRadialProgress
-            used={row.original.usedStorageBytes}
-            total={row.original.totalStorageBytes}
-            size={40}
-            strokeWidth={6}
-          />
+          <StorageProgressbar used={300000000} total={row.original.totalStorageBytes} />
         </div>
       ),
     },
@@ -70,7 +65,7 @@ export function crateTableColumns({
     },
     {
       id: "actions",
-      header: () => <div className="text-right"> </div>, // always right aligned
+      header: () => <div className="text-right"> </div>,
       size: 5,
       minSize: 5,
       cell: ({ row }) => {

@@ -10,7 +10,6 @@ function GetMoreStorage({ user }: GetMoreStorageProps) {
   const percent = user.allocatedStorageLimitBytes > 0 ? (user.usedAccountStorageBytes / user!.allocatedStorageLimitBytes) * 100 : 0;
   const minPercent = 5; // always show at least 5% so the progressbar always looks a little full.
   const displayPercent = percent > 0 && percent < minPercent ? minPercent : percent;
-  console.log(user.allocatedStorageLimitBytes);
   return (
     <div className="space-y-2 w-full">
       {/* progress bar */}
