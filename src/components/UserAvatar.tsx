@@ -1,7 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useUserStore } from "@/features/auth";
-import type { Crate } from "@/features/crates/types/Crate";
 
 type UserAvatarProps = {
   displayName: string;
@@ -10,27 +7,22 @@ type UserAvatarProps = {
 };
 
 function UserAvatar({ displayName, email, profilePictureUrl }: UserAvatarProps) {
-  const { user } = useUserStore.getState();
-
   return (
-    <div className="flex items-center">
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="flex items-center gap-1">
-            <Avatar className="h-6 w-6 cursor-pointer">
-              {profilePictureUrl ? (
-                <AvatarImage src={profilePictureUrl} alt={displayName} />
-              ) : (
-                <AvatarFallback>{displayName?.[0] ?? "?"}</AvatarFallback>
-              )}
-            </Avatar>
-            {user?.email === email && <span className="text-xs text-muted-foreground">(me)</span>}
-          </div>
-        </TooltipTrigger>
-        <TooltipContent side="top">
-          <p>{displayName}</p>
-        </TooltipContent>
-      </Tooltip>
+    <div className="flex items-center gap-2">
+      <Avatar className="h-8 w-8">
+        {profilePictureUrl ? (
+          <AvatarImage src={profilePictureUrl} alt={displayName} />
+        ) : (
+          <AvatarFallback>{displayName ?? "-"}</AvatarFallback>
+        )}
+      </Avatar>
+
+      <div className="flex flex-col leading-tight text-left">
+        <span className="font-medium text-sm">{displayName}</span>
+        <span className="text-xs text-muted-foreground">
+          {email}
+        </span>
+      </div>
     </div>
   );
 }
