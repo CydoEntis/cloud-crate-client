@@ -6,7 +6,7 @@ import type { FolderContents } from "../../types/FolderContents";
 
 export function useFolderCreation(
   crateId: string,
-  folderId: string | null,
+  folderId: string,
   refetch: () => Promise<QueryObserverResult<FolderContents>>
 ) {
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
@@ -18,7 +18,7 @@ export function useFolderCreation(
     const payload: CreateFolder = {
       name,
       crateId,
-      parentFolderId: folderId === "root" ? null : folderId,
+      parentFolderId: folderId,
       color,
     };
 

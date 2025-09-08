@@ -5,7 +5,7 @@ import z from "zod";
 
 import CrateTable from "@/features/crates/components/CrateTable";
 import { crateTableColumns } from "@/features/crates/components/crateTableColumns";
-import { useGetUserCrates } from "@/features/crates/hooks/queries/useGetUserCrates";
+import { useGetUserCrates } from "@/features/crates/hooks/queries/useGetCrates";
 import UpdateCrateModal from "@/features/crates/components/UpdateCrateModal";
 import SearchInputField from "@/components/SearchInputField";
 import OrderToggle from "@/components/OrderToggle";

@@ -9,7 +9,7 @@ export const useCreateFolder = () => {
   return useMutation({
     mutationFn: (data: CreateFolder) => createFolder(data),
     onSuccess: (result, data) => {
-      const parentFolderKey = data.parentFolderId ?? "root";
+      const parentFolderKey = data.parentFolderId;
 
       queryClient.invalidateQueries({
         predicate: (query) =>

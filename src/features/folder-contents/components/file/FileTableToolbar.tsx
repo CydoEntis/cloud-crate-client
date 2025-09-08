@@ -62,6 +62,8 @@ export default function FileTableToolbar({
   folderDestinations = [],
   refetch,
 }: Props) {
+
+  console.log(folderId);
   const [moveTarget, setMoveTarget] = useState<string>("");
 
   const { fileIds, folderIds, getFinalMoveSelection, clearSelection } = useSelectionStore();

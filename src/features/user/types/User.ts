@@ -5,14 +5,12 @@ export type User = {
   email: string;
   displayName: string;
   profilePictureUrl?: string;
-
   plan: SubscriptionPlan;
-
-  maxStorageBytes: number; 
-  usedStorageBytes: number; 
+  allocatedStorageLimitBytes: number; 
+  usedAccountStorageBytes: number; 
+  remainingAllocatableBytes: number;
   createdAt: string;
   updatedAt: string;
-
   canCreateMoreCrates: boolean;
   crateCount: number;
 };

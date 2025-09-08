@@ -18,20 +18,30 @@ type CreateCrateModalProps = {
   user: User;
 };
 
-export default function CreateCrateModal({ user }: CreateCrateModalProps) {
+function CreateCrateModal({ user }: CreateCrateModalProps) {
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
 
   const BytesPerGb = 1024 * 1024 * 1024;
 
-  // Normalize user storage into GB
-  const minAlloc = Math.max(1, Math.ceil(user.usedStorageBytes / BytesPerGb)); // in GB
-  const maxAlloc = Math.floor(user.maxStorageBytes / BytesPerGb); // in GB
+  // Normalize storage values into GB
+  const usedGb = Math.floor(user.usedAccountStorageBytes / BytesPerGb);
+  const maxGb = Math.floor(user.allocatedStorageLimitBytes / BytesPerGb);
+  const remainingGb = Math.floor(user.remainingAllocatableBytes / BytesPerGb);
+
+  console.log("Remaining allocatable storage: ", remainingGb);
+
+  // Minimum allocation is always 1GB if there is enough remaining space
+  const minAlloc = remainingGb >= 1 ? 1 : remainingGb > 0 ? remainingGb : 0;
+  const maxAlloc = Math.max(remainingGb, minAlloc); // Ensure max is at least minAlloc
+
+  // Default allocation for the form
+  const defaultAlloc = Math.min(Math.max(minAlloc, 1), remainingGb);
 
   // Adjust schema: still validates allocatedStorage in GB
   const schema = createCreateCrateSchema({
-    usedStorageBytes: user.usedStorageBytes,
-    maxStorageBytes: user.maxStorageBytes,
+    usedAccountStorageBytes: user.usedAccountStorageBytes,
+    allocatedStorageLimitBytes: user.allocatedStorageLimitBytes,
   });
   type FormValues = z.infer<typeof schema> & {
     allocatedStorageGb: number;
@@ -42,7 +52,7 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
     defaultValues: {
       name: "",
       color: "#ffffff",
-      allocatedStorageGb: minAlloc, // default in GB
+      allocatedStorageGb: defaultAlloc,
     },
   });
 
@@ -58,8 +68,7 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
     try {
       await createCrate({
         ...data,
-        // Convert GB → MB for API if needed
-        allocatedStorageMb: data.allocatedStorageGb * 1024,
+        allocatedStorageMb: data.allocatedStorageGb * 1024, // convert GB → MB
       });
       toast.success("Crate created successfully");
       onClose();
@@ -108,7 +117,7 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
               control={form.control}
               name="color"
               render={({ field }) => (
-                <FormItem>  
+                <FormItem>
                   <FormLabel>Color</FormLabel>
                   <FormControl>
                     <ColorPicker control={form.control} name={field.name} />
@@ -126,18 +135,22 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
                 <FormItem>
                   <FormLabel>Allocate Storage (GB)</FormLabel>
                   <FormControl>
-                    <div className="flex flex-col">
-                      <Slider
-                        value={[field.value ?? minAlloc]} // always a number
-                        min={minAlloc}
-                        max={maxAlloc}
-                        step={1} // GB increments
-                        onValueChange={(val) => field.onChange(val[0])}
-                      />
-                      <div className="mt-2 text-sm text-muted-foreground">
-                        {field.value} GB selected
+                    {remainingGb > 0 ? (
+                      <div className="flex flex-col">
+                        <Slider
+                          value={[field.value ?? defaultAlloc]}
+                          min={minAlloc}
+                          max={maxAlloc}
+                          step={1}
+                          onValueChange={(val) => field.onChange(val[0])}
+                        />
+                        <div className="mt-2 text-sm text-muted-foreground">
+                          {field.value} GB selected (Remaining: {remainingGb} GB)
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <p className="text-sm text-red-500 font-medium">No remaining storage available.</p>
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -146,7 +159,7 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
 
             {globalError && <p className="text-sm text-red-500 font-medium">{globalError}</p>}
 
-            <Button type="submit" disabled={isPending} className="text-secondary">
+            <Button type="submit" disabled={isPending || remainingGb === 0} className="text-secondary">
               Create Crate
             </Button>
           </form>
@@ -155,3 +168,5 @@ export default function CreateCrateModal({ user }: CreateCrateModalProps) {
     </Dialog>
   );
 }
+
+export default CreateCrateModal;

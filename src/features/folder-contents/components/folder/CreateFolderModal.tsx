@@ -14,7 +14,7 @@ type CreateFolderModalProps = {
   isOpen: boolean;
   onClose: () => void;
   crateId: string;
-  parentFolderId?: string | null;
+  parentFolderId: string,
 };
 
 type FormValues = Pick<CreateFolder, "name" | "color">;
@@ -31,7 +31,7 @@ export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: 
     try {
       await createFolder({
         crateId,
-        parentFolderId: parentFolderId ?? "root",
+        parentFolderId: parentFolderId,
         name: data.name,
         color: data.color,
       });

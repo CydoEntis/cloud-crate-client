@@ -1,3 +1,3 @@
 export * from "./createCrate";
-export * from "./getUserCrates";
+export * from "./getCrates";
 export * from "./getCrateDetails";

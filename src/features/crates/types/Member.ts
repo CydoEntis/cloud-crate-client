@@ -6,4 +6,5 @@ export type Member = {
   displayName: string;
   profilePicture: string;
   role: CrateRole;
+  joinedAt: string | Date;
 }

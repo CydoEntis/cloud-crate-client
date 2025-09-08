@@ -2,8 +2,8 @@
 import z from "zod";
 
 export type StorageDetails = {
-  usedStorageBytes: number;
-  maxStorageBytes: number;
+  usedAccountStorageBytes: number;
+  allocatedStorageLimitBytes: number;
 };
 
 /**
@@ -12,8 +12,8 @@ export type StorageDetails = {
  */
 export const createCreateCrateSchema = (storage: StorageDetails) => {
   const BytesPerGb = 1024 * 1024 * 1024;
-  const usedGb = Math.ceil(storage.usedStorageBytes / BytesPerGb);
-  const maxGb = Math.floor(storage.maxStorageBytes / BytesPerGb);
+  const usedGb = Math.ceil(storage.usedAccountStorageBytes / BytesPerGb);
+  const maxGb = Math.floor(storage.allocatedStorageLimitBytes / BytesPerGb);
 
   // Minimum 1 GB, and at least usedGb
   const minGb = Math.max(1, usedGb);
@@ -28,7 +28,6 @@ export const createCreateCrateSchema = (storage: StorageDetails) => {
       .string()
       .min(1, { message: "Color is required." })
       .regex(/^#([0-9A-Fa-f]{6})$/, { message: "Color is invalid." }),
-    // NOTE: field name is allocatedStorageGb and message uses GB units
     allocatedStorageGb: z
       .number({
         required_error: "Allocated storage is required",

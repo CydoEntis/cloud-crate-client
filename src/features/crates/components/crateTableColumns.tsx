@@ -64,7 +64,7 @@ export function crateTableColumns({
       header: () => <div className="text-right">Joined</div>,
       cell: ({ row }) => (
         <div className="text-right flex justify-end items-center gap-2">
-          <DateIndicator date={row.original.joinedAt} />
+          <DateIndicator date={row.original.owner.joinedAt} />
         </div>
       ),
     },

@@ -1,4 +1,4 @@
-export type GetUserCratesParams = {
+export type GetCrateParams = {
   searchTerm?: string;
   sortBy?: "Name" | "JoinedAt" | "UsedStorage";
   ascending?: boolean;

@@ -97,6 +97,8 @@ function CrateFolderPage() {
   const { handleNavigate } = useFolderNavigation(crateId);
   const { handleDropItem } = useFolderDragAndDrop(crateId);
 
+  console.log(isOpen);
+
   if (isCrateLoading || isLoading) return <p>Loading...</p>;
   if (isCrateError || !crate || error) return <p>Failed to load crate or folder info</p>;
 
@@ -163,9 +165,8 @@ function CrateFolderPage() {
           onPageSizeChange={(newSize) => setSearchParams({ pageSize: newSize, page: 1 })}
         />
       )}
-
       {/* Modals */}
-      <CreateFolderModal isOpen={isOpen} onClose={close} crateId={crateId} />
+      <CreateFolderModal isOpen={isCreateFolderOpen} onClose={() => setIsCreateFolderOpen(false)} crateId={crateId} parentFolderId={folderId}/>
       {previewFile && (
         <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={() => setPreviewFile(null)} />
       )}

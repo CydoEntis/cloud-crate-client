@@ -7,10 +7,10 @@ type GetMoreStorageProps = {
 };
 
 function GetMoreStorage({ user }: GetMoreStorageProps) {
-  const percent = user.maxStorageBytes > 0 ? (user.usedStorageBytes / user!.maxStorageBytes) * 100 : 0;
+  const percent = user.allocatedStorageLimitBytes > 0 ? (user.usedAccountStorageBytes / user!.allocatedStorageLimitBytes) * 100 : 0;
   const minPercent = 5; // always show at least 5% so the progressbar always looks a little full.
   const displayPercent = percent > 0 && percent < minPercent ? minPercent : percent;
-
+  console.log(user.allocatedStorageLimitBytes);
   return (
     <div className="space-y-2 w-full">
       {/* progress bar */}
@@ -20,7 +20,7 @@ function GetMoreStorage({ user }: GetMoreStorageProps) {
 
       {/* label */}
       <p className="text-sm text-muted-foreground text-center flex justify-between items-center">
-        {formatBytes(user!.usedStorageBytes)} of {formatBytes(user!.maxStorageBytes)} used
+        {formatBytes(user!.usedAccountStorageBytes)} of {formatBytes(user!.allocatedStorageLimitBytes)} used
       </p>
       <Button className="w-full cursor-pointer" variant="outline">
         Get More Storage
