@@ -8,7 +8,6 @@ type OrderToggleProps = {
 };
 
 export default function OrderToggle({ ascending, onChange, label }: OrderToggleProps) {
-  console.log("ascending:", ascending);
   return (
     <div className="flex flex-col gap-1">
       {label && <span className="text-sm text-muted-foreground px-1">{label}</span>}

@@ -1,6 +1,5 @@
 import SearchInputField from "@/components/SearchInputField";
 import OrderToggle from "@/components/OrderToggle";
-
 import SortBySelect from "@/components/OrderBySelect";
 import { allowedSortByValues, sortByLabels } from "../utils/crate.constants";
 import type { SortBy } from "../types/SortBy";
@@ -37,7 +36,7 @@ export function CratesFilters({
           allowedValues={allowedSortByValues}
           labels={sortByLabels}
         />
-        <OrderToggle ascending={ascending} onChange={onOrderChange} />
+        <OrderToggle ascending={ascending} onChange={(val) => onOrderChange(val)} />
       </div>
     </div>
   );

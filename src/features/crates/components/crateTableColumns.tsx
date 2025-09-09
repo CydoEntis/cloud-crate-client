@@ -1,81 +1,84 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import type { Crate } from "../types/Crate";
-import CrateActionsMenu from "./CrateActionsMenu";
-import UserAvatar from "@/components/UserAvatar";
 import CrateIndicator from "./CrateIndicator";
-import DateIndicator from "@/components/DateIndicator";
+import UserAvatar from "@/components/UserAvatar";
+import CrateActionsMenu from "./CrateActionsMenu";
+import CrateSelectCell from "./CrateSelectCell";
 import StorageProgressbar from "@/components/StorageProgressbar";
+import DateIndicator from "@/components/DateIndicator";
+import SelectAllCrates from "./SelectAllCrates";
+
+const columnHelper = createColumnHelper<Crate>();
 
 export function crateTableColumns({
+  crates,
   onEdit,
   onDelete,
   onLeave,
 }: {
+  crates: Crate[];
   onEdit: (crate: Crate) => void;
-  onDelete: (crateId: string) => void;
-  onLeave: (crateId: string) => void;
-}): ColumnDef<Crate>[] {
+  onDelete: (id: string) => void;
+  onLeave: (id: string) => void;
+}) {
+  const allIds = crates.map((c) => c.id);
+
   return [
-    {
-      accessorKey: "name",
-      size: 55,
-      minSize: 30,
-      header: () => <div className="text-left">Name</div>,
+    columnHelper.display({
+      id: "select",
+      size: 2,
+      minSize: 2,
+      header: () => <SelectAllCrates allIds={allIds} />,
+      cell: ({ row }) => <CrateSelectCell crate={row.original} />,
+    }),
+
+    columnHelper.accessor("name", {
+      header: "Name",
+      size: 53,
+      minSize: 28,
       cell: ({ row }) => (
         <div className="text-left flex items-center gap-2">
           <CrateIndicator crateColor={row.original.color} crateName={row.original.name} />
         </div>
       ),
-    },
-    {
-      accessorKey: "owner",
+    }),
+
+    columnHelper.accessor("owner", {
+      header: "Owner",
       size: 20,
       minSize: 20,
-      header: () => <div className="text-left">Owner</div>,
       cell: ({ row }) => {
         const { displayName, profilePicture, email } = row.original.owner;
         return (
-          <div className="text-left flex justify-start items-center gap-2">
+          <div className="text-left flex items-center gap-2">
             <UserAvatar displayName={displayName} profilePictureUrl={profilePicture} email={email} />
           </div>
         );
       },
-    },
-    {
-      accessorKey: "storage",
+    }),
+
+    columnHelper.accessor("totalStorageBytes", {
+      header: "Storage",
       size: 10,
       minSize: 10,
-      header: () => <div className="text-left">Storage</div>,
-      cell: ({ row }) => (
-        <div className="text-left flex justify-start items-center gap-2">
-          <StorageProgressbar used={300000000} total={row.original.totalStorageBytes} />
-        </div>
-      ),
-    },
-    {
-      accessorKey: "joinedAt",
+      cell: ({ row }) => <StorageProgressbar used={300_000_000} total={row.original.totalStorageBytes} />,
+    }),
+
+    columnHelper.accessor("owner.joinedAt", {
+      header: "Joined",
       size: 10,
       minSize: 10,
-      header: () => <div className="text-left">Joined</div>,
-      cell: ({ row }) => (
-        <div className="text-left flex justify-start items-center gap-2">
-          <DateIndicator date={row.original.owner.joinedAt} />
-        </div>
-      ),
-    },
-    {
+      cell: ({ row }) => <DateIndicator date={row.original.owner.joinedAt} />,
+    }),
+
+    columnHelper.display({
       id: "actions",
-      header: () => <div className="text-right"> </div>,
+      header: "",
       size: 5,
       minSize: 5,
-      cell: ({ row }) => {
-        const crate = row.original;
-        return (
-          <div className="text-right flex justify-end">
-            <CrateActionsMenu crate={crate} onEdit={onEdit} onDelete={onDelete} onLeave={onLeave} />
-          </div>
-        );
-      },
-    },
+      cell: ({ row }) => (
+        <CrateActionsMenu crate={row.original} onEdit={onEdit} onDelete={onDelete} onLeave={onLeave} />
+      ),
+    }),
   ];
 }

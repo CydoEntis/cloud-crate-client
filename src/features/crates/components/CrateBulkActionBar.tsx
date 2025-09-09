@@ -1,0 +1,35 @@
+import { Button } from "@/components/ui/button";
+import { Trash2, LogOut } from "lucide-react";
+import { useCrateSelectionStore } from "../store/useCrateSelectionStore";
+import { useBulkDeleteCrates } from "../hooks/mutations/useBulkDeleteCrates";
+import { useBulkLeaveCrates } from "../hooks/mutations/useBulkLeaveCrates";
+
+export default function CrateBulkActionBar() {
+  const { selectedIds, clear } = useCrateSelectionStore();
+  const bulkDelete = useBulkDeleteCrates();
+  const bulkLeave = useBulkLeaveCrates();
+
+  if (selectedIds.size === 0) return null;
+
+  const handleDelete = async () => {
+    await bulkDelete.mutateAsync(Array.from(selectedIds));
+    clear();
+  };
+
+  const handleLeave = async () => {
+    await bulkLeave.mutateAsync(Array.from(selectedIds));
+    clear();
+  };
+
+  return (
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[90%] md:w-auto text-foreground bg-card border border-input shadow-xl rounded-xl p-4 flex items-center gap-4 z-50">
+      <p className="font-semibold">{selectedIds.size} selected</p>
+      <Button variant="outline" onClick={handleLeave} className="flex items-center gap-2">
+        <LogOut /> Leave
+      </Button>
+      <Button variant="destructive" onClick={handleDelete} className="flex items-center gap-2">
+        <Trash2 /> Delete
+      </Button>
+    </div>
+  );
+}

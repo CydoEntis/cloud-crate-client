@@ -40,7 +40,7 @@ const folderFileTableColumns = (selectMode: boolean, folderContents: FolderConte
     columnHelper.accessor("name", {
       header: () => <div className="text-left">Name</div>,
       size: 53,
-      minSize: 28,
+            minSize: 28,
       cell: (info) => <NameCell row={info.row.original} />,
     }),
 
