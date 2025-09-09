@@ -24,10 +24,22 @@ export default function CrateBulkActionBar() {
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[90%] md:w-auto text-foreground bg-card border border-input shadow-xl rounded-xl p-4 flex items-center gap-4 z-50">
       <p className="font-semibold">{selectedIds.size} selected</p>
-      <Button variant="outline" onClick={handleLeave} className="flex items-center gap-2">
+
+      <Button
+        variant="outline"
+        onClick={handleLeave}
+        className="flex items-center gap-2"
+        title="You cannot leave crates you own"
+      >
         <LogOut /> Leave
       </Button>
-      <Button variant="destructive" onClick={handleDelete} className="flex items-center gap-2">
+
+      <Button
+        variant="destructive"
+        onClick={handleDelete}
+        className="flex items-center gap-2"
+        title="You cannot delete crates you don't own"
+      >
         <Trash2 /> Delete
       </Button>
     </div>

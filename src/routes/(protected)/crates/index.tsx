@@ -6,6 +6,7 @@ import PaginationControls from "@/components/PaginationControls";
 import { crateSearchSchema } from "@/features/crates/schemas/crateSearchSchema";
 import { useCratesPage } from "@/features/crates/hooks/useCratesPage";
 import { CratesFilters } from "@/features/crates/components/CratesFilter";
+import CrateBulkActionBar from "@/features/crates/components/CrateBulkActionBar";
 
 export const Route = createFileRoute("/(protected)/crates/")({
   validateSearch: zodValidator(crateSearchSchema),
@@ -65,6 +66,8 @@ export default function CratesPage() {
           onOpenChange={(open) => !open && setEditingCrate(null)}
         />
       )}
+
+      <CrateBulkActionBar />
     </div>
   );
 }
