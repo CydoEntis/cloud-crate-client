@@ -5,7 +5,6 @@ import z from "zod";
 
 import CrateTable from "@/features/crates/components/CrateTable";
 import { crateTableColumns } from "@/features/crates/components/crateTableColumns";
-import { useGetUserCrates } from "@/features/crates/hooks/queries/useGetCrates";
 import UpdateCrateModal from "@/features/crates/components/UpdateCrateModal";
 import SearchInputField from "@/components/SearchInputField";
 import OrderToggle from "@/components/OrderToggle";
@@ -16,6 +15,7 @@ import CrateMemberTabs from "@/features/crates/components/CrateMemberTabs";
 import SortBySelect from "@/components/OrderBySelect";
 
 import type { Crate } from "@/features/crates/types/Crate";
+import { useGetCrates } from "@/features/crates/hooks/queries/useGetCrates";
 
 const allowedSortByValues = ["Name", "JoinedAt", "UsedStorage"] as const;
 type SortByType = (typeof allowedSortByValues)[number];
@@ -71,7 +71,7 @@ function CratesPage() {
     }
   }, []);
 
-  const { data, isPending } = useGetUserCrates({
+  const { data, isPending } = useGetCrates({
     searchTerm,
     sortBy,
     ascending,
@@ -139,4 +139,5 @@ function CratesPage() {
   );
 }
 
-export default CratesPage;
+
+

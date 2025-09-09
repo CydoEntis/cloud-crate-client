@@ -3,12 +3,10 @@ import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/compone
 import { Link, useNavigate } from "@tanstack/react-router";
 import logo from "@/assets/cloud-crate-logo.png";
 import SidebarNavlink from "./SidebarNavlink";
-import { Files, LayoutDashboard, Settings, Star, Trash2, Users2, Plus, Box, Award, LogOut } from "lucide-react";
+import { Settings, Trash2, Box, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import UpgradeAccountButton from "@/features/user/components/UpgradeAccountButton";
 import { useAuthStore, useUserStore } from "@/features/auth";
-import CrateSidebarLinks from "@/features/crates/components/CrateSideBarLinks";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import GetMoreStorage from "@/components/GetMoreStorage";

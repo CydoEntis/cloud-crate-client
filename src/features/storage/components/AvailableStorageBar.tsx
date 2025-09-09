@@ -24,7 +24,6 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
   const totalPercent = allSegments.reduce((sum, s) => sum + s.rawPercent, 0);
   const difference = 100 - totalPercent;
   if (difference !== 0) {
-    // Add/subtract the difference from the largest segment
     const largestIndex = allSegments.reduce(
       (maxIdx, s, idx, arr) => (s.rawPercent > arr[maxIdx].rawPercent ? idx : maxIdx),
       0
@@ -37,6 +36,14 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
   const minTotalPercent = (minWidthPx / containerWidthPx) * 100 * segmentCount;
   const scale = Math.max(1, (100 - minTotalPercent) / (100 - minTotalPercent));
 
+  // Sort "Other" and "Available" last
+  const sortedSegments = allSegments.sort((a, b) => {
+    const lastItems = ["Other", "Available"];
+    if (lastItems.includes(a.name) && !lastItems.includes(b.name)) return 1;
+    if (!lastItems.includes(a.name) && lastItems.includes(b.name)) return -1;
+    return 0;
+  });
+
   return (
     <div>
       <div className="flex justify-between items-center text-foreground pb-4">
@@ -47,7 +54,7 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
         </p>
       </div>
       <div className="w-full flex gap-2">
-        {allSegments.map((s) => {
+        {sortedSegments.map((s) => {
           const scaledPercent = Math.max(s.rawPercent * scale, (minWidthPx / containerWidthPx) * 100);
           return (
             <div key={s.id} style={{ width: `${scaledPercent}%` }} className="relative">
