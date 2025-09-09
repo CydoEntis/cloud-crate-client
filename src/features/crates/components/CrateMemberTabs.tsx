@@ -1,7 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const memberTypes = ["All", "Owner", "Joined"] as const;
-export type MemberType = (typeof memberTypes)[number];
+import type { MemberType } from "../types/MemberType";
+import { allowedMemberTypes } from "../utils/crate.constants";
 
 export interface CrateMemberTabsProps {
   value: MemberType;
@@ -12,12 +11,8 @@ export default function CrateMemberTabs({ value, onChange }: CrateMemberTabsProp
   return (
     <Tabs value={value} onValueChange={(val) => onChange(val as MemberType)}>
       <TabsList className="bg-card p-1 rounded-lg">
-        {memberTypes.map((type) => (
-          <TabsTrigger
-            key={type}
-            value={type}
-            className="px-4 py-2 rounded-md text-sm"
-          >
+        {allowedMemberTypes.map((type) => (
+          <TabsTrigger key={type} value={type} className="px-4 py-2 rounded-md text-sm">
             {type === "Owner" ? "Owned" : type}
           </TabsTrigger>
         ))}

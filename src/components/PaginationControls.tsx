@@ -13,7 +13,6 @@ type PaginationControlsProps = {
   pageSize: number;
   totalCount: number;
   onPageChange: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
 };
 
 function PaginationControls({ page, pageSize, totalCount, onPageChange }: PaginationControlsProps) {
@@ -22,35 +21,30 @@ function PaginationControls({ page, pageSize, totalCount, onPageChange }: Pagina
   if (totalPages <= 1) return null;
 
   const renderPages = () => {
-    const pages = [];
+    const pages: (number | "ellipsis")[] = [];
+    const delta = 1; // show current ±1
 
     for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= page - 1 && i <= page + 1)) {
-        pages.push(
-          <PaginationItem key={i}>
-            <PaginationLink
-              className="text-foreground"
-              isActive={i === page}
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                onPageChange(i);
-              }}
-            >
-              {i}
-            </PaginationLink>
-          </PaginationItem>
-        );
-      } else if ((i === 2 && page > 3) || (i === totalPages - 1 && page < totalPages - 2)) {
-        pages.push(
-          <PaginationItem key={`ellipsis-${i}`}>
-            <PaginationEllipsis />
-          </PaginationItem>
-        );
+      if (i === 1 || i === totalPages || (i >= page - delta && i <= page + delta)) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "ellipsis") {
+        pages.push("ellipsis");
       }
     }
 
-    return pages;
+    return pages.map((p, idx) =>
+      p === "ellipsis" ? (
+        <PaginationItem key={`ellipsis-${idx}`}>
+          <PaginationEllipsis />
+        </PaginationItem>
+      ) : (
+        <PaginationItem key={p} className="text-foreground cursor-pointer">
+          <PaginationLink isActive={p === page} onClick={() => onPageChange(p)}>
+            {p}
+          </PaginationLink>
+        </PaginationItem>
+      )
+    );
   };
 
   return (
@@ -58,14 +52,7 @@ function PaginationControls({ page, pageSize, totalCount, onPageChange }: Pagina
       <PaginationContent>
         {page > 1 && (
           <PaginationItem>
-            <PaginationPrevious
-              className="text-foreground"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                onPageChange(page - 1);
-              }}
-            />
+            <PaginationPrevious className="cursor-pointer text-foreground" onClick={() => onPageChange(page - 1)} />
           </PaginationItem>
         )}
 
@@ -73,14 +60,7 @@ function PaginationControls({ page, pageSize, totalCount, onPageChange }: Pagina
 
         {page < totalPages && (
           <PaginationItem>
-            <PaginationNext
-              className="text-foreground"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                onPageChange(page + 1);
-              }}
-            />
+            <PaginationNext className="cursor-pointer text-foreground" onClick={() => onPageChange(page + 1)} />
           </PaginationItem>
         )}
       </PaginationContent>

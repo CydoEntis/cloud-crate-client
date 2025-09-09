@@ -49,7 +49,6 @@ function CrateFolderPage() {
   const navigate = Route.useNavigate();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const { isOpen, close } = useFolderModalStore();
 
   // Crate info
   const { data: crate, isLoading: isCrateLoading, isError: isCrateError } = useCrateDetails(crateId);

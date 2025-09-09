@@ -24,20 +24,16 @@ function CreateCrateModal({ user }: CreateCrateModalProps) {
 
   const BytesPerGb = 1024 * 1024 * 1024;
 
-  // Normalize storage values into GB
   const usedGb = Math.floor(user.usedAccountStorageBytes / BytesPerGb);
   const maxGb = Math.floor(user.allocatedStorageLimitBytes / BytesPerGb);
   const remainingGb = Math.floor(user.remainingAllocatableBytes / BytesPerGb);
 
 
-  // Minimum allocation is always 1GB if there is enough remaining space
   const minAlloc = remainingGb >= 1 ? 1 : remainingGb > 0 ? remainingGb : 0;
-  const maxAlloc = Math.max(remainingGb, minAlloc); // Ensure max is at least minAlloc
+  const maxAlloc = Math.max(remainingGb, minAlloc); 
 
-  // Default allocation for the form
   const defaultAlloc = Math.min(Math.max(minAlloc, 1), remainingGb);
 
-  // Adjust schema: still validates allocatedStorage in GB
   const schema = createCreateCrateSchema({
     usedAccountStorageBytes: user.usedAccountStorageBytes,
     allocatedStorageLimitBytes: user.allocatedStorageLimitBytes,
