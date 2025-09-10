@@ -19,7 +19,7 @@ function FolderContentsActionMenu({ row }: { row: FolderContentRowItem }) {
   const handleSoftDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (row.isFolder) {
-      softDeleteFolderMutation.mutate(row.id);
+      softDeleteFolderMutation.mutate({ crateId: row.crateId, folderId: row.id });
     } else {
       softDeleteFileMutation.mutate({ fileId: row.id, crateId: row.crateId });
     }

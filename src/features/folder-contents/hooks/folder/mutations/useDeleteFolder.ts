@@ -5,7 +5,7 @@ export const useDeleteFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (folderId: string) => deleteFolder(folderId),
+    mutationFn: ({ crateId, folderId }: { crateId: string; folderId: string }) => deleteFolder(crateId, folderId),
     onSuccess: (_data, folderId) => {
       queryClient.invalidateQueries({ queryKey: ["folderContents"], exact: false });
     },
