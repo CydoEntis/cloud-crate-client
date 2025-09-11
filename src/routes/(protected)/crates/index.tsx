@@ -67,7 +67,8 @@ export default function CratesPage() {
         />
       )}
 
-      <CrateBulkActionBar />
+      {/* Removing but keeping here in case we deicde to add back in Bulk selecting and Actions on Crates */}
+      {/* <CrateBulkActionBar /> */}
     </div>
   );
 }

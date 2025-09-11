@@ -21,21 +21,23 @@ export function crateTableColumns({
   onDelete: (id: string) => void;
   onLeave: (id: string) => void;
 }) {
+  // Used for bulk selecting crates
   const allIds = crates.map((c) => c.id);
 
   return [
-    columnHelper.display({
-      id: "select",
-      size: 2,
-      minSize: 2,
-      header: () => <SelectAllCrates allIds={allIds} />,
-      cell: ({ row }) => <CrateSelectCell crate={row.original} />,
-    }),
+    // Leaving this in incase we ever want to go back to allowing bulk selections for Crates
+    // columnHelper.display({
+    //   id: "select",
+    //   size: 2,
+    //   minSize: 2,
+    //   header: () => <SelectAllCrates allIds={allIds} />,
+    //   cell: ({ row }) => <CrateSelectCell crate={row.original} />,
+    // }),
 
     columnHelper.accessor("name", {
       header: "Name",
-      size: 53,
-      minSize: 28,
+      size: 55,
+      minSize: 30,
       cell: ({ row }) => (
         <div className="text-left flex items-center gap-2">
           <CrateIndicator crateColor={row.original.color} crateName={row.original.name} />
