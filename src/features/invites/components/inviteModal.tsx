@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { toast } from "sonner";
 import { Box, Check, Loader2, X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
@@ -10,13 +9,20 @@ import { useDeclineInvite } from "@/features/invites/hooks/mutations/useDeclineI
 import { useInviteStore } from "@/features/invites/store/inviteStore";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import InviteModalSkeleton from "./InviteModalSkeleton";
+import InviteError from "./InviteError";
 
 export function InviteModal() {
   const token = useInviteStore((s) => s.token);
   const clearToken = useInviteStore((s) => s.clearToken);
   const navigate = useNavigate();
 
-  const { data: invite, isLoading, error } = useGetInviteByToken(token ?? "");
+  const {
+    data: invite,
+    isLoading,
+    error,
+  } = useGetInviteByToken(token ?? "");
+
   const { mutateAsync: acceptInvite } = useAcceptInvite();
   const { mutateAsync: declineInvite } = useDeclineInvite();
 
@@ -25,7 +31,6 @@ export function InviteModal() {
 
   const handleAccept = async () => {
     try {
-      console.log(token);
       await acceptAnimation.run(() => acceptInvite(token!));
       toast.success("Invite accepted!");
       clearToken();
@@ -51,14 +56,16 @@ export function InviteModal() {
 
   return (
     <Dialog open={!!token && !isLoading && !error} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent className="text-foreground border-muted">
         {isLoading ? (
-          <div className="p-6 text-center">Loading invite...</div>
+          <InviteModalSkeleton />
         ) : error || !invite ? (
-          <div className="p-6 text-center">Invalid or expired invite.</div>
+          <InviteError onClose={handleClose} />
         ) : (
           <>
-            <h3 className="text-lg font-semibold text-center flex justify-center w-full">You have been invited to join</h3>
+            <h3 className="text-lg font-semibold text-center flex justify-center w-full">
+              You have been invited to join
+            </h3>
             <div className="w-full flex justify-center items-center gap-2">
               <div
                 className="rounded-md p-1 flex items-center justify-center"

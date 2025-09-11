@@ -26,7 +26,7 @@ function PublicInviteRedirectPage() {
       });
     } else {
       navigate({
-        to: "/dashboard",
+        to: "/",
         replace: true,
       });
     }
