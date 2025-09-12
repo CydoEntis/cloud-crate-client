@@ -46,21 +46,29 @@ function CrateActionsMenu({ crate, onEdit, onDelete, onLeave }: CrateActionsMenu
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="border-none">
+        <DropdownMenuTrigger asChild className="border-muted">
           <div className="flex justify-end w-full">
             <button className="p-1 hover:bg-muted rounded cursor-pointer" onClick={(e) => e.stopPropagation()}>
               <MoreVertical className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-secondary border-none ">
-          <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+        <DropdownMenuContent align="end" className="bg-card border-2 border-muted cursor-pointer ">
+          <DropdownMenuItem className="cursor-pointer" onClick={handleEdit}>
+            Edit
+          </DropdownMenuItem>
           {isOwner ? (
-            <DropdownMenuItem onClick={handleDelete} className="text-destructive">
+            <DropdownMenuItem
+              onClick={handleDelete}
+              className="text-destructive cursor-pointer hover:!text-white hover:!bg-destructive"
+            >
               Delete
             </DropdownMenuItem>
           ) : (
-            <DropdownMenuItem onClick={handleLeave} className="text-destructive">
+            <DropdownMenuItem
+              onClick={handleLeave}
+              className="text-destructive cursor-pointer hover:!text-white hover:!bg-destructive"
+            >
               Leave
             </DropdownMenuItem>
           )}

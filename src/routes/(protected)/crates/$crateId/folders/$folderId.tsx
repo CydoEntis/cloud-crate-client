@@ -26,6 +26,7 @@ import { useFolderModalStore } from "@/features/folder-contents/store/useFolderM
 import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
 import type { CrateFolder } from "@/features/folder-contents/types/folder/CrateFolder";
 import BulkActionBar from "@/features/bulk/components/BulkActionToolbar";
+import { useGetMembers } from "@/features/members/hooks/useGetMembers";
 
 const allowedOrderByValues = ["Name", "CreatedAt", "Size"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];
@@ -71,8 +72,11 @@ function CrateFolderPage() {
   );
 
   const { data: availableFolders } = useAvailableMoveTargets(crateId);
+  const {data: members} = useGetMembers(crateId);
   const [selectMode, setSelectMode] = useState(false);
   const [previewFile, setPreviewFile] = useState<CrateFile | null>(null);
+
+  console.log(members);
 
   const setSearchParams = (params: Partial<typeof search>) => {
     navigate({
@@ -167,7 +171,6 @@ function CrateFolderPage() {
           pageSize={pageSize}
           totalCount={totalFiles + totalFolders}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
-          onPageSizeChange={(newSize) => setSearchParams({ pageSize: newSize, page: 1 })}
         />
       )}
 
