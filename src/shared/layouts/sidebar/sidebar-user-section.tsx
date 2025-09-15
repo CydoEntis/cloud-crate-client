@@ -2,9 +2,9 @@ import { LogOut } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 
 import { useUserStore } from "@/features/user/user.store";
-import GetMoreStorage from "@/shared/components/GetMoreStorage";
-import CurrentUserDisplay from "@/features/user/components/CurrentUserDisplay";
+import UpgradeAccountStorage from "@/features/user/components/upgrade-account-storage";
 import { useLogout } from "@/features/auth/api/auth.queries";
+import AuthenticatedUserDisplay from "@/features/user/components/authenticated-user-display";
 
 export function SidebarUserSection() {
   const user = useUserStore((state) => state.user);
@@ -14,15 +14,19 @@ export function SidebarUserSection() {
     logout();
   };
 
+  const handleUpgrade = () => {
+    throw new Error("Not implemented");
+  };
+
   if (!user) {
     return null;
   }
 
   return (
     <div className="pb-6 px-4 space-y-4">
-      <GetMoreStorage user={user} />
+      <UpgradeAccountStorage onUpgradeClick={handleUpgrade} />
       <div className="border-t border-secondary pt-4 flex justify-between items-center">
-        <CurrentUserDisplay user={user} />
+        <AuthenticatedUserDisplay />
         <Button
           onClick={handleLogout}
           disabled={isPending}

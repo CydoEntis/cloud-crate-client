@@ -9,6 +9,12 @@ type SidebarNavlinkProps = {
   icon: React.ReactElement;
 };
 
+const ANIMATION_CONFIG = {
+  slideX: 8,
+  indicator: { type: "spring", stiffness: 300, damping: 25 },
+  slide: { type: "spring", stiffness: 300, damping: 30 },
+} as const;
+
 const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isActive = pathname === to || pathname.startsWith(to + "/");
@@ -23,29 +29,30 @@ const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
     }
   }, []);
 
-  const slideX = 8;
-
   return (
     <div className="relative px-2">
+      {/* Active indicator */}
       {isActive && (
         <motion.div
           layoutId="sidebar-indicator"
           className="absolute top-0 right-0 w-1 bg-primary rounded-l-2xl"
           style={{ height }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          transition={ANIMATION_CONFIG.indicator}
         />
       )}
+
       <Link
         to={to}
         ref={ref}
-        className="px-4 py-2 pr-5 rounded-lg font-medium relative z-10 flex items-center justify-between h-10 "
+        className="px-4 py-2 pr-5 rounded-lg font-medium relative z-10 flex items-center justify-between h-10"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        aria-current={isActive ? "page" : undefined}
       >
         <motion.span
           initial={{ x: 0 }}
-          animate={{ x: isActive || isHovered ? slideX : 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          animate={{ x: isActive || isHovered ? ANIMATION_CONFIG.slideX : 0 }}
+          transition={ANIMATION_CONFIG.slide}
           className={clsx(
             "font-medium flex items-center gap-4 transition-colors duration-200",
             isActive || isHovered ? "text-primary" : "text-sidebar-accent-foreground"

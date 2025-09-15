@@ -1,9 +1,10 @@
+// Fixed CreateCrateModal - Hooks must always run in the same order
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useCrateModalStore } from "../store/crateModalStore";
 import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
-import { useUserStore } from "@/features/user/user.store"; // Import user store
+import { useUserStore } from "@/features/user/user.store";
 import { toast } from "sonner";
 import { createCreateCrateSchema } from "../schemas/CreateCrateSchema";
 import type z from "zod";
@@ -14,32 +15,26 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/shared/components/ui/input";
 import { Slider } from "@radix-ui/react-slider";
 
-// Remove the user prop requirement
 function CreateCrateModal() {
+  // ALL HOOKS MUST RUN BEFORE ANY CONDITIONAL RETURNS
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
-
-  // Get user from store instead of props
   const user = useUserStore((state) => state.user);
 
-  // Don't render if no user (though this shouldn't happen in protected routes)
-  if (!user) {
-    return null;
-  }
-
+  // Calculate values with fallbacks if user is null
   const BytesPerGb = 1024 * 1024 * 1024;
-
-  const usedGb = Math.floor(user.usedStorageBytes / BytesPerGb);
-  const maxGb = Math.floor(user.accountStorageLimitBytes / BytesPerGb);
-  const remainingGb = Math.floor(user.remainingAllocationBytes / BytesPerGb);
+  const usedGb = user ? Math.floor(user.usedStorageBytes / BytesPerGb) : 0;
+  const maxGb = user ? Math.floor(user.accountStorageLimitBytes / BytesPerGb) : 0;
+  const remainingGb = user ? Math.floor(user.remainingAllocationBytes / BytesPerGb) : 0;
 
   const minAlloc = remainingGb >= 1 ? 1 : remainingGb > 0 ? remainingGb : 0;
   const maxAlloc = Math.max(remainingGb, minAlloc);
   const defaultAlloc = Math.min(Math.max(minAlloc, 1), remainingGb);
 
+  // Create schema with fallbacks
   const schema = createCreateCrateSchema({
-    usedStorageBytes: user.usedStorageBytes,
-    accountStorageLimitBytes: user.accountStorageLimitBytes,
+    usedStorageBytes: user?.usedStorageBytes || 0,
+    accountStorageLimitBytes: user?.accountStorageLimitBytes || 0,
   });
 
   type FormValues = z.infer<typeof schema>;
@@ -54,6 +49,11 @@ function CreateCrateModal() {
   });
 
   const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
+
+  // NOW we can do conditional rendering - after all hooks have run
+  if (!user) {
+    return null;
+  }
 
   const onClose = () => {
     form.reset();

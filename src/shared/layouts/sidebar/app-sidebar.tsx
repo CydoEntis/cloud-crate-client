@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { Settings, Trash2, Box } from "lucide-react";
-
 import logo from "@/assets/cloud-crate-logo.png";
-
 import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/shared/components/ui/sidebar";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
-import SidebarNavlink from "./SidebarNavlink";
+import SidebarNavlink from "./sidebar-navlink";
 import ThemeToggle from "@/shared/components/ThemeToggle";
 import { SidebarUserSection } from "./sidebar-user-section";
 
