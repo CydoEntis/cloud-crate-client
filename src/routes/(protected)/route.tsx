@@ -1,10 +1,6 @@
 import { useAuthStore } from "@/features/auth/auth.store";
-import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
-import { InviteModal } from "@/features/invites/components/inviteModal";
-import { useGetUser } from "@/features/user/hooks/useGetUser";
-import { Separator } from "@/shared/components/ui/separator";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
-import { AppSidebar } from "@/shared/layouts/sidebar/AppSidebar";
+import { UserDataProvider } from "@/features/user/components/user-data-provider";
+import { ProtectedLayout } from "@/shared/layouts/protect-layout";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(protected)")({
@@ -15,29 +11,15 @@ export const Route = createFileRoute("/(protected)")({
       throw redirect({ to: "/login" });
     }
   },
-  component: RouteComponent
+  component: ProtectedRoute,
 });
 
-function RouteComponent() {
-  const { isLoading, isError, data: user } = useGetUser();
-
-  if (isLoading) return <div>Loading user data...</div>;
-  if (isError) return <div>Failed to load user data</div>;
-
+function ProtectedRoute() {
   return (
-    <SidebarProvider>
-      {user && <CreateCrateModal user={user} />}
-      <InviteModal />
-      <AppSidebar />
-      <SidebarInset className="md:py-4 md:pr-4 bg-sidebar">
-        <header className="flex h-12 rounded-t-2xl shrink-0 items-center gap-2  px-4 bg-background">
-          <SidebarTrigger className="-ml-1 text-foreground" />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-        </header>
-        <div className="flex flex-1 flex-col gap-4 sm:p-2 lg:p-10  bg-background rounded-b-2xl">
-          <Outlet />
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+    <UserDataProvider>
+      <ProtectedLayout>
+        <Outlet />
+      </ProtectedLayout>
+    </UserDataProvider>
   );
 }

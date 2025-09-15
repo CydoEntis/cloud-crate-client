@@ -1,26 +1,31 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller, Form } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useCrateModalStore } from "../store/crateModalStore";
 import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
+import { useUserStore } from "@/features/user/user.store"; // Import user store
 import { toast } from "sonner";
 import { createCreateCrateSchema } from "../schemas/CreateCrateSchema";
 import type z from "zod";
-import type { User } from "@/features/user/types/User";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { Slider } from "@radix-ui/react-slider";
 
-type CreateCrateModalProps = {
-  user: User;
-};
-
-function CreateCrateModal({ user }: CreateCrateModalProps) {
+// Remove the user prop requirement
+function CreateCrateModal() {
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
+
+  // Get user from store instead of props
+  const user = useUserStore((state) => state.user);
+
+  // Don't render if no user (though this shouldn't happen in protected routes)
+  if (!user) {
+    return null;
+  }
 
   const BytesPerGb = 1024 * 1024 * 1024;
 
@@ -32,7 +37,6 @@ function CreateCrateModal({ user }: CreateCrateModalProps) {
   const maxAlloc = Math.max(remainingGb, minAlloc);
   const defaultAlloc = Math.min(Math.max(minAlloc, 1), remainingGb);
 
-  // ✅ Updated schema creation with new property names
   const schema = createCreateCrateSchema({
     usedStorageBytes: user.usedStorageBytes,
     accountStorageLimitBytes: user.accountStorageLimitBytes,
@@ -62,7 +66,7 @@ function CreateCrateModal({ user }: CreateCrateModalProps) {
       await createCrate({
         name: data.name,
         color: data.color,
-        allocatedStorageGb: data.allocatedStorageGb, // Keep as GB if your backend expects GB
+        allocatedStorageGb: data.allocatedStorageGb,
       });
 
       toast.success("Crate created successfully");
@@ -72,7 +76,6 @@ function CreateCrateModal({ user }: CreateCrateModalProps) {
     }
   };
 
-  // ✅ Better storage validation logic
   const hasAvailableStorage = remainingGb > 0;
 
   return (
@@ -126,7 +129,7 @@ function CreateCrateModal({ user }: CreateCrateModalProps) {
               )}
             />
 
-            {/* Storage Slider in GB */}
+            {/* Storage Slider */}
             <Controller
               name="allocatedStorageGb"
               control={form.control}
