@@ -1,9 +1,9 @@
 import type { ApiResponse } from "@/features/auth";
-import api from "@/lib/api";
 import type { User } from "../types/User";
+import apiService from "@/shared/lib/api/ApiClient";
 
 export const getUser = async (): Promise<User> => {
-  const { value: result, isSuccess, errors } = (await api.get<ApiResponse<User>>("/user")).data;
+  const { data: result, isSuccess, errors } = (await apiService.get<ApiResponse<User>>("/user")).data;
   console.log(result);
   return result!;
 };

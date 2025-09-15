@@ -1,16 +1,13 @@
-import type { SubscriptionPlan } from "./SubscriptionPlan";
-
 export type User = {
-  id: string; 
+  id: string;
   email: string;
   displayName: string;
-  profilePictureUrl?: string;
-  plan: SubscriptionPlan;
-  allocatedStorageLimitBytes: number; 
-  usedAccountStorageBytes: number; 
-  remainingAllocatableBytes: number;
+  accountStorageLimitBytes: number;
+  allocatedStorageBytes: number;
+  remainingAllocationBytes: number;
+  remainingUsageBytes: number;
+  usedStorageBytes: number;
   createdAt: string;
   updatedAt: string;
-  canCreateMoreCrates: boolean;
-  crateCount: number;
+  profilePictureUrl?: string;  
 };

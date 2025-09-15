@@ -1,6 +1,6 @@
 import type { CrateDetails } from "@/features/crates/types/CrateDetails";
 import AvailableStorageBar from "./AvailableStorageBar";
-import { mimeCategoryColors } from "@/lib/getMimeCategory";
+import { mimeCategoryColors } from "@/shared/lib/getMimeCategory";
 
 type Props = {
   crate: CrateDetails;

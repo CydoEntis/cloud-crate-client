@@ -1,13 +1,13 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import clouds from "@/assets/Cloudy.svg";
 import logo from "@/assets/cloud-crate-logo.png";
-import { useAuthStore } from "@/features/auth";
+import { useAuthStore } from "@/features/auth/auth.store";
 
 export const Route = createFileRoute("/(public)/(auth)")({
   beforeLoad: () => {
     const token = useAuthStore.getState().accessToken;
     if (token) {
-      throw redirect({ to: "/dashboard" });
+      throw redirect({ to: "/" });
     }
   },
   component: RouteComponent,
@@ -29,7 +29,11 @@ function RouteComponent() {
             <h3 className="font-bold text-4xl text-primary">Cloud Crate</h3>
           </div>
         </div>
-        <Outlet />
+        <div className="flex flex-1 justify-center p-6 md:p-10 pt-16 z-10 relative">
+          <div className="w-full max-w-sm">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

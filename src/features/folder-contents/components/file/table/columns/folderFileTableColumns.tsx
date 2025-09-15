@@ -2,13 +2,14 @@ import { createColumnHelper } from "@tanstack/react-table";
 import NameCell from "./NameCell";
 import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
 import type { CrateFolder } from "@/features/folder-contents/types/folder/CrateFolder";
-import UserAvatar from "@/components/UserAvatar";
-import DateIndicator from "@/components/DateIndicator";
-import StorageDisplay from "@/components/StorageDisplay";
+
 import SelectCell from "./SelectCell";
 import FolderContentsActionMenu from "../../FolderContentsActionMenu";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
+import { Checkbox } from "@/shared/components/ui/checkbox";
+import UserAvatar from "@/shared/components/UserAvatar";
+import DateIndicator from "@/shared/components/DateIndicator";
+import StorageDisplay from "@/shared/components/StorageDisplay";
 
 export type FolderContentRowItem = CrateFile | CrateFolder;
 
@@ -40,7 +41,7 @@ const folderFileTableColumns = (selectMode: boolean, folderContents: FolderConte
     columnHelper.accessor("name", {
       header: () => <div className="text-left">Name</div>,
       size: 53,
-            minSize: 28,
+      minSize: 28,
       cell: (info) => <NameCell row={info.row.original} />,
     }),
 

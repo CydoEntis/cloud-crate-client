@@ -1,16 +1,15 @@
-// CrateActionsMenu.tsx
+import { MoreVertical } from "lucide-react";
+import type { Crate } from "../types/Crate";
+import { useLeaveCrate } from "../hooks/mutations/useLeaveCrate";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreVertical } from "lucide-react";
-import { useUserStore } from "@/features/auth";
-import type { Crate } from "../types/Crate";
-import { useLeaveCrate } from "../hooks/mutations/useLeaveCrate";
-import { useState } from "react";
-import ConfirmDialog from "@/components/ConfirmDialog";
+} from "@/shared/components/ui/dropdown-menu";
+import ConfirmDialog from "@/shared/components/ConfirmDialog";
+import { useUserStore } from "@/features/user/user.store";
 
 type CrateActionsMenuProps = {
   crate: Crate;

@@ -1,9 +1,9 @@
 import type { ApiResponse } from "@/features/auth/types";
-import api from "@/lib/api";
-import type { CreateCrateRequest } from "../types/CreateCrateRequest";
 import type { Crate } from "../types/Crate";
+import type { CreateCrateRequest } from "../types/CreateCrateRequest";
+import apiService from "@/shared/lib/api/ApiClient";
 
 export const createCrate = async (data: CreateCrateRequest): Promise<Crate> => {
-  const { value: result } = (await api.post<ApiResponse<Crate>>("/crates", data)).data;
+  const { data: result } = (await apiService.post<ApiResponse<Crate>>("/crates", data)).data;
   return result!;
 };

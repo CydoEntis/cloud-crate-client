@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { useDeleteCrate } from "../hooks/mutations/useDeleteCrate";
 import { toast } from "sonner";
 import { Loader2, Check } from "lucide-react";
-import { useAnimatedAction } from "@/hooks/useAnimationAction";
+import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "@/shared/components/ui/button";
 
 export default function DeleteCrate({ crateId }: { crateId: string }) {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function DeleteCrate({ crateId }: { crateId: string }) {
       await run(() => deleteCrate(crateId));
       toast.success("Crate deleted.");
       setConfirming(false);
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/" });
     } catch {
       toast.error("Failed to delete crate.");
     }

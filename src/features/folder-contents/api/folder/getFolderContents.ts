@@ -1,8 +1,8 @@
 import type { ApiResponse } from "@/features/auth";
-import api from "@/lib/api";
 import type { GetFolderContentsParams } from "../../types/folder/GetFolderContentsParams";
 import type { FolderContents } from "../../types/FolderContents";
 import { folderContentsSchema } from "../../schemas/FolderContentsSchema";
+import apiService from "@/shared/lib/api/ApiClient";
 
 export const getFolderContents = async (
   crateId: string,
@@ -27,8 +27,8 @@ export const getFolderContents = async (
     : `/crates/${crateId}/folders/contents?${queryParams.toString()}`;
 
   try {
-    const response = await api.get<ApiResponse<any>>(url);
-    const data = folderContentsSchema.parse(response.data.value);
+    const response = await apiService.get<ApiResponse<any>>(url);
+    const data = folderContentsSchema.parse(response.data.data);
     console.log("Folder contents:", data);
     return data;
   } catch (err) {

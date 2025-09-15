@@ -1,21 +1,21 @@
-import { Separator } from "@/components/ui/separator";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { useAuthStore } from "@/features/auth";
+import { useAuthStore } from "@/features/auth/auth.store";
 import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
 import { InviteModal } from "@/features/invites/components/inviteModal";
 import { useGetUser } from "@/features/user/hooks/useGetUser";
-import { AppSidebar } from "@/layouts/sidebar/AppSidebar";
+import { Separator } from "@/shared/components/ui/separator";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
+import { AppSidebar } from "@/shared/layouts/sidebar/AppSidebar";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(protected)")({
   beforeLoad: () => {
     const auth = useAuthStore.getState();
 
-    if (!auth.isAuthenticated()) {
+    if (!auth.isAuthenticated) {
       throw redirect({ to: "/login" });
     }
   },
-  component: RouteComponent,
+  component: RouteComponent
 });
 
 function RouteComponent() {

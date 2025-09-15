@@ -2,26 +2,23 @@ import { toast } from "sonner";
 import { Box, Check, Loader2, X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
-import { useAnimatedAction } from "@/hooks/useAnimationAction";
+import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { useGetInviteByToken } from "@/features/invites/hooks/queries/useGetInviteByToken";
 import { useAcceptInvite } from "@/features/invites/hooks/mutations/useAcceptInvite";
 import { useDeclineInvite } from "@/features/invites/hooks/mutations/useDeclineInvite";
 import { useInviteStore } from "@/features/invites/store/inviteStore";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+
 import InviteModalSkeleton from "./InviteModalSkeleton";
 import InviteError from "./InviteError";
+import { Dialog, DialogContent } from "@/shared/components/ui/dialog";
+import { Button } from "@/shared/components/ui/button";
 
 export function InviteModal() {
   const token = useInviteStore((s) => s.token);
   const clearToken = useInviteStore((s) => s.clearToken);
   const navigate = useNavigate();
 
-  const {
-    data: invite,
-    isLoading,
-    error,
-  } = useGetInviteByToken(token ?? "");
+  const { data: invite, isLoading, error } = useGetInviteByToken(token ?? "");
 
   const { mutateAsync: acceptInvite } = useAcceptInvite();
   const { mutateAsync: declineInvite } = useDeclineInvite();

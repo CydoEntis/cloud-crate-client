@@ -1,10 +1,10 @@
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
-import { Button } from "@/components/ui/button";
 import { Trash2, Move } from "lucide-react";
 import { useBulkDelete } from "@/features/bulk/hooks/useBulkDelete";
 import { useBulkMove } from "@/features/bulk/hooks/useBulkMove";
 import { useState } from "react";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Button } from "@/shared/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 
 type Props = {
   crateId: string;

@@ -1,9 +1,5 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { useInviteToCrate } from "../hooks/mutations/useInviteToCrate";
 
@@ -11,6 +7,10 @@ import { CrateRole } from "../types/CrateRole";
 import type { CrateInviteApiRequest } from "../types/CrateInviteApiRequest";
 import type { CrateInviteFormValues } from "../types/CrateInviteRequest";
 import { crateInviteFormSchema } from "../schemas/crateInviteFormSchema";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 
 type InviteCollaboratorsProps = { crateId: string };
 

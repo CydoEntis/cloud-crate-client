@@ -14,19 +14,18 @@ import AvailableStorageIndicator from "@/features/storage/components/AvailableSt
 import FileUpload from "@/features/folder-contents/components/file/FileUpload";
 import FileTable from "@/features/folder-contents/components/file/FileTable";
 import FileTableToolbar from "@/features/folder-contents/components/file/FileTableToolbar";
-import PaginationControls from "@/components/PaginationControls";
 import { CreateFolderModal } from "@/features/folder-contents/components/folder";
 import FilePreviewPanel from "@/features/folder-contents/components/file/FilePreviewPanel";
 import folderFileTableColumns from "@/features/folder-contents/components/file/table/columns/folderFileTableColumns";
 import { Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import CrateSettingsPanel from "@/features/crates/components/CrateSettingsPanel";
 import { CrateRole } from "@/features/invites/types/CrateRole";
-import { useFolderModalStore } from "@/features/folder-contents/store/useFolderModalStore";
 import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
 import type { CrateFolder } from "@/features/folder-contents/types/folder/CrateFolder";
 import BulkActionBar from "@/features/bulk/components/BulkActionToolbar";
 import { useGetMembers } from "@/features/members/hooks/useGetMembers";
+import { Button } from "@/shared/components/ui/button";
+import PaginationControls from "@/shared/components/PaginationControls";
 
 const allowedOrderByValues = ["Name", "CreatedAt", "Size"] as const;
 type OrderByType = (typeof allowedOrderByValues)[number];

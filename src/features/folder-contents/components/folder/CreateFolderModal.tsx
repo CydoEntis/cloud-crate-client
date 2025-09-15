@@ -1,20 +1,20 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { ColorPicker } from "@/components/ColorPicker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useCreateFolder } from "../../hooks/folder/mutations/useCreateFolder";
 import type { CreateFolder } from "../../types/folder/request/CreateFolder";
 import { CreateFolderSchema } from "../../schemas/folder/CreateFolderSchema";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
+import { ColorPicker } from "@/shared/components/ColorPicker";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 
 type CreateFolderModalProps = {
   isOpen: boolean;
   onClose: () => void;
   crateId: string;
-  parentFolderId: string,
+  parentFolderId: string;
 };
 
 type FormValues = Pick<CreateFolder, "name" | "color">;

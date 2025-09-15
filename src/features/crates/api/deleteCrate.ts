@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/features/auth/types";
-import api from "@/lib/api";
+import apiService from "@/shared/lib/api/ApiClient";
 
 export const deleteCrate = async (crateId: string): Promise<string> => {
-  const response = await api.delete<ApiResponse<string>>(`/crates/${crateId}`);
-  return response.data.value!;
+  const response = await apiService.delete<ApiResponse<string>>(`/crates/${crateId}`);
+  return response.data.data!;
 };

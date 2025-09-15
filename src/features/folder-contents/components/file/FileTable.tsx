@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanstack/react-table";
-import { Table, TableBody } from "@/components/ui/table";
-import GenericTableHeader from "@/components/GenericTableHeader";
-import GenericTableRow from "@/components/GenericTableRow";
-import { Skeleton } from "@/components/ui/skeleton";
+
 import { useMediaQuery } from "usehooks-ts";
 import type { CrateFile } from "../../types/file/CrateFile";
 import type { CrateFolder } from "../../types/folder/CrateFolder";
 import type { FolderContents } from "../../types/FolderContents";
 import FolderBreadcrumbs from "../folder/FolderBreadcrumbs";
 import type { FolderBreadcrumb } from "../../types/folder/FolderBreadcrumb";
+import { Table, TableBody } from "@/shared/components/ui/table";
+import GenericTableHeader from "@/shared/components/GenericTableHeader";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import GenericTableRow from "@/shared/components/GenericTableRow";
 
 type FileTableProps = {
   crateId: string;

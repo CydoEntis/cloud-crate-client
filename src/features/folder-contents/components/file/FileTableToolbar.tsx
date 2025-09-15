@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus, SquareCheck, Trash2, X } from "lucide-react";
-
-import SearchInputField from "@/components/SearchInputField";
-import SortBySelect from "@/components/OrderBySelect";
-import OrderToggle from "@/components/OrderToggle";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus } from "lucide-react";
 
 import { useBulkMove } from "@/features/bulk/hooks/useBulkMove";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import { useBulkDelete } from "@/features/bulk/hooks/useBulkDelete";
+import SearchInputField from "@/shared/components/SearchInputField";
+import OrderToggle from "@/shared/components/OrderToggle";
+import { Button } from "@/shared/components/ui/button";
 
 type OrderBy = "Name" | "CreatedAt" | "Size";
 
@@ -109,12 +106,12 @@ export default function FileTableToolbar({
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
         <SearchInputField value={search} onChange={onSearchChange} placeholder="Search files & folders..." />
         <div className="flex items-center gap-2">
-          <SortBySelect
+          {/* <SortBySelect
             value={orderBy}
             onChange={onOrderByChange}
             allowedValues={allowedOrderByValues}
             labels={orderByLabels}
-          />
+          /> */}
           <OrderToggle ascending={ascending} onChange={onAscendingChange} />
         </div>
       </div>

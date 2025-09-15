@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import type { MemberType } from "../types/MemberType";
 import { allowedMemberTypes } from "../utils/crate.constants";
 

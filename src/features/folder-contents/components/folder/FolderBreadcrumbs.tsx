@@ -1,3 +1,4 @@
+import type { FolderBreadcrumb } from "../../types/folder/FolderBreadcrumb";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -5,18 +6,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/shared/components/ui/breadcrumb";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronRight } from "lucide-react";
+} from "@/shared/components/ui/dropdown-menu";
 import { Link } from "@tanstack/react-router";
-import type { FolderBreadcrumb } from "../../types/folder/FolderBreadcrumb";
-
-
+import { ChevronRight } from "lucide-react";
 
 interface FolderBreadcrumbsProps {
   crateId: string;

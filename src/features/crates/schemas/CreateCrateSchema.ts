@@ -1,19 +1,14 @@
-// src/features/crates/schemas/CreateCrateSchema.ts
 import z from "zod";
 
 export type StorageDetails = {
-  usedAccountStorageBytes: number;
-  allocatedStorageLimitBytes: number;
+  usedStorageBytes: number;
+  accountStorageLimitBytes: number;
 };
 
-/**
- * Schema now validates allocatedStorageGb (number, in GB).
- * The storage param is still provided in bytes so we compute GB min/max.
- */
 export const createCreateCrateSchema = (storage: StorageDetails) => {
   const BytesPerGb = 1024 * 1024 * 1024;
-  const usedGb = Math.ceil(storage.usedAccountStorageBytes / BytesPerGb);
-  const maxGb = Math.floor(storage.allocatedStorageLimitBytes / BytesPerGb);
+  const usedGb = Math.ceil(storage.usedStorageBytes / BytesPerGb);
+  const maxGb = Math.floor(storage.accountStorageLimitBytes / BytesPerGb);
 
   // Minimum 1 GB, and at least usedGb
   const minGb = Math.max(1, usedGb);
@@ -37,5 +32,3 @@ export const createCreateCrateSchema = (storage: StorageDetails) => {
       .max(maxGb, { message: `Allocated storage cannot exceed ${maxGb} GB` }),
   });
 };
-
-export type CreateCrateSchema = ReturnType<typeof createCreateCrateSchema>;

@@ -1,10 +1,10 @@
-import SearchInputField from "@/components/SearchInputField";
-import OrderToggle from "@/components/OrderToggle";
-import SortBySelect from "@/components/OrderBySelect";
+
 import { allowedSortByValues, sortByLabels } from "../utils/crate.constants";
 import type { SortBy } from "../types/SortBy";
 import type { MemberType } from "../types/MemberType";
 import CrateMemberTabs from "./CrateMemberTabs";
+import SearchInputField from "@/shared/components/SearchInputField";
+import OrderToggle from "@/shared/components/OrderToggle";
 
 export function CratesFilters({
   searchTerm,
@@ -30,12 +30,12 @@ export function CratesFilters({
       <SearchInputField value={searchTerm} onChange={onSearchTermChange} placeholder="Search crates by name..." />
       <div className="flex flex-wrap items-end gap-2">
         <CrateMemberTabs value={memberType} onChange={onMemberTypeChange} />
-        <SortBySelect
+        {/* <SortBySelect
           value={sortBy}
           onChange={onSortByChange}
           allowedValues={allowedSortByValues}
           labels={sortByLabels}
-        />
+        /> */}
         <OrderToggle ascending={ascending} onChange={(val) => onOrderChange(val)} />
       </div>
     </div>

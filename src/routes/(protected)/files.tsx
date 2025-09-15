@@ -1,7 +1,8 @@
 import { Settings } from "lucide-react";
-import PageHeader from "@/components/PageHeader";
-import { Button } from "@/components/ui/button";
+
 import { createFileRoute } from "@tanstack/react-router";
+import PageHeader from "@/shared/components/PageHeader";
+import { Button } from "@/shared/components/ui/button";
 
 export const Route = createFileRoute("/(protected)/files")({
   component: FilesPage,

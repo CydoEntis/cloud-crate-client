@@ -1,5 +1,5 @@
-import { Skeleton } from "@/components/ui/skeleton"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/shared/components/ui/button";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 function InviteModalSkeleton() {
   return (
@@ -29,7 +29,7 @@ function InviteModalSkeleton() {
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 export default InviteModalSkeleton;

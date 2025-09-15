@@ -1,6 +1,6 @@
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useCrateSelectionStore } from "../store/useCrateSelectionStore";
+import { Checkbox } from "@/shared/components/ui/checkbox";
 
 function SelectAllCrates({ allIds }: { allIds: string[] }) {
   const toggleAll = useCrateSelectionStore((s) => s.toggleAll);

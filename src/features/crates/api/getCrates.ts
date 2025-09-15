@@ -1,7 +1,7 @@
 import type { ApiResponse, PaginatedResult } from "@/features/auth";
 import type { Crate } from "../types/Crate";
-import api from "@/lib/api";
 import type { GetCrateParams } from "../types/GetCrateParams";
+import apiService from "@/shared/lib/api/ApiClient";
 
 export const getCrates = async ({
   searchTerm,
@@ -20,6 +20,6 @@ export const getCrates = async ({
   params.append("PageSize", pageSize.toString());
   if (memberType) params.append("MemberType", memberType);
 
-  const { data } = await api.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
-  return data.value!;
+  const { data } = await apiService.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
+  return data.data!;
 };

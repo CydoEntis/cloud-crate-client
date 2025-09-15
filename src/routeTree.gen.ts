@@ -14,7 +14,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as publicRouteImport } from './routes/(public)/route'
 import { Route as protectedRouteImport } from './routes/(protected)/route'
 import { Route as IndexImport } from './routes/index'
-import { Route as protectedTrashImport } from './routes/(protected)/trash'
 import { Route as protectedFilesImport } from './routes/(protected)/files'
 import { Route as publicauthRouteImport } from './routes/(public)/(auth)/route'
 import { Route as protectedCratesIndexImport } from './routes/(protected)/crates/index'
@@ -40,12 +39,6 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const protectedTrashRoute = protectedTrashImport.update({
-  id: '/trash',
-  path: '/trash',
-  getParentRoute: () => protectedRouteRoute,
 } as any)
 
 const protectedFilesRoute = protectedFilesImport.update({
@@ -136,13 +129,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedFilesImport
       parentRoute: typeof protectedRouteImport
     }
-    '/(protected)/trash': {
-      id: '/(protected)/trash'
-      path: '/trash'
-      fullPath: '/trash'
-      preLoaderRoute: typeof protectedTrashImport
-      parentRoute: typeof protectedRouteImport
-    }
     '/(public)/(auth)/login': {
       id: '/(public)/(auth)/login'
       path: '/login'
@@ -192,7 +178,6 @@ declare module '@tanstack/react-router' {
 
 interface protectedRouteRouteChildren {
   protectedFilesRoute: typeof protectedFilesRoute
-  protectedTrashRoute: typeof protectedTrashRoute
   protectedCratesIndexRoute: typeof protectedCratesIndexRoute
   protectedCratesCrateIdIndexRoute: typeof protectedCratesCrateIdIndexRoute
   protectedCratesCrateIdFoldersFolderIdRoute: typeof protectedCratesCrateIdFoldersFolderIdRoute
@@ -200,7 +185,6 @@ interface protectedRouteRouteChildren {
 
 const protectedRouteRouteChildren: protectedRouteRouteChildren = {
   protectedFilesRoute: protectedFilesRoute,
-  protectedTrashRoute: protectedTrashRoute,
   protectedCratesIndexRoute: protectedCratesIndexRoute,
   protectedCratesCrateIdIndexRoute: protectedCratesCrateIdIndexRoute,
   protectedCratesCrateIdFoldersFolderIdRoute:
@@ -242,7 +226,6 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof publicauthRouteRouteWithChildren
   '/files': typeof protectedFilesRoute
-  '/trash': typeof protectedTrashRoute
   '/login': typeof publicauthLoginRoute
   '/register': typeof publicauthRegisterRoute
   '/invite/$token': typeof publicInviteTokenRoute
@@ -254,7 +237,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof publicauthRouteRouteWithChildren
   '/files': typeof protectedFilesRoute
-  '/trash': typeof protectedTrashRoute
   '/login': typeof publicauthLoginRoute
   '/register': typeof publicauthRegisterRoute
   '/invite/$token': typeof publicInviteTokenRoute
@@ -270,7 +252,6 @@ export interface FileRoutesById {
   '/(public)': typeof publicRouteRouteWithChildren
   '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
   '/(protected)/files': typeof protectedFilesRoute
-  '/(protected)/trash': typeof protectedTrashRoute
   '/(public)/(auth)/login': typeof publicauthLoginRoute
   '/(public)/(auth)/register': typeof publicauthRegisterRoute
   '/(public)/invite/$token': typeof publicInviteTokenRoute
@@ -284,7 +265,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/files'
-    | '/trash'
     | '/login'
     | '/register'
     | '/invite/$token'
@@ -295,7 +275,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/files'
-    | '/trash'
     | '/login'
     | '/register'
     | '/invite/$token'
@@ -309,7 +288,6 @@ export interface FileRouteTypes {
     | '/(public)'
     | '/(public)/(auth)'
     | '/(protected)/files'
-    | '/(protected)/trash'
     | '/(public)/(auth)/login'
     | '/(public)/(auth)/register'
     | '/(public)/invite/$token'
@@ -353,7 +331,6 @@ export const routeTree = rootRoute
       "filePath": "(protected)/route.tsx",
       "children": [
         "/(protected)/files",
-        "/(protected)/trash",
         "/(protected)/crates/",
         "/(protected)/crates/$crateId/",
         "/(protected)/crates/$crateId/folders/$folderId"
@@ -376,10 +353,6 @@ export const routeTree = rootRoute
     },
     "/(protected)/files": {
       "filePath": "(protected)/files.tsx",
-      "parent": "/(protected)"
-    },
-    "/(protected)/trash": {
-      "filePath": "(protected)/trash.tsx",
       "parent": "/(protected)"
     },
     "/(public)/(auth)/login": {

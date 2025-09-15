@@ -2,11 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import CrateTable from "@/features/crates/components/CrateTable";
 import UpdateCrateModal from "@/features/crates/components/UpdateCrateModal";
-import PaginationControls from "@/components/PaginationControls";
 import { crateSearchSchema } from "@/features/crates/schemas/crateSearchSchema";
 import { useCratesPage } from "@/features/crates/hooks/useCratesPage";
 import { CratesFilters } from "@/features/crates/components/CratesFilter";
 import CrateBulkActionBar from "@/features/crates/components/CrateBulkActionBar";
+import PaginationControls from "@/shared/components/PaginationControls";
 
 export const Route = createFileRoute("/(protected)/crates/")({
   validateSearch: zodValidator(crateSearchSchema),

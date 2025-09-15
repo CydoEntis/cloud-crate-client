@@ -1,4 +1,4 @@
-import api from "@/lib/api";
+import apiService from "@/shared/lib/api/ApiClient";
 import type { CreateFolder } from "../../types/folder/request/CreateFolder";
 
 export const createFolder = async (data: CreateFolder): Promise<void> => {
@@ -13,5 +13,5 @@ export const createFolder = async (data: CreateFolder): Promise<void> => {
     parentFolderId: data.parentFolderId, 
   };
 
-  await api.post(`/crates/${data.crateId}/folders`, payload);
+  await apiService.post(`/crates/${data.crateId}/folders`, payload);
 };

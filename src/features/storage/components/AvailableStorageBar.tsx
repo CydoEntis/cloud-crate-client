@@ -1,4 +1,4 @@
-import { formatBytes } from "@/lib/formatBytes";
+import { formatBytes } from "@/shared/lib/formatBytes";
 import type { StorageSegment } from "../types/StorageSegment";
 
 type StorageProps = {

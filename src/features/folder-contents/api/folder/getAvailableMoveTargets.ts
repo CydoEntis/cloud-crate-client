@@ -1,11 +1,11 @@
-import api from "@/lib/api";
-import type { Folder } from "../types/Folder";
 import type { ApiResponse } from "@/features/auth";
+import apiService from "@/shared/lib/api/ApiClient";
+import type { CrateFolder } from "../../types/folder/CrateFolder";
 
-export const getAvailableMoveTargets = async (crateId: string, excludeFolderId?: string): Promise<Folder[]> => {
+export const getAvailableMoveTargets = async (crateId: string, excludeFolderId?: string): Promise<CrateFolder[]> => {
   const query = excludeFolderId ? `?excludeFolderId=${excludeFolderId}` : "";
   const url = `/crates/${crateId}/folders/available-move-targets${query}`;
 
-  const response = await api.get<ApiResponse<Folder[]>>(url);
-  return response.data.value ?? [];
+  const response = await apiService.get<ApiResponse<CrateFolder[]>>(url);
+  return response.data.data ?? [];
 };

@@ -1,9 +1,8 @@
-// CrateSettingsPanel.tsx
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import InviteCollaborators from "@/features/invites/components/InivteCollaborators";
 import DeleteCrate from "./DeleteCrate";
 import type { CrateRole } from "@/features/invites/types/CrateRole";
 import UpdateCrateForm from "./UpdateCrateForm";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/shared/components/ui/sheet";
 
 type CrateSettingsPanelProps = {
   isOpen: boolean;
@@ -23,8 +22,8 @@ export default function CrateSettingsPanel({
   role,
 }: CrateSettingsPanelProps) {
   return (
-    <Sheet open={isOpen} onOpenChange={onClose} >
-      <SheetContent side="right" className="px-4 py-8 border-none shadow bg-card text-foreground" >
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent side="right" className="px-4 py-8 border-none shadow bg-card text-foreground">
         <SheetHeader className="p-0">
           <SheetTitle>Crate Settings</SheetTitle>
           <SheetDescription>Update crate info, manage collaborators, or delete this crate.</SheetDescription>

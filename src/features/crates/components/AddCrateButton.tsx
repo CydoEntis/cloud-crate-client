@@ -1,8 +1,8 @@
-import { SidebarMenuItem } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
+
 import { Plus } from "lucide-react";
 import { useCrateModalStore } from "../store/crateModalStore";
-import { useUserStore } from "@/features/auth";
+import { SidebarMenuItem } from "@/shared/components/ui/sidebar";
+import { Button } from "@/shared/components/ui/button";
 
 function AddCrateButton() {
   const { open } = useCrateModalStore();

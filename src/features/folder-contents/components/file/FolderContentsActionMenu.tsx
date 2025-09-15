@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
+import type { FolderContentRowItem } from "@/features/folder-contents/types/FolderContentRowItem";
+import { MoreVertical } from "lucide-react";
+import { useDeleteFolder } from "../../hooks/folder/mutations/useDeleteFolder";
+import { useSoftDeleteFile } from "../../hooks/file/mutations/useSoftDeleteFile";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { FolderContentRowItem } from "@/features/folder-contents/types/FolderContentRowItem";
-import { MoreVertical } from "lucide-react";
-import { useDeleteFolder } from "../../hooks/folder/mutations/useDeleteFolder";
-import { useSoftDeleteFile } from "../../hooks/file/mutations/useSoftDeleteFile";
+} from "@/shared/components/ui/dropdown-menu";
+import { Button } from "@/shared/components/ui/button";
 
 function FolderContentsActionMenu({ row }: { row: FolderContentRowItem }) {
   if ((row as any).isBackRow) return null;

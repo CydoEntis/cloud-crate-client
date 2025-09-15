@@ -1,4 +1,9 @@
-import type z from "zod";
-import type { StorageDetails, createCreateCrateSchema } from "../schemas/CreateCrateSchema";
+import z from "zod";
+import { createCreateCrateSchema } from "../schemas/CreateCrateSchema";
 
-export type CreateCrateRequest<T extends StorageDetails> = z.infer<ReturnType<typeof createCreateCrateSchema>>;
+const baseSchema = createCreateCrateSchema({
+  usedStorageBytes: 0,
+  accountStorageLimitBytes: 100 * 1024 * 1024 * 1024 
+});
+
+export type CreateCrateRequest = z.infer<typeof baseSchema>;

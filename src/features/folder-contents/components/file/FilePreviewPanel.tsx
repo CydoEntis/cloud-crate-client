@@ -1,12 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { useGetFile } from "../../hooks/file/queries/useGetFile";
 import { FilePreview } from "./FilePreview";
-import { DownloadButton } from "@/components/DownloadButton";
-import { formatBytes } from "@/lib/formatBytes";
-import StorageDisplay from "@/components/StorageDisplay";
-import DateIndicator from "@/components/DateIndicator";
-import UserAvatar from "@/components/UserAvatar";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import DateIndicator from "@/shared/components/DateIndicator";
+import { DownloadButton } from "@/shared/components/DownloadButton";
+import StorageDisplay from "@/shared/components/StorageDisplay";
+import UserAvatar from "@/shared/components/UserAvatar";
 
 type FilePreviewPanelProps = {
   crateId: string;
@@ -50,11 +49,11 @@ export default function FilePreviewPanel({ crateId, fileId, onClose }: FilePrevi
                 <div className="flex flex-col gap-2 text-sm text-muted-foreground">
                   <div className="flex gap-2">
                     <h3>Uploader:</h3>
-                    <UserAvatar
+                    {/* <UserAvatar
                       displayName={file.uploadedByDisplayName ?? ""}
                       email={file.uploadedByEmail ?? ""}
                       profilePictureUrl={file.uploadedByProfilePictureUrl ?? ""}
-                    />
+                    /> */}
                   </div>
                   <div className="flex gap-2">
                     <h3>Upload Date:</h3>

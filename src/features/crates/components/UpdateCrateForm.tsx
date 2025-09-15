@@ -1,18 +1,17 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ColorPicker } from "@/components/ColorPicker";
+
 import { Loader2, Check } from "lucide-react";
-import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { UpdateCrateSchema } from "../schemas/UpdateCrateSchema";
 import { useUpdateCrate } from "../hooks/mutations/useUpdateCrate";
-import { setFieldErrorsFromValidationResponse } from "@/lib/formUtils";
 import type { UpdateCrateRequest } from "../types/UpdateCrateRequest";
-import { useAnimatedAction } from "@/hooks/useAnimationAction";
-import { useApiFormErrorHandler } from "@/hooks/useApiFromErrorHandler";
+import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
+import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
+import { ColorPicker } from "@/shared/components/ColorPicker";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 
 type UpdateCrateFormProps = {
   crateId: string;
