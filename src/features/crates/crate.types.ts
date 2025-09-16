@@ -3,19 +3,11 @@ import type { z } from "zod";
 import type { CrateRole } from "@/features/invites/types/CrateRole";
 import type { FileTypeBreakdown } from "@/features/folder-contents/types/file";
 import type { crateSearchSchema, createCrateSchema, updateCrateSchema } from "./crate.schemas";
+import type { Member } from "../members/member.types";
 
 export type GetCrateParams = z.infer<typeof crateSearchSchema>;
 export type CreateCrateRequest = z.infer<typeof createCrateSchema>;
 export type UpdateCrateRequest = z.infer<typeof updateCrateSchema>;
-
-export type Member = {
-  userId: string;
-  email: string;
-  displayName: string;
-  profilePicture: string;
-  role: CrateRole;
-  joinedAt: string | Date;
-};
 
 export type Crate = {
   id: string;
