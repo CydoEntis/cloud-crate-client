@@ -1,7 +1,7 @@
 // Fixed CreateCrateModal - Hooks must always run in the same order
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
-import { useCrateModalStore } from "../store/crateModalStore";
+import { useCrateModalStore } from "../store/crate-modal.store";
 import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
 import { useUserStore } from "@/features/user/user.store";

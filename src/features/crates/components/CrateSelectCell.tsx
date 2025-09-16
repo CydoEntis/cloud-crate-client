@@ -1,6 +1,6 @@
 import React from "react";
 import type { Crate } from "../types/Crate";
-import { useCrateSelectionStore } from "../store/useCrateSelectionStore";
+import { useCrateSelectionStore } from "../store/crate-selection.store";
 import { Checkbox } from "@radix-ui/react-checkbox";
 
 type CrateSelectCellProps = {

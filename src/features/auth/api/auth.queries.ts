@@ -2,8 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../auth.store";
 import { useUserStore } from "../../user/user.store";
 import { authService } from "./auth.service";
-import type { AuthUser } from "../auth.types";
-import type { User } from "@/features/user/types/User";
+import type { User } from "@/features/user/user.types";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -75,7 +74,7 @@ export const useMe = () => {
     queryKey: authKeys.me(),
     queryFn: () => authService.me(),
     enabled: isAuthenticated,
-    staleTime: 1000 * 60 * 5, 
+    staleTime: 1000 * 60 * 5,
   });
 };
 

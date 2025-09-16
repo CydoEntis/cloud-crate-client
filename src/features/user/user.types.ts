@@ -9,5 +9,5 @@ export type User = {
   usedStorageBytes: number;
   createdAt: string;
   updatedAt: string;
-  profilePictureUrl?: string;  
+  profilePictureUrl?: string;
 };

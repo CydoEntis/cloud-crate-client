@@ -1,6 +1,6 @@
-import type { User } from "@/features/user/types/User";
 import type { AuthUser } from "@/features/auth/auth.types";
 import { create } from "zustand";
+import type { User } from "./user.types";
 
 interface UserStore {
   user: User | null;
@@ -18,7 +18,6 @@ export const useUserStore = create<UserStore>((set) => ({
     set((state) => ({
       user: state.user
         ? {
-            // Keep existing user data, update with auth data
             ...state.user,
             id: authUser.id,
             email: authUser.email,
@@ -26,20 +25,17 @@ export const useUserStore = create<UserStore>((set) => ({
             profilePictureUrl: authUser.profilePictureUrl || state.user.profilePictureUrl,
           }
         : {
-            // Create complete User object with all required fields
             id: authUser.id,
             email: authUser.email,
             displayName: authUser.displayName,
             profilePictureUrl: authUser.profilePictureUrl || "",
 
-            // Storage-related fields with defaults (will be updated by /me endpoint)
             accountStorageLimitBytes: 0,
             allocatedStorageBytes: 0,
             remainingAllocationBytes: 0,
             remainingUsageBytes: 0,
             usedStorageBytes: 0,
 
-            // Timestamps with defaults
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           },

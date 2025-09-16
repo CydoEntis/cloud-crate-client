@@ -1,5 +1,5 @@
 import React from "react";
-import { useCrateSelectionStore } from "../store/useCrateSelectionStore";
+import { useCrateSelectionStore } from "../store/crate-selection.store";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 
 function SelectAllCrates({ allIds }: { allIds: string[] }) {
