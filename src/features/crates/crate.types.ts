@@ -1,0 +1,50 @@
+import type { z } from "zod";
+
+import type { CrateRole } from "@/features/invites/types/CrateRole";
+import type { FileTypeBreakdown } from "@/features/folder-contents/types/file";
+import type { crateSearchSchema, createCrateSchema, updateCrateSchema } from "./crate.schemas";
+
+export type GetCrateParams = z.infer<typeof crateSearchSchema>;
+export type CreateCrateRequest = z.infer<typeof createCrateSchema>;
+export type UpdateCrateRequest = z.infer<typeof updateCrateSchema>;
+
+export type Member = {
+  userId: string;
+  email: string;
+  displayName: string;
+  profilePicture: string;
+  role: CrateRole;
+  joinedAt: string | Date;
+};
+
+export type Crate = {
+  id: string;
+  name: string;
+  color: string;
+  owner: Member;
+  usedStorageBytes: number;
+  totalStorageBytes: number;
+  joinedAt: Date;
+};
+
+export type CrateDetails = {
+  id: string;
+  name: string;
+  role: CrateRole;
+  color: string;
+  totalUsedStorage: number;
+  storageLimit: number;
+  breakdownByType: FileTypeBreakdown[];
+  remainingStorage: number;
+  rootFolderId: string;
+};
+
+export type UserCratesResponse = {
+  owned: Crate[];
+  joined: Crate[];
+};
+
+export type StorageDetails = {
+  usedStorageBytes: number;
+  accountStorageLimitBytes: number;
+};
