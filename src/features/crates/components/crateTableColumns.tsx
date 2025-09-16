@@ -1,10 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import type { Crate } from "../types/Crate";
 import CrateIndicator from "./CrateIndicator";
 import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/shared/components/UserAvatar";
 import StorageProgressbar from "@/shared/components/StorageProgressbar";
 import DateIndicator from "@/shared/components/DateIndicator";
+import type { Crate } from "../crate.types";
 
 const columnHelper = createColumnHelper<Crate>();
 
@@ -19,19 +19,7 @@ export function crateTableColumns({
   onDelete: (id: string) => void;
   onLeave: (id: string) => void;
 }) {
-  // Used for bulk selecting crates
-  const allIds = crates.map((c) => c.id);
-
   return [
-    // Leaving this in incase we ever want to go back to allowing bulk selections for Crates
-    // columnHelper.display({
-    //   id: "select",
-    //   size: 2,
-    //   minSize: 2,
-    //   header: () => <SelectAllCrates allIds={allIds} />,
-    //   cell: ({ row }) => <CrateSelectCell crate={row.original} />,
-    // }),
-
     columnHelper.accessor("name", {
       header: "Name",
       size: 55,

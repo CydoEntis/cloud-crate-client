@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef } from "@tanstack/react-table";
-import type { Crate } from "../types/Crate";
 import { useNavigate } from "@tanstack/react-router";
 import { useMediaQuery } from "usehooks-ts";
 import { Table, TableBody } from "@/shared/components/ui/table";
 import GenericTableHeader from "@/shared/components/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/GenericTableRow";
+import type { Crate } from "../crate.types";
 
 type CrateTableProps = {
   data: Crate[];

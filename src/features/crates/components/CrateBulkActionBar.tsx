@@ -1,5 +1,5 @@
 import { Trash2, LogOut } from "lucide-react";
-import { useCrateSelectionStore } from "../store/crate-selection.store";
+import { useCrateSelectionStore } from "../store/crateSelectionStore";
 
 import { Button } from "@/shared/components/ui/button";
 import { useBulkDeleteCrates, useBulkLeaveCrates } from "../api/crate.queries";

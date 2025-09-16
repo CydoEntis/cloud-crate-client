@@ -1,6 +1,6 @@
 
 import { Plus } from "lucide-react";
-import { useCrateModalStore } from "../store/crate-modal.store";
+import { useCrateModalStore } from "../store/crateModalStore";
 import { SidebarMenuItem } from "@/shared/components/ui/sidebar";
 import { Button } from "@/shared/components/ui/button";
 

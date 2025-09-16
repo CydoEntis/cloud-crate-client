@@ -1,76 +1,149 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import { useMemo, useCallback } from "react";
 import CrateTable from "@/features/crates/components/CrateTable";
-import UpdateCrateModal from "@/features/crates/components/UpdateCrateModal";
-
-import { CratesFilters } from "@/features/crates/components/CratesFilter";
-import PaginationControls from "@/shared/components/PaginationControls";
 import { crateSearchSchema } from "@/features/crates/crate.schemas";
+import { useGetCrates } from "@/features/crates/api/crate.queries";
+import { crateTableColumns } from "@/features/crates/components/crateTableColumns";
+import type { Crate } from "@/features/crates/crate.types";
+import { useCrateActions } from "@/features/crates/hooks/useCrateActions";
+import CratesPagination from "@/features/crates/components/CratesPagination";
+import CratesEditModal from "@/features/crates/components/CratesEditModal";
+import CratesConfirmActionDialog from "@/features/crates/components/CratesConfirmActionDialog";
+import { CratesFilters } from "@/features/crates/components/CratesFilter";
+import CratesError from "@/features/crates/components/CratesError";
+import NoCratesFound from "@/features/crates/components/NoCratesFound";
+import CratesPageHeader from "@/features/crates/components/CratesPageHeader";
 
 export const Route = createFileRoute("/(protected)/crates/")({
   validateSearch: zodValidator(crateSearchSchema),
+  errorComponent: CratesError,
   component: CratesPage,
 });
 
-export default function CratesPage() {
-  return <p>Crates Page</p>;
+function CratesPageLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="space-y-6 p-6">
+      <CratesPageHeader />
+      {children}
+    </div>
+  );
 }
-// export default function CratesPage() {
-//   const {
-//     searchTerm,
-//     sortBy,
-//     ascending,
-//     memberType,
-//     data,
-//     isPending,
-//     editingCrate,
-//     setEditingCrate,
-//     columns,
-//     updateFilter,
-//     setSearchParams,
-//   } = useCratesPage();
 
-//   return (
-//     <div className="space-y-6 p-6">
-//       <header className="flex flex-col gap-1">
-//         <h2 className="text-2xl font-semibold text-foreground">My Crates</h2>
-//         <p className="text-muted-foreground text-sm">Manage your owned and joined crates.</p>
-//       </header>
+export default function CratesPage() {
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const editingCrateId = search.edit ?? null;
 
-//       <CratesFilters
-//         searchTerm={searchTerm}
-//         onSearchTermChange={(val) => updateFilter({ searchTerm: val })}
-//         memberType={memberType}
-//         onMemberTypeChange={(val) => updateFilter({ memberType: val })}
-//         sortBy={sortBy}
-//         onSortByChange={(val) => updateFilter({ sortBy: val })}
-//         ascending={ascending}
-//         onOrderChange={(val) => updateFilter({ ascending: val })}
-//       />
+  const crateRequest = useMemo(
+    () => ({
+      searchTerm: search.searchTerm ?? "",
+      sortBy: search.sortBy ?? "Name",
+      ascending: search.ascending ?? false,
+      page: search.page ?? 1,
+      pageSize: search.pageSize ?? 10,
+      memberType: search.memberType ?? "All",
+    }),
+    [search.searchTerm, search.sortBy, search.ascending, search.page, search.pageSize, search.memberType]
+  );
 
-//       <CrateTable data={data?.items ?? []} columns={columns} isLoading={isPending} />
+  const { data: crates, isPending, error } = useGetCrates(crateRequest);
 
-//       {data && data.totalCount > 1 && (
-//         <PaginationControls
-//           page={data.page}
-//           pageSize={data.pageSize}
-//           totalCount={data.totalCount}
-//           onPageChange={(newPage) => setSearchParams({ page: newPage })}
-//         />
-//       )}
+  if (error) {
+    throw error;
+  }
 
-//       {editingCrate && (
-//         <UpdateCrateModal
-//           open
-//           crateId={editingCrate.id}
-//           initialName={editingCrate.name}
-//           initialColor={editingCrate.color}
-//           onOpenChange={(open) => !open && setEditingCrate(null)}
-//         />
-//       )}
+  const {
+    confirmAction,
+    handleDeleteCrate,
+    handleLeaveCrate,
+    handleConfirmAction,
+    handleCancelAction,
+    isDeleting,
+    isLeaving,
+  } = useCrateActions(crates?.items);
 
-//       {/* Removing but keeping here in case we deicde to add back in Bulk selecting and Actions on Crates */}
-//       {/* <CrateBulkActionBar /> */}
-//     </div>
-//   );
-// }
+  const updateFilter = useCallback(
+    (partial: Partial<typeof crateRequest>) => {
+      navigate({
+        search: (old) => ({ ...old, ...partial }),
+      });
+    },
+    [navigate]
+  );
+
+  const handleEditCrate = useCallback(
+    (crate: Crate) => {
+      navigate({ search: (old) => ({ ...old, edit: crate.id }) });
+    },
+    [navigate]
+  );
+
+  const handleCloseModal = useCallback(() => {
+    navigate({
+      search: (old) => {
+        const { edit, ...rest } = old;
+        return rest;
+      },
+    });
+  }, [navigate]);
+
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      navigate({
+        search: (old) => ({ ...old, page: newPage }),
+      });
+    },
+    [navigate]
+  );
+
+  const crateColumns = useMemo(
+    () =>
+      crateTableColumns({
+        crates: crates?.items ?? [],
+        onEdit: handleEditCrate,
+        onDelete: handleDeleteCrate,
+        onLeave: handleLeaveCrate,
+      }),
+    [crates?.items, handleEditCrate, handleDeleteCrate, handleLeaveCrate]
+  );
+
+  return (
+    <CratesPageLayout>
+      <CratesFilters
+        searchTerm={crateRequest.searchTerm}
+        onSearchTermChange={(val) => updateFilter({ searchTerm: val, page: 1 })}
+        memberType={crateRequest.memberType}
+        onMemberTypeChange={(val) => updateFilter({ memberType: val, page: 1 })}
+        sortBy={crateRequest.sortBy}
+        onSortByChange={(val) => updateFilter({ sortBy: val, page: 1 })}
+        ascending={crateRequest.ascending}
+        onOrderChange={(val) => updateFilter({ ascending: val, page: 1 })}
+      />
+
+      {!crates?.items?.length && !isPending ? (
+        <NoCratesFound searchTerm={crateRequest.searchTerm} onFilterChange={updateFilter} />
+      ) : (
+        <>
+          <CrateTable
+            data={crates?.items ?? []}
+            columns={crateColumns}
+            isLoading={isPending}
+            aria-label="Crates table"
+          />
+          {crates && !isPending && <CratesPagination crates={crates} onPageChange={handlePageChange} />}
+        </>
+      )}
+
+      <CratesEditModal editingCrateId={editingCrateId} crates={crates?.items} onClose={handleCloseModal} />
+
+      <CratesConfirmActionDialog
+        confirmAction={confirmAction}
+        isDeleting={isDeleting}
+        isLeaving={isLeaving}
+        onConfirm={handleConfirmAction}
+        onCancel={handleCancelAction}
+      />
+    </CratesPageLayout>
+  );
+}

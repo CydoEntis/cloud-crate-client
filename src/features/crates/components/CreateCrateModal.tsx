@@ -1,7 +1,7 @@
 // Fixed CreateCrateModal - Hooks must always run in the same order
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
-import { useCrateModalStore } from "../store/crate-modal.store";
+import { useCrateModalStore } from "../store/crateModalStore";
 import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
 import { useUserStore } from "@/features/user/user.store";
 import { toast } from "sonner";
@@ -11,9 +11,9 @@ import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import { Slider } from "@radix-ui/react-slider";
 import { useCreateCrate } from "../api/crate.queries";
 import { createCreateCrateSchema } from "../crate.schemas";
+import { Slider } from "@/shared/components/ui/slider";
 
 function CreateCrateModal() {
   const { isOpen, close } = useCrateModalStore();
@@ -47,7 +47,6 @@ function CreateCrateModal() {
 
   const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
 
-  // NOW we can do conditional rendering - after all hooks have run
   if (!user) {
     return null;
   }

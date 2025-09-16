@@ -34,7 +34,6 @@ export type ApiResponse<T> = {
   data: T | null;
   message?: string;
   statusCode: number;
-  errors?: ApiError[];  
+  errors?: ApiError[];
   timestamp: string;
 };
-

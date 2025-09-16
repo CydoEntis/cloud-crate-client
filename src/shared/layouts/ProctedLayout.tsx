@@ -1,6 +1,6 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { Separator } from "@/shared/components/ui/separator";
-import { AppSidebar } from "./sidebar/app-sidebar";
+import { AppSidebar } from "./sidebar/AppSidebar";
 import { InviteModal } from "@/features/invites/components/inviteModal";
 import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
 import type { ReactNode } from "react";

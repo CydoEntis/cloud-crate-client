@@ -21,6 +21,7 @@ export const crateSearchSchema = z.object({
   page: z.coerce.number().min(1).optional().default(1),
   pageSize: z.coerce.number().min(1).max(100).optional().default(10),
   memberType: z.enum(allowedMemberTypes).optional().default("All"),
+  edit: z.string().optional(),
 });
 
 export const createCreateCrateSchema = (storage: { usedStorageBytes: number; accountStorageLimitBytes: number }) => {

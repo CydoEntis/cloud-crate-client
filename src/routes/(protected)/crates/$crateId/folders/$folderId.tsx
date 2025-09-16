@@ -11,7 +11,6 @@ import { CreateFolderModal } from "@/features/folder-contents/components/folder"
 import FilePreviewPanel from "@/features/folder-contents/components/file/FilePreviewPanel";
 import folderFileTableColumns from "@/features/folder-contents/components/file/table/columns/folderFileTableColumns";
 import { Settings } from "lucide-react";
-import CrateSettingsPanel from "@/features/crates/components/CrateSettingsPanel";
 
 import BulkActionBar from "@/features/bulk/components/BulkActionToolbar";
 import { Button } from "@/shared/components/ui/button";
@@ -37,7 +36,7 @@ export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$fold
   component: CrateFolderPage,
 });
 
-function CratesFolderPage() {
+function CrateFolderPage() {
   return <p>CrateFolderPage</p>;
 }
 

@@ -4,9 +4,9 @@ import { Settings, Trash2, Box } from "lucide-react";
 import logo from "@/assets/cloud-crate-logo.png";
 import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/shared/components/ui/sidebar";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
-import SidebarNavlink from "./sidebar-navlink";
+import SidebarNavlink from "./SidebarNavlink";
 import ThemeToggle from "@/shared/components/ThemeToggle";
-import { SidebarUserSection } from "./sidebar-user-section";
+import { SidebarUserSection } from "./SidebarUserSection";
 
 const navlinks = [
   { id: "crates", text: "Crates", to: "/crates", icon: <Box /> },

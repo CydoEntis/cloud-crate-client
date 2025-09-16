@@ -1,6 +1,5 @@
 import { MoreVertical } from "lucide-react";
-import type { Crate } from "../types/Crate";
-import { useLeaveCrate } from "../hooks/mutations/useLeaveCrate";
+
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -10,6 +9,7 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import ConfirmDialog from "@/shared/components/ConfirmDialog";
 import { useUserStore } from "@/features/user/user.store";
+import type { Crate } from "../crate.types";
 
 type CrateActionsMenuProps = {
   crate: Crate;
