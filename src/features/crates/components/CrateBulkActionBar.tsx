@@ -1,8 +1,8 @@
 import { Trash2, LogOut } from "lucide-react";
 import { useCrateSelectionStore } from "../store/crate-selection.store";
-import { useBulkDeleteCrates } from "../hooks/mutations/useBulkDeleteCrates";
-import { useBulkLeaveCrates } from "../hooks/mutations/useBulkLeaveCrates";
+
 import { Button } from "@/shared/components/ui/button";
+import { useBulkDeleteCrates, useBulkLeaveCrates } from "../api/crate.queries";
 
 export default function CrateBulkActionBar() {
   const { selectedIds, clear } = useCrateSelectionStore();

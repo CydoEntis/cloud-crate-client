@@ -1,4 +1,4 @@
-import { useDownloadFile } from "@/features/folder-contents/hooks/file/mutations/useDownloadFile";
+import { useDownloadFile } from "@/features/folder-contents/api/file.queries";
 import { Button } from "./ui/button";
 
 export function DownloadButton({ crateId, fileId, fileName }: { crateId: string; fileId: string; fileName: string }) {
@@ -7,7 +7,6 @@ export function DownloadButton({ crateId, fileId, fileName }: { crateId: string;
   const handleDownload = async () => {
     const blob = await downloadMutation.mutateAsync({ crateId, fileId });
 
-    // Create a temporary link
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -15,7 +14,6 @@ export function DownloadButton({ crateId, fileId, fileName }: { crateId: string;
     document.body.appendChild(link);
     link.click();
 
-    // Cleanup
     link.remove();
     window.URL.revokeObjectURL(url);
   };

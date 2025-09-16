@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useDeleteCrate } from "../hooks/mutations/useDeleteCrate";
 import { toast } from "sonner";
 import { Loader2, Check } from "lucide-react";
 import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/shared/components/ui/button";
+import { useDeleteCrate } from "../api/crate.queries";
 
 export default function DeleteCrate({ crateId }: { crateId: string }) {
   const navigate = useNavigate();

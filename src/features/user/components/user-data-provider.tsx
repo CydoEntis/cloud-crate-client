@@ -1,4 +1,4 @@
-import { useGetUser } from "../hooks/useGetUser";
+import { useGetUser } from "../api/user.queries";
 import { useUserStore } from "../user.store";
 import { useEffect, type ReactNode } from "react";
 

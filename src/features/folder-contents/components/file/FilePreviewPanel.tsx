@@ -1,15 +1,15 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
-import { useGetFile } from "../../hooks/file/queries/useGetFile";
 import { FilePreview } from "./FilePreview";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import DateIndicator from "@/shared/components/DateIndicator";
 import { DownloadButton } from "@/shared/components/DownloadButton";
 import StorageDisplay from "@/shared/components/StorageDisplay";
 import UserAvatar from "@/shared/components/UserAvatar";
+import { useGetFile } from "../../api/file.queries";
 
 type FilePreviewPanelProps = {
   crateId: string;
-  fileId: string | null;
+  fileId: string;
   onClose: () => void;
 };
 

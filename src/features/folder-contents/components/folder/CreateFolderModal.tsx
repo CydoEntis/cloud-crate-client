@@ -1,14 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useCreateFolder } from "../../hooks/folder/mutations/useCreateFolder";
-import type { CreateFolder } from "../../types/folder/request/CreateFolder";
-import { CreateFolderSchema } from "../../schemas/folder/CreateFolderSchema";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { useCreateFolder } from "../../api/folder.queries";
+import type { CreateFolder } from "../../types/folder.types";
+import { createFolderSchema } from "../../schemas/folder.schemas";
 
 type CreateFolderModalProps = {
   isOpen: boolean;
@@ -23,7 +24,7 @@ export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: 
   const { mutateAsync: createFolder, isPending } = useCreateFolder();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(CreateFolderSchema.pick({ name: true, color: true })),
+    resolver: zodResolver(createFolderSchema.pick({ name: true, color: true })),
     defaultValues: { name: "", color: "#4ade80" },
   });
 

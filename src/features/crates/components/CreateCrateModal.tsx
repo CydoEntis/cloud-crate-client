@@ -2,11 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useCrateModalStore } from "../store/crate-modal.store";
-import { useCreateCrate } from "../hooks/mutations/useCreateCrate";
 import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
 import { useUserStore } from "@/features/user/user.store";
 import { toast } from "sonner";
-import { createCreateCrateSchema } from "../schemas/CreateCrateSchema";
 import type z from "zod";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { ColorPicker } from "@/shared/components/ColorPicker";
@@ -14,14 +12,14 @@ import { Button } from "@/shared/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { Slider } from "@radix-ui/react-slider";
+import { useCreateCrate } from "../api/crate.queries";
+import { createCreateCrateSchema } from "../crate.schemas";
 
 function CreateCrateModal() {
-  // ALL HOOKS MUST RUN BEFORE ANY CONDITIONAL RETURNS
   const { isOpen, close } = useCrateModalStore();
   const { mutateAsync: createCrate, isPending } = useCreateCrate();
   const user = useUserStore((state) => state.user);
 
-  // Calculate values with fallbacks if user is null
   const BytesPerGb = 1024 * 1024 * 1024;
   const usedGb = user ? Math.floor(user.usedStorageBytes / BytesPerGb) : 0;
   const maxGb = user ? Math.floor(user.accountStorageLimitBytes / BytesPerGb) : 0;
@@ -31,7 +29,6 @@ function CreateCrateModal() {
   const maxAlloc = Math.max(remainingGb, minAlloc);
   const defaultAlloc = Math.min(Math.max(minAlloc, 1), remainingGb);
 
-  // Create schema with fallbacks
   const schema = createCreateCrateSchema({
     usedStorageBytes: user?.usedStorageBytes || 0,
     accountStorageLimitBytes: user?.accountStorageLimitBytes || 0,

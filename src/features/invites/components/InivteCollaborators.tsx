@@ -1,123 +1,123 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useInviteToCrate } from "../hooks/mutations/useInviteToCrate";
 
-import { CrateRole } from "../types/CrateRole";
-import type { CrateInviteApiRequest } from "../types/CrateInviteApiRequest";
-import type { CrateInviteFormValues } from "../types/CrateInviteRequest";
-import { crateInviteFormSchema } from "../schemas/crateInviteFormSchema";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 
-type InviteCollaboratorsProps = { crateId: string };
+// import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
+// import { Button } from "@/shared/components/ui/button";
+// import { Input } from "@/shared/components/ui/input";
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
+// import type { CrateInvite, CrateInviteRequest } from "../invite.types";
+// import { crateInviteFormSchema } from "../invite.schemas";
+// import { CrateRole } from "@/features/crates/crate.types";
+// import { useInviteToCrate } from "../api/invite.queries";
 
-export default function InviteCollaborators({ crateId }: InviteCollaboratorsProps) {
-  const form = useForm<CrateInviteFormValues>({
-    resolver: zodResolver(crateInviteFormSchema),
-    defaultValues: {
-      email: "",
-      role: CrateRole.Viewer,
-      expiresAt: 15,
-    },
-  });
+// type InviteCollaboratorsProps = { crateId: string };
 
-  const { mutateAsync: invite, isPending } = useInviteToCrate();
+// export default function InviteCollaborators({ crateId }: InviteCollaboratorsProps) {
+//   const form = useForm<CrateInvite>({
+//     resolver: zodResolver(crateInviteFormSchema),
+//     defaultValues: {
+//       email: "",
+//       role: CrateRole.Viewer,
+//       expiresAt: 15,
+//     },
+//   });
 
-  const onSubmit = async (data: CrateInviteFormValues) => {
-    try {
-      const inviteRequest: CrateInviteApiRequest = {
-        ...data,
-        crateId,
-        expiresAt: new Date(Date.now() + data.expiresAt * 60 * 1000),
-      };
+//   const { mutateAsync: invite, isPending } = useInviteToCrate();
 
-      await invite(inviteRequest);
-      form.reset();
-    } catch (error) {
-      form.setError("email", { message: "Failed to send invitation" });
-    }
-  };
+//   const onSubmit = async (data: CrateInviteRequest) => {
+//     try {
+//       const inviteRequest: CrateInviteRequest = {
+//         ...data,
+//         crateId,
+//         expiresAt: new Date(Date.now() + data.expiresAt * 60 * 1000),
+//       };
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Enter email to invite"
-                  className="border-none h-full text-xl rounded-lg py-2 text-foreground 
-             focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-2 items-end">
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Role</FormLabel>
-                <FormControl>
-                  <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={CrateRole.Editor}>Editor</SelectItem>
-                      <SelectItem value={CrateRole.Viewer}>Viewer</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+//       await invite(inviteRequest);
+//       form.reset();
+//     } catch (error) {
+//       form.setError("email", { message: "Failed to send invitation" });
+//     }
+//   };
 
-          <FormField
-            control={form.control}
-            name="expiresAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Expires in</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(Number(value));
-                    }}
-                    value={String(field.value)}
-                    defaultValue={String(field.value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select expiration time" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="15">15 minutes</SelectItem>
-                      <SelectItem value="30">30 minutes</SelectItem>
-                      <SelectItem value="60">60 minutes</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={isPending} className="flex-1">
-            Send Invite
-          </Button>
-        </div>
-      </form>
-    </Form>
-  );
-}
+//   return (
+//     <Form {...form}>
+//       <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-4">
+//         <FormField
+//           control={form.control}
+//           name="email"
+//           render={({ field }) => (
+//             <FormItem>
+//               <FormLabel>Email</FormLabel>
+//               <FormControl>
+//                 <Input
+//                   {...field}
+//                   placeholder="Enter email to invite"
+//                   className="border-none h-full text-xl rounded-lg py-2 text-foreground 
+//              focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+//                 />
+//               </FormControl>
+//               <FormMessage />
+//             </FormItem>
+//           )}
+//         />
+//         <div className="flex gap-2 items-end">
+//           <FormField
+//             control={form.control}
+//             name="role"
+//             render={({ field }) => (
+//               <FormItem>
+//                 <FormLabel>Role</FormLabel>
+//                 <FormControl>
+//                   <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+//                     <SelectTrigger>
+//                       <SelectValue placeholder="Select a role" />
+//                     </SelectTrigger>
+//                     <SelectContent>
+//                       <SelectItem value={CrateRole.Editor}>Editor</SelectItem>
+//                       <SelectItem value={CrateRole.Viewer}>Viewer</SelectItem>
+//                     </SelectContent>
+//                   </Select>
+//                 </FormControl>
+//                 <FormMessage />
+//               </FormItem>
+//             )}
+//           />
+
+//           <FormField
+//             control={form.control}
+//             name="expiresAt"
+//             render={({ field }) => (
+//               <FormItem>
+//                 <FormLabel>Expires in</FormLabel>
+//                 <FormControl>
+//                   <Select
+//                     onValueChange={(value) => {
+//                       field.onChange(Number(value));
+//                     }}
+//                     value={String(field.value)}
+//                     defaultValue={String(field.value)}
+//                   >
+//                     <SelectTrigger>
+//                       <SelectValue placeholder="Select expiration time" />
+//                     </SelectTrigger>
+//                     <SelectContent>
+//                       <SelectItem value="15">15 minutes</SelectItem>
+//                       <SelectItem value="30">30 minutes</SelectItem>
+//                       <SelectItem value="60">60 minutes</SelectItem>
+//                     </SelectContent>
+//                   </Select>
+//                 </FormControl>
+//                 <FormMessage />
+//               </FormItem>
+//             )}
+//           />
+//           <Button type="submit" disabled={isPending} className="flex-1">
+//             Send Invite
+//           </Button>
+//         </div>
+//       </form>
+//     </Form>
+//   );
+// }

@@ -2,19 +2,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useUploadFiles } from "../../hooks/file/mutations/useUploadFiles";
-import { UploadFileSchema } from "../../schemas/file/UploadFileSchema";
-import type { UploadFileInput } from "../../types/file";
-import { ACCEPTED_EXTENSIONS } from "../../utils/file/acceptedExtensions";
+import { ACCEPTED_EXTENSIONS } from "../../utils/file.utils";
+import { uploadFileSchema } from "../../schemas/file.schemas";
+import type { UploadFile } from "../../types/file.types";
+import { useUploadFiles } from "../../api/file.queries";
 
 type FileUploadProps = {
   crateId: string;
   folderId: string;
-}
+};
 
 function FileUpload({ crateId, folderId }: FileUploadProps) {
-  const { register, setValue, watch, formState } = useForm<UploadFileInput>({
-    resolver: zodResolver(UploadFileSchema),
+  const { register, setValue, watch, formState } = useForm<UploadFile>({
+    resolver: zodResolver(uploadFileSchema),
     defaultValues: { folderId, files: [] },
   });
 
@@ -29,7 +29,6 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
       folderId,
       files: selectedFiles,
       onProgress: (percent) => {
-        // Could optionally update a single progress bar if desired
         console.log(`Upload progress: ${percent}%`);
       },
     });

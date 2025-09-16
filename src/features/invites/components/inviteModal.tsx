@@ -3,15 +3,14 @@ import { Box, Check, Loader2, X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
 import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
-import { useGetInviteByToken } from "@/features/invites/hooks/queries/useGetInviteByToken";
-import { useAcceptInvite } from "@/features/invites/hooks/mutations/useAcceptInvite";
-import { useDeclineInvite } from "@/features/invites/hooks/mutations/useDeclineInvite";
+
 import { useInviteStore } from "@/features/invites/invite.store";
 
 import InviteModalSkeleton from "./InviteModalSkeleton";
 import InviteError from "./InviteError";
 import { Dialog, DialogContent } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
+import { useAcceptInvite, useDeclineInvite, useGetInviteByToken } from "../api/invite.queries";
 
 export function InviteModal() {
   const token = useInviteStore((s) => s.token);

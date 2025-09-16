@@ -1,6 +1,5 @@
-import InviteCollaborators from "@/features/invites/components/InivteCollaborators";
+import type { CrateRole } from "../crate.types";
 import DeleteCrate from "./DeleteCrate";
-import type { CrateRole } from "@/features/invites/types/CrateRole";
 import UpdateCrateForm from "./UpdateCrateForm";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/shared/components/ui/sheet";
 
@@ -31,7 +30,7 @@ export default function CrateSettingsPanel({
         </SheetHeader>
 
         <div className="border-t mt-8 pt-6 space-y-4">
-          <InviteCollaborators crateId={crateId} />
+          {/* <InviteCollaborators crateId={crateId} /> */}
           <DeleteCrate crateId={crateId} />
         </div>
       </SheetContent>

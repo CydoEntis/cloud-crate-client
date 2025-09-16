@@ -3,15 +3,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
-import { UpdateCrateSchema } from "../schemas/UpdateCrateSchema";
-import { useUpdateCrate } from "../hooks/mutations/useUpdateCrate";
-import type { UpdateCrateRequest } from "../types/UpdateCrateRequest";
+
 import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { useUpdateCrate } from "../api/crate.queries";
+import type { UpdateCrateRequest } from "../crate.types";
+import { updateCrateSchema } from "../crate.schemas";
 
 type UpdateCrateFormProps = {
   crateId: string;
@@ -25,20 +26,20 @@ function UpdateCrateForm({ crateId, initialName, initialColor, onSuccess }: Upda
   const { phase, run } = useAnimatedAction();
 
   const form = useForm<UpdateCrateRequest>({
-    resolver: zodResolver(UpdateCrateSchema),
+    resolver: zodResolver(updateCrateSchema),
     defaultValues: { name: initialName, color: initialColor },
   });
 
   const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
 
-  const onSubmit = async (data: UpdateCrateRequest) => {
+  const onSubmit = async (request: UpdateCrateRequest) => {
     try {
-      await run(() => updateCrate({ crateId, ...data }));
-      form.reset(data);
+      await run(() => updateCrate({ crateId, request }));
+      form.reset(request);
       toast.success("Crate updated successfully!");
       onSuccess?.();
     } catch (err) {
-      form.reset(data);
+      form.reset(request);
       handleApiError(err);
     }
   };

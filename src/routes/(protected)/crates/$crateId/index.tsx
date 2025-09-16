@@ -1,25 +1,23 @@
+import { crateService } from "@/features/crates/api/crate.service";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { getCrateDetails } from "@/features/crates/api/getCrateDetails";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/")({
   loader: async ({ params }) => {
-    const crate = await getCrateDetails(params.crateId);
+    const crate = await crateService.getCrate(params.crateId);
 
     if (!crate) {
       throw new Error("Crate not found");
     }
 
     throw redirect({
-      to: "/crates/$crateId/folders/$folderId", 
+      to: "/crates/$crateId/folders/$folderId",
       params: {
         crateId: params.crateId,
-        folderId: crate.rootFolderId, 
+        folderId: crate.rootFolderId,
       },
     });
   },
 });
-
-
 
 // import { useEffect, useMemo, useState } from "react";
 // import { createFileRoute } from "@tanstack/react-router";
@@ -97,7 +95,6 @@ export const Route = createFileRoute("/(protected)/crates/$crateId/")({
 
 //   const { handleNavigate } = useFolderNavigation(crateId);
 //   const { handleDropItem } = useFolderDragAndDrop(crateId);
-
 
 // const columns = useMemo(() => folderFileTableColumns(selectMode), [selectMode]);
 //   return (
