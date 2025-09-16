@@ -1,8 +1,8 @@
 import type { z } from "zod";
 
-import type { FileTypeBreakdown } from "@/features/folder-contents/types/file";
 import type { crateSearchSchema, createCrateSchema, updateCrateSchema } from "./crate.schemas";
 import type { Member } from "../members/member.types";
+import type { FileTypeBreakdown } from "../folder-contents/types/file.types";
 
 export type GetCrateParams = z.infer<typeof crateSearchSchema>;
 export type CreateCrateRequest = z.infer<typeof createCrateSchema>;

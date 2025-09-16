@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import React, { useState } from "react";
-import { useFolderModalStore } from "../store/useFolderModalStore";
+import { useFolderModalStore } from "../store/folder-modal.store";
+import { Button } from "@/shared/components/ui/button";
 
 type FolderContentsToolbarProps = {
   crateId: string;

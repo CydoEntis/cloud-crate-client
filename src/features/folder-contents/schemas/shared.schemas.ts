@@ -1,7 +1,13 @@
-import z from "zod";
-import { crateFolderSchema } from "./folder/CrateFolderSchema";
-import { crateFileSchema } from "./file/CrateFileSchema";
-import { folderBreadcrumbSchema } from "./FolderBreadcrumbSchema";
+import { z } from "zod";
+import { crateFolderSchema } from "./folder.schemas";
+import { crateFileSchema } from "./file.schemas";
+
+export const folderBreadcrumbSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  color: z.string().default("#9CA3AF"),
+  isRoot: z.boolean(),
+});
 
 export const folderContentsSchema = z.object({
   folders: z.array(crateFolderSchema),
