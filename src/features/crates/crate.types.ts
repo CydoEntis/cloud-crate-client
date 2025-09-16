@@ -1,6 +1,5 @@
 import type { z } from "zod";
 
-import type { CrateRole } from "@/features/invites/types/CrateRole";
 import type { FileTypeBreakdown } from "@/features/folder-contents/types/file";
 import type { crateSearchSchema, createCrateSchema, updateCrateSchema } from "./crate.schemas";
 import type { Member } from "../members/member.types";
@@ -40,3 +39,9 @@ export type StorageDetails = {
   usedStorageBytes: number;
   accountStorageLimitBytes: number;
 };
+
+export enum CrateRole {
+  Owner = "Owner", // Full control, including deleting the crate
+  Editor = "Editor", // Can upload/download/delete files
+  Viewer = "Viewer", // Read-only access
+}

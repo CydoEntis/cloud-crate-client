@@ -1,8 +1,8 @@
 import * as z from "zod";
-import { CrateRole } from "../types/CrateRole";
+import { CrateRole } from "../crates/crate.types";
 
 export const crateInviteFormSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   role: z.nativeEnum(CrateRole),
-  expiresAt: z.number(), // Minutes
+  expiresAt: z.number(),
 });

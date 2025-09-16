@@ -6,7 +6,7 @@ import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { useGetInviteByToken } from "@/features/invites/hooks/queries/useGetInviteByToken";
 import { useAcceptInvite } from "@/features/invites/hooks/mutations/useAcceptInvite";
 import { useDeclineInvite } from "@/features/invites/hooks/mutations/useDeclineInvite";
-import { useInviteStore } from "@/features/invites/store/inviteStore";
+import { useInviteStore } from "@/features/invites/invite.store";
 
 import InviteModalSkeleton from "./InviteModalSkeleton";
 import InviteError from "./InviteError";
