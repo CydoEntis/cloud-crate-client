@@ -1,6 +1,6 @@
 import type { z } from "zod";
-import type { crateFolderSchema, createFolderSchema, moveFolderSchema } from "../schemas/folderSchema";
-import type { folderBreadcrumbSchema } from "../schemas/sharedSchema";
+import type { crateFolderSchema, createFolderSchema, moveFolderSchema } from "../folder/folderSchema";
+import type { folderBreadcrumbSchema } from "../sharedSchema";
 
 export type CreateFolder = z.infer<typeof createFolderSchema>;
 export type MoveFolder = z.infer<typeof moveFolderSchema>;

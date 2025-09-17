@@ -2,8 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { ACCEPTED_EXTENSIONS } from "../../utils/fileUtils";
-import { uploadFileSchema } from "../../schemas/fileSchema";
+import { ACCEPTED_EXTENSIONS } from "../fileUtils";
+import { uploadFileSchema } from "../fileSchema";
 import type { UploadFile } from "../../types/fileTypes";
 import { useUploadFiles } from "../../api/fileQueries";
 

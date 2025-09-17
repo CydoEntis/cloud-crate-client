@@ -1,7 +1,7 @@
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import type { Row } from "@tanstack/react-table";
-import type { FolderContentRowItem } from "@/features/folder-contents/types/FolderContentRowItem";
 import { Checkbox } from "@/shared/components/ui/checkbox";
+import type { FolderContentRowItem } from "@/features/folder-contents/sharedTypes";
 
 function SelectCell({ row }: { row: Row<FolderContentRowItem> }) {
   const { toggleFile, toggleFolder, isFileSelected, isFolderSelected } = useSelectionStore();

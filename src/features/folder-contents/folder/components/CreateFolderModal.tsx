@@ -7,9 +7,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { useCreateFolder } from "../../api/folderQueries";
-import type { CreateFolder } from "../../types/folderTypes";
-import { createFolderSchema } from "../../schemas/folderSchema";
+
+import { createFolderSchema } from "../folderSchema";
+import type { CreateFolder } from "../folderTypes";
+import { useCreateFolder } from "../api/folderQueries";
 
 type CreateFolderModalProps = {
   isOpen: boolean;

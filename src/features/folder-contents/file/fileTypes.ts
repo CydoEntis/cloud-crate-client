@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { crateFileSchema, moveFileSchema, uploadFileSchema } from "../schemas/fileSchema";
+import type { crateFileSchema, moveFileSchema, uploadFileSchema } from "../file/fileSchema";
 
 export type CrateFile = z.infer<typeof crateFileSchema>;
 export type MoveFile = z.infer<typeof moveFileSchema>;

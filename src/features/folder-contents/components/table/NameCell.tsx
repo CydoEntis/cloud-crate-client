@@ -1,4 +1,4 @@
-import type { FolderContentRowItem } from "@/features/folder-contents/types/FolderContentRowItem";
+import type { FolderContentRowItem } from "@/features/folder-contents/sharedTypes";
 import FileIndicator from "@/shared/components/FileIndicator";
 
 type NameCellProps = {

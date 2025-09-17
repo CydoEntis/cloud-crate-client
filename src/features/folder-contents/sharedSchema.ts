@@ -1,6 +1,8 @@
 import { z } from "zod";
-import { crateFolderSchema } from "./folderSchema";
-import { crateFileSchema } from "./fileSchema";
+import { crateFolderSchema } from "./folder/folderSchema";
+import { crateFileSchema } from "./file/fileSchema";
+import { allowedOrderByValues } from "./sharedTypes";
+
 
 export const folderBreadcrumbSchema = z.object({
   id: z.string().uuid(),
@@ -17,4 +19,12 @@ export const folderContentsSchema = z.object({
   breadcrumbs: z.array(folderBreadcrumbSchema),
   totalFolders: z.number().int().nonnegative(),
   totalFiles: z.number().int().nonnegative(),
+});
+
+export const folderSearchSchema = z.object({
+  page: z.coerce.number().optional().default(1),
+  pageSize: z.coerce.number().optional().default(10),
+  search: z.string().optional(),
+  orderBy: z.enum(allowedOrderByValues).optional().default("Name"),
+  ascending: z.boolean().default(false),
 });

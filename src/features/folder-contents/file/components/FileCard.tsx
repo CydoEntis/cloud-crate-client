@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { getFileIcon } from "../util/getFileIcon";
-import { getFileColor } from "../util/getFileColor";
+import { getFileColor, getFileIcon } from "../fileUtils";
+import { Button } from "@/shared/components/ui/button";
 
 type FileCardProps = {
   filename: string;

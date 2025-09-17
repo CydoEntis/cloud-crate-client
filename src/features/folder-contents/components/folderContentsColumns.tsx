@@ -1,21 +1,21 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import NameCell from "./NameCell";
+import NameCell from "./table/NameCell";
 
-import SelectCell from "./SelectCell";
-import FolderContentsActionMenu from "../../FolderContentsActionMenu";
+import SelectCell from "./table/SelectCell";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import UserAvatar from "@/shared/components/UserAvatar";
 import DateIndicator from "@/shared/components/DateIndicator";
 import StorageDisplay from "@/shared/components/StorageDisplay";
-import type { CrateFile } from "@/features/folder-contents/types/fileTypes";
-import type { CrateFolder } from "@/features/folder-contents/types/folderTypes";
+import type { CrateFile } from "@/features/folder-contents/file/fileTypes";
+import type { CrateFolder } from "@/features/folder-contents/folder/folderTypes";
+import FolderContentsActionMenu from "./FolderContentsActionMenu";
 
 export type FolderContentRowItem = CrateFile | CrateFolder;
 
 const columnHelper = createColumnHelper<FolderContentRowItem>();
 
-const folderFileTableColumns = (selectMode: boolean, folderContents: FolderContentRowItem[]) => {
+const folderContentsColumns = (selectMode: boolean, folderContents: FolderContentRowItem[]) => {
   const columns = [
     columnHelper.display({
       id: "select",
@@ -109,4 +109,4 @@ const folderFileTableColumns = (selectMode: boolean, folderContents: FolderConte
   return columns;
 };
 
-export default folderFileTableColumns;
+export default folderContentsColumns;

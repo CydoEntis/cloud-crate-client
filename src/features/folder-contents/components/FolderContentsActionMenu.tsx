@@ -7,9 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
-import { useDeleteFolder } from "../../api/folderQueries";
-import { useSoftDeleteFile } from "../../api/fileQueries";
-import type { FolderContentRowItem } from "../../types/sharedTypes";
+
 
 function FolderContentsActionMenu({ row }: { row: FolderContentRowItem }) {
   if ((row as any).isBackRow) return null;

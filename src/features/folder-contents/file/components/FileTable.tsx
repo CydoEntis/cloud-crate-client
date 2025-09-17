@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanstack/react-table";
 
 import { useMediaQuery } from "usehooks-ts";
-import FolderBreadcrumbs from "../folder/FolderBreadcrumbs";
 import { Table, TableBody } from "@/shared/components/ui/table";
 import GenericTableHeader from "@/shared/components/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/GenericTableRow";
-import type { FolderContentRowItem, FolderContents } from "../../types/sharedTypes";
-import type { CrateFile } from "../../types/fileTypes";
-import type { FolderBreadcrumb } from "../../types/folderTypes";
+import type { FolderContentRowItem, FolderContents } from "../../sharedTypes";
+import type { FolderBreadcrumb } from "../../folder/folderTypes";
+import type { CrateFile } from "../fileTypes";
+import FolderBreadcrumbs from "../../folder/components/FolderBreadcrumbs";
 
 type FileTableProps = {
   crateId: string;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { uploaderSchema } from "../../user/userSchemas";
-import { ACCEPTED_EXTENSIONS } from "../utils/fileUtils";
+import { ACCEPTED_EXTENSIONS } from "./fileUtils";
 
 export const crateFileSchema = z.object({
   id: z.string().uuid(),
