@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile } from "../fileTypes";
 import { fileService } from "./fileService";
-import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile } from "../types/fileTypes";
 
 export const fileKeys = {
   all: ["files"] as const,
@@ -118,11 +118,15 @@ export const useSoftDeleteFile = () => {
 };
 
 export const useDownloadFile = () => {
-  return useMutation({
-    mutationFn: ({ crateId, fileId }: { crateId: string; fileId: string }) => fileService.downloadFile(crateId, fileId),
-    onError: (error: Error) => {
-      console.error("Failed to download file:", error);
-      toast.error(error.message || "Failed to download file");
+  return useMutation<Blob, Error, { crateId: string; fileId: string }>({
+    mutationFn: async ({ crateId, fileId }) => {
+      const response = await fetch(`/api/crates/${crateId}/files/${fileId}/download`);
+
+      if (!response.ok) {
+        throw new Error("Download failed");
+      }
+
+      return response.blob();
     },
   });
 };
