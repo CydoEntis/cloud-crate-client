@@ -1,7 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import NameCell from "./NameCell";
-import type { CrateFile } from "@/features/folder-contents/types/file/CrateFile";
-import type { CrateFolder } from "@/features/folder-contents/types/folder/CrateFolder";
 
 import SelectCell from "./SelectCell";
 import FolderContentsActionMenu from "../../FolderContentsActionMenu";
@@ -10,6 +8,8 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import UserAvatar from "@/shared/components/UserAvatar";
 import DateIndicator from "@/shared/components/DateIndicator";
 import StorageDisplay from "@/shared/components/StorageDisplay";
+import type { CrateFile } from "@/features/folder-contents/types/file.types";
+import type { CrateFolder } from "@/features/folder-contents/types/folder.types";
 
 export type FolderContentRowItem = CrateFile | CrateFolder;
 
@@ -45,25 +45,25 @@ const folderFileTableColumns = (selectMode: boolean, folderContents: FolderConte
       cell: (info) => <NameCell row={info.row.original} />,
     }),
 
-    columnHelper.accessor("uploader.displayName", {
-      header: "Uploaded By",
-      size: 20,
-      minSize: 20,
-      cell: ({ row }) =>
-        row.original.isFolder ? (
-          <div className=" flex justify-start items-center gap-2">
-            <p>-</p>
-          </div>
-        ) : (
-          <div className=" flex justify-start items-center gap-2">
-            <UserAvatar
-              displayName={row.original.uploader.displayName}
-              profilePictureUrl={row.original.uploader.profilePictureUrl!}
-              email={row.original.uploader.email}
-            />
-          </div>
-        ),
-    }),
+    // columnHelper.accessor("uploader.displayName", {
+    //   header: "Uploaded By",
+    //   size: 20,
+    //   minSize: 20,
+    //   cell: ({ row }) =>
+    //     row.original.isFolder ? (
+    //       <div className=" flex justify-start items-center gap-2">
+    //         <p>-</p>
+    //       </div>
+    //     ) : (
+    //       <div className=" flex justify-start items-center gap-2">
+    //         <UserAvatar
+    //           displayName={row.original.uploader.displayName}
+    //           profilePictureUrl={row.original.uploader.profilePictureUrl!}
+    //           email={row.original.uploader.email}
+    //         />
+    //       </div>
+    //     ),
+    // }),
 
     columnHelper.accessor("createdAt", {
       header: "Uploaded At",
