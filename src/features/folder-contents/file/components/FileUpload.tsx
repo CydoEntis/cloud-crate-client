@@ -4,8 +4,9 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { ACCEPTED_EXTENSIONS } from "../fileUtils";
 import { uploadFileSchema } from "../fileSchema";
-import type { UploadFile } from "../../types/fileTypes";
-import { useUploadFiles } from "../../api/fileQueries";
+import { useUploadFiles } from "../api/fileQueries";
+import type { UploadFile } from "../fileTypes";
+
 
 type FileUploadProps = {
   crateId: string;
@@ -28,7 +29,7 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
       crateId,
       folderId,
       files: selectedFiles,
-      onProgress: (percent) => {
+      onProgress: (percent: number) => {
         console.log(`Upload progress: ${percent}%`);
       },
     });

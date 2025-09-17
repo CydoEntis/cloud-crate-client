@@ -7,6 +7,9 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
+import type { FolderContentRowItem } from "../sharedTypes";
+import { useDeleteFolder } from "../folder/api/folderQueries";
+import { useSoftDeleteFile } from "../file/api/fileQueries";
 
 
 function FolderContentsActionMenu({ row }: { row: FolderContentRowItem }) {

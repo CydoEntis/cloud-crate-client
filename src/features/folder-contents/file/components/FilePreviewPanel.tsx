@@ -4,8 +4,8 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import DateIndicator from "@/shared/components/DateIndicator";
 import { DownloadButton } from "@/shared/components/DownloadButton";
 import StorageDisplay from "@/shared/components/StorageDisplay";
-import UserAvatar from "@/shared/components/UserAvatar";
-import { useGetFile } from "../../api/fileQueries";
+import { useGetFile } from "../api/fileQueries";
+
 
 type FilePreviewPanelProps = {
   crateId: string;

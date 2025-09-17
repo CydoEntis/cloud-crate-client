@@ -1,4 +1,4 @@
-import { useDownloadFile } from "@/features/folder-contents/api/fileQueries";
+import { useDownloadFile } from "@/features/folder-contents/file/api/fileQueries";
 import { Button } from "./ui/button";
 
 export function DownloadButton({ crateId, fileId, fileName }: { crateId: string; fileId: string; fileName: string }) {
