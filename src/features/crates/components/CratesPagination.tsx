@@ -1,6 +1,6 @@
 import PaginationControls from "@/shared/components/PaginationControls";
-import type { PaginatedResult } from "@/features/auth/auth.types";
-import type { Crate } from "@/features/crates/crate.types";
+import type { PaginatedResult } from "@/features/auth/authTypes";
+import type { Crate } from "@/features/crates/crateTypes";
 
 type CratesPaginationProps = {
   crates: PaginatedResult<Crate>;

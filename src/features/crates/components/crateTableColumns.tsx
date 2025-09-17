@@ -4,7 +4,7 @@ import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/shared/components/UserAvatar";
 import StorageProgressbar from "@/shared/components/StorageProgressbar";
 import DateIndicator from "@/shared/components/DateIndicator";
-import type { Crate } from "../crate.types";
+import type { Crate } from "../crateTypes";
 
 const columnHelper = createColumnHelper<Crate>();
 

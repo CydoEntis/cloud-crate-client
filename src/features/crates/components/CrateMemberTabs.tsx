@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
-import { allowedMemberTypes } from "../utils/crate.constants";
+import { allowedMemberTypes } from "../utils/crateConstants";
 import type { MemberType } from "./CratesFilter";
 
 export interface CrateMemberTabsProps {

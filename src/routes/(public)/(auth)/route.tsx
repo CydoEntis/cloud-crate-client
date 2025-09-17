@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import clouds from "@/assets/Cloudy.svg";
 import logo from "@/assets/cloud-crate-logo.png";
-import { useAuthStore } from "@/features/auth/auth.store";
+import { useAuthStore } from "@/features/auth/authStore";
 
 export const Route = createFileRoute("/(public)/(auth)")({
   beforeLoad: () => {

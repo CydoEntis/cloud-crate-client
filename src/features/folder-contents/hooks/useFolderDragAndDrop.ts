@@ -1,9 +1,9 @@
 // Fixed useFolderDragAndDrop hook
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { useMoveFolder } from "../api/folder.queries";
-import { useMoveFile } from "../api/file.queries";
-import type { FolderContents } from "../types/shared.types";
+import { useMoveFolder } from "../api/folderQueries";
+import { useMoveFile } from "../api/fileQueries";
+import type { FolderContents } from "../types/sharedTypes";
 
 export function useFolderDragAndDrop(crateId: string) {
   const moveFolderMutation = useMoveFolder();

@@ -10,9 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { useUpdateCrate } from "@/features/crates/api/crate.queries";
-import type { UpdateCrateRequest, Crate } from "@/features/crates/crate.types";
-import { updateCrateSchema } from "@/features/crates/crate.schemas";
+import { useUpdateCrate } from "@/features/crates/api/crateQueries";
+import type { UpdateCrateRequest, Crate } from "@/features/crates/crateTypes";
+import { updateCrateSchema } from "@/features/crates/crateSchemas";
 
 type CratesEditModalProps = {
   editingCrateId: string | null;

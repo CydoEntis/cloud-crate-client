@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useCrateModalStore } from "../store/crateModalStore";
 import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
-import { useUserStore } from "@/features/user/user.store";
+import { useUserStore } from "@/features/user/userStore";
 import { toast } from "sonner";
 import type z from "zod";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -11,8 +11,8 @@ import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import { useCreateCrate } from "../api/crate.queries";
-import { createCreateCrateSchema } from "../crate.schemas";
+import { useCreateCrate } from "../api/crateQueries";
+import { createCreateCrateSchema } from "../crateSchemas";
 import { Slider } from "@/shared/components/ui/slider";
 
 function CreateCrateModal() {

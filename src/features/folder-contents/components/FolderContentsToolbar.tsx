@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { useFolderModalStore } from "../store/folder-modal.store";
+import { useFolderModalStore } from "../store/folderModalStore";
 import { Button } from "@/shared/components/ui/button";
 
 type FolderContentsToolbarProps = {

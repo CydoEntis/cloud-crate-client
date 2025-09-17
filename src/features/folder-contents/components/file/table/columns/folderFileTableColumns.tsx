@@ -8,8 +8,8 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import UserAvatar from "@/shared/components/UserAvatar";
 import DateIndicator from "@/shared/components/DateIndicator";
 import StorageDisplay from "@/shared/components/StorageDisplay";
-import type { CrateFile } from "@/features/folder-contents/types/file.types";
-import type { CrateFolder } from "@/features/folder-contents/types/folder.types";
+import type { CrateFile } from "@/features/folder-contents/types/fileTypes";
+import type { CrateFolder } from "@/features/folder-contents/types/folderTypes";
 
 export type FolderContentRowItem = CrateFile | CrateFolder;
 

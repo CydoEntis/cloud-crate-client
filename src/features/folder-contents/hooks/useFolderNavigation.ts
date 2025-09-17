@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { navigateToFolder } from "../utils/folder.utils";
+import { navigateToFolder } from "../utils/folderUtils";
 
 export function useFolderNavigation(crateId: string) {
   const navigate = useNavigate();

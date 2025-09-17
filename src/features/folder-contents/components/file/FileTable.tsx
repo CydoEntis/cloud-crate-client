@@ -7,9 +7,9 @@ import { Table, TableBody } from "@/shared/components/ui/table";
 import GenericTableHeader from "@/shared/components/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/GenericTableRow";
-import type { FolderContentRowItem, FolderContents } from "../../types/shared.types";
-import type { CrateFile } from "../../types/file.types";
-import type { FolderBreadcrumb } from "../../types/folder.types";
+import type { FolderContentRowItem, FolderContents } from "../../types/sharedTypes";
+import type { CrateFile } from "../../types/fileTypes";
+import type { FolderBreadcrumb } from "../../types/folderTypes";
 
 type FileTableProps = {
   crateId: string;

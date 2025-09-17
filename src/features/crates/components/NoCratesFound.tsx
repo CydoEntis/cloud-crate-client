@@ -1,5 +1,5 @@
 import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
-import type { GetCrateParams } from "@/features/crates/crate.types";
+import type { GetCrateParams } from "@/features/crates/crateTypes";
 import { Button } from "@/shared/components/ui/button";
 
 type NoCratesFoundProps = {

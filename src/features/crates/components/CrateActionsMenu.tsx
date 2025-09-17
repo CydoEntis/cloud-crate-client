@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import ConfirmDialog from "@/shared/components/ConfirmDialog";
-import { useUserStore } from "@/features/user/user.store";
-import type { Crate } from "../crate.types";
+import { useUserStore } from "@/features/user/userStore";
+import type { Crate } from "../crateTypes";
 
 type CrateActionsMenuProps = {
   crate: Crate;

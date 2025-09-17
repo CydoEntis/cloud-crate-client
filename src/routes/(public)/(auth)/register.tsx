@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import AuthForm from "@/features/auth/components/auth-form";
-import { authSearchSchema } from "@/features/auth/auth.schemas";
+import AuthForm from "@/features/auth/components/AuthForm";
+import { authSearchSchema } from "@/features/auth/authSchemas";
 
 export const Route = createFileRoute("/(public)/(auth)/register")({
   component: RegisterPage,

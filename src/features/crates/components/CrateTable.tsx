@@ -6,7 +6,7 @@ import { Table, TableBody } from "@/shared/components/ui/table";
 import GenericTableHeader from "@/shared/components/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/GenericTableRow";
-import type { Crate } from "../crate.types";
+import type { Crate } from "../crateTypes";
 
 type CrateTableProps = {
   data: Crate[];

@@ -1,4 +1,4 @@
-import { crateService } from "@/features/crates/api/crate.service";
+import { crateService } from "@/features/crates/api/crateService";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/")({

@@ -4,13 +4,13 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 
-import { useInviteStore } from "@/features/invites/invite.store";
+import { useInviteStore } from "@/features/invites/inviteStore";
 
 import InviteModalSkeleton from "./InviteModalSkeleton";
 import InviteError from "./InviteError";
 import { Dialog, DialogContent } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
-import { useAcceptInvite, useDeclineInvite, useGetInviteByToken } from "../api/invite.queries";
+import { useAcceptInvite, useDeclineInvite, useGetInviteByToken } from "../api/inviteQueries";
 
 export function InviteModal() {
   const token = useInviteStore((s) => s.token);

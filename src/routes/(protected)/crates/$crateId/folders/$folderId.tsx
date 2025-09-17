@@ -16,15 +16,15 @@ import folderFileTableColumns, {
 import BulkActionBar from "@/features/bulk/components/BulkActionToolbar";
 import { Button } from "@/shared/components/ui/button";
 import PaginationControls from "@/shared/components/PaginationControls";
-import { useCrateDetails } from "@/features/crates/api/crate.queries";
-import { useGetMembers } from "@/features/members/api/member.queries";
+import { useCrateDetails } from "@/features/crates/api/crateQueries";
+import { useGetMembers } from "@/features/members/api/memberQueries";
 import {
   useGetFolderContents,
   useGetAvailableMoveTargets,
   useCreateFolder,
-} from "@/features/folder-contents/api/folder.queries";
-import type { CrateFile } from "@/features/folder-contents/types/file.types";
-import { CrateRole } from "@/features/crates/crate.types";
+} from "@/features/folder-contents/api/folderQueries";
+import type { CrateFile } from "@/features/folder-contents/types/fileTypes";
+import { CrateRole } from "@/features/crates/crateTypes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useFolderDragAndDrop } from "@/features/folder-contents/hooks/useFolderDragAndDrop";
 import { useFolderNavigation } from "@/features/folder-contents/hooks/useFolderNavigation";

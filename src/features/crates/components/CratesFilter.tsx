@@ -1,4 +1,4 @@
-import { allowedSortByValues, sortByLabels } from "../utils/crate.constants";
+import { allowedSortByValues, sortByLabels } from "../utils/crateConstants";
 import CrateMemberTabs from "./CrateMemberTabs";
 import SearchInputField from "@/shared/components/SearchInputField";
 import OrderToggle from "@/shared/components/OrderToggle";

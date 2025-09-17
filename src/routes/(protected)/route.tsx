@@ -1,5 +1,5 @@
-import { useAuthStore } from "@/features/auth/auth.store";
-import { UserDataProvider } from "@/features/user/components/user-data-provider";
+import { useAuthStore } from "@/features/auth/authStore";
+import { UserDataProvider } from "@/features/user/components/UserDataProvider";
 import { ProtectedLayout } from "@/shared/layouts/ProctedLayout";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 

@@ -1,10 +1,10 @@
 import { LogOut } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 
-import { useUserStore } from "@/features/user/user.store";
-import UpgradeAccountStorage from "@/features/user/components/upgrade-account-storage";
-import { useLogout } from "@/features/auth/api/auth.queries";
-import AuthenticatedUserDisplay from "@/features/user/components/authenticated-user-display";
+import { useUserStore } from "@/features/user/userStore";
+import UpgradeAccountStorage from "@/features/user/components/UpgradeAccountStorage";
+import { useLogout } from "@/features/auth/api/authQueries";
+import AuthenticatedUserDisplay from "@/features/user/components/AuthenticatedUserDisplay";
 
 export function SidebarUserSection() {
   const user = useUserStore((state) => state.user);

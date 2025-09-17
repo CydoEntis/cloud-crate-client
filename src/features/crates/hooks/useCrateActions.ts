@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { useDeleteCrate, useLeaveCrate } from "@/features/crates/api/crate.queries";
-import type { Crate } from "@/features/crates/crate.types";
+import { useDeleteCrate, useLeaveCrate } from "@/features/crates/api/crateQueries";
+import type { Crate } from "@/features/crates/crateTypes";
 
 type ConfirmAction = {
   type: "delete" | "leave";
