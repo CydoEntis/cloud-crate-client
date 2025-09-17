@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { CrateFolder, CreateFolder, GetFolderContentsParams, MoveFolder } from "../folderTypes";
+import type { FolderContents } from "../../sharedTypes";
 import { folderService } from "./folderService";
-import type { CrateFolder, CreateFolder, GetFolderContentsParams, MoveFolder } from "../types/folderTypes";
-import type { FolderContents } from "../types/sharedTypes";
 
 export const folderKeys = {
   all: ["folders"] as const,

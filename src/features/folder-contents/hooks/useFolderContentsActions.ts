@@ -10,13 +10,13 @@ import { useFolderDragAndDrop } from "@/features/folder-contents/folder/hooks/us
 import { useFolderNavigation } from "@/features/folder-contents/folder/hooks/useFolderNavigation";
 import { CrateRole } from "@/features/crates/crateTypes";
 import type { CrateFile } from "@/features/folder-contents/file/fileTypes";
-import type { FolderContentRowItem } from "../sharedTypes";
+import type { FolderContentRowItem, OrderByType } from "../sharedTypes";
 
 export type FolderPageSearchParams = {
   page: number;
   pageSize: number;
   searchTerm: string;
-  orderBy: string;
+  orderBy: OrderByType;
   ascending: boolean;
 };
 
