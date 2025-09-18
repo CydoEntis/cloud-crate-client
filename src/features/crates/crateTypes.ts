@@ -39,7 +39,7 @@ export type CrateDetails = {
   allocatedStorageBytes: number;
   usedStorageBytes: number;
   remainingStorageBytes: number;
-  role: CrateRole;
+  currentMember: Member;
   breakdownByType: FileTypeBreakdown[];
   rootFolderId: string;
 };
