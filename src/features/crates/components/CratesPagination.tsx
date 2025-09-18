@@ -1,9 +1,9 @@
 import PaginationControls from "@/shared/components/PaginationControls";
 import type { PaginatedResult } from "@/features/auth/authTypes";
-import type { Crate } from "@/features/crates/crateTypes";
+import type { CrateSummary } from "@/features/crates/crateTypes";
 
 type CratesPaginationProps = {
-  crates: PaginatedResult<Crate>;
+  crates: PaginatedResult<CrateSummary>;
   onPageChange: (page: number) => void;
 };
 

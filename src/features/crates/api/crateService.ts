@@ -1,7 +1,14 @@
 import apiService from "@/shared/lib/api/ApiClient";
 import type { ApiResponse, PaginatedResult } from "@/features/auth/authTypes";
 
-import type { Crate, CrateDetails, CreateCrateRequest, GetCrateParams, UpdateCrateRequest } from "../crateTypes";
+import type {
+  Crate,
+  CrateDetails,
+  CrateSummary,
+  CreateCrateRequest,
+  GetCrateParams,
+  UpdateCrateRequest,
+} from "../crateTypes";
 
 export const crateService = {
   async getCrate(crateId: string): Promise<CrateDetails> {
@@ -16,7 +23,7 @@ export const crateService = {
     return result;
   },
 
-  async getCrates(crateParams: GetCrateParams): Promise<PaginatedResult<Crate>> {
+  async getCrates(crateParams: GetCrateParams): Promise<PaginatedResult<CrateSummary>> {
     const { searchTerm, sortBy = "Name", ascending = false, page = 1, memberType = "All" } = crateParams;
     const params = new URLSearchParams();
 
@@ -26,10 +33,11 @@ export const crateService = {
     params.append("Page", page.toString());
     if (memberType) params.append("MemberType", memberType);
 
-    const response = await apiService.get<ApiResponse<PaginatedResult<Crate>>>(`/crates?${params.toString()}`);
+    const response = await apiService.get<ApiResponse<PaginatedResult<CrateSummary>>>(`/crates?${params.toString()}`);
 
     const { data: result, isSuccess, message, errors } = response.data;
 
+    console.log(result);
     if (!isSuccess || !result) {
       console.error("Failed to fetch crates:", errors);
       throw new Error(message ?? "Failed to fetch crates");
@@ -50,16 +58,14 @@ export const crateService = {
     return result;
   },
 
-  async updateCrate(crateId: string, request: UpdateCrateRequest): Promise<Crate> {
-    const response = await apiService.put<ApiResponse<Crate>>(`/crates/${crateId}`, request);
-    const { data: result, isSuccess, message, errors } = response.data;
+  async updateCrate(crateId: string, request: UpdateCrateRequest): Promise<void> {
+    const response = await apiService.put<ApiResponse<void>>(`/crates/${crateId}`, request);
+    const { isSuccess, message, errors } = response.data;
 
-    if (!isSuccess || !result) {
+    if (!isSuccess) {
       console.error("Failed to update crate:", errors);
       throw new Error(message ?? "Failed to update crate");
     }
-
-    return result;
   },
 
   async deleteCrate(crateId: string): Promise<void> {

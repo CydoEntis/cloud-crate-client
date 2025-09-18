@@ -3,7 +3,8 @@ import { devtools } from "zustand/middleware";
 
 type CrateModalStore = {
   isOpen: boolean;
-  open: () => void;
+  open: (crateId?: string) => void;
+  crateId: string | null;
   close: () => void;
 };
 
@@ -11,7 +12,7 @@ export const useCrateModalStore = create<CrateModalStore>()(
   devtools(
     (set) => ({
       isOpen: false,
-      open: () => set({ isOpen: true }),
+      open: (crateId?: string) => set({ isOpen: true, crateId }),
       close: () => set({ isOpen: false }),
     }),
     { name: "CrateModalStore" }

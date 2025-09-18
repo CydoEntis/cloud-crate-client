@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { crateService } from "./crateService";
-import type { GetCrateParams, CreateCrateRequest, UpdateCrateRequest, Crate, CrateDetails } from "../crateTypes";
+import type { GetCrateParams, CreateCrateRequest, UpdateCrateRequest, Crate, CrateDetails, CrateSummary } from "../crateTypes";
 import type { PaginatedResult } from "@/features/auth/authTypes";
 
 export const crateKeys = {
@@ -21,7 +21,7 @@ export const useGetCrates = (
     memberType: "All",
   }
 ) => {
-  return useQuery<PaginatedResult<Crate>, Error>({
+  return useQuery<PaginatedResult<CrateSummary>, Error>({
     queryKey: crateKeys.list(params),
     queryFn: () => crateService.getCrates(params),
     staleTime: 1000 * 60 * 2,
@@ -61,6 +61,8 @@ export const useUpdateCrate = () => {
     mutationFn: ({ crateId, request }: { crateId: string; request: UpdateCrateRequest }) =>
       crateService.updateCrate(crateId, request),
     onSuccess: (updatedCrate, { crateId }) => {
+      console.log(updatedCrate)
+      console.log(crateId)
       queryClient.setQueryData(crateKeys.detail(crateId), updatedCrate);
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
       toast.success("Crate updated successfully");

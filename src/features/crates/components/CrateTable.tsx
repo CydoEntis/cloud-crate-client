@@ -6,11 +6,11 @@ import { Table, TableBody } from "@/shared/components/ui/table";
 import GenericTableHeader from "@/shared/components/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/GenericTableRow";
-import type { Crate } from "../crateTypes";
+import type { Crate, CrateSummary } from "../crateTypes";
 
 type CrateTableProps = {
-  data: Crate[];
-  columns: ColumnDef<Crate, any>[];
+  data: CrateSummary[];
+  columns: ColumnDef<CrateSummary, any>[];
   isLoading?: boolean;
 };
 
@@ -51,7 +51,7 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
     }
   }, [isMobile, isTablet, isDesktop]);
 
-  const table = useReactTable<Crate>({
+  const table = useReactTable<CrateSummary>({
     data,
     columns,
     state: { columnVisibility },
@@ -86,7 +86,7 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
           : table
               .getRowModel()
               .rows.map((row, index) => (
-                <GenericTableRow<Crate>
+                <GenericTableRow<CrateSummary>
                   key={row.id}
                   row={row}
                   rowIndex={index}

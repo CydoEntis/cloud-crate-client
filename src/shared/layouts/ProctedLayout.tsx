@@ -2,8 +2,8 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/componen
 import { Separator } from "@/shared/components/ui/separator";
 import { AppSidebar } from "./sidebar/AppSidebar";
 import { InviteModal } from "@/features/invites/components/inviteModal";
-import CreateCrateModal from "@/features/crates/components/CreateCrateModal";
 import type { ReactNode } from "react";
+import UpsertCrateModal from "@/features/crates/components/UpsertCrateModal";
 
 interface ProtectedLayoutProps {
   children: ReactNode;
@@ -12,7 +12,7 @@ interface ProtectedLayoutProps {
 export function ProtectedLayout({ children }: ProtectedLayoutProps) {
   return (
     <SidebarProvider>
-      <CreateCrateModal />
+      <UpsertCrateModal />
       <InviteModal />
       <AppSidebar />
       <SidebarInset className="md:py-4 md:pr-4 bg-sidebar">
@@ -20,9 +20,7 @@ export function ProtectedLayout({ children }: ProtectedLayoutProps) {
           <SidebarTrigger className="-ml-1 text-foreground" />
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
         </header>
-        <div className="flex flex-1 flex-col gap-4 sm:p-2 lg:p-10 bg-background rounded-b-2xl">
-          {children}
-        </div>
+        <div className="flex flex-1 flex-col gap-4 sm:p-2 lg:p-10 bg-background rounded-b-2xl">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

@@ -1,13 +1,13 @@
 import { useState, useCallback } from "react";
 import { useDeleteCrate, useLeaveCrate } from "@/features/crates/api/crateQueries";
-import type { Crate } from "@/features/crates/crateTypes";
+import type { Crate, CrateSummary } from "@/features/crates/crateTypes";
 
 type ConfirmAction = {
   type: "delete" | "leave";
-  crate: Crate;
+  crate: CrateSummary;
 };
 
-export function useCrateActions(crates?: Crate[]) {
+export function useCrateActions(crates: CrateSummary[]) {
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
   const deleteCrateMutation = useDeleteCrate();
   const leaveCrateMutation = useLeaveCrate();

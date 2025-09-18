@@ -1,32 +1,46 @@
 import type { z } from "zod";
-
 import type { crateSearchSchema, createCrateSchema, updateCrateSchema } from "./crateSchemas";
 import type { Member } from "../members/memberTypes";
-import type { FileTypeBreakdown } from "../folder-contents/types/fileTypes";
+import type { FileTypeBreakdown } from "../folder-contents/file/fileTypes";
 
 export type GetCrateParams = z.infer<typeof crateSearchSchema>;
 export type CreateCrateRequest = z.infer<typeof createCrateSchema>;
-export type UpdateCrateRequest = z.infer<typeof updateCrateSchema>;
+
+export type UpdateCrateRequest = {
+  name: string;
+  color: string;
+  storageAllocationGb?: number;
+};
 
 export type Crate = {
   id: string;
   name: string;
   color: string;
   owner: Member;
+  UsedStorageBytes: number;
+  AllocatedStorageBytes: number;
+  joinedAt: Date;
+};
+
+export type CrateSummary = {
+  id: string;
+  name: string;
+  color: string;
+  owner: Member;
   usedStorageBytes: number;
-  totalStorageBytes: number;
+  allocatedStorageBytes: number;
   joinedAt: Date;
 };
 
 export type CrateDetails = {
   id: string;
   name: string;
-  role: CrateRole;
   color: string;
-  totalUsedStorage: number;
-  storageLimit: number;
+  allocatedStorageBytes: number;
+  usedStorageBytes: number;
+  remainingStorageBytes: number;
+  role: CrateRole;
   breakdownByType: FileTypeBreakdown[];
-  remainingStorage: number;
   rootFolderId: string;
 };
 
@@ -41,7 +55,7 @@ export type StorageDetails = {
 };
 
 export enum CrateRole {
-  Owner = "Owner", // Full control, including deleting the crate
-  Editor = "Editor", // Can upload/download/delete files
-  Viewer = "Viewer", // Read-only access
+  Owner = "Owner",
+  Editor = "Editor",
+  Viewer = "Viewer",
 }

@@ -1,4 +1,4 @@
-import type { CrateDetails } from "@/features/crates/types/CrateDetails";
+import type { CrateDetails } from "@/features/crates/crateTypes";
 import AvailableStorageBar from "./AvailableStorageBar";
 import { mimeCategoryColors } from "@/shared/lib/getMimeCategory";
 
@@ -7,8 +7,7 @@ type Props = {
 };
 
 const AvailableStorageIndicator = ({ crate }: Props) => {
-  const { totalUsedStorage, storageLimit, remainingStorage, breakdownByType } = crate;
-  console.log(crate);
+  const { usedStorageBytes, allocatedStorageBytes, remainingStorageBytes, breakdownByType } = crate;
   const segments = [
     ...breakdownByType.map((item) => {
       return {
@@ -21,12 +20,12 @@ const AvailableStorageIndicator = ({ crate }: Props) => {
     {
       id: "available",
       name: "Available",
-      usedStorage: remainingStorage,
+      usedStorage: remainingStorageBytes,
       color: "var(--color-secondary)",
     },
   ];
 
-  return <AvailableStorageBar totalUsedStorage={totalUsedStorage} storageLimit={storageLimit} segments={segments} />;
+  return <AvailableStorageBar totalUsedStorage={usedStorageBytes} storageLimit={allocatedStorageBytes} segments={segments} />;
 };
 
 export default AvailableStorageIndicator;

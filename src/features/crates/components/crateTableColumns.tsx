@@ -2,19 +2,17 @@ import { createColumnHelper } from "@tanstack/react-table";
 import CrateIndicator from "./CrateIndicator";
 import CrateActionsMenu from "./CrateActionsMenu";
 import UserAvatar from "@/shared/components/UserAvatar";
-import StorageProgressbar from "@/shared/components/StorageProgressbar";
 import DateIndicator from "@/shared/components/DateIndicator";
-import type { Crate } from "../crateTypes";
+import type { Crate, CrateSummary } from "../crateTypes";
+import StorageDisplay from "@/shared/components/StorageDisplay";
 
-const columnHelper = createColumnHelper<Crate>();
+const columnHelper = createColumnHelper<CrateSummary>();
 
 export function crateTableColumns({
-  crates,
-  onEdit,
   onDelete,
   onLeave,
 }: {
-  crates: Crate[];
+  crates: CrateSummary[];
   onEdit: (crate: Crate) => void;
   onDelete: (id: string) => void;
   onLeave: (id: string) => void;
@@ -45,11 +43,18 @@ export function crateTableColumns({
       },
     }),
 
-    columnHelper.accessor("totalStorageBytes", {
-      header: "Storage",
+    columnHelper.accessor("usedStorageBytes", {
+      header: "Used",
       size: 10,
       minSize: 10,
-      cell: ({ row }) => <StorageProgressbar used={300_000_000} total={row.original.totalStorageBytes} />,
+      cell: ({ row }) => <StorageDisplay storage={row.original.usedStorageBytes} />,
+    }),
+
+    columnHelper.accessor("allocatedStorageBytes", {
+      header: "Allocated",
+      size: 10,
+      minSize: 10,
+      cell: ({ row }) => <StorageDisplay storage={row.original.allocatedStorageBytes} />,
     }),
 
     columnHelper.accessor("owner.joinedAt", {
@@ -64,9 +69,7 @@ export function crateTableColumns({
       header: "",
       size: 5,
       minSize: 5,
-      cell: ({ row }) => (
-        <CrateActionsMenu crate={row.original} onEdit={onEdit} onDelete={onDelete} onLeave={onLeave} />
-      ),
+      cell: ({ row }) => <CrateActionsMenu crate={row.original} onDelete={onDelete} onLeave={onLeave} />,
     }),
   ];
 }

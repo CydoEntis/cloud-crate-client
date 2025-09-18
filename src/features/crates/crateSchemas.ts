@@ -52,6 +52,7 @@ export const createCrateSchema = z.object({
 export const updateCrateSchema = z.object({
   name: crateNameField,
   color: colorField,
+  storageAllocationGb: z.number().min(1).max(1000).optional(),
 });
 
 export const crateResponseSchema = z.object({

@@ -9,25 +9,26 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import ConfirmDialog from "@/shared/components/ConfirmDialog";
 import { useUserStore } from "@/features/user/userStore";
-import type { Crate } from "../crateTypes";
+import type { CrateSummary } from "../crateTypes";
+import { useCrateModalStore } from "../store/crateModalStore";
 
 type CrateActionsMenuProps = {
-  crate: Crate;
-  onEdit: (crate: Crate) => void;
+  crate: CrateSummary;
   onDelete: (crateId: string) => void;
   onLeave: (crateId: string) => void;
 };
 
-function CrateActionsMenu({ crate, onEdit, onDelete, onLeave }: CrateActionsMenuProps) {
+function CrateActionsMenu({ crate, onDelete, onLeave }: CrateActionsMenuProps) {
   const { user } = useUserStore();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<() => void>(() => () => {});
+  const { open } = useCrateModalStore();
 
   const isOwner = user?.email === crate.owner.email;
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onEdit(crate);
+    open(crate.id);
   };
 
   const handleDelete = (e: React.MouseEvent) => {

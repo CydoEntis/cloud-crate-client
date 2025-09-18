@@ -11,12 +11,12 @@ import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { useUpdateCrate } from "@/features/crates/api/crateQueries";
-import type { UpdateCrateRequest, Crate } from "@/features/crates/crateTypes";
+import type { UpdateCrateRequest, CrateSummary } from "@/features/crates/crateTypes";
 import { updateCrateSchema } from "@/features/crates/crateSchemas";
 
 type CratesEditModalProps = {
   editingCrateId: string | null;
-  crates?: Crate[];
+  crates?: CrateSummary[];
   onClose: () => void;
 };
 

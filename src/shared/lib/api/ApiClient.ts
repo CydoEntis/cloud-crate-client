@@ -26,9 +26,9 @@ export class ApiService {
           config.headers.Authorization = `Bearer ${token}`;
         }
 
-        if (import.meta.env.DEV) {
-          console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, config.data);
-        }
+        // if (import.meta.env.DEV) {
+        //   console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, config.data);
+        // }
 
         return config;
       },
@@ -37,9 +37,9 @@ export class ApiService {
 
     this.api.interceptors.response.use(
       (response) => {
-        if (import.meta.env.DEV) {
-          console.log(`✅ ${response.status} ${response.config.url}`, response.data);
-        }
+        // if (import.meta.env.DEV) {
+        //   console.log(`✅ ${response.status} ${response.config.url}`, response.data);
+        // }
         return response;
       },
       async (error: AxiosError) => {

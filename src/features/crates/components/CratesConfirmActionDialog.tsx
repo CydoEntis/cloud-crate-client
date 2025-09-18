@@ -1,9 +1,9 @@
 import ConfirmDialog from "@/shared/components/ConfirmDialog";
-import type { Crate } from "@/features/crates/crateTypes";
+import type { CrateSummary } from "@/features/crates/crateTypes";
 
 type ConfirmAction = {
   type: "delete" | "leave";
-  crate: Crate;
+  crate: CrateSummary;
 };
 
 type CratesConfirmDialogProps = {

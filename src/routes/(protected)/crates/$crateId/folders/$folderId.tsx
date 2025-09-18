@@ -94,6 +94,8 @@ export default function CrateFolderPage() {
     [selectMode, flattenedContents]
   );
 
+  console.log("The crate: ", crate);
+
   return (
     <FolderPageLayout>
       {crate && <AvailableStorageIndicator crate={crate} />}
