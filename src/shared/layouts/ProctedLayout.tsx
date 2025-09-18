@@ -1,7 +1,6 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { Separator } from "@/shared/components/ui/separator";
 import { AppSidebar } from "./sidebar/AppSidebar";
-import { InviteModal } from "@/features/invites/components/inviteModal";
 import type { ReactNode } from "react";
 import UpsertCrateModal from "@/features/crates/components/UpsertCrateModal";
 
@@ -13,7 +12,6 @@ export function ProtectedLayout({ children }: ProtectedLayoutProps) {
   return (
     <SidebarProvider>
       <UpsertCrateModal />
-      <InviteModal />
       <AppSidebar />
       <SidebarInset className="md:py-4 md:pr-4 bg-sidebar">
         <header className="flex h-12 rounded-t-2xl shrink-0 items-center gap-2 px-4 bg-background">

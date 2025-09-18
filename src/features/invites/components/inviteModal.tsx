@@ -1,104 +1,151 @@
-import { toast } from "sonner";
-import { Box, Check, Loader2, X } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
-
-import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
-
-import { useInviteStore } from "@/features/invites/inviteStore";
-
-import InviteModalSkeleton from "./InviteModalSkeleton";
-import InviteError from "./InviteError";
-import { Dialog, DialogContent } from "@/shared/components/ui/dialog";
+import { useState } from "react";
+import { Search, ChevronDown, X, Info } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
-import { useAcceptInvite, useDeclineInvite, useGetInviteByToken } from "../api/inviteQueries";
+import { Input } from "@/shared/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
+import { CrateRole } from "@/features/crates/crateTypes";
+import type { Member } from "@/features/members/memberTypes";
 
-export function InviteModal() {
-  const token = useInviteStore((s) => s.token);
-  const clearToken = useInviteStore((s) => s.clearToken);
-  const navigate = useNavigate();
+type InviteModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  crateId: string;
+  crateName: string;
+  members: Member[];
+};
 
-  const { data: invite, isLoading, error } = useGetInviteByToken(token ?? "");
+function InviteModal({ isOpen, onClose, crateId, crateName, members }: InviteModalProps) {
+  const [searchValue, setSearchValue] = useState("");
 
-  const { mutateAsync: acceptInvite } = useAcceptInvite();
-  const { mutateAsync: declineInvite } = useDeclineInvite();
-
-  const acceptAnimation = useAnimatedAction();
-  const declineAnimation = useAnimatedAction();
-
-  const handleAccept = async () => {
-    try {
-      await acceptAnimation.run(() => acceptInvite(token!));
-      toast.success("Invite accepted!");
-      clearToken();
-      navigate({ to: `/crates/${invite!.crateId}` });
-    } catch {
-      toast.error("Failed to accept invite.");
-    }
+  const handleRoleChange = (userId: string, newRole: CrateRole) => {
+    // TODO: Implement role change logic
+    console.log(`Change ${userId} role to ${newRole}`);
   };
 
-  const handleDecline = async () => {
-    try {
-      await declineAnimation.run(() => declineInvite(token!));
-      toast.success("Invite declined.");
-      clearToken();
-    } catch {
-      toast.error("Failed to decline invite.");
-    }
+  const handleRemoveMember = (userId: string) => {
+    // TODO: Implement remove member logic
+    console.log(`Remove member ${userId}`);
   };
 
-  const handleClose = () => {
-    clearToken();
+  const handleInvite = () => {
+    // TODO: Implement invite logic
+    console.log(`Invite ${searchValue}`);
+    setSearchValue("");
+  };
+
+  const getRoleColor = (role: CrateRole) => {
+    switch (role) {
+      case CrateRole.Owner:
+        return "bg-red-100 text-red-700 hover:bg-red-200";
+      case CrateRole.Editor:
+        return "bg-green-100 text-green-700 hover:bg-green-200";
+      case CrateRole.Viewer:
+        return "bg-gray-100 text-gray-700 hover:bg-gray-200";
+      default:
+        return "bg-gray-100 text-gray-700 hover:bg-gray-200";
+    }
   };
 
   return (
-    <Dialog open={!!token && !isLoading && !error} onOpenChange={handleClose}>
-      <DialogContent className="text-foreground border-muted">
-        {isLoading ? (
-          <InviteModalSkeleton />
-        ) : error || !invite ? (
-          <InviteError onClose={handleClose} />
-        ) : (
-          <>
-            <h3 className="text-lg font-semibold text-center flex justify-center w-full">
-              You have been invited to join
-            </h3>
-            <div className="w-full flex justify-center items-center gap-2">
-              <div
-                className="rounded-md p-1 flex items-center justify-center"
-                style={{ backgroundColor: invite.crateColor, width: 32, height: 32 }}
-              >
-                <Box size={32} className="text-white" />
-              </div>
-              <h3 className="text-xl font-semibold">{invite.crateName}</h3>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-md mx-auto">
+        <DialogHeader className="relative">
+          <DialogTitle className="text-xl font-semibold text-left">Share this crate</DialogTitle>
+          <button onClick={onClose} className="absolute right-0 top-0 p-1 hover:bg-gray-100 rounded-full">
+            <X className="h-4 w-4" />
+          </button>
+          <div className="flex items-center gap-2 mt-2">
+            <Info className="h-4 w-4 text-gray-500" />
+          </div>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600">Invite your team to collaborate on this crate.</p>
+
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Add team member"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="pl-10 pr-10"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && searchValue.trim()) {
+                  handleInvite();
+                }
+              }}
+            />
+            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          </div>
+
+          {/* People with access */}
+          <div>
+            <h3 className="font-medium text-sm mb-3">People with access</h3>
+            <div className="space-y-3">
+              {members.map((member) => (
+                <div key={member.userId} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={member.profilePicture} alt={member.displayName} />
+                        <AvatarFallback className="text-xs">
+                          {member.displayName.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      {member.role === CrateRole.Owner && (
+                        <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border border-white" />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">{member.displayName}</p>
+                      <p className="text-xs text-gray-500 truncate">{member.email}</p>
+                    </div>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className={`${getRoleColor(member.role)} border-0`}>
+                        {member.role}
+                        <ChevronDown className="ml-1 h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {Object.values(CrateRole).map((role) => (
+                        <DropdownMenuItem
+                          key={role}
+                          onClick={() => handleRoleChange(member.userId, role)}
+                          className={member.role === role ? "bg-gray-100" : ""}
+                        >
+                          {role}
+                        </DropdownMenuItem>
+                      ))}
+                      {member.role !== CrateRole.Owner && (
+                        <>
+                          <hr className="my-1" />
+                          <DropdownMenuItem
+                            onClick={() => handleRemoveMember(member.userId)}
+                            className="text-red-600 focus:text-red-600"
+                          >
+                            Remove access
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ))}
             </div>
-
-            <p className="text-center mt-4">Would you like to accept the invitation?</p>
-
-            <div className="flex gap-4 mt-4">
-              <Button
-                onClick={handleAccept}
-                disabled={!acceptAnimation.isIdle || !declineAnimation.isIdle}
-                className="flex flex-1 justify-center items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white disabled:opacity-50 cursor-pointer hover:bg-violet-600 transition-colors duration-300"
-              >
-                {acceptAnimation.isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
-                {acceptAnimation.isSuccess && <Check className="h-5 w-5" />}
-                {acceptAnimation.isIdle && "Accept"}
-              </Button>
-
-              <Button
-                variant="outline"
-                onClick={handleDecline}
-                disabled={!acceptAnimation.isIdle || !declineAnimation.isIdle}
-                className="flex flex-1 justify-center items-center gap-2 border-primary text-primary px-4 py-2 disabled:opacity-50 cursor-pointer transition-colors duration-300 rounded-lg hover:text-primary hover:bg-violet-50"
-              >
-                {declineAnimation.isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
-                {declineAnimation.isSuccess && <X className="h-5 w-5" />}
-                {declineAnimation.isIdle && "Decline"}
-              </Button>
-            </div>
-          </>
-        )}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
 }
+
+export default InviteModal;
