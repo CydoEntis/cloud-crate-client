@@ -8,8 +8,8 @@ type StorageProps = {
 };
 
 function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: StorageProps) {
-  const minWidthPx = 10; // minimum readable width in px
-  const containerWidthPx = 100; // percent
+  const minWidthPx = 10;
+  const containerWidthPx = 100;
 
   // Map segments to include rawPercent and enforce min 1%
   let allSegments = segments.map((s) => {
@@ -31,7 +31,6 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
     allSegments[largestIndex].rawPercent += difference;
   }
 
-  // Scale segments proportionally with minWidth
   const segmentCount = allSegments.length;
   const minTotalPercent = (minWidthPx / containerWidthPx) * 100 * segmentCount;
   const scale = Math.max(1, (100 - minTotalPercent) / (100 - minTotalPercent));
@@ -60,12 +59,12 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
             <div key={s.id} style={{ width: `${scaledPercent}%` }} className="relative">
               <div className="flex justify-between items-center text-foreground mb-1 text-xs">
                 <div className="flex gap-1 items-center truncate">
-                  <div className="rounded h-4 w-4" style={{ backgroundColor: s.color }} />
+                  <div className={`rounded h-4 w-4 ${s.bgClass}`} />
                   <span className="truncate">{s.name}</span>
                 </div>
                 <span>{s.rawPercent}%</span>
               </div>
-              <div className="h-6 rounded" style={{ backgroundColor: s.color }} />
+              <div className={`h-6 rounded ${s.bgClass}`} />
             </div>
           );
         })}

@@ -1,4 +1,3 @@
-import type { FolderBreadcrumb } from "../../types/folder/FolderBreadcrumb";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +14,7 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
+import type { FolderBreadcrumb } from "../folderTypes";
 
 interface FolderBreadcrumbsProps {
   crateId: string;
