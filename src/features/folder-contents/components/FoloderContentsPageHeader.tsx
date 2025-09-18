@@ -1,25 +1,21 @@
-// features/folder-contents/components/FolderPageHeader.tsx
 import { useState, useCallback } from "react";
-import { Settings } from "lucide-react";
+import { Pencil, Settings } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useCrateDetails } from "@/features/crates/api/crateQueries";
 import { CrateRole } from "@/features/crates/crateTypes";
 import { useParams } from "@tanstack/react-router";
+import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
+import { useMemberPreview } from "@/features/members/api/memberQueries";
 
 function FolderContentsPageHeader() {
   const { crateId } = useParams({ from: "/(protected)/crates/$crateId/folders/$folderId" });
+  const { data: members } = useMemberPreview(crateId);
   const { data: crate } = useCrateDetails(crateId);
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const { open } = useCrateModalStore();
 
-  const handleOpenSettings = useCallback(() => {
-    setSettingsOpen(true);
-  }, []);
+  const canManage = crate?.currentMember.role !== CrateRole.Viewer;
 
-  const handleCloseSettings = useCallback(() => {
-    setSettingsOpen(false);
-  }, []);
-
-  const canManage = crate?.role !== CrateRole.Viewer;
+  console.log("Members:", members);
 
   if (!crate) return null;
 
@@ -31,9 +27,9 @@ function FolderContentsPageHeader() {
           <Button
             variant="outline"
             className="border-primary text-primary hover:bg-primary/30 cursor-pointer hover:text-primary"
-            onClick={handleOpenSettings}
+            onClick={() => open(crate.id)}
           >
-            <Settings /> Settings
+            <Pencil /> Edit
           </Button>
         )}
       </div>

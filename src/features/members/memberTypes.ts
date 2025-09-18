@@ -8,3 +8,14 @@ export type Member = {
   role: CrateRole;
   joinedAt: string | Date;
 };
+
+export type MemberQueryParameters = {
+  page?: number;
+  pageSize?: number;
+  searchTerm?: string;
+  sortBy?: "DisplayName" | "Email" | "Role" | "JoinedAt";
+  ascending?: boolean;
+  filterByRole?: CrateRole;
+  recentOnly?: boolean;
+  limit?: number;
+};

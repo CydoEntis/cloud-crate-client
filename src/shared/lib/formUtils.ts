@@ -1,6 +1,5 @@
 import type { UseFormReturn, Path, FieldValues } from "react-hook-form";
-
-export type ApiError = { code: string; message: string };
+import type { ApiError } from "./sharedTypes";
 
 const errorCodeToFieldMap: Record<string, string | null> = {
   ERR_DUPLICATE_EMAIL: "email",

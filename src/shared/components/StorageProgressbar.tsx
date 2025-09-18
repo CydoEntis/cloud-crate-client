@@ -22,7 +22,6 @@ export default function StorageProgress({
 }: StorageProgressProps) {
   const rawPercent = total > 0 ? (used / total) * 100 : 0;
 
-  // Ensure small usage is still visible
   const displayPercent = rawPercent > 0 && rawPercent < 5 ? 5 : rawPercent;
   const percent = Math.min(displayPercent, 100);
 
