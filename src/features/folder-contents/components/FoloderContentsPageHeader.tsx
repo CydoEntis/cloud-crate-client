@@ -77,8 +77,6 @@ function FolderContentsPageHeader() {
         isOpen={inviteModalOpen}
         onClose={() => setInviteModalOpen(false)}
         crateId={crateId}
-        crateName={crate.name}
-        members={members?.items || []}
       />
     </>
   );

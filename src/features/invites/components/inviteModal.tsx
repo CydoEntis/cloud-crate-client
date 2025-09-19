@@ -11,17 +11,18 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { CrateRole } from "@/features/crates/crateTypes";
-import type { Member } from "@/features/members/memberTypes";
+import SearchInputField from "@/shared/components/SearchInputField";
+import { usePaginatedMembers } from "@/features/members/api/memberQueries";
 
 type InviteModalProps = {
   isOpen: boolean;
-  onClose: () => void;
   crateId: string;
-  crateName: string;
-  members: Member[];
+  onClose: () => void;
 };
 
-function InviteModal({ isOpen, onClose, crateId, crateName, members }: InviteModalProps) {
+function InviteModal({ isOpen, onClose, crateId }: InviteModalProps) {
+  const { data: paginatedResult, isLoading, error } = usePaginatedMembers(crateId);
+  const members = paginatedResult?.items || [];
   const [searchValue, setSearchValue] = useState("");
 
   const handleRoleChange = (userId: string, newRole: CrateRole) => {
@@ -55,7 +56,7 @@ function InviteModal({ isOpen, onClose, crateId, crateName, members }: InviteMod
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto">
+      <DialogContent className="max-w-md mx-auto text-foreground border-muted">
         <DialogHeader className="relative">
           <DialogTitle className="text-xl font-semibold text-left">Share this crate</DialogTitle>
           <button onClick={onClose} className="absolute right-0 top-0 p-1 hover:bg-gray-100 rounded-full">
@@ -70,19 +71,7 @@ function InviteModal({ isOpen, onClose, crateId, crateName, members }: InviteMod
           <p className="text-sm text-gray-600">Invite your team to collaborate on this crate.</p>
 
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Add team member"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="pl-10 pr-10"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && searchValue.trim()) {
-                  handleInvite();
-                }
-              }}
-            />
-            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <SearchInputField value={searchValue} onChange={setSearchValue} placeholder="Enter email to invite" />
           </div>
 
           {/* People with access */}

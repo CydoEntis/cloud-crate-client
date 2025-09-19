@@ -34,8 +34,10 @@ export const useRecentMembers = (crateId: string) => {
 };
 
 export const usePaginatedMembers = (crateId: string, page: number = 1, pageSize: number = 20) => {
-  return useGetMembers(crateId, {
+  const result = useGetMembers(crateId, {
     page,
     pageSize,
   });
+
+  return result;
 };
