@@ -16,7 +16,7 @@ type InviteFormProps = {
 function InviteForm({ crateId }: InviteFormProps) {
   const inviteUser = useInviteToCrate();
   const [searchValue, setSearchValue] = useState("");
-  const [selectedRole, setSelectedRole] = useState<CrateRole>(CrateRole.Viewer);
+  const [selectedRole, setSelectedRole] = useState<CrateRole>(CrateRole.Member);
 
   const handleInvite = () => {
     if (!searchValue.trim() || !isValidEmail(searchValue.trim())) return;
@@ -30,7 +30,7 @@ function InviteForm({ crateId }: InviteFormProps) {
     inviteUser.mutate(inviteRequest, {
       onSuccess: () => {
         setSearchValue("");
-        setSelectedRole(CrateRole.Viewer);
+        setSelectedRole(CrateRole.Member);
       },
     });
   };

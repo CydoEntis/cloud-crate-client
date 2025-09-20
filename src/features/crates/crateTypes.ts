@@ -56,8 +56,6 @@ export type StorageDetails = {
 
 export enum CrateRole {
   Owner = "Owner",
-  Contributor = "Contributor", 
-  Uploader = "Uploader",
-  Downloader = "Downloader",
-  Viewer = "Viewer",
+  Manager = "Manager",
+  Member = "Member",
 }

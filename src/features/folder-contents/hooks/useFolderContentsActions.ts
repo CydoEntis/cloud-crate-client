@@ -75,7 +75,6 @@ function useFolderContentsActions({ crateId, folderId, searchParams }: UseFolder
   );
 
   const isLoading = crateQuery.isLoading || folderContentsQuery.isLoading;
-  const canManage = crateQuery.data?.role !== CrateRole.Viewer;
   const folderData = folderContentsQuery.data || defaultFolderData;
 
   const handlePreviewFile = useCallback((file: CrateFile) => {
@@ -113,7 +112,6 @@ function useFolderContentsActions({ crateId, folderId, searchParams }: UseFolder
     isFolderLoading: folderContentsQuery.isLoading,
     isMoving: dragAndDrop.isMoving,
 
-    canManage,
     totalItems,
 
     isSettingsOpen,

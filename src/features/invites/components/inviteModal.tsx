@@ -1,4 +1,3 @@
-// InviteModal.tsx (simplified)
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { CrateRole } from "@/features/crates/crateTypes";
 import { usePaginatedMembers } from "@/features/members/api/memberQueries";

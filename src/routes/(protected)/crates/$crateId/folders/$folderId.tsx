@@ -73,7 +73,6 @@ export default function CrateFolderPage() {
     refetch,
   } = useFolderContentsActions({ crateId, folderId, searchParams });
 
-  console.log("CRATE: ", crate);
 
   const setSearchParams = useCallback(
     (params: Partial<typeof search>) => {
@@ -96,7 +95,6 @@ export default function CrateFolderPage() {
     [selectMode, flattenedContents]
   );
 
-  console.log("The crate: ", crate);
 
   return (
     <FolderPageLayout>

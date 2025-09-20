@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pencil, UserPlus } from "lucide-react";
+import { Pencil, UserPlus, X } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { useCrateDetails } from "@/features/crates/api/crateQueries";
@@ -17,7 +17,9 @@ function FolderContentsPageHeader() {
 
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
-  const canManage = crate?.currentMember.role !== CrateRole.Viewer;
+  const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
+  const canLeave = crate?.currentMember.role !== CrateRole.Owner;
+
   const remainingCount = members ? Math.max(0, members.totalCount - members.items.length) : 0;
 
   const handleInvite = () => {
@@ -48,36 +50,41 @@ function FolderContentsPageHeader() {
             </div>
 
             {canManage && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-primary text-primary hover:bg-primary/20 hover:text-primary"
-                onClick={handleInvite}
-              >
-                <UserPlus className="h-4 w-4 mr-2" />
-                Invite
-              </Button>
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-primary text-primary hover:bg-primary/20 hover:text-primary"
+                  onClick={handleInvite}
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Invite
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary/30 cursor-pointer hover:text-primary"
+                  onClick={() => open(crate.id)}
+                >
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+              </>
             )}
           </div>
-
-          {canManage && (
+          {canLeave && (
             <Button
               variant="outline"
-              className="border-primary text-primary hover:bg-primary/30 cursor-pointer hover:text-primary"
+              className="!border-destructive text-destructive hover:!bg-destructive/30 cursor-pointer hover:!text-destructive"
               onClick={() => open(crate.id)}
             >
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit
+              <X className="h-4 w-4 mr-2" />
+              Leave
             </Button>
           )}
         </div>
       </div>
 
-      <InviteModal
-        isOpen={inviteModalOpen}
-        onClose={() => setInviteModalOpen(false)}
-        crateId={crateId}
-      />
+      <InviteModal isOpen={inviteModalOpen} onClose={() => setInviteModalOpen(false)} crateId={crateId} />
     </>
   );
 }
