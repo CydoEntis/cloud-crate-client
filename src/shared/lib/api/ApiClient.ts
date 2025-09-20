@@ -13,7 +13,7 @@ export class ApiService {
     this.api = axios.create({
       baseURL,
       withCredentials: true,
-      timeout: 10000, 
+      // timeout: 10000, 
     });
     this.setupInterceptors();
   }

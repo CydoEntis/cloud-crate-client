@@ -24,8 +24,8 @@ function InviteModal({ isOpen, onClose, crateId }: InviteModalProps) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto text-foreground border-muted">
+    <Dialog open={isOpen} onOpenChange={onClose} >
+      <DialogContent className="min-w-2xl mx-auto text-foreground border-muted">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-left">Invite to crate</DialogTitle>
         </DialogHeader>

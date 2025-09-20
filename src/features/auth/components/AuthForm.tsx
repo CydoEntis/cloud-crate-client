@@ -28,7 +28,9 @@ function AuthForm({ mode }: AuthFormProps) {
 
   const form = useForm<LoginRequest | RegisterRequest>({
     resolver: zodResolver(isLogin ? loginSchema : registerSchema),
-    defaultValues: isLogin ? { email: "", password: "" } : { email: "", password: "", displayName: "" },
+    defaultValues: isLogin
+      ? { email: "", password: "" }
+      : { email: "", password: "", confirmPassword: "", displayName: "" },
   });
 
   const { mutateAsync: login, isPending: isLoginPending } = useLogin();
@@ -36,10 +38,16 @@ function AuthForm({ mode }: AuthFormProps) {
 
   const isPending = isLogin ? isLoginPending : isRegisterPending;
 
+  console.log("Form errors:", form.formState.errors);
+  console.log("Form is valid:", form.formState.isValid);
+
   async function onSubmit(data: LoginRequest | RegisterRequest) {
     try {
-      clearError();
+      console.log("onSubmit called with mode:", mode);
+      console.log("isLogin:", isLogin);
+      console.log("Form data:", data);
 
+      clearError();
       if (isLogin) {
         await login(data as LoginRequest);
       } else {
@@ -107,6 +115,20 @@ function AuthForm({ mode }: AuthFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input placeholder="********" {...field} type="password" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
                         <Input placeholder="********" {...field} type="password" />
                       </FormControl>

@@ -39,9 +39,8 @@ function MembersList({ members, onRoleChange, onRemoveMember }: MembersListProps
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Owner cannot change their role */}
               {member.role === CrateRole.Owner ? (
-                <div className="w-[120px] h-8 px-3 py-1 bg-red-100 text-red-700 rounded-md text-sm flex items-center justify-center border-0">
+                <div className="w-[120px] h-8 px-3 py-1 text-primary border border-primary rounded-md text-sm flex items-center justify-center">
                   Owner
                 </div>
               ) : (

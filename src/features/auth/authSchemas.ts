@@ -24,7 +24,7 @@ export const registerSchema = z
     email: emailField,
     password: passwordField,
     confirmPassword: passwordField,
-    profilePictureUrl: z.string(),
+    profilePictureUrl: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

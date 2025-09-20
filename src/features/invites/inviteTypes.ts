@@ -2,9 +2,8 @@ import type { CrateRole } from "../crates/crateTypes";
 
 export type CrateInviteRequest = {
   crateId: string;
-  email: string;
+  invitedEmail: string;
   role: CrateRole;
-  expiresAt: Date;
 };
 
 export type CrateInvite = {

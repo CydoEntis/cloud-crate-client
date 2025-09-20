@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { useAuthStore } from "@/features/auth/store";
 import { useInviteStore } from "@/features/invites/inviteStore";
+import { useIsAuthenticated } from "@/features/auth/authStore";
 
 export const Route = createFileRoute("/(public)/invite/$token")({
   component: PublicInviteRedirectPage,
@@ -11,11 +11,12 @@ export const Route = createFileRoute("/(public)/invite/$token")({
 function PublicInviteRedirectPage() {
   const { token } = useParams({ strict: false });
   const navigate = useNavigate();
-  const isAuthenticated = useAuthStore.getState().isAuthenticated();
+  const isAuthenticated = useIsAuthenticated(); 
   const setPendingToken = useInviteStore((s) => s.setToken);
 
   useEffect(() => {
     if (!token) return;
+    
     setPendingToken(token);
 
     if (!isAuthenticated) {
@@ -30,7 +31,7 @@ function PublicInviteRedirectPage() {
         replace: true,
       });
     }
-  }, [token, isAuthenticated]);
+  }, [token, isAuthenticated, navigate, setPendingToken]);
 
   return null;
 }

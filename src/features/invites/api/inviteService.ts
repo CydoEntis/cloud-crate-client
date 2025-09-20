@@ -1,19 +1,16 @@
 import apiService from "@/shared/lib/api/ApiClient";
-import type { ApiResponse } from "@/features/auth/authTypes";
 import type { CrateInvite, CrateInviteRequest } from "../inviteTypes";
-
+import type { ApiResponse } from "@/shared/lib/sharedTypes";
 
 export const inviteService = {
   async inviteUserToCrate(request: CrateInviteRequest): Promise<void> {
     const response = await apiService.post<ApiResponse<void>>(`/invite`, request);
-    const { data: result, isSuccess, message, errors } = response.data;
+    const { isSuccess, message, errors } = response.data;
 
-    if (!isSuccess || !result) {
+    if (!isSuccess) {
       console.error("Failed to invite user to crate:", errors);
       throw new Error(message ?? `Failed to invite user to crate`);
     }
-
-    return result;
   },
 
   async getInviteByToken(token: string): Promise<CrateInvite> {
