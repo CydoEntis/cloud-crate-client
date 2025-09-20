@@ -6,6 +6,7 @@ import { CrateRole } from "@/features/crates/crateTypes";
 import SearchInputField from "@/shared/components/SearchInputField";
 import { useInviteToCrate } from "../api/inviteQueries";
 import type { CrateInviteRequest } from "../inviteTypes";
+import { crateInviteFormSchema } from "../inviteSchemas";
 
 type InviteFormProps = {
   crateId: string;
@@ -20,41 +21,61 @@ function InviteForm({ crateId }: InviteFormProps) {
   const handleInvite = () => {
     if (!searchValue.trim()) return;
 
+    const emails = searchValue
+      .split(",")
+      .map((email) => email.trim())
+      .filter((email) => email && isValidEmail(email));
+
+    if (emails.length === 0) return;
+
     const expirationDate = new Date();
     expirationDate.setMinutes(expirationDate.getMinutes() + expirationMinutes);
 
-    const inviteRequest: CrateInviteRequest = {
-      crateId: crateId,
-      email: searchValue.trim(),
-      role: selectedRole,
-      expiresAt: expirationDate,
-    };
+    emails.forEach((email) => {
+      const inviteRequest: CrateInviteRequest = {
+        crateId: crateId,
+        email: email,
+        role: selectedRole,
+        expiresAt: expirationDate,
+      };
 
-    inviteUser.mutate(inviteRequest, {
-      onSuccess: () => {
-        setSearchValue("");
-        setSelectedRole(CrateRole.Viewer);
-        setExpirationMinutes(30);
-      },
+      inviteUser.mutate(inviteRequest);
     });
+
+    setSearchValue("");
+    setSelectedRole(CrateRole.Viewer);
+    setExpirationMinutes(30);
   };
 
-  const isValidEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidEmail = (email: string): boolean => {
+    const result = crateInviteFormSchema.shape.email.safeParse(email);
+    return result.success;
   };
 
-  const canInvite = searchValue.trim() && isValidEmail(searchValue.trim());
+  const getValidEmails = () => {
+    return searchValue
+      .split(",")
+      .map((email) => email.trim())
+      .filter((email) => email && isValidEmail(email));
+  };
+
+  const canInvite = searchValue.trim() && getValidEmails().length > 0;
 
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <SearchInputField value={searchValue} onChange={setSearchValue} placeholder="Enter email to invite" />
+        <SearchInputField
+          value={searchValue}
+          onChange={setSearchValue}
+          placeholder="Enter email(s) separated by commas"
+        />
         <Button variant="outline" onClick={handleInvite} disabled={!canInvite || inviteUser.isPending}>
           <UserPlus className="h-4 w-4 mr-1" />
           {inviteUser.isPending ? "Inviting..." : "Invite"}
         </Button>
       </div>
 
+      {/* Rest of your component stays the same */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Role:</span>
