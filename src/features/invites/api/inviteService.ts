@@ -27,25 +27,21 @@ export const inviteService = {
 
   async acceptInvite(token: string): Promise<void> {
     const response = await apiService.post<ApiResponse<void>>(`/invite/token/${token}/accept`);
-    const { data: result, isSuccess, message, errors } = response.data;
+    const { isSuccess, message, errors } = response.data;
 
-    if (!isSuccess || !result) {
+    if (!isSuccess) {
       console.error("Failed to accept invite:", errors);
       throw new Error(message ?? `Failed to accept invite`);
     }
-
-    return result;
   },
 
   async declineInvite(token: string): Promise<void> {
     const response = await apiService.post<ApiResponse<void>>(`/invite/token/${token}/decline`);
-    const { data: result, isSuccess, message, errors } = response.data;
+    const { isSuccess, message, errors } = response.data;
 
-    if (!isSuccess || !result) {
+    if (!isSuccess) {
       console.error("Failed to decline invite:", errors);
       throw new Error(message ?? `Failed to decline invite`);
     }
-
-    return result;
   },
 };

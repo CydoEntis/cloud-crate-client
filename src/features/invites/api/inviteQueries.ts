@@ -45,9 +45,10 @@ export const useAcceptInvite = () => {
       queryClient.invalidateQueries({ queryKey: ["crates"] });
       toast.success("Invite accepted successfully");
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       console.error("Failed to accept invite:", error);
-      toast.error(error.message || "Failed to accept invite");
+      const errorMessage = error?.response?.data?.message || error.message || "Failed to accept invite";
+      toast.error(errorMessage);
     },
   });
 };
