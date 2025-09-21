@@ -11,7 +11,7 @@ import ConfirmDialog from "@/shared/components/ConfirmDialog";
 import { useUserStore } from "@/features/user/userStore";
 import type { CrateSummary } from "../crateTypes";
 import { useCrateModalStore } from "../store/crateModalStore";
-import { CrateRole } from "../crateTypes"; // Make sure this import exists
+import { CrateRole } from "../crateTypes"; 
 
 type CrateActionsMenuProps = {
   crate: CrateSummary;
