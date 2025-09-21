@@ -3,9 +3,10 @@ import { CrateRole } from "@/features/crates/crateTypes";
 import { useAssignRole, useRemoveMember } from "@/features/members/api/memberQueries";
 import MembersList from "@/features/members/components/MemberList";
 import PaginationControls from "@/shared/components/PaginationControls";
-import { Input } from "@/shared/components/ui/input";
 import InviteForm from "./InviteForm";
 import { usePaginatedMembersModal } from "@/features/members/hooks/usePaginatedMembersModal";
+import IconInputField from "@/components/IconInputField";
+import { Search } from "lucide-react";
 
 type InviteModalProps = {
   currentUserRole: CrateRole;
@@ -30,7 +31,6 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
 
   const assignRoleMutation = useAssignRole(crateId);
   const removeMemberMutation = useRemoveMember(crateId);
-
   const members = paginatedResult?.items || [];
 
   const handleRoleChange = async (userId: string, newRole: CrateRole) => {
@@ -45,7 +45,6 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
     } catch (error) {}
   };
 
-  // Reset pagination when modal opens
   const handleModalChange = (open: boolean) => {
     if (!open) {
       onClose();
@@ -61,17 +60,17 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
           <DialogTitle className="text-xl font-semibold text-left">Manage Crate Members</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 mb-4">
+        <div className="space-y-4">
           <p className="text-sm text-muted-foreground">Invite your team to collaborate on this crate.</p>
 
           <InviteForm crateId={crateId} />
 
-          {/* Search Input */}
-          <Input
+          <IconInputField
+            icon={Search}
             placeholder="Search members..."
             value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full"
+            onChange={handleSearch}
+            delay={300}
           />
 
           <MembersList
@@ -84,6 +83,7 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
 
           {paginatedResult && (
             <PaginationControls
+              align="left"
               page={page}
               pageSize={pageSize}
               totalCount={paginatedResult.totalCount}
