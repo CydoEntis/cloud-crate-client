@@ -2,7 +2,7 @@ import apiService from "@/shared/lib/api/ApiClient";
 import { authResponseSchema } from "../authSchemas";
 import type { User } from "@/features/user/userTypes";
 import type { ApiResponse } from "@/shared/lib/sharedTypes";
-import type { LoginRequest, AuthResponse, RegisterRequest } from "../authTypes";
+import type { LoginRequest, AuthResponse, RegisterRequest, ResetPasswordRequest } from "../authTypes";
 
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
@@ -40,20 +40,28 @@ export const authService = {
     }
   },
 
-  async refresh(): Promise<{ token: string }> {
-    const response = await apiService.post<ApiResponse<{ token: string }>>("/auth/refresh");
+  async forgotPassword(email: string): Promise<void> {
+    const response = await apiService.post<ApiResponse<null>>("/auth/forgot-password", { email });
 
-    const { data: result, isSuccess, message } = response.data;
+    const { isSuccess, message } = response.data;
 
-    if (!isSuccess || !result) {
-      throw new Error(message ?? "Token refresh failed");
+    if (!isSuccess) {
+      throw new Error(message ?? "Failed to send reset email");
     }
+  },
 
-    return result;
+  async resetPassword(resetData: ResetPasswordRequest): Promise<void> {
+    const response = await apiService.post<ApiResponse<null>>("/auth/reset-password", resetData);
+
+    const { isSuccess, message } = response.data;
+
+    if (!isSuccess) {
+      throw new Error(message ?? "Password reset failed");
+    }
   },
 
   async me(): Promise<User> {
-    const response = await apiService.get<ApiResponse<User>>("/auth/me");
+    const response = await apiService.get<ApiResponse<User>>("/auth/user");
 
     const { data: result, isSuccess, message } = response.data;
 

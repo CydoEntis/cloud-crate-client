@@ -38,15 +38,8 @@ function AuthForm({ mode }: AuthFormProps) {
 
   const isPending = isLogin ? isLoginPending : isRegisterPending;
 
-  console.log("Form errors:", form.formState.errors);
-  console.log("Form is valid:", form.formState.isValid);
-
   async function onSubmit(data: LoginRequest | RegisterRequest) {
     try {
-      console.log("onSubmit called with mode:", mode);
-      console.log("isLogin:", isLogin);
-      console.log("Form data:", data);
-
       clearError();
       if (isLogin) {
         await login(data as LoginRequest);

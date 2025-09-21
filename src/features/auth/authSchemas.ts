@@ -31,9 +31,26 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
+export const forgotPasswordSchema = z.object({
+  email: emailField,
+});
+
+export const resetPasswordSchema = z
+  .object({
+    email: emailField,
+    token: z.string().min(1, "Reset token is required"),
+    newPassword: passwordField,
+    confirmPassword: passwordField,
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 export const authResponseSchema = z.object({
-  token: z.string(),
-  refreshToken: z.string().optional(),
+  accessToken: z.string(),
+  accessTokenExpires: z.string(),
+  tokenType: z.string(),
   user: z
     .object({
       id: z.string(),

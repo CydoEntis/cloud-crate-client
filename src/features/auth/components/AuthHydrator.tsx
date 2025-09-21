@@ -6,17 +6,13 @@ interface AuthHydratorProps {
 }
 
 function AuthHydrator({ children }: AuthHydratorProps) {
-  const { accessToken, validateStoredToken, clearAuth } = useAuthStore();
+  const { accessToken, isTokenExpiringSoon, clearAuth } = useAuthStore();
 
   useEffect(() => {
-    if (accessToken) {
-      validateStoredToken(accessToken).then((isValid) => {
-        if (!isValid) {
-          clearAuth();
-        }
-      });
+    if (accessToken && isTokenExpiringSoon(0)) {
+      clearAuth();
     }
-  }, [accessToken, validateStoredToken, clearAuth]);
+  }, [accessToken, isTokenExpiringSoon, clearAuth]);
 
   return <>{children}</>;
 }

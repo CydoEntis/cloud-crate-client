@@ -13,7 +13,6 @@ export class ApiService {
     this.api = axios.create({
       baseURL,
       withCredentials: true,
-      // timeout: 10000, 
     });
     this.setupInterceptors();
   }
@@ -21,14 +20,15 @@ export class ApiService {
   private setupInterceptors(): void {
     this.api.interceptors.request.use(
       (config) => {
-        const token = useAuthStore.getState().accessToken;
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+        const { accessToken, isTokenExpiringSoon } = useAuthStore.getState();
+
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
         }
 
-        // if (import.meta.env.DEV) {
-        //   console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, config.data);
-        // }
+        if (import.meta.env.DEV && accessToken && isTokenExpiringSoon()) {
+          console.log("⚠️ Access token is expiring soon, will refresh on next API call if needed");
+        }
 
         return config;
       },
@@ -37,9 +37,6 @@ export class ApiService {
 
     this.api.interceptors.response.use(
       (response) => {
-        // if (import.meta.env.DEV) {
-        //   console.log(`✅ ${response.status} ${response.config.url}`, response.data);
-        // }
         return response;
       },
       async (error: AxiosError) => {
@@ -49,7 +46,9 @@ export class ApiService {
 
         const originalRequest = error.config as any;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        const isAuthEndpoint = originalRequest.url?.includes("/auth/");
+
+        if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
           originalRequest._retry = true;
 
           if (this.isRefreshing) {
@@ -67,17 +66,30 @@ export class ApiService {
           this.isRefreshing = true;
 
           try {
-            const res = await this.api.post("/auth/refresh");
-            const { accessToken } = res.data;
+            const response = await this.api.post("/auth/refresh");
 
-            useAuthStore.getState().setAuth(accessToken);
+            const { data: result, isSuccess } = response.data;
+
+            if (!isSuccess || !result) {
+              throw new Error("Token refresh failed");
+            }
+
+            const { accessToken, accessTokenExpires } = result;
+
+            useAuthStore.getState().setAuth({
+              accessToken,
+              accessTokenExpires,
+            });
+
             this.processQueue(null, accessToken);
 
             originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
             return this.api(originalRequest);
           } catch (refreshError) {
             this.processQueue(refreshError, null);
-            useAuthStore.getState().clearAuth();
+
+            const { clearAuth } = useAuthStore.getState();
+            clearAuth();
 
             if (typeof window !== "undefined") {
               window.location.href = "/login";
@@ -158,5 +170,6 @@ export class ApiService {
     }
   }
 }
+
 const apiService = new ApiService(import.meta.env.VITE_API_URL);
 export default apiService;

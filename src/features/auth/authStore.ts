@@ -4,17 +4,17 @@ import { immer } from "zustand/middleware/immer";
 
 interface AuthState {
   accessToken: string | null;
-  refreshToken: string | null;
+  accessTokenExpires: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
 interface AuthActions {
-  setAuth: (tokens: { accessToken: string; refreshToken?: string }) => void;
+  setAuth: (tokens: { accessToken: string; accessTokenExpires: string }) => void;
+  updateAccessToken: (accessToken: string, expires: string) => void;
   clearAuth: () => void;
   setLoading: (loading: boolean) => void;
-  validateStoredToken: (token: string) => Promise<boolean>;
-  isTokenExpiringSoon: (token: string, thresholdMinutes?: number) => boolean;
+  isTokenExpiringSoon: (thresholdMinutes?: number) => boolean;
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -24,24 +24,28 @@ export const useAuthStore = create<AuthStore>()(
     persist(
       immer((set, get) => ({
         accessToken: null,
-        refreshToken: null,
+        accessTokenExpires: null,
         isAuthenticated: false,
         isLoading: false,
 
         setAuth: (tokens) =>
           set((state) => {
             state.accessToken = tokens.accessToken;
-            if (tokens.refreshToken) {
-              state.refreshToken = tokens.refreshToken;
-            }
+            state.accessTokenExpires = tokens.accessTokenExpires;
             state.isAuthenticated = true;
             state.isLoading = false;
+          }),
+
+        updateAccessToken: (accessToken, expires) =>
+          set((state) => {
+            state.accessToken = accessToken;
+            state.accessTokenExpires = expires;
           }),
 
         clearAuth: () =>
           set((state) => {
             state.accessToken = null;
-            state.refreshToken = null;
+            state.accessTokenExpires = null;
             state.isAuthenticated = false;
             state.isLoading = false;
           }),
@@ -51,44 +55,24 @@ export const useAuthStore = create<AuthStore>()(
             state.isLoading = loading;
           }),
 
-        validateStoredToken: async (token) => {
-          try {
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            const isExpired = payload.exp * 1000 < Date.now();
+        isTokenExpiringSoon: (thresholdMinutes = 5) => {
+          const { accessTokenExpires } = get();
+          if (!accessTokenExpires) return true;
 
-            if (isExpired) {
-              get().clearAuth();
-              return false;
-            }
+          const expiryTime = new Date(accessTokenExpires).getTime();
+          const thresholdTime = Date.now() + thresholdMinutes * 60 * 1000;
 
-            return true;
-          } catch (error) {
-            console.warn("Invalid token format:", error);
-            get().clearAuth();
-            return false;
-          }
-        },
-
-        isTokenExpiringSoon: (token, thresholdMinutes = 5) => {
-          try {
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            const expiryTime = payload.exp * 1000;
-            const thresholdTime = Date.now() + thresholdMinutes * 60 * 1000;
-
-            return expiryTime < thresholdTime;
-          } catch {
-            return true;
-          }
+          return expiryTime < thresholdTime;
         },
       })),
       {
         name: "auth-store",
         partialize: (state) => ({
           accessToken: state.accessToken,
-          refreshToken: state.refreshToken,
+          accessTokenExpires: state.accessTokenExpires,
           isAuthenticated: state.isAuthenticated,
         }),
-        version: 1,
+        version: 3, 
       }
     ),
     { name: "AuthStore" }

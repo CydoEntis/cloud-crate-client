@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import fs from "fs";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,4 +14,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    https: {
+      key: fs.readFileSync('./cert.key'),
+      cert: fs.readFileSync('./cert.crt')
+    },
+    port: 5173,
+    host: 'localhost'
+  }
 });
