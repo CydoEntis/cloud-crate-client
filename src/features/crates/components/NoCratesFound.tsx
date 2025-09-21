@@ -40,7 +40,7 @@ function NoCratesFound({ searchTerm, onFilterChange }: NoCratesFoundProps) {
         </Button>
       ) : (
         <Button
-          onClick={open}
+          onClick={() => open()}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           Create Your First Crate

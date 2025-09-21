@@ -1,7 +1,8 @@
 import apiService from "@/shared/lib/api/ApiClient";
-import type { LoginRequest, RegisterRequest, AuthResponse, ApiResponse } from "../authTypes";
 import { authResponseSchema } from "../authSchemas";
 import type { User } from "@/features/user/userTypes";
+import type { ApiResponse } from "@/shared/lib/sharedTypes";
+import type { LoginRequest, AuthResponse, RegisterRequest } from "../authTypes";
 
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
