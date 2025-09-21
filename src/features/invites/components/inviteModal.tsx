@@ -1,8 +1,11 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { CrateRole } from "@/features/crates/crateTypes";
-import { usePaginatedMembers, useAssignRole, useRemoveMember } from "@/features/members/api/memberQueries";
+import { useAssignRole, useRemoveMember } from "@/features/members/api/memberQueries";
 import MembersList from "@/features/members/components/MemberList";
+import PaginationControls from "@/shared/components/PaginationControls";
+import { Input } from "@/shared/components/ui/input";
 import InviteForm from "./InviteForm";
+import { usePaginatedMembersModal } from "@/features/members/hooks/usePaginatedMembersModal";
 
 type InviteModalProps = {
   currentUserRole: CrateRole;
@@ -12,7 +15,19 @@ type InviteModalProps = {
 };
 
 function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalProps) {
-  const { data: paginatedResult, isLoading, error } = usePaginatedMembers(crateId);
+  const {
+    data: paginatedResult,
+    isLoading,
+    error,
+    page,
+    pageSize,
+    searchTerm,
+    totalPages,
+    setPage,
+    handleSearch,
+    resetPagination,
+  } = usePaginatedMembersModal(crateId, 1);
+
   const assignRoleMutation = useAssignRole(crateId);
   const removeMemberMutation = useRemoveMember(crateId);
 
@@ -30,11 +45,20 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
     } catch (error) {}
   };
 
+  // Reset pagination when modal opens
+  const handleModalChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+    } else {
+      resetPagination();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleModalChange}>
       <DialogContent className="min-w-2xl mx-auto text-foreground border-muted">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-left">Invite to crate</DialogTitle>
+          <DialogTitle className="text-xl font-semibold text-left">Manage Crate Members</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 mb-4">
@@ -42,13 +66,30 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
 
           <InviteForm crateId={crateId} />
 
+          {/* Search Input */}
+          <Input
+            placeholder="Search members..."
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full"
+          />
+
           <MembersList
             members={members}
             onRoleChange={handleRoleChange}
             onRemoveMember={handleRemoveMember}
-            isLoading={assignRoleMutation.isPending || removeMemberMutation.isPending}
+            isLoading={assignRoleMutation.isPending || removeMemberMutation.isPending || isLoading}
             currentUserRole={currentUserRole}
           />
+
+          {paginatedResult && (
+            <PaginationControls
+              page={page}
+              pageSize={pageSize}
+              totalCount={paginatedResult.totalCount}
+              onPageChange={setPage}
+            />
+          )}
         </div>
       </DialogContent>
     </Dialog>

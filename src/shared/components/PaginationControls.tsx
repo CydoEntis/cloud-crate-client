@@ -15,7 +15,7 @@ function PaginationControls({ page, pageSize, totalCount, onPageChange }: Pagina
 
   const renderPages = () => {
     const pages: (number | "ellipsis")[] = [];
-    const delta = 1; // show current ±1
+    const delta = 1; 
 
     for (let i = 1; i <= totalPages; i++) {
       if (i === 1 || i === totalPages || (i >= page - delta && i <= page + delta)) {
