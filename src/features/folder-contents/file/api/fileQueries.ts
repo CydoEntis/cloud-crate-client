@@ -16,7 +16,10 @@ export const useGetFile = (crateId: string, fileId: string) => {
     queryKey: fileKeys.detail(crateId, fileId),
     queryFn: () => fileService.getFile(crateId, fileId),
     enabled: !!crateId && !!fileId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 15,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
+    refetchIntervalInBackground: false,
   });
 };
 
@@ -25,7 +28,10 @@ export const useGetFiles = (crateId: string, folderId?: string | null) => {
     queryKey: fileKeys.list(crateId, folderId),
     queryFn: () => fileService.getFiles(crateId, folderId),
     enabled: !!crateId,
-    staleTime: 1000 * 60 * 2,
+    staleTime: 1000 * 15,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
+    refetchIntervalInBackground: false,
   });
 };
 
@@ -118,15 +124,28 @@ export const useSoftDeleteFile = () => {
 };
 
 export const useDownloadFile = () => {
-  return useMutation<Blob, Error, { crateId: string; fileId: string }>({
-    mutationFn: async ({ crateId, fileId }) => {
+  return useMutation({
+    mutationFn: async ({ crateId, fileId, fileName }: { crateId: string; fileId: string; fileName: string }) => {
       const response = await fetch(`/api/crates/${crateId}/files/${fileId}/download`);
-
       if (!response.ok) {
         throw new Error("Download failed");
       }
-
-      return response.blob();
+      const blob = await response.blob();
+      return { blob, fileName };
+    },
+    onSuccess: ({ blob, fileName }) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    },
+    onError: (error: Error) => {
+      console.error("Failed to download file:", error);
+      toast.error(error.message || "Failed to download file");
     },
   });
 };

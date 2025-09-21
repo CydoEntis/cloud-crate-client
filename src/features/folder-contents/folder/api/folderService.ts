@@ -1,7 +1,7 @@
 import apiService from "@/shared/lib/api/ApiClient";
-import type { ApiResponse } from "@/features/auth/authTypes";
-import type { CrateFolder, CreateFolder, GetFolderContentsParams, MoveFolder } from "../types/folderTypes";
-import type { FolderContents } from "../types/sharedTypes";
+import type { ApiResponse } from "@/shared/lib/sharedTypes";
+import type { FolderContents } from "../../sharedTypes";
+import type { CreateFolder, CrateFolder, GetFolderContentsParams, MoveFolder } from "../folderTypes";
 
 export const folderService = {
   async createFolder(data: CreateFolder): Promise<CrateFolder> {
@@ -103,5 +103,19 @@ export const folderService = {
       console.error("Failed to delete folder:", errors);
       throw new Error(message ?? "Failed to delete folder");
     }
+  },
+
+  async downloadFolder(crateId: string, folderId: string): Promise<{ blob: Blob; fileName: string }> {
+    const response = await apiService.get(`/crates/${crateId}/folders/${folderId}/download`, {
+      responseType: "blob",
+    });
+
+    const contentDisposition = response.headers["content-disposition"];
+    const fileName = contentDisposition ? contentDisposition.split("filename=")[1]?.replace(/"/g, "") : "folder.zip";
+
+    return {
+      blob: response.data,
+      fileName,
+    };
   },
 };

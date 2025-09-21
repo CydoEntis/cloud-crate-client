@@ -1,8 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { crateService } from "./crateService";
-import type { GetCrateParams, CreateCrateRequest, UpdateCrateRequest, Crate, CrateDetails, CrateSummary } from "../crateTypes";
-import type { PaginatedResult } from "@/features/auth/authTypes";
+import type {
+  GetCrateParams,
+  CreateCrateRequest,
+  UpdateCrateRequest,
+  Crate,
+  CrateDetails,
+  CrateSummary,
+} from "../crateTypes";
+import type { PaginatedResult } from "@/shared/lib/sharedTypes";
 
 export const crateKeys = {
   all: ["crates"] as const,
@@ -24,7 +31,10 @@ export const useGetCrates = (
   return useQuery<PaginatedResult<CrateSummary>, Error>({
     queryKey: crateKeys.list(params),
     queryFn: () => crateService.getCrates(params),
-    staleTime: 1000 * 60 * 2,
+    staleTime: 1000 * 15,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
+    refetchIntervalInBackground: false,
   });
 };
 
@@ -33,7 +43,10 @@ export const useCrateDetails = (crateId: string) => {
     queryKey: crateKeys.detail(crateId),
     queryFn: () => crateService.getCrate(crateId),
     enabled: !!crateId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 15,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
+    refetchIntervalInBackground: false,
   });
 };
 
@@ -61,8 +74,8 @@ export const useUpdateCrate = () => {
     mutationFn: ({ crateId, request }: { crateId: string; request: UpdateCrateRequest }) =>
       crateService.updateCrate(crateId, request),
     onSuccess: (updatedCrate, { crateId }) => {
-      console.log(updatedCrate)
-      console.log(crateId)
+      console.log(updatedCrate);
+      console.log(crateId);
       queryClient.setQueryData(crateKeys.detail(crateId), updatedCrate);
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
       toast.success("Crate updated successfully");

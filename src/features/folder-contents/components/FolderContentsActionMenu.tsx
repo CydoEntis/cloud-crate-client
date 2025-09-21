@@ -8,8 +8,8 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
 import type { FolderContentRowItem } from "../sharedTypes";
-import { useDeleteFolder } from "../folder/api/folderQueries";
-import { useSoftDeleteFile } from "../file/api/fileQueries";
+import { useDeleteFolder, useDownloadFolder } from "../folder/api/folderQueries";
+import { useDownloadFile, useSoftDeleteFile } from "../file/api/fileQueries";
 import { CrateRole } from "@/features/crates/crateTypes";
 import type { Member } from "@/features/members/memberTypes";
 
@@ -26,6 +26,9 @@ function FolderContentsActionMenu({ row, currentMember }: { row: FolderContentRo
   const softDeleteFolderMutation = useDeleteFolder();
   const softDeleteFileMutation = useSoftDeleteFile();
 
+  const downloadFileMutation = useDownloadFile();
+  const downloadFolderMutation = useDownloadFolder();
+
   const handleSoftDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (row.isFolder) {
@@ -37,6 +40,19 @@ function FolderContentsActionMenu({ row, currentMember }: { row: FolderContentRo
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    if (row.isFolder) {
+      downloadFolderMutation.mutate({
+        crateId: row.crateId,
+        folderId: row.id,
+      });
+    } else {
+      downloadFileMutation.mutate({
+        crateId: row.crateId,
+        fileId: row.id,
+        fileName: row.name,
+      });
+    }
   };
 
   return (

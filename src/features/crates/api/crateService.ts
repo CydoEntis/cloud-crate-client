@@ -1,5 +1,4 @@
 import apiService from "@/shared/lib/api/ApiClient";
-import type { ApiResponse, PaginatedResult } from "@/features/auth/authTypes";
 
 import type {
   Crate,
@@ -9,6 +8,7 @@ import type {
   GetCrateParams,
   UpdateCrateRequest,
 } from "../crateTypes";
+import type { ApiResponse, PaginatedResult } from "@/shared/lib/sharedTypes";
 
 export const crateService = {
   async getCrate(crateId: string): Promise<CrateDetails> {

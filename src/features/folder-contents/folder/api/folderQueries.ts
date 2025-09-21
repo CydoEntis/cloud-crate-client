@@ -20,7 +20,10 @@ export const useGetFolderContents = (
     queryKey: [...folderKeys.contents(crateId, folderId), params],
     queryFn: () => folderService.getFolderContents(crateId, folderId, params),
     enabled: !!crateId,
-    staleTime: 1000 * 60 * 2,
+    staleTime: 1000 * 15,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
+    refetchIntervalInBackground: false,
   });
 };
 
@@ -29,7 +32,8 @@ export const useGetAvailableMoveTargets = (crateId: string, excludeFolderId?: st
     queryKey: folderKeys.moveTargets(crateId, excludeFolderId),
     queryFn: () => folderService.getAvailableMoveTargets(crateId, excludeFolderId),
     enabled: !!crateId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 30,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -99,6 +103,27 @@ export const useDeleteFolder = () => {
     onError: (error: Error) => {
       console.error("Failed to delete folder:", error);
       toast.error(error.message || "Failed to delete folder");
+    },
+  });
+};
+
+export const useDownloadFolder = () => {
+  return useMutation({
+    mutationFn: ({ crateId, folderId }: { crateId: string; folderId: string }) =>
+      folderService.downloadFolder(crateId, folderId),
+    onSuccess: ({ blob, fileName }) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    },
+    onError: (error: Error) => {
+      console.error("Failed to download folder:", error);
+      toast.error(error.message || "Failed to download folder");
     },
   });
 };
