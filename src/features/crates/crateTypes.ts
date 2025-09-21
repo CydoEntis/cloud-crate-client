@@ -30,6 +30,7 @@ export type CrateSummary = {
   usedStorageBytes: number;
   allocatedStorageBytes: number;
   joinedAt: Date;
+  currentUserRole: CrateRole;
 };
 
 export type CrateDetails = {

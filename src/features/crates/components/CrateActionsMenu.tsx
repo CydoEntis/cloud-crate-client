@@ -11,6 +11,7 @@ import ConfirmDialog from "@/shared/components/ConfirmDialog";
 import { useUserStore } from "@/features/user/userStore";
 import type { CrateSummary } from "../crateTypes";
 import { useCrateModalStore } from "../store/crateModalStore";
+import { CrateRole } from "../crateTypes"; // Make sure this import exists
 
 type CrateActionsMenuProps = {
   crate: CrateSummary;
@@ -24,7 +25,9 @@ function CrateActionsMenu({ crate, onDelete, onLeave }: CrateActionsMenuProps) {
   const [confirmAction, setConfirmAction] = useState<() => void>(() => () => {});
   const { open } = useCrateModalStore();
 
-  const isOwner = user?.email === crate.owner.email;
+  const canEdit = crate.currentUserRole === CrateRole.Owner || crate.currentUserRole === CrateRole.Manager;
+  const canDelete = crate.currentUserRole === CrateRole.Owner;
+  const canLeave = crate.currentUserRole !== CrateRole.Owner;
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -53,25 +56,28 @@ function CrateActionsMenu({ crate, onDelete, onLeave }: CrateActionsMenuProps) {
             </button>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-card border-2 border-muted cursor-pointer ">
-          <DropdownMenuItem className="cursor-pointer" onClick={handleEdit}>
-            Edit
-          </DropdownMenuItem>
-          {isOwner ? (
+        <DropdownMenuContent align="end" className="bg-card border-2 border-muted cursor-pointer">
+          {canEdit && (
+            <DropdownMenuItem className="cursor-pointer" onClick={handleEdit}>
+              Edit
+            </DropdownMenuItem>
+          )}
+
+          {canDelete ? (
             <DropdownMenuItem
               onClick={handleDelete}
               className="text-destructive cursor-pointer hover:!text-white hover:!bg-destructive"
             >
               Delete
             </DropdownMenuItem>
-          ) : (
+          ) : canLeave ? (
             <DropdownMenuItem
               onClick={handleLeave}
               className="text-destructive cursor-pointer hover:!text-white hover:!bg-destructive"
             >
               Leave
             </DropdownMenuItem>
-          )}
+          ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -82,13 +88,13 @@ function CrateActionsMenu({ crate, onDelete, onLeave }: CrateActionsMenuProps) {
           confirmAction();
           setConfirmOpen(false);
         }}
-        title={isOwner ? "Delete Crate?" : "Leave Crate?"}
+        title={canDelete ? "Delete Crate?" : "Leave Crate?"}
         description={
-          isOwner
+          canDelete
             ? "Are you sure you want to delete this crate? This action cannot be undone."
             : "Are you sure you want to leave this crate?"
         }
-        confirmLabel={isOwner ? "Delete" : "Leave"}
+        confirmLabel={canDelete ? "Delete" : "Leave"}
       />
     </>
   );

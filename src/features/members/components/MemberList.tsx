@@ -53,7 +53,7 @@ function MembersList({ members, onRoleChange, onRemoveMember }: MembersListProps
                   </SelectTrigger>
                   <SelectContent className="border-muted">
                     {Object.values(CrateRole)
-                      .filter((role) => role !== CrateRole.Owner) // Don't allow promoting to Owner
+                      .filter((role) => role !== CrateRole.Owner) 
                       .map((role) => (
                         <SelectItem key={role} value={role}>
                           {role}
