@@ -73,7 +73,6 @@ export default function CrateFolderPage() {
     refetch,
   } = useFolderContentsActions({ crateId, folderId, searchParams });
 
-
   const setSearchParams = useCallback(
     (params: Partial<typeof search>) => {
       navigate({
@@ -91,10 +90,9 @@ export default function CrateFolderPage() {
   );
 
   const columns = useMemo(
-    () => folderContentsColumns(selectMode, flattenedContents) as ColumnDef<FolderContentRowItem>[],
+    () => folderContentsColumns(flattenedContents, crate?.currentMember) as ColumnDef<FolderContentRowItem>[],
     [selectMode, flattenedContents]
   );
-
 
   return (
     <FolderPageLayout>

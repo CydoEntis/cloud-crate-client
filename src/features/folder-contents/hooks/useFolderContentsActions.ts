@@ -33,7 +33,6 @@ function useFolderContentsActions({ crateId, folderId, searchParams }: UseFolder
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
 
   const crateQuery = useCrateDetails(crateId);
-  // const membersQuery = useGetMembers(crateId);
   const availableFoldersQuery = useGetAvailableMoveTargets(crateId);
 
   const folderContentsQuery = useGetFolderContents(crateId, folderId, {

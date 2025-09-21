@@ -1,3 +1,6 @@
+import type z from "zod";
+import type { uploaderSchema } from "./userSchemas";
+
 export type User = {
   id: string;
   email: string;
@@ -11,3 +14,5 @@ export type User = {
   updatedAt: string;
   profilePictureUrl?: string;
 };
+
+export type Uploader = z.infer<typeof uploaderSchema>;

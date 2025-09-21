@@ -10,12 +10,15 @@ import StorageDisplay from "@/shared/components/StorageDisplay";
 import type { CrateFile } from "@/features/folder-contents/file/fileTypes";
 import type { CrateFolder } from "@/features/folder-contents/folder/folderTypes";
 import FolderContentsActionMenu from "./FolderContentsActionMenu";
+import type { CrateRole } from "@/features/crates/crateTypes";
+import type { Uploader } from "@/features/user/userTypes";
+import type { Member } from "@/features/members/memberTypes";
 
 export type FolderContentRowItem = CrateFile | CrateFolder;
 
 const columnHelper = createColumnHelper<FolderContentRowItem>();
 
-const folderContentsColumns = (selectMode: boolean, folderContents: FolderContentRowItem[]) => {
+const folderContentsColumns = (folderContents: FolderContentRowItem[], currentMember?: Member) => {
   const columns = [
     columnHelper.display({
       id: "select",
@@ -102,7 +105,7 @@ const folderContentsColumns = (selectMode: boolean, folderContents: FolderConten
       header: "",
       size: 5,
       minSize: 5,
-      cell: (info) => <FolderContentsActionMenu row={info.row.original} />,
+      cell: (info) => <FolderContentsActionMenu row={info.row.original} currentMember={currentMember}/>,
     }),
   ];
 
