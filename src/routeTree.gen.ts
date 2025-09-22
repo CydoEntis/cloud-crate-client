@@ -17,8 +17,10 @@ import { Route as IndexImport } from './routes/index'
 import { Route as publicauthRouteImport } from './routes/(public)/(auth)/route'
 import { Route as protectedCratesIndexImport } from './routes/(protected)/crates/index'
 import { Route as publicInviteTokenImport } from './routes/(public)/invite/$token'
+import { Route as publicauthResetPasswordImport } from './routes/(public)/(auth)/reset-password'
 import { Route as publicauthRegisterImport } from './routes/(public)/(auth)/register'
 import { Route as publicauthLoginImport } from './routes/(public)/(auth)/login'
+import { Route as publicauthForgotPasswordImport } from './routes/(public)/(auth)/forgot-password'
 import { Route as protectedCratesCrateIdIndexImport } from './routes/(protected)/crates/$crateId/index'
 import { Route as protectedCratesCrateIdFoldersFolderIdImport } from './routes/(protected)/crates/$crateId/folders/$folderId'
 
@@ -57,6 +59,12 @@ const publicInviteTokenRoute = publicInviteTokenImport.update({
   getParentRoute: () => publicRouteRoute,
 } as any)
 
+const publicauthResetPasswordRoute = publicauthResetPasswordImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => publicauthRouteRoute,
+} as any)
+
 const publicauthRegisterRoute = publicauthRegisterImport.update({
   id: '/register',
   path: '/register',
@@ -66,6 +74,12 @@ const publicauthRegisterRoute = publicauthRegisterImport.update({
 const publicauthLoginRoute = publicauthLoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => publicauthRouteRoute,
+} as any)
+
+const publicauthForgotPasswordRoute = publicauthForgotPasswordImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => publicauthRouteRoute,
 } as any)
 
@@ -115,6 +129,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicauthRouteImport
       parentRoute: typeof publicRouteImport
     }
+    '/(public)/(auth)/forgot-password': {
+      id: '/(public)/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof publicauthForgotPasswordImport
+      parentRoute: typeof publicauthRouteImport
+    }
     '/(public)/(auth)/login': {
       id: '/(public)/(auth)/login'
       path: '/login'
@@ -127,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof publicauthRegisterImport
+      parentRoute: typeof publicauthRouteImport
+    }
+    '/(public)/(auth)/reset-password': {
+      id: '/(public)/(auth)/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof publicauthResetPasswordImport
       parentRoute: typeof publicauthRouteImport
     }
     '/(public)/invite/$token': {
@@ -180,13 +208,17 @@ const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(
 )
 
 interface publicauthRouteRouteChildren {
+  publicauthForgotPasswordRoute: typeof publicauthForgotPasswordRoute
   publicauthLoginRoute: typeof publicauthLoginRoute
   publicauthRegisterRoute: typeof publicauthRegisterRoute
+  publicauthResetPasswordRoute: typeof publicauthResetPasswordRoute
 }
 
 const publicauthRouteRouteChildren: publicauthRouteRouteChildren = {
+  publicauthForgotPasswordRoute: publicauthForgotPasswordRoute,
   publicauthLoginRoute: publicauthLoginRoute,
   publicauthRegisterRoute: publicauthRegisterRoute,
+  publicauthResetPasswordRoute: publicauthResetPasswordRoute,
 }
 
 const publicauthRouteRouteWithChildren = publicauthRouteRoute._addFileChildren(
@@ -209,8 +241,10 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof publicauthRouteRouteWithChildren
+  '/forgot-password': typeof publicauthForgotPasswordRoute
   '/login': typeof publicauthLoginRoute
   '/register': typeof publicauthRegisterRoute
+  '/reset-password': typeof publicauthResetPasswordRoute
   '/invite/$token': typeof publicInviteTokenRoute
   '/crates': typeof protectedCratesIndexRoute
   '/crates/$crateId': typeof protectedCratesCrateIdIndexRoute
@@ -219,8 +253,10 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof publicauthRouteRouteWithChildren
+  '/forgot-password': typeof publicauthForgotPasswordRoute
   '/login': typeof publicauthLoginRoute
   '/register': typeof publicauthRegisterRoute
+  '/reset-password': typeof publicauthResetPasswordRoute
   '/invite/$token': typeof publicInviteTokenRoute
   '/crates': typeof protectedCratesIndexRoute
   '/crates/$crateId': typeof protectedCratesCrateIdIndexRoute
@@ -233,8 +269,10 @@ export interface FileRoutesById {
   '/(protected)': typeof protectedRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
+  '/(public)/(auth)/forgot-password': typeof publicauthForgotPasswordRoute
   '/(public)/(auth)/login': typeof publicauthLoginRoute
   '/(public)/(auth)/register': typeof publicauthRegisterRoute
+  '/(public)/(auth)/reset-password': typeof publicauthResetPasswordRoute
   '/(public)/invite/$token': typeof publicInviteTokenRoute
   '/(protected)/crates/': typeof protectedCratesIndexRoute
   '/(protected)/crates/$crateId/': typeof protectedCratesCrateIdIndexRoute
@@ -245,8 +283,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/invite/$token'
     | '/crates'
     | '/crates/$crateId'
@@ -254,8 +294,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/invite/$token'
     | '/crates'
     | '/crates/$crateId'
@@ -266,8 +308,10 @@ export interface FileRouteTypes {
     | '/(protected)'
     | '/(public)'
     | '/(public)/(auth)'
+    | '/(public)/(auth)/forgot-password'
     | '/(public)/(auth)/login'
     | '/(public)/(auth)/register'
+    | '/(public)/(auth)/reset-password'
     | '/(public)/invite/$token'
     | '/(protected)/crates/'
     | '/(protected)/crates/$crateId/'
@@ -324,9 +368,15 @@ export const routeTree = rootRoute
       "filePath": "(public)/(auth)/route.tsx",
       "parent": "/(public)",
       "children": [
+        "/(public)/(auth)/forgot-password",
         "/(public)/(auth)/login",
-        "/(public)/(auth)/register"
+        "/(public)/(auth)/register",
+        "/(public)/(auth)/reset-password"
       ]
+    },
+    "/(public)/(auth)/forgot-password": {
+      "filePath": "(public)/(auth)/forgot-password.tsx",
+      "parent": "/(public)/(auth)"
     },
     "/(public)/(auth)/login": {
       "filePath": "(public)/(auth)/login.tsx",
@@ -334,6 +384,10 @@ export const routeTree = rootRoute
     },
     "/(public)/(auth)/register": {
       "filePath": "(public)/(auth)/register.tsx",
+      "parent": "/(public)/(auth)"
+    },
+    "/(public)/(auth)/reset-password": {
+      "filePath": "(public)/(auth)/reset-password.tsx",
       "parent": "/(public)/(auth)"
     },
     "/(public)/invite/$token": {

@@ -25,6 +25,7 @@ export const registerSchema = z
     password: passwordField,
     confirmPassword: passwordField,
     profilePictureUrl: z.string().optional(),
+    inviteToken: z.string().min(1, "Valid invite token is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

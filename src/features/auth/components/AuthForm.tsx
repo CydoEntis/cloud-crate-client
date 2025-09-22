@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/sha
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
+import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import type { LoginRequest, RegisterRequest } from "../authTypes";
 import { loginSchema, registerSchema } from "../authSchemas";
 import { useLogin, useRegister } from "../api/authQueries";
@@ -26,11 +27,44 @@ function AuthForm({ mode }: AuthFormProps) {
 
   const { error, handleAuthSuccess, handleAuthError, clearError } = useAuthForm();
 
+  if (!isLogin && !inviteToken) {
+    return (
+      <div className="flex flex-col gap-6">
+        <Card className="shadow-md border-none bg-card">
+          <CardHeader>
+            <CardTitle className="text-3xl font-bold">Invitation Required</CardTitle>
+            <CardDescription className="text-sm">Registration is by invitation only</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Alert>
+              <AlertDescription>
+                Registration requires a valid invitation. If you have an invite link, please use that to access the
+                registration form.
+              </AlertDescription>
+            </Alert>
+            <div className="mt-6 space-y-3">
+              <Link to="/login">
+                <Button className="w-full bg-indigo-500 hover:bg-indigo-600">Go to Login</Button>
+              </Link>
+              <p className="text-center text-sm text-muted-foreground">Need an invitation? Contact an administrator.</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   const form = useForm<LoginRequest | RegisterRequest>({
     resolver: zodResolver(isLogin ? loginSchema : registerSchema),
     defaultValues: isLogin
       ? { email: "", password: "" }
-      : { email: "", password: "", confirmPassword: "", displayName: "" },
+      : {
+          email: "",
+          password: "",
+          confirmPassword: "",
+          displayName: "",
+          inviteToken: inviteToken || "", // Include invite token
+        },
   });
 
   const { mutateAsync: login, isPending: isLoginPending } = useLogin();
@@ -50,6 +84,7 @@ function AuthForm({ mode }: AuthFormProps) {
         await register({
           ...registerData,
           profilePictureUrl: avatarUrl,
+          inviteToken: inviteToken || "", 
         });
       }
 
@@ -67,6 +102,13 @@ function AuthForm({ mode }: AuthFormProps) {
           <CardDescription className="text-sm">
             {isLogin ? "Enter your account details" : "Enter your details to create an account"}
           </CardDescription>
+          {!isLogin && inviteToken && (
+            <Alert>
+              <AlertDescription>
+                You have been invited to join CloudCrate. Complete the form below to create your account.
+              </AlertDescription>
+            </Alert>
+          )}
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -132,7 +174,11 @@ function AuthForm({ mode }: AuthFormProps) {
                   />
                 )}
 
-                {error && <p className="text-destructive text-sm mb-2">{error}</p>}
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
               </div>
 
               <div className="space-y-1 mt-6">
@@ -154,6 +200,17 @@ function AuthForm({ mode }: AuthFormProps) {
                 )}
               </div>
 
+              {isLogin && (
+                <div className="text-center mt-4">
+                  <Link
+                    to="/forgot-password"
+                    className="text-sm text-indigo-500 hover:text-indigo-600 underline underline-offset-4"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+              )}
+
               <div className="mt-4 text-center text-sm">
                 {isLogin ? "Don't have an account? " : "Already have an account? "}
                 <Link
@@ -161,7 +218,7 @@ function AuthForm({ mode }: AuthFormProps) {
                   search={inviteToken ? { inviteToken } : undefined}
                   className="underline underline-offset-4 text-indigo-500 font-bold"
                 >
-                  {isLogin ? "Sign up" : "Login"}
+                  {isLogin ? "Contact admin for invite" : "Login"}
                 </Link>
               </div>
             </form>

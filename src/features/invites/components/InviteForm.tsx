@@ -7,7 +7,7 @@ import SearchInputField from "@/shared/components/SearchInputField";
 import { useInviteToCrate } from "../api/inviteQueries";
 import type { CrateInviteRequest } from "../inviteTypes";
 import { crateInviteFormSchema } from "../inviteSchemas";
-import IconInputField from "@/components/IconInputField";
+import IconInputField from "@/shared/components/IconInputField";
 
 type InviteFormProps = {
   crateId: string;
