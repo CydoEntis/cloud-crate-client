@@ -13,6 +13,7 @@ export type User = {
   createdAt: string;
   updatedAt: string;
   profilePictureUrl?: string;
+  isAdmin: boolean;
 };
 
 export type Uploader = z.infer<typeof uploaderSchema>;

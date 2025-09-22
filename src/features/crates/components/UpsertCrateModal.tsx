@@ -5,7 +5,6 @@ import { Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// Components
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
@@ -13,7 +12,6 @@ import { Input } from "@/shared/components/ui/input";
 import { Slider } from "@/shared/components/ui/slider";
 import { ColorPicker } from "@/shared/components/ColorPicker";
 
-// Hooks & API
 import { useUserStore } from "@/features/user/userStore";
 import { useCreateCrate, useUpdateCrate } from "@/features/crates/api/crateQueries";
 import { crateService } from "@/features/crates/api/crateService";

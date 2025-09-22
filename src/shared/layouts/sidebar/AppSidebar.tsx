@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
-import { Settings, Trash2, Box } from "lucide-react";
+import { Settings, Trash2, Box, Shield } from "lucide-react"; // Add Shield icon
 import logo from "@/assets/cloud-crate-logo.png";
 import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/shared/components/ui/sidebar";
+import { useUserStore } from "@/features/user/userStore"; // Add this import
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import SidebarNavlink from "./SidebarNavlink";
 import ThemeToggle from "@/shared/components/ThemeToggle";
@@ -14,7 +15,14 @@ const navlinks = [
   { id: "settings", text: "Settings", to: "/settings", icon: <Settings /> },
 ];
 
+// Admin-only navigation
+const adminNavlinks = [{ id: "admin", text: "Admin Panel", to: "/admin", icon: <Shield /> }];
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const user = useUserStore((state) => state.user);
+
+  console.log("User in AppSidebar:", user); // Debugging line
+
   return (
     <Sidebar {...props} className="border-none">
       <SidebarContent className="bg-sidebar flex flex-col justify-between h-full">
@@ -27,7 +35,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <h3 className="font-bold text-3xl text-primary">Cloud Crate</h3>
             </Link>
           </div>
-
           <SidebarMenu className="pt-4 pb-8">
             <AddCrateButton />
           </SidebarMenu>
@@ -39,6 +46,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
               </SidebarMenuItem>
             ))}
+
+            {/* Admin Navigation - Only show for admin users */}
+            {user?.isAdmin &&
+              adminNavlinks.map((link) => (
+                <SidebarMenuItem key={link.id} className="my-1">
+                  <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
+                </SidebarMenuItem>
+              ))}
           </SidebarMenu>
 
           {/* Theme Toggle */}
@@ -46,7 +61,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <ThemeToggle />
           </SidebarMenu>
         </div>
-
         {/* Bottom Section - User Area */}
         <SidebarUserSection />
       </SidebarContent>

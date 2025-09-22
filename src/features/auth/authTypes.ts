@@ -26,4 +26,5 @@ export type AuthUser = {
   email: string;
   displayName: string;
   profilePictureUrl?: string;
+  isAdmin: boolean;
 };

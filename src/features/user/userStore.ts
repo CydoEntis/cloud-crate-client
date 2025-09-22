@@ -1,5 +1,6 @@
 import type { AuthUser } from "@/features/auth/authTypes";
 import { create } from "zustand";
+import { persist } from "zustand/middleware"; // Add this import
 import type { User } from "./userTypes";
 
 interface UserStore {
@@ -9,37 +10,46 @@ interface UserStore {
   clearUser: () => void;
 }
 
-export const useUserStore = create<UserStore>((set) => ({
-  user: null,
+export const useUserStore = create<UserStore>()(
+  persist(
+    // Wrap with persist
+    (set) => ({
+      user: null,
 
-  setUser: (user) => set({ user }),
+      setUser: (user) => set({ user }),
 
-  setAuthUser: (authUser) =>
-    set((state) => ({
-      user: state.user
-        ? {
-            ...state.user,
-            id: authUser.id,
-            email: authUser.email,
-            displayName: authUser.displayName,
-            profilePictureUrl: authUser.profilePictureUrl || state.user.profilePictureUrl,
-          }
-        : {
-            id: authUser.id,
-            email: authUser.email,
-            displayName: authUser.displayName,
-            profilePictureUrl: authUser.profilePictureUrl || "",
+      setAuthUser: (authUser) =>
+        set((state) => ({
+          user: state.user
+            ? {
+                ...state.user,
+                id: authUser.id,
+                email: authUser.email,
+                displayName: authUser.displayName,
+                profilePictureUrl: authUser.profilePictureUrl || state.user.profilePictureUrl,
+                isAdmin: authUser.isAdmin,
+              }
+            : {
+                id: authUser.id,
+                email: authUser.email,
+                displayName: authUser.displayName,
+                profilePictureUrl: authUser.profilePictureUrl || "",
+                accountStorageLimitBytes: 0,
+                allocatedStorageBytes: 0,
+                remainingAllocationBytes: 0,
+                remainingUsageBytes: 0,
+                usedStorageBytes: 0,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                isAdmin: authUser.isAdmin,
+              },
+        })),
 
-            accountStorageLimitBytes: 0,
-            allocatedStorageBytes: 0,
-            remainingAllocationBytes: 0,
-            remainingUsageBytes: 0,
-            usedStorageBytes: 0,
-
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-    })),
-
-  clearUser: () => set({ user: null }),
-}));
+      clearUser: () => set({ user: null }),
+    }),
+    {
+      name: "user-store", // Storage key
+      partialize: (state) => ({ user: state.user }), // Only persist user data
+    }
+  )
+);

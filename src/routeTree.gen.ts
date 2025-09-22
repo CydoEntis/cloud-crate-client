@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as publicRouteImport } from './routes/(public)/route'
 import { Route as protectedRouteImport } from './routes/(protected)/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as protectedAdminImport } from './routes/(protected)/admin'
 import { Route as publicauthRouteImport } from './routes/(public)/(auth)/route'
 import { Route as protectedCratesIndexImport } from './routes/(protected)/crates/index'
 import { Route as publicInviteTokenImport } from './routes/(public)/invite/$token'
@@ -40,6 +41,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const protectedAdminRoute = protectedAdminImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => protectedRouteRoute,
 } as any)
 
 const publicauthRouteRoute = publicauthRouteImport.update({
@@ -129,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicauthRouteImport
       parentRoute: typeof publicRouteImport
     }
+    '/(protected)/admin': {
+      id: '/(protected)/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof protectedAdminImport
+      parentRoute: typeof protectedRouteImport
+    }
     '/(public)/(auth)/forgot-password': {
       id: '/(public)/(auth)/forgot-password'
       path: '/forgot-password'
@@ -191,12 +205,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface protectedRouteRouteChildren {
+  protectedAdminRoute: typeof protectedAdminRoute
   protectedCratesIndexRoute: typeof protectedCratesIndexRoute
   protectedCratesCrateIdIndexRoute: typeof protectedCratesCrateIdIndexRoute
   protectedCratesCrateIdFoldersFolderIdRoute: typeof protectedCratesCrateIdFoldersFolderIdRoute
 }
 
 const protectedRouteRouteChildren: protectedRouteRouteChildren = {
+  protectedAdminRoute: protectedAdminRoute,
   protectedCratesIndexRoute: protectedCratesIndexRoute,
   protectedCratesCrateIdIndexRoute: protectedCratesCrateIdIndexRoute,
   protectedCratesCrateIdFoldersFolderIdRoute:
@@ -241,6 +257,7 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof publicauthRouteRouteWithChildren
+  '/admin': typeof protectedAdminRoute
   '/forgot-password': typeof publicauthForgotPasswordRoute
   '/login': typeof publicauthLoginRoute
   '/register': typeof publicauthRegisterRoute
@@ -253,6 +270,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof publicauthRouteRouteWithChildren
+  '/admin': typeof protectedAdminRoute
   '/forgot-password': typeof publicauthForgotPasswordRoute
   '/login': typeof publicauthLoginRoute
   '/register': typeof publicauthRegisterRoute
@@ -269,6 +287,7 @@ export interface FileRoutesById {
   '/(protected)': typeof protectedRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
+  '/(protected)/admin': typeof protectedAdminRoute
   '/(public)/(auth)/forgot-password': typeof publicauthForgotPasswordRoute
   '/(public)/(auth)/login': typeof publicauthLoginRoute
   '/(public)/(auth)/register': typeof publicauthRegisterRoute
@@ -283,6 +302,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/forgot-password'
     | '/login'
     | '/register'
@@ -294,6 +314,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/forgot-password'
     | '/login'
     | '/register'
@@ -308,6 +329,7 @@ export interface FileRouteTypes {
     | '/(protected)'
     | '/(public)'
     | '/(public)/(auth)'
+    | '/(protected)/admin'
     | '/(public)/(auth)/forgot-password'
     | '/(public)/(auth)/login'
     | '/(public)/(auth)/register'
@@ -352,6 +374,7 @@ export const routeTree = rootRoute
     "/(protected)": {
       "filePath": "(protected)/route.tsx",
       "children": [
+        "/(protected)/admin",
         "/(protected)/crates/",
         "/(protected)/crates/$crateId/",
         "/(protected)/crates/$crateId/folders/$folderId"
@@ -373,6 +396,10 @@ export const routeTree = rootRoute
         "/(public)/(auth)/register",
         "/(public)/(auth)/reset-password"
       ]
+    },
+    "/(protected)/admin": {
+      "filePath": "(protected)/admin.tsx",
+      "parent": "/(protected)"
     },
     "/(public)/(auth)/forgot-password": {
       "filePath": "(public)/(auth)/forgot-password.tsx",
