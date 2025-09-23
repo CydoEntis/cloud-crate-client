@@ -1,4 +1,4 @@
-import apiService from "@/shared/lib/api/ApiClient";
+import apiService from "@/shared/lib/api/ApiService";
 
 import type {
   Crate,

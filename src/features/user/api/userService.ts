@@ -1,4 +1,4 @@
-import apiService from "@/shared/lib/api/ApiClient";
+import apiService from "@/shared/lib/api/ApiService";
 import type { ApiResponse } from "@/features/auth/authTypes";
 import type { User } from "../userTypes";
 

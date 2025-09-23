@@ -1,4 +1,4 @@
-import apiService from "@/shared/lib/api/ApiClient";
+import apiService from "@/shared/lib/api/ApiService";
 import type { Member, MemberQueryParameters } from "../memberTypes";
 import type { ApiResponse, PaginatedResult } from "@/shared/lib/sharedTypes";
 import type { CrateRole } from "@/features/crates/crateTypes";

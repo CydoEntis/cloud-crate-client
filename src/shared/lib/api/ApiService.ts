@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/features/auth/authStore";
-import { handleApiError, isSuspensionError, showErrorToast } from "@/shared/utils/errorHandler";
+import { handleApiError, isSuspensionError } from "@/shared/utils/errorHandler";
 import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 export class ApiService {
@@ -22,15 +22,12 @@ export class ApiService {
     this.api.interceptors.request.use(
       (config) => {
         const { accessToken, isTokenExpiringSoon } = useAuthStore.getState();
-
         if (accessToken) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
-
         if (import.meta.env.DEV && accessToken && isTokenExpiringSoon()) {
           console.log("⚠️ Access token is expiring soon, will refresh on next API call if needed");
         }
-
         return config;
       },
       (error) => Promise.reject(error)
@@ -45,21 +42,10 @@ export class ApiService {
           console.error(`❌ ${error.response?.status} ${error.config?.url}`, error);
         }
 
-        // Check for suspension error BEFORE handling 401s
         if (isSuspensionError(error)) {
-          // Show suspension toast
-          showErrorToast(error);
-
-          // Clear auth and redirect
-          const { clearAuth } = useAuthStore.getState();
-          clearAuth();
-
-          if (typeof window !== "undefined") {
-            // Small delay to let toast show
-            setTimeout(() => {
-              window.location.href = "/login";
-            }, 1500);
-          }
+          const { useBanDialogStore } = await import("@/shared/store/banDialogStore");
+          const appError = handleApiError(error);
+          useBanDialogStore.getState().showBanDialog(appError.message);
 
           return Promise.reject(error);
         }
@@ -86,7 +72,6 @@ export class ApiService {
 
           try {
             const response = await this.api.post("/auth/refresh");
-
             const { data: result, isSuccess } = response.data;
 
             if (!isSuccess || !result) {
