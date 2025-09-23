@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/features/auth/authStore";
-import { handleApiError } from "@/shared/utils/errorHandler";
+import { handleApiError, isSuspensionError, showErrorToast } from "@/shared/utils/errorHandler";
 import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 export class ApiService {
@@ -45,8 +45,26 @@ export class ApiService {
           console.error(`❌ ${error.response?.status} ${error.config?.url}`, error);
         }
 
-        const originalRequest = error.config as any;
+        // Check for suspension error BEFORE handling 401s
+        if (isSuspensionError(error)) {
+          // Show suspension toast
+          showErrorToast(error);
 
+          // Clear auth and redirect
+          const { clearAuth } = useAuthStore.getState();
+          clearAuth();
+
+          if (typeof window !== "undefined") {
+            // Small delay to let toast show
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 1500);
+          }
+
+          return Promise.reject(error);
+        }
+
+        const originalRequest = error.config as any;
         const isAuthEndpoint = originalRequest.url?.includes("/auth/");
 
         if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {

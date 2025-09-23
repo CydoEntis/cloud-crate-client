@@ -1,28 +1,7 @@
-// errorHandler.ts - REPLACE YOUR CURRENT ONE
 import { AxiosError } from "axios";
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-
-// Your actual frontend types
-interface ApiResponse<T> {
-  isSuccess: boolean;
-  data: T | null;
-  message?: string;
-  statusCode: number;
-  errors?: ApiError[];
-  timestamp: string;
-}
-
-interface ApiError {
-  code: string;
-  message: string;
-}
-
-// ASP.NET validation format
-interface AspNetValidationError {
-  errors?: Record<string, string[]>;
-  title?: string;
-}
+import type { ApiResponse, ApiError } from "../lib/sharedTypes";
 
 export class AppError extends Error {
   constructor(
@@ -35,26 +14,36 @@ export class AppError extends Error {
   }
 }
 
+export function isSuspensionError(error: unknown): boolean {
+  if (error instanceof AxiosError && error.response) {
+    const responseData = error.response.data;
+    const message = responseData?.message || "";
+
+    return (
+      error.response.status === 401 &&
+      (message.includes("suspended") || message.includes("banned") || message === "Account has been suspended")
+    );
+  }
+  return false;
+}
+
 export function handleApiError(error: unknown): AppError {
   if (error instanceof AxiosError && error.response) {
     const responseData = error.response.data;
     const statusCode = error.response.status;
 
-    // Handle your CloudCrate API format
     if (responseData && "isSuccess" in responseData) {
       const apiResponse = responseData as ApiResponse<any>;
       const message = apiResponse.message || "Request failed";
       return new AppError(message, statusCode, error);
     }
 
-    // Handle ASP.NET validation errors
     if (responseData?.errors && typeof responseData.errors === "object" && !Array.isArray(responseData.errors)) {
       const firstError = Object.values(responseData.errors)[0];
       const message = Array.isArray(firstError) ? firstError[0] : String(firstError);
       return new AppError(message, statusCode, error);
     }
 
-    // Fallback
     const message = responseData?.message || responseData?.title || "Something went wrong";
     return new AppError(message, statusCode, error);
   }
@@ -75,12 +64,10 @@ export function getErrorMessage(error: unknown): string {
   return handleApiError(error).message;
 }
 
-// Simple form error handler
 export function setFormErrors<T extends FieldValues>(error: unknown, form: UseFormReturn<T>): string | null {
   if (error instanceof AxiosError && error.response) {
     const responseData = error.response.data;
 
-    // Handle ASP.NET validation errors
     if (responseData?.errors && typeof responseData.errors === "object" && !Array.isArray(responseData.errors)) {
       Object.entries(responseData.errors).forEach(([field, messages]) => {
         const messageArray = Array.isArray(messages) ? messages : [messages];
@@ -122,6 +109,5 @@ export function setFormErrors<T extends FieldValues>(error: unknown, form: UseFo
     }
   }
 
-  // Return the main error message for display
   return handleApiError(error).message;
 }
