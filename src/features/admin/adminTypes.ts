@@ -54,4 +54,5 @@ export enum SubscriptionPlan {
   Mini = "Mini",
   Standard = "Standard",
   Max = "Max",
+  Simple = "Simple",
 }

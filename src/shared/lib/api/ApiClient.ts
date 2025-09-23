@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/features/auth/authStore";
+import { handleApiError } from "@/shared/utils/errorHandler";
 import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 export class ApiService {
@@ -118,56 +119,47 @@ export class ApiService {
   }
 
   public async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.api.get<T>(url, config);
+    try {
+      return await this.api.get<T>(url, config);
+    } catch (error) {
+      throw handleApiError(error);
+    }
   }
 
   public async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.api.post<T>(url, data, config);
+    try {
+      return await this.api.post<T>(url, data, config);
+    } catch (error) {
+      throw handleApiError(error);
+    }
   }
 
   public async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.api.put<T>(url, data, config);
+    try {
+      return await this.api.put<T>(url, data, config);
+    } catch (error) {
+      throw handleApiError(error);
+    }
   }
 
   public async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.api.delete<T>(url, config);
+    try {
+      return await this.api.delete<T>(url, config);
+    } catch (error) {
+      throw handleApiError(error);
+    }
   }
 
   public async patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.api.patch<T>(url, data, config);
+    try {
+      return await this.api.patch<T>(url, data, config);
+    } catch (error) {
+      throw handleApiError(error);
+    }
   }
 
   public get instance(): AxiosInstance {
     return this.api;
-  }
-
-  public parseApiError(error: AxiosError): string {
-    if (error.response?.data) {
-      const data = error.response.data as any;
-
-      if (error.response.status === 422 && data.errors) {
-        const firstError = Object.values(data.errors)[0] as string;
-        return Array.isArray(firstError) ? firstError[0] : firstError;
-      }
-
-      if (data.message) return data.message;
-      if (typeof data === "string") return data;
-    }
-
-    switch (error.response?.status) {
-      case 400:
-        return "Bad request";
-      case 401:
-        return "Please log in again";
-      case 403:
-        return "Access denied";
-      case 404:
-        return "Not found";
-      case 500:
-        return "Server error";
-      default:
-        return "Something went wrong";
-    }
   }
 }
 

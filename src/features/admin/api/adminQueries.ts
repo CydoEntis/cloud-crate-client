@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { adminService } from "./adminService";
 import type { AdminUserSearchParams, CreateInviteRequest, SubscriptionPlan } from "../adminTypes";
 import { toast } from "sonner";
+import { showErrorToast } from "@/shared/utils/errorHandler";
 
 export const adminKeys = {
   all: ["admin"] as const,
@@ -38,7 +39,7 @@ export const useBanUser = () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to ban user");
+      showErrorToast(error);
     },
   });
 };
@@ -49,8 +50,12 @@ export const useUnbanUser = () => {
   return useMutation({
     mutationFn: adminService.unbanUser,
     onSuccess: () => {
+      toast.success("User unbanned successfully");
       queryClient.invalidateQueries({ queryKey: adminKeys.users() });
       queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+    },
+    onError: (error) => {
+      showErrorToast(error);
     },
   });
 };
@@ -61,8 +66,12 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: adminService.deleteUser,
     onSuccess: () => {
+      toast.success("User deleted successfully");
       queryClient.invalidateQueries({ queryKey: adminKeys.users() });
       queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+    },
+    onError: (error) => {
+      showErrorToast(error);
     },
   });
 };
@@ -73,8 +82,12 @@ export const useMakeAdmin = () => {
   return useMutation({
     mutationFn: adminService.makeAdmin,
     onSuccess: () => {
+      toast.success("User promoted to admin successfully");
       queryClient.invalidateQueries({ queryKey: adminKeys.users() });
       queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+    },
+    onError: (error) => {
+      showErrorToast(error);
     },
   });
 };
@@ -85,8 +98,12 @@ export const useRemoveAdmin = () => {
   return useMutation({
     mutationFn: adminService.removeAdmin,
     onSuccess: () => {
+      toast.success("Admin privileges removed successfully");
       queryClient.invalidateQueries({ queryKey: adminKeys.users() });
       queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+    },
+    onError: (error) => {
+      showErrorToast(error);
     },
   });
 };
@@ -97,7 +114,11 @@ export const useCreateInvite = () => {
   return useMutation({
     mutationFn: adminService.createInvite,
     onSuccess: () => {
+      toast.success("Invite created successfully");
       queryClient.invalidateQueries({ queryKey: adminKeys.invites() });
+    },
+    onError: (error) => {
+      showErrorToast(error);
     },
   });
 };
@@ -114,7 +135,7 @@ export const useUpdateUserPlan = () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update user plan");
+      showErrorToast(error);
     },
   });
 };
