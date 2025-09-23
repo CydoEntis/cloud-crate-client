@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Check } from "lucide-react";
@@ -9,7 +10,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Switch } from "@/shared/components/ui/switch";
 import { useCreateInvite } from "../api/adminQueries";
 import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
-import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
+import { setFormErrors } from "@/shared/utils/errorHandler";
 
 const inviteUserSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -26,6 +27,7 @@ type AdminInviteUserModalProps = {
 function AdminInviteUserModal({ open, onClose }: AdminInviteUserModalProps) {
   const { mutateAsync: createInvite } = useCreateInvite();
   const { phase, run } = useAnimatedAction();
+  const [globalError, setGlobalError] = useState<string | null>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(inviteUserSchema),
@@ -35,20 +37,25 @@ function AdminInviteUserModal({ open, onClose }: AdminInviteUserModalProps) {
     },
   });
 
-  const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
+  const clearErrors = () => {
+    setGlobalError(null);
+    form.clearErrors();
+  };
 
   const handleClose = () => {
     form.reset();
-    clearErrors?.();
+    clearErrors();
     onClose();
   };
 
   const onSubmit = async (data: FormValues) => {
     try {
+      clearErrors();
       await run(() => createInvite(data));
       handleClose();
     } catch (err) {
-      handleApiError(err);
+      const globalError = setFormErrors(err, form);
+      setGlobalError(globalError);
     }
   };
 
@@ -85,7 +92,7 @@ function AdminInviteUserModal({ open, onClose }: AdminInviteUserModalProps) {
                       autoComplete="off"
                       onChange={(e) => {
                         field.onChange(e);
-                        clearErrors?.();
+                        clearErrors();
                       }}
                     />
                   </FormControl>

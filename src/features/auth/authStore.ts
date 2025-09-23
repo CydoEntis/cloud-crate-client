@@ -72,7 +72,7 @@ export const useAuthStore = create<AuthStore>()(
           accessTokenExpires: state.accessTokenExpires,
           isAuthenticated: state.isAuthenticated,
         }),
-        version: 3, 
+        version: 3,
       }
     ),
     { name: "AuthStore" }

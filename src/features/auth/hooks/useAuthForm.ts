@@ -1,30 +1,22 @@
 import { useState } from "react";
-import { useNavigate, useSearch } from "@tanstack/react-router";
-import { extractApiErrors } from "@/shared/lib/formUtils";
+import { useRouter } from "@tanstack/react-router";
+import { setFormErrors, getErrorMessage } from "@/shared/utils/errorHandler";
 
 export function useAuthForm() {
-  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleAuthSuccess = (inviteToken?: string) => {
-    if (inviteToken) {
-      navigate({ to: `/invite/${inviteToken}` });
-    } else {
-      navigate({ to: "/" });
-    }
+  const handleAuthSuccess = async () => {
+    setError(null);
+    await router.navigate({ to: "/" });
   };
 
   const handleAuthError = (err: unknown, form: any) => {
-    const globalError = extractApiErrors(err, form);
+    const globalError = setFormErrors(err, form);
     setError(globalError);
   };
 
   const clearError = () => setError(null);
 
-  return {
-    error,
-    handleAuthSuccess,
-    handleAuthError,
-    clearError,
-  };
+  return { error, handleAuthSuccess, handleAuthError, clearError };
 }

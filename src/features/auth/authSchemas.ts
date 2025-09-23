@@ -5,9 +5,7 @@ export const authSearchSchema = z.object({
 });
 
 const emailField = z.string().min(1, "Email is required").email("Invalid email address");
-
 const passwordField = z.string().min(1, "Password is required").min(8, "Password must be at least 8 characters");
-
 const displayNameField = z
   .string()
   .min(1, "Display name is required")
@@ -57,6 +55,7 @@ export const authResponseSchema = z.object({
       id: z.string(),
       email: z.string().email(),
       displayName: z.string(),
+      isAdmin: z.boolean(),
     })
     .optional(),
 });

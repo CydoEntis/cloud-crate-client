@@ -84,11 +84,11 @@ function AuthForm({ mode }: AuthFormProps) {
         await register({
           ...registerData,
           profilePictureUrl: avatarUrl,
-          inviteToken: inviteToken || "", 
+          inviteToken: inviteToken || "",
         });
       }
 
-      handleAuthSuccess(inviteToken);
+      handleAuthSuccess();
     } catch (err: unknown) {
       handleAuthError(err, form);
     }

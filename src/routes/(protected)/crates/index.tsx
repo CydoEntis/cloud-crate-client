@@ -8,7 +8,6 @@ import { crateTableColumns } from "@/features/crates/components/crateTableColumn
 import type { Crate } from "@/features/crates/crateTypes";
 import { useCrateActions } from "@/features/crates/hooks/useCrateActions";
 import CratesPagination from "@/features/crates/components/CratesPagination";
-import CratesEditModal from "@/features/crates/components/CratesEditModal";
 import CratesConfirmActionDialog from "@/features/crates/components/CratesConfirmActionDialog";
 import { CratesFilters } from "@/features/crates/components/CratesFilter";
 import CratesError from "@/features/crates/components/CratesError";
@@ -137,7 +136,6 @@ export default function CratesPage() {
         </>
       )}
 
-      <CratesEditModal editingCrateId={editingCrateId} crates={crates?.items} onClose={handleCloseModal} />
 
       <CratesConfirmActionDialog
         confirmAction={confirmAction}

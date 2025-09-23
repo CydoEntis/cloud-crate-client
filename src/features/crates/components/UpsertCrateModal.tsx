@@ -18,7 +18,7 @@ import { crateService } from "@/features/crates/api/crateService";
 import { createCreateCrateSchema } from "@/features/crates/crateSchemas";
 import type { CrateDetails, UpdateCrateRequest } from "@/features/crates/crateTypes";
 import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
-import { useApiFormErrorHandler } from "@/shared/hooks/useApiFromErrorHandler";
+import { setFormErrors } from "@/shared/utils/errorHandler";
 import { useCrateModalStore } from "../store/crateModalStore";
 
 type FormValues = {
@@ -30,6 +30,7 @@ type FormValues = {
 export default function UpsertCrateModal() {
   const user = useUserStore((state) => state.user);
   const [crate, setCrate] = useState<CrateDetails | null>(null);
+  const [globalError, setGlobalError] = useState<string | null>(null);
   const { open, close, isOpen, crateId } = useCrateModalStore();
 
   const isEditing = !!crateId;
@@ -71,7 +72,10 @@ export default function UpsertCrateModal() {
     },
   });
 
-  const { globalError, handleApiError, clearErrors } = useApiFormErrorHandler(form);
+  const clearErrors = () => {
+    setGlobalError(null);
+    form.clearErrors();
+  };
 
   useEffect(() => {
     if (!crateId) {
@@ -99,12 +103,13 @@ export default function UpsertCrateModal() {
 
   const handleClose = () => {
     form.reset();
-    clearErrors?.();
+    clearErrors();
     close();
   };
 
   const onSubmit = async (data: FormValues) => {
     try {
+      clearErrors();
       if (isEditing && crate) {
         const updateData: UpdateCrateRequest = {
           name: data.name,
@@ -117,7 +122,8 @@ export default function UpsertCrateModal() {
       }
       handleClose();
     } catch (err) {
-      handleApiError(err);
+      const globalError = setFormErrors(err, form);
+      setGlobalError(globalError);
     }
   };
 
@@ -152,7 +158,7 @@ export default function UpsertCrateModal() {
                       autoComplete="off"
                       onChange={(e) => {
                         field.onChange(e);
-                        clearErrors?.();
+                        clearErrors();
                       }}
                     />
                   </FormControl>
@@ -180,13 +186,9 @@ export default function UpsertCrateModal() {
               control={form.control}
               render={({ field }) => {
                 const crateCurrentGb = isEditing && crate ? Math.floor(crate.allocatedStorageBytes / BytesPerGb) : 1;
-
                 const crateUsedGb = isEditing && crate ? Math.ceil(crate.usedStorageBytes / BytesPerGb) : 0;
-
                 const currentValue = typeof field.value === "number" ? field.value : crateCurrentGb;
-
                 const maxGb = isEditing && crate ? crateCurrentGb + remainingGb : Math.max(1, remainingGb);
-
                 const minGb = isEditing ? Math.max(crateUsedGb, 1) : 1;
 
                 return (
@@ -201,7 +203,7 @@ export default function UpsertCrateModal() {
                           step={1}
                           onValueChange={(val) => {
                             field.onChange(val[0]);
-                            clearErrors?.();
+                            clearErrors();
                           }}
                           className="w-full"
                           disabled={isPending}

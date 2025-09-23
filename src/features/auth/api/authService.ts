@@ -7,7 +7,6 @@ import type { LoginRequest, AuthResponse, RegisterRequest, ResetPasswordRequest 
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     const response = await apiService.post<ApiResponse<AuthResponse>>("/auth/login", credentials);
-
     const { data: result, isSuccess, message, errors } = response.data;
 
     if (!isSuccess || !result) {
@@ -15,13 +14,12 @@ export const authService = {
       throw new Error(message ?? "Login failed");
     }
 
-    const validatedData = authResponseSchema.parse(result);
+    const validatedData = authResponseSchema.parse(result) as AuthResponse;
     return validatedData;
   },
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
     const response = await apiService.post<ApiResponse<AuthResponse>>("/auth/register", userData);
-
     const { data: result, isSuccess, message, errors } = response.data;
 
     if (!isSuccess || !result) {
@@ -29,7 +27,7 @@ export const authService = {
       throw new Error(message ?? "Registration failed");
     }
 
-    return authResponseSchema.parse(result);
+    return authResponseSchema.parse(result) as AuthResponse;
   },
 
   async logout(): Promise<void> {
@@ -42,7 +40,6 @@ export const authService = {
 
   async forgotPassword(email: string): Promise<void> {
     const response = await apiService.post<ApiResponse<null>>("/auth/forgot-password", { email });
-
     const { isSuccess, message } = response.data;
 
     if (!isSuccess) {
@@ -52,7 +49,6 @@ export const authService = {
 
   async resetPassword(resetData: ResetPasswordRequest): Promise<void> {
     const response = await apiService.post<ApiResponse<null>>("/auth/reset-password", resetData);
-
     const { isSuccess, message } = response.data;
 
     if (!isSuccess) {
@@ -62,7 +58,6 @@ export const authService = {
 
   async me(): Promise<User> {
     const response = await apiService.get<ApiResponse<User>>("/auth/user");
-
     const { data: result, isSuccess, message } = response.data;
 
     if (!isSuccess || !result) {
