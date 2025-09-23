@@ -1,5 +1,11 @@
 import apiService from "@/shared/lib/api/ApiClient";
-import type { AdminUser, AdminUserSearchParams, AdminStats, CreateInviteRequest } from "../adminTypes";
+import type {
+  AdminUser,
+  AdminUserSearchParams,
+  AdminStats,
+  CreateInviteRequest,
+  SubscriptionPlan,
+} from "../adminTypes";
 import type { ApiResponse, PaginatedResult } from "@/shared/lib/sharedTypes";
 
 export const adminService = {
@@ -69,5 +75,13 @@ export const adminService = {
       throw new Error(message ?? "Failed to create invite");
     }
     return result;
+  },
+
+  async updateUserPlan(userId: string, plan: SubscriptionPlan): Promise<void> {
+    const response = await apiService.post<ApiResponse<null>>(`/admin/users/${userId}/plan`, { plan });
+    const { isSuccess, message } = response.data;
+    if (!isSuccess) {
+      throw new Error(message ?? "Failed to update user plan");
+    }
   },
 };

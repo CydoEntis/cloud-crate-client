@@ -1,4 +1,4 @@
-import { MoreHorizontal, Shield, ShieldOff, Ban, Trash2, UserCheck } from "lucide-react";
+import { MoreHorizontal, Shield, ShieldOff, Ban, Trash2, UserCheck, Settings } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import {
   DropdownMenu,
@@ -6,8 +6,11 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuSub,
 } from "@/shared/components/ui/dropdown-menu";
-import type { AdminUser } from "../adminTypes";
+import { SubscriptionPlan, type AdminUser } from "../adminTypes";
 
 type AdminUserActionsMenuProps = {
   user: AdminUser;
@@ -16,6 +19,7 @@ type AdminUserActionsMenuProps = {
   onDelete: (id: string) => void;
   onMakeAdmin: (id: string) => void;
   onRemoveAdmin: (id: string) => void;
+  onUpdatePlan?: (id: string, plan: SubscriptionPlan) => void;
 };
 
 function AdminUserActionsMenu({
@@ -25,16 +29,17 @@ function AdminUserActionsMenu({
   onDelete,
   onMakeAdmin,
   onRemoveAdmin,
+  onUpdatePlan,
 }: AdminUserActionsMenuProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="border-muted">
+      <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-card border-2 border-muted cursor-pointer">
+      <DropdownMenuContent align="end">
         {user.isAdmin ? (
           <DropdownMenuItem onClick={() => onRemoveAdmin(user.id)}>
             <ShieldOff className="mr-2 h-4 w-4" />
@@ -45,6 +50,23 @@ function AdminUserActionsMenu({
             <Shield className="mr-2 h-4 w-4" />
             Make Admin
           </DropdownMenuItem>
+        )}
+
+        {onUpdatePlan && (
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <Settings className="mr-2 h-4 w-4" />
+              Change Plan
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem onClick={() => onUpdatePlan(user.id, SubscriptionPlan.Free)}>Free</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onUpdatePlan(user.id, SubscriptionPlan.Mini)}>Mini</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onUpdatePlan(user.id, SubscriptionPlan.Standard)}>
+                Standard
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onUpdatePlan(user.id, SubscriptionPlan.Max)}>Max</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
         )}
 
         <DropdownMenuSeparator />

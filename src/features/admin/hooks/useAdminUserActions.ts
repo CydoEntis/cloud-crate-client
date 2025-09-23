@@ -1,9 +1,16 @@
 import { useState, useCallback } from "react";
-import { useBanUser, useUnbanUser, useDeleteUser, useMakeAdmin, useRemoveAdmin } from "../api/adminQueries";
-import type { AdminUser } from "../adminTypes";
+import {
+  useBanUser,
+  useUnbanUser,
+  useDeleteUser,
+  useMakeAdmin,
+  useRemoveAdmin,
+  useUpdateUserPlan,
+} from "../api/adminQueries";
+import type { AdminUser, SubscriptionPlan } from "../adminTypes";
 
 type ConfirmAction = {
-  type: "ban" | "unban" | "delete" | "makeAdmin" | "removeAdmin";
+  type: "ban" | "delete" | "makeAdmin" | "removeAdmin";
   userId: string;
   userEmail: string;
 } | null;
@@ -16,6 +23,7 @@ export const useAdminUserActions = (users: AdminUser[]) => {
   const deleteMutation = useDeleteUser();
   const makeAdminMutation = useMakeAdmin();
   const removeAdminMutation = useRemoveAdmin();
+  const updatePlanMutation = useUpdateUserPlan();
 
   const handleBanUser = useCallback(
     (userId: string) => {
@@ -80,6 +88,13 @@ export const useAdminUserActions = (users: AdminUser[]) => {
     [users]
   );
 
+  const handleUpdatePlan = useCallback(
+    (userId: string, plan: SubscriptionPlan) => {
+      updatePlanMutation.mutate({ userId, plan });
+    },
+    [updatePlanMutation]
+  );
+
   const handleConfirmAction = useCallback(() => {
     if (!confirmAction) return;
 
@@ -111,6 +126,7 @@ export const useAdminUserActions = (users: AdminUser[]) => {
     handleDeleteUser,
     handleMakeAdmin,
     handleRemoveAdmin,
+    handleUpdatePlan,
     handleConfirmAction,
     handleCancelAction,
     isBanning: banMutation.isPending,

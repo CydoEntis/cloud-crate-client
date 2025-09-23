@@ -3,7 +3,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import UserAvatar from "@/shared/components/UserAvatar";
 import DateIndicator from "@/shared/components/DateIndicator";
 import StorageDisplay from "@/shared/components/StorageDisplay";
-import type { AdminUser } from "../adminTypes";
+import type { AdminUser, SubscriptionPlan } from "../adminTypes";
 import AdminUserActionsMenu from "./AdminUserActionsMenu";
 import TruncatedText from "@/shared/components/TruncatedText";
 
@@ -15,6 +15,7 @@ export function adminUserTableColumns({
   onDelete,
   onMakeAdmin,
   onRemoveAdmin,
+  onUpdatePlan,
 }: {
   users: AdminUser[];
   onBan: (id: string) => void;
@@ -22,6 +23,7 @@ export function adminUserTableColumns({
   onDelete: (id: string) => void;
   onMakeAdmin: (id: string) => void;
   onRemoveAdmin: (id: string) => void;
+  onUpdatePlan: (id: string, plan: SubscriptionPlan) => void;
 }) {
   return [
     columnHelper.accessor("displayName", {
@@ -96,6 +98,7 @@ export function adminUserTableColumns({
           onDelete={onDelete}
           onMakeAdmin={onMakeAdmin}
           onRemoveAdmin={onRemoveAdmin}
+          onUpdatePlan={onUpdatePlan}
         />
       ),
     }),

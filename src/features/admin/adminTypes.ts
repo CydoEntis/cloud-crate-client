@@ -48,3 +48,10 @@ export type CreateInviteRequest = {
   email: string;
   isAdmin?: boolean;
 };
+
+export enum SubscriptionPlan {
+  Free = "Free",
+  Mini = "Mini",
+  Standard = "Standard",
+  Max = "Max",
+}

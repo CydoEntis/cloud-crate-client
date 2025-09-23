@@ -72,6 +72,7 @@ export default function AdminPage() {
     handleRemoveAdmin,
     handleConfirmAction,
     handleCancelAction,
+    handleUpdatePlan,
     isBanning,
     isUnbanning,
     isDeleting,
@@ -106,6 +107,7 @@ export default function AdminPage() {
         onDelete: handleDeleteUser,
         onMakeAdmin: handleMakeAdmin,
         onRemoveAdmin: handleRemoveAdmin,
+        onUpdatePlan: handleUpdatePlan,
       }),
     [users?.items, handleBanUser, handleUnbanUser, handleDeleteUser, handleMakeAdmin, handleRemoveAdmin]
   );
