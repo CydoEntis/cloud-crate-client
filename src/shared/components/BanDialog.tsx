@@ -18,7 +18,7 @@ interface BanDialogProps {
 export function BanDialog({ open, message, onConfirm }: BanDialogProps) {
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent className="max-w-md border-muted text-foreground">
         <AlertDialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
@@ -33,7 +33,7 @@ export function BanDialog({ open, message, onConfirm }: BanDialogProps) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={onConfirm} className="w-full">
+          <AlertDialogAction onClick={onConfirm} className="w-full cursor-pointer">
             I Understand
           </AlertDialogAction>
         </AlertDialogFooter>
