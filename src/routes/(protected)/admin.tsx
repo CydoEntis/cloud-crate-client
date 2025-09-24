@@ -19,11 +19,9 @@ import AdminUserConfirmActionDialog from "@/features/admin/components/AdminUserC
 export const Route = createFileRoute("/(protected)/admin")({
   validateSearch: zodValidator(adminUserSearchSchema),
   errorComponent: AdminUsersError,
-  beforeLoad: () => {
-    const user = useUserStore.getState().user;
-
-    // Check if user is admin
-    if (!user?.isAdmin) {
+  beforeLoad: ({ context }) => {
+    const { userData } = context;
+    if (!userData?.isAdmin) {
       throw new Error("Admin access required");
     }
   },
