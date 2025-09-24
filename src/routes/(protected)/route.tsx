@@ -3,9 +3,9 @@ import { AuthGuard } from "@/features/auth/components/AuthGuard";
 import { InviteManagementModal } from "@/features/invites/components/InviteManagementModal";
 import { UserDataProvider } from "@/features/user/components/UserDataProvider";
 import { ProtectedLayout } from "@/shared/layouts/ProctedLayout";
-import { authService } from "@/features/auth/api/authService";
 import { BanDialog } from "@/shared/components/BanDialog";
 import { useBanDialogStore } from "@/shared/store/banDialogStore";
+import { userService } from "@/features/user/api/userService";
 import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-router";
 
 function BanDialogWrapper() {
@@ -32,8 +32,8 @@ export const Route = createFileRoute("/(protected)")({
 
     try {
       await context.queryClient.ensureQueryData({
-        queryKey: ["auth", "me"],
-        queryFn: () => authService.me(),
+        queryKey: ["user", "me"],
+        queryFn: () => userService.getUser(),
         staleTime: 0,
         retry: false,
       });
