@@ -1,6 +1,5 @@
 import apiService from "@/shared/lib/api/ApiService";
 import { authResponseSchema } from "../authSchemas";
-import type { User } from "@/features/user/userTypes";
 import type { ApiResponse } from "@/shared/lib/sharedTypes";
 import type { LoginRequest, AuthResponse, RegisterRequest, ResetPasswordRequest } from "../authTypes";
 
@@ -54,16 +53,5 @@ export const authService = {
     if (!isSuccess) {
       throw new Error(message ?? "Password reset failed");
     }
-  },
-
-  async me(): Promise<User> {
-    const response = await apiService.get<ApiResponse<User>>("/auth/user");
-    const { data: result, isSuccess, message } = response.data;
-
-    if (!isSuccess || !result) {
-      throw new Error(message ?? "Failed to fetch user data");
-    }
-
-    return result;
   },
 };

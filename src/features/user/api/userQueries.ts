@@ -8,13 +8,15 @@ export const userKeys = {
   me: () => [...userKeys.all, "me"] as const,
 };
 
-export const useGetUser = () => {
+export const useGetUser = (enabled: boolean = true) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  const shouldEnable = enabled && isAuthenticated;
 
   return useQuery<User, Error>({
     queryKey: userKeys.me(),
     queryFn: userService.getUser,
-    enabled: isAuthenticated,
+    enabled: shouldEnable,
     retry: false,
     staleTime: 1000 * 60 * 5,
   });

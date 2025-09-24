@@ -13,9 +13,7 @@ export type RegisterRequest = z.infer<typeof registerSchema>;
 export type ForgotPasswordRequest = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordRequest = z.infer<typeof resetPasswordSchema>;
 
-export type AuthResponse = Omit<z.infer<typeof authResponseSchema>, "user"> & {
-  user?: User;
-};
+export type AuthResponse = z.infer<typeof authResponseSchema>;
 
 export type RefreshTokenRequest = {
   refreshToken: string;

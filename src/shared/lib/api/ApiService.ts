@@ -71,25 +71,41 @@ export class ApiService {
           this.isRefreshing = true;
 
           try {
+            if (import.meta.env.DEV) {
+              console.log("🔄 Access token expired, attempting refresh...");
+              console.log("🍪 Refresh token cookie will be sent automatically");
+            }
+
             const response = await this.api.post("/auth/refresh");
-            const { data: result, isSuccess } = response.data;
+            const { data: result, isSuccess, message } = response.data;
 
             if (!isSuccess || !result) {
-              throw new Error("Token refresh failed");
+              throw new Error(message || "Token refresh failed");
             }
 
             const { accessToken, accessTokenExpires } = result;
 
+            const expiresDate = new Date(accessTokenExpires).toISOString();
+
             useAuthStore.getState().setAuth({
               accessToken,
-              accessTokenExpires,
+              accessTokenExpires: expiresDate,
             });
+
+            if (import.meta.env.DEV) {
+              console.log("✅ Token refreshed successfully");
+              console.log("🍪 New refresh token cookie set by server");
+            }
 
             this.processQueue(null, accessToken);
 
             originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
             return this.api(originalRequest);
           } catch (refreshError) {
+            if (import.meta.env.DEV) {
+              console.error("❌ Token refresh failed:", refreshError);
+            }
+
             this.processQueue(refreshError, null);
 
             const { clearAuth } = useAuthStore.getState();

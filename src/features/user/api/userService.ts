@@ -1,6 +1,6 @@
 import apiService from "@/shared/lib/api/ApiService";
-import type { ApiResponse } from "@/features/auth/authTypes";
 import type { User } from "../userTypes";
+import type { ApiResponse } from "@/shared/lib/sharedTypes";
 
 export const userService = {
   async getUser(): Promise<User> {
