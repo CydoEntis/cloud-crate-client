@@ -19,6 +19,14 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const { isLoading, isError, data: user, error } = useGetUser(shouldFetchUser);
 
   useEffect(() => {
+    console.log("UserDataProvider mounted with:", {
+      hasToken: !!accessToken,
+      isAuthenticated,
+      isExpiring: accessToken ? isTokenExpiringSoon(1) : "no token",
+    });
+  }, []);
+
+  useEffect(() => {
     const initializeAuth = async () => {
       if (!accessToken || isTokenExpiringSoon(1)) {
         try {

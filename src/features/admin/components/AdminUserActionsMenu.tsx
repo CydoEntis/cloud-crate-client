@@ -33,13 +33,13 @@ function AdminUserActionsMenu({
 }: AdminUserActionsMenuProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className="border-muted">
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="border-accent">
         {user.isAdmin ? (
           <DropdownMenuItem onClick={() => onRemoveAdmin(user.id)}>
             <ShieldOff className="mr-2 h-4 w-4" />
@@ -58,7 +58,7 @@ function AdminUserActionsMenu({
               <Settings className="mr-2 h-4 w-4" />
               Change Plan
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
+            <DropdownMenuSubContent className="border-accent">
               <DropdownMenuItem onClick={() => onUpdatePlan(user.id, SubscriptionPlan.Free)}>Free</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onUpdatePlan(user.id, SubscriptionPlan.Mini)}>Mini</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onUpdatePlan(user.id, SubscriptionPlan.Standard)}>
