@@ -5,17 +5,12 @@ import { immer } from "zustand/middleware/immer";
 interface AuthState {
   accessToken: string | null;
   accessTokenExpires: string | null;
-  user: any | null; 
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
 interface AuthActions {
-  setAuth: (tokens: { 
-    accessToken: string; 
-    accessTokenExpires: string;
-    user?: any;
-  }) => void;
+  setAuth: (tokens: { accessToken: string; accessTokenExpires: string }) => void;
   updateAccessToken: (accessToken: string, expires: string) => void;
   clearAuth: () => void;
   setLoading: (loading: boolean) => void;
@@ -30,30 +25,30 @@ export const useAuthStore = create<AuthStore>()(
       immer((set, get) => ({
         accessToken: null,
         accessTokenExpires: null,
-        user: null,
         isAuthenticated: false,
         isLoading: false,
 
         setAuth: (tokens) =>
           set((state) => {
+            console.log("🔧 setAuth called with:", { hasToken: !!tokens.accessToken });
             state.accessToken = tokens.accessToken;
             state.accessTokenExpires = tokens.accessTokenExpires;
-            state.user = tokens.user || state.user; // Keep existing user if not provided
             state.isAuthenticated = true;
             state.isLoading = false;
           }),
 
         updateAccessToken: (accessToken, expires) =>
           set((state) => {
+            console.log("🔧 updateAccessToken called");
             state.accessToken = accessToken;
             state.accessTokenExpires = expires;
           }),
 
         clearAuth: () =>
           set((state) => {
+            console.log("🚨 clearAuth called - stack trace:", new Error().stack);
             state.accessToken = null;
             state.accessTokenExpires = null;
-            state.user = null;
             state.isAuthenticated = false;
             state.isLoading = false;
           }),
@@ -77,10 +72,11 @@ export const useAuthStore = create<AuthStore>()(
         partialize: (state) => ({
           accessToken: state.accessToken,
           accessTokenExpires: state.accessTokenExpires,
-          user: state.user,
           isAuthenticated: state.isAuthenticated,
         }),
-        version: 4, // Increment version due to schema changes
+        onRehydrateStorage: () => (state) => {
+          console.log("🏪 Auth store rehydrated with:", state);
+        },
       }
     ),
     { name: "AuthStore" }
@@ -89,4 +85,3 @@ export const useAuthStore = create<AuthStore>()(
 
 export const useIsAuthenticated = () => useAuthStore((state) => state.isAuthenticated);
 export const useIsLoading = () => useAuthStore((state) => state.isLoading);
-export const useCurrentUser = () => useAuthStore((state) => state.user);

@@ -21,8 +21,6 @@ const adminNavlinks = [{ id: "admin", text: "Admin Panel", to: "/admin", icon: <
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useUserStore((state) => state.user);
 
-  console.log("User in AppSidebar:", user); // Debugging line
-
   return (
     <Sidebar {...props} className="border-none">
       <SidebarContent className="bg-sidebar flex flex-col justify-between h-full">

@@ -3,7 +3,6 @@ import { useRouter } from "@tanstack/react-router";
 import { useAuthStore } from "../authStore";
 import { useUserStore } from "../../user/userStore";
 import { authService } from "./authService";
-import type { User } from "@/features/user/userTypes";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -12,7 +11,6 @@ export const authKeys = {
 
 export const useLogin = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
-  const setAuthUser = useUserStore((state) => state.setAuthUser);
 
   return useMutation({
     mutationFn: authService.login,
@@ -21,17 +19,12 @@ export const useLogin = () => {
         accessToken: response.accessToken,
         accessTokenExpires: response.accessTokenExpires,
       });
-
-      if (response.user) {
-        setAuthUser(response.user);
-      }
     },
   });
 };
 
 export const useRegister = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
-  const setAuthUser = useUserStore((state) => state.setAuthUser);
 
   return useMutation({
     mutationFn: authService.register,
@@ -40,10 +33,7 @@ export const useRegister = () => {
         accessToken: response.accessToken,
         accessTokenExpires: response.accessTokenExpires,
       });
-
-      if (response.user) {
-        setAuthUser(response.user);
-      }
+      
     },
   });
 };
@@ -83,24 +73,5 @@ export const useResetPassword = () => {
   });
 };
 
-export const useMe = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  return useQuery<User, Error>({
-    queryKey: authKeys.me(),
-    queryFn: () => authService.me(),
-    enabled: isAuthenticated,
-    staleTime: 1000 * 60 * 5,
-  });
-};
 
-export const useUpdateUserFromMe = () => {
-  const setUser = useUserStore((state) => state.setUser);
-  const { data: userData } = useMe();
-
-  return () => {
-    if (userData) {
-      setUser(userData);
-    }
-  };
-};

@@ -10,28 +10,24 @@ interface UserDataProviderProps {
 
 export function UserDataProvider({ children }: UserDataProviderProps) {
   const setUser = useUserStore((state) => state.setUser);
-  const { accessToken, isTokenExpiringSoon, setAuth, clearAuth, isAuthenticated } = useAuthStore();
+  const clearUser = useUserStore((state) => state.clearUser);
+  const { accessToken, isTokenExpiringSoon, setAuth, clearAuth, isAuthenticated, setLoading } = useAuthStore();
 
-  const [initializationComplete, setInitializationComplete] = useState(false);
-  const [initializationError, setInitializationError] = useState<string | null>(null);
-
-  const shouldFetchUser = initializationComplete && isAuthenticated;
-  const { isLoading, isError, data: user, error } = useGetUser(shouldFetchUser);
-
-  useEffect(() => {
-    console.log("UserDataProvider mounted with:", {
-      hasToken: !!accessToken,
-      isAuthenticated,
-      isExpiring: accessToken ? isTokenExpiringSoon(1) : "no token",
-    });
-  }, []);
+  const [authInitialized, setAuthInitialized] = useState(false);
 
   useEffect(() => {
     const initializeAuth = async () => {
-      if (!accessToken || isTokenExpiringSoon(1)) {
-        try {
-          console.log("🔄 UserDataProvider - attempting token refresh on initialization...");
+      console.log("🔄 UserDataProvider initializing auth...", {
+        hasToken: !!accessToken,
+        isExpiring: accessToken ? isTokenExpiringSoon(1) : true,
+        isAuthenticated,
+      });
 
+      if (!accessToken || isTokenExpiringSoon(1)) {
+        setLoading(true);
+
+        try {
+          console.log("🔄 Attempting token refresh with HTTP-only cookie...");
           const response = await apiService.post("/auth/refresh");
           const { data: result, isSuccess, message } = response.data;
 
@@ -46,19 +42,24 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
             accessTokenExpires: new Date(accessTokenExpires).toISOString(),
           });
 
-          console.log("✅ UserDataProvider - token refreshed successfully");
+          console.log("✅ Token refreshed successfully");
         } catch (error) {
-          console.log("❌ UserDataProvider - token refresh failed, user needs to login");
+          console.log("❌ Token refresh failed:", error);
           clearAuth();
-          setInitializationError("Authentication expired. Please log in again.");
+          clearUser();
+        } finally {
+          setLoading(false);
         }
       }
 
-      setInitializationComplete(true);
+      setAuthInitialized(true);
     };
 
     initializeAuth();
   }, []);
+
+  const shouldFetchUser = authInitialized && isAuthenticated;
+  const { isLoading: isUserLoading, isError, data: user, error } = useGetUser(shouldFetchUser);
 
   useEffect(() => {
     if (user) {
@@ -66,7 +67,13 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     }
   }, [user, setUser]);
 
-  if (!initializationComplete) {
+  useEffect(() => {
+    if (!isAuthenticated) {
+      clearUser();
+    }
+  }, [isAuthenticated, clearUser]);
+
+  if (!authInitialized) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -77,18 +84,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     );
   }
 
-  if (initializationError) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-destructive mb-2">Authentication Error</p>
-          <p className="text-sm text-muted-foreground">{initializationError}</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isLoading) {
+  if (shouldFetchUser && isUserLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">

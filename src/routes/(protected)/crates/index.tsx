@@ -48,7 +48,6 @@ export default function CratesPage() {
 
   const { data: crates, isPending, error } = useGetCrates(crateRequest);
 
-  console.log("Crate List: ", crates)
 
   if (error) {
     throw error;
