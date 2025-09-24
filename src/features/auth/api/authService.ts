@@ -32,8 +32,13 @@ export const authService = {
   async logout(): Promise<void> {
     try {
       await apiService.post("/auth/logout");
-    } catch (error) {
-      console.warn("Logout API call failed:", error);
+      console.log("✅ Server logout successful");
+    } catch (error: any) {
+      console.warn("⚠️ Logout API call failed:", error?.message);
+
+      if (import.meta.env.DEV) {
+        console.warn("Full logout error:", error);
+      }
     }
   },
 

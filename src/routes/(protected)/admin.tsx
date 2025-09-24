@@ -39,7 +39,7 @@ function AdminPageLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function AdminPage() {
+function AdminPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 

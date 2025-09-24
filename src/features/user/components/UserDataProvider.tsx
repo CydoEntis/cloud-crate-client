@@ -1,74 +1,48 @@
 import { useGetUser } from "../api/userQueries";
 import { useUserStore } from "../userStore";
 import { useAuthStore } from "@/features/auth/authStore";
-import { useEffect, useState, type ReactNode } from "react";
-import apiService from "@/shared/lib/api/ApiService";
+import { useEffect, useState, useRef, type ReactNode } from "react";
 
-interface UserDataProviderProps {
+type UserDataProviderProps = {
   children: ReactNode;
-}
+};
 
 export function UserDataProvider({ children }: UserDataProviderProps) {
   const setUser = useUserStore((state) => state.setUser);
   const clearUser = useUserStore((state) => state.clearUser);
-  const { accessToken, isTokenExpiringSoon, setAuth, clearAuth, isAuthenticated, setLoading } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
   const [authInitialized, setAuthInitialized] = useState(false);
+  const initRef = useRef(false);
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      console.log("🔄 UserDataProvider initializing auth...", {
-        hasToken: !!accessToken,
-        isExpiring: accessToken ? isTokenExpiringSoon(1) : true,
-        isAuthenticated,
-      });
+    if (initRef.current) {
+      console.log("🔄 Auth already initialized, skipping...");
+      return;
+    }
 
-      if (!accessToken || isTokenExpiringSoon(1)) {
-        setLoading(true);
+    console.log("🔄 UserDataProvider initializing...", {
+      isAuthenticated,
+    });
 
-        try {
-          console.log("🔄 Attempting token refresh with HTTP-only cookie...");
-          const response = await apiService.post("/auth/refresh");
-          const { data: result, isSuccess, message } = response.data;
-
-          if (!isSuccess || !result) {
-            throw new Error(message || "Token refresh failed");
-          }
-
-          const { accessToken: newAccessToken, accessTokenExpires } = result;
-
-          setAuth({
-            accessToken: newAccessToken,
-            accessTokenExpires: new Date(accessTokenExpires).toISOString(),
-          });
-
-          console.log("✅ Token refreshed successfully");
-        } catch (error) {
-          console.log("❌ Token refresh failed:", error);
-          clearAuth();
-          clearUser();
-        } finally {
-          setLoading(false);
-        }
-      }
-
-      setAuthInitialized(true);
-    };
-
-    initializeAuth();
+    initRef.current = true;
+    setAuthInitialized(true);
   }, []);
 
   const shouldFetchUser = authInitialized && isAuthenticated;
+
   const { isLoading: isUserLoading, isError, data: user, error } = useGetUser(shouldFetchUser);
 
   useEffect(() => {
     if (user) {
+      console.log("👤 User data loaded successfully");
       setUser(user);
     }
   }, [user, setUser]);
 
   useEffect(() => {
     if (!isAuthenticated) {
+      console.log("👤 Not authenticated, clearing user data");
       clearUser();
     }
   }, [isAuthenticated, clearUser]);
@@ -78,7 +52,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
-          <p className="text-muted-foreground">Initializing...</p>
+          <p className="text-muted-foreground">Initializing authentication...</p>
         </div>
       </div>
     );

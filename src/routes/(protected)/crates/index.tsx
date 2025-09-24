@@ -29,7 +29,7 @@ function CratesPageLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function CratesPage() {
+function CratesPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const editingCrateId = search.edit ?? null;

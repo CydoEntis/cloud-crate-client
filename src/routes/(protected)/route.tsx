@@ -5,17 +5,16 @@ import { UserDataProvider } from "@/features/user/components/UserDataProvider";
 import { ProtectedLayout } from "@/shared/layouts/ProctedLayout";
 import { BanDialog } from "@/shared/components/BanDialog";
 import { useBanDialogStore } from "@/shared/store/banDialogStore";
-import { userService } from "@/features/user/api/userService";
 import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-router";
 
 function BanDialogWrapper() {
   const router = useRouter();
-  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const logout = useAuthStore((state) => state.logout);
   const { isOpen, message, hideBanDialog } = useBanDialogStore();
 
   const handleBanConfirm = () => {
     hideBanDialog();
-    clearAuth();
+    logout();
     router.navigate({ to: "/login" });
   };
 
@@ -25,21 +24,12 @@ function BanDialogWrapper() {
 export const Route = createFileRoute("/(protected)")({
   beforeLoad: async ({ context }) => {
     const auth = useAuthStore.getState();
-
     if (!auth.isAuthenticated) {
+      console.log("🚫 User not authenticated, redirecting to login");
       throw redirect({ to: "/login" });
     }
 
-    try {
-      await context.queryClient.ensureQueryData({
-        queryKey: ["user", "me"],
-        queryFn: () => userService.getUser(),
-        staleTime: 0,
-        retry: false,
-      });
-    } catch (error) {
-      console.log("Ban check failed during route load:", error);
-    }
+    console.log("✅ User authenticated, proceeding to protected route");
   },
   component: ProtectedRoute,
 });

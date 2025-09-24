@@ -37,7 +37,6 @@ export const crateService = {
 
     const { data: result, isSuccess, message, errors } = response.data;
 
-    console.log(result);
     if (!isSuccess || !result) {
       console.error("Failed to fetch crates:", errors);
       throw new Error(message ?? "Failed to fetch crates");

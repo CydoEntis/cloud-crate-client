@@ -5,6 +5,7 @@ import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig, type Ax
 export class ApiService {
   private api: AxiosInstance;
   private isRefreshing = false;
+  private refreshPromise: Promise<string> | null = null;
   private failedQueue: {
     resolve: (token: string) => void;
     reject: (error: any) => void;
@@ -34,9 +35,7 @@ export class ApiService {
     );
 
     this.api.interceptors.response.use(
-      (response) => {
-        return response;
-      },
+      (response) => response,
       async (error: AxiosError) => {
         if (import.meta.env.DEV) {
           console.error(`❌ ${error.response?.status} ${error.config?.url}`, error);
@@ -46,7 +45,6 @@ export class ApiService {
           const { useBanDialogStore } = await import("@/shared/store/banDialogStore");
           const appError = handleApiError(error);
           useBanDialogStore.getState().showBanDialog(appError.message);
-
           return Promise.reject(error);
         }
 
@@ -56,68 +54,59 @@ export class ApiService {
         if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
           originalRequest._retry = true;
 
-          if (this.isRefreshing) {
-            return new Promise((resolve, reject) => {
-              this.failedQueue.push({
-                resolve: (token: string) => {
-                  originalRequest.headers["Authorization"] = `Bearer ${token}`;
-                  resolve(this.api(originalRequest));
-                },
-                reject,
-              });
-            });
+          if (this.isRefreshing && this.refreshPromise) {
+            if (import.meta.env.DEV) {
+              console.log("🔄 Token refresh already in progress, queuing request...");
+            }
+
+            try {
+              const newToken = await this.refreshPromise;
+              originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+              return this.api(originalRequest);
+            } catch (refreshError) {
+              return Promise.reject(refreshError);
+            }
           }
 
           this.isRefreshing = true;
+          this.refreshPromise = this.performTokenRefresh();
 
           try {
-            if (import.meta.env.DEV) {
-              console.log("🔄 Access token expired, attempting refresh...");
-              console.log("🍪 Refresh token cookie will be sent automatically");
-            }
+            const newToken = await this.refreshPromise;
 
-            const response = await this.api.post("/auth/refresh");
-            const { data: result, isSuccess, message } = response.data;
+            this.processQueue(null, newToken);
 
-            if (!isSuccess || !result) {
-              throw new Error(message || "Token refresh failed");
-            }
-
-            const { accessToken, accessTokenExpires } = result;
-
-            const expiresDate = new Date(accessTokenExpires).toISOString();
-
-            useAuthStore.getState().setAuth({
-              accessToken,
-              accessTokenExpires: expiresDate,
-            });
-
-            if (import.meta.env.DEV) {
-              console.log("✅ Token refreshed successfully");
-              console.log("🍪 New refresh token cookie set by server");
-            }
-
-            this.processQueue(null, accessToken);
-
-            originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
+            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
             return this.api(originalRequest);
-          } catch (refreshError) {
-            if (import.meta.env.DEV) {
-              console.error("❌ Token refresh failed:", refreshError);
-            }
-
+          } catch (refreshError: any) {
             this.processQueue(refreshError, null);
 
-            const { clearAuth } = useAuthStore.getState();
-            clearAuth();
+            const isRefreshTokenInvalid =
+              refreshError?.response?.status === 401 ||
+              refreshError?.response?.status === 403 ||
+              refreshError?.message?.includes("Invalid refresh token") ||
+              refreshError?.message?.includes("refresh token");
 
-            if (typeof window !== "undefined") {
-              window.location.href = "/login";
+            if (isRefreshTokenInvalid) {
+              if (import.meta.env.DEV) {
+                console.log("🚨 Refresh token invalid - performing full logout");
+              }
+              useAuthStore.getState().logout();
+
+              if (typeof window !== "undefined") {
+                window.location.href = "/login";
+              }
+            } else {
+              if (import.meta.env.DEV) {
+                console.log("🔧 Temporary refresh failure - clearing memory auth only");
+              }
+              useAuthStore.getState().clearMemoryAuth();
             }
 
             return Promise.reject(refreshError);
           } finally {
             this.isRefreshing = false;
+            this.refreshPromise = null;
           }
         }
 
@@ -126,15 +115,55 @@ export class ApiService {
     );
   }
 
+  private async performTokenRefresh(): Promise<string> {
+    if (import.meta.env.DEV) {
+      console.log("🔄 Starting token refresh...");
+      console.log("🍪 Refresh token cookie will be sent automatically");
+    }
+
+    try {
+      const response = await this.api.post("/auth/refresh");
+      const { data: result, isSuccess, message } = response.data;
+
+      if (!isSuccess || !result) {
+        throw new Error(message || "Token refresh failed");
+      }
+
+      const { accessToken, accessTokenExpires } = result;
+      const expiresDate = new Date(accessTokenExpires).toISOString();
+
+      useAuthStore.getState().setAuth({
+        accessToken,
+        accessTokenExpires: expiresDate,
+      });
+
+      if (import.meta.env.DEV) {
+        console.log("✅ Token refreshed successfully");
+        console.log("🍪 New refresh token cookie set by server");
+      }
+
+      return accessToken;
+    } catch (error: any) {
+      if (import.meta.env.DEV) {
+        console.error("❌ Token refresh failed:", error);
+      }
+      throw error;
+    }
+  }
+
   private processQueue(error: any, token: string | null = null): void {
     this.failedQueue.forEach((prom) => {
       if (error) {
         prom.reject(error);
-      } else {
-        prom.resolve(token!);
+      } else if (token) {
+        prom.resolve(token);
       }
     });
     this.failedQueue = [];
+  }
+
+  public isCurrentlyRefreshing(): boolean {
+    return this.isRefreshing;
   }
 
   public async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {

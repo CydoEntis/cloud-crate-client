@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
 
 interface AuthState {
   accessToken: string | null;
@@ -12,9 +11,11 @@ interface AuthState {
 interface AuthActions {
   setAuth: (tokens: { accessToken: string; accessTokenExpires: string }) => void;
   updateAccessToken: (accessToken: string, expires: string) => void;
-  clearAuth: () => void;
+  clearMemoryAuth: () => void;
+  logout: () => void;
   setLoading: (loading: boolean) => void;
   isTokenExpiringSoon: (thresholdMinutes?: number) => boolean;
+  isTokenValid: () => boolean;
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -22,60 +23,109 @@ type AuthStore = AuthState & AuthActions;
 export const useAuthStore = create<AuthStore>()(
   devtools(
     persist(
-      immer((set, get) => ({
+      (set, get) => ({
         accessToken: null,
         accessTokenExpires: null,
         isAuthenticated: false,
         isLoading: false,
 
-        setAuth: (tokens) =>
-          set((state) => {
-            console.log("🔧 setAuth called with:", { hasToken: !!tokens.accessToken });
-            state.accessToken = tokens.accessToken;
-            state.accessTokenExpires = tokens.accessTokenExpires;
-            state.isAuthenticated = true;
-            state.isLoading = false;
-          }),
+        setAuth: (tokens) => {
+          console.log("🔧 setAuth called with:", {
+            hasToken: !!tokens.accessToken,
+            expires: tokens.accessTokenExpires,
+          });
 
-        updateAccessToken: (accessToken, expires) =>
-          set((state) => {
-            console.log("🔧 updateAccessToken called");
-            state.accessToken = accessToken;
-            state.accessTokenExpires = expires;
-          }),
+          if (!tokens.accessToken || !tokens.accessTokenExpires) {
+            console.error("⚠️ setAuth called with invalid tokens");
+            return;
+          }
 
-        clearAuth: () =>
-          set((state) => {
-            console.log("🚨 clearAuth called - stack trace:", new Error().stack);
-            state.accessToken = null;
-            state.accessTokenExpires = null;
-            state.isAuthenticated = false;
-            state.isLoading = false;
-          }),
+          set({
+            accessToken: tokens.accessToken,
+            accessTokenExpires: tokens.accessTokenExpires,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        },
 
-        setLoading: (loading) =>
-          set((state) => {
-            state.isLoading = loading;
-          }),
+        updateAccessToken: (accessToken, expires) => {
+          console.log("🔧 updateAccessToken called");
+
+          if (!accessToken || !expires) {
+            console.error("⚠️ updateAccessToken called with invalid data");
+            return;
+          }
+
+          set({
+            accessToken,
+            accessTokenExpires: expires,
+          });
+        },
+
+        clearMemoryAuth: () => {
+          console.log("🔧 clearMemoryAuth called - clearing tokens but keeping auth status");
+          set({
+            accessToken: null,
+            accessTokenExpires: null,
+            isLoading: false,
+          });
+        },
+
+        logout: () => {
+          console.log("🚨 Full logout - removing all auth data");
+
+          localStorage.removeItem("auth-store");
+
+          set({
+            accessToken: null,
+            accessTokenExpires: null,
+            isAuthenticated: false,
+            isLoading: false,
+          });
+        },
+
+        setLoading: (loading) => {
+          set({ isLoading: loading });
+        },
 
         isTokenExpiringSoon: (thresholdMinutes = 5) => {
           const { accessTokenExpires } = get();
           if (!accessTokenExpires) return true;
 
           const expiryTime = new Date(accessTokenExpires).getTime();
-          const thresholdTime = Date.now() + thresholdMinutes * 60 * 1000;
+          const currentTime = Date.now();
+          const thresholdTime = currentTime + thresholdMinutes * 60 * 1000;
+
           return expiryTime < thresholdTime;
         },
-      })),
+
+        isTokenValid: () => {
+          const { accessToken, accessTokenExpires } = get();
+
+          if (!accessToken || !accessTokenExpires) {
+            return false;
+          }
+
+          const expiryTime = new Date(accessTokenExpires).getTime();
+          const currentTime = Date.now();
+
+          return expiryTime > currentTime + 30000;
+        },
+      }),
       {
         name: "auth-store",
         partialize: (state) => ({
-          accessToken: state.accessToken,
-          accessTokenExpires: state.accessTokenExpires,
           isAuthenticated: state.isAuthenticated,
         }),
+        version: 1,
         onRehydrateStorage: () => (state) => {
-          console.log("🏪 Auth store rehydrated with:", state);
+          if (state) {
+            console.log("🏪 Auth store rehydrated - authenticated:", state.isAuthenticated);
+
+            if (state.isAuthenticated && !state.accessToken) {
+              console.log("🔄 Authenticated but no token in memory - will refresh on first API call");
+            }
+          }
         },
       }
     ),
@@ -85,3 +135,5 @@ export const useAuthStore = create<AuthStore>()(
 
 export const useIsAuthenticated = () => useAuthStore((state) => state.isAuthenticated);
 export const useIsLoading = () => useAuthStore((state) => state.isLoading);
+export const useHasValidToken = () =>
+  useAuthStore((state) => state.isAuthenticated && !!state.accessToken && state.isTokenValid());

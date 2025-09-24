@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 import type { User } from "./userTypes";
 
 interface UserStore {
@@ -9,15 +9,18 @@ interface UserStore {
 }
 
 export const useUserStore = create<UserStore>()(
-  persist(
+  devtools(
     (set) => ({
       user: null,
-      setUser: (user) => set({ user }),
-      clearUser: () => set({ user: null }),
+      setUser: (user) => {
+        console.log("👤 User data set in memory (not persisted)");
+        set({ user });
+      },
+      clearUser: () => {
+        console.log("👤 User data cleared from memory");
+        set({ user: null });
+      },
     }),
-    {
-      name: "user-store",
-      partialize: (state) => ({ user: state.user }),
-    }
+    { name: "UserStore" }
   )
 );
