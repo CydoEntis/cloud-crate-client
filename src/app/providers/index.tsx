@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "sonner";
-import { QueryProvider } from "./query-client";
+import { QueryProvider } from "./QueryProvider";
+import { ThemeProvider } from "./ThemeProvider";
 
 interface AppProvidersProps {
   children: ReactNode;
