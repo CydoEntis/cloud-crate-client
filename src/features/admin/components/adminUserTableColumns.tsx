@@ -30,15 +30,7 @@ export function adminUserTableColumns({
       minSize: 30,
       cell: ({ row }) => {
         const { displayName, email, profilePictureUrl } = row.original;
-        return (
-          <div className="flex items-center gap-2">
-            <UserAvatar displayName={displayName} email={email} profilePictureUrl={profilePictureUrl || ""} />
-            <div className="flex flex-col min-w-0 flex-1">
-              <TruncatedText text={displayName} maxLength={20} className="font-medium" />
-              <TruncatedText text={email} maxLength={25} className="text-sm text-muted-foreground" />
-            </div>
-          </div>
-        );
+        return <UserAvatar displayName={displayName} email={email} profilePictureUrl={profilePictureUrl || ""} />;
       },
     }),
     columnHelper.accessor("plan", {

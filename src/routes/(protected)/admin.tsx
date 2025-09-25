@@ -109,7 +109,7 @@ function AdminPage() {
 
   return (
     <AdminPageLayout>
-      <AdminUsersFilters
+      {/* <AdminUsersFilters
         searchTerm={usersRequest.searchTerm}
         onSearchTermChange={(val) => updateFilter({ searchTerm: val, page: 1 })}
         userType={usersRequest.userType}
@@ -122,7 +122,7 @@ function AdminPage() {
         onUserStatusChange={(val) => updateFilter({ userStatus: val, page: 1 })}
         planFilter={usersRequest.planFilter}
         onPlanFilterChange={(val) => updateFilter({ planFilter: val, page: 1 })}
-      />
+      /> */}
 
       {!users?.items?.length && !isPending ? (
         <NoUsersFound searchTerm={usersRequest.searchTerm} onFilterChange={updateFilter} />

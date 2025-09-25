@@ -1,3 +1,4 @@
+import TruncatedText from "./TruncatedText";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type UserAvatarProps = {
@@ -18,8 +19,8 @@ function UserAvatar({ displayName, email, profilePictureUrl }: UserAvatarProps) 
       </Avatar>
 
       <div className="flex flex-col leading-tight text-left">
-        <span className="font-medium text-sm">{displayName}</span>
-        <span className="text-xs text-muted-foreground">{email}</span>
+        <span className="font-medium text-sm"><TruncatedText text={displayName} maxLength={15}></TruncatedText></span>
+        <span className="text-xs text-muted-foreground"><TruncatedText text={email} maxLength={15}></TruncatedText></span>
       </div>
     </div>
   );

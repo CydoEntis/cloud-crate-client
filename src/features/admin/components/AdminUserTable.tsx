@@ -28,7 +28,7 @@ function AdminUserTable({ data, columns, isLoading }: AdminUserTableProps) {
         plan: false,
         usedStorageBytes: false,
         isAdmin: false,
-        isLocked: true,
+        isLocked: false,
         createdAt: false,
         actions: true,
       });
@@ -37,8 +37,8 @@ function AdminUserTable({ data, columns, isLoading }: AdminUserTableProps) {
         displayName: true,
         plan: true,
         usedStorageBytes: false,
-        isAdmin: true,
-        isLocked: true,
+        isAdmin: false,
+        isLocked: false,
         createdAt: false,
         actions: true,
       });
