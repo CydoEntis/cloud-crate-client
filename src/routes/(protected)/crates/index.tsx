@@ -9,10 +9,11 @@ import type { Crate } from "@/features/crates/crateTypes";
 import { useCrateActions } from "@/features/crates/hooks/useCrateActions";
 import CratesPagination from "@/features/crates/components/CratesPagination";
 import CratesConfirmActionDialog from "@/features/crates/components/CratesConfirmActionDialog";
-import { CratesFilters } from "@/features/crates/components/CratesFilter";
 import CratesError from "@/features/crates/components/CratesError";
 import NoCratesFound from "@/features/crates/components/NoCratesFound";
 import CratesPageHeader from "@/features/crates/components/CratesPageHeader";
+import ContentFilter from "@/shared/components/filter/ContentFilter";
+import { allowedSortByValues, sortByLabels } from "@/features/crates/utils/crateConstants";
 
 export const Route = createFileRoute("/(protected)/crates/")({
   validateSearch: zodValidator(crateSearchSchema),
@@ -47,7 +48,6 @@ function CratesPage() {
   );
 
   const { data: crates, isPending, error } = useGetCrates(crateRequest);
-
 
   if (error) {
     throw error;
@@ -110,15 +110,33 @@ function CratesPage() {
 
   return (
     <CratesPageLayout>
-      <CratesFilters
+      <ContentFilter
         searchTerm={crateRequest.searchTerm}
         onSearchTermChange={(val) => updateFilter({ searchTerm: val, page: 1 })}
-        memberType={crateRequest.memberType}
-        onMemberTypeChange={(val) => updateFilter({ memberType: val, page: 1 })}
-        sortBy={crateRequest.sortBy}
-        onSortByChange={(val) => updateFilter({ sortBy: val, page: 1 })}
-        ascending={crateRequest.ascending}
-        onOrderChange={(val) => updateFilter({ ascending: val, page: 1 })}
+        searchPlaceholder="Search crates by name..."
+        sort={{
+          value: crateRequest.sortBy,
+          onChange: (val) => updateFilter({ sortBy: val, page: 1 }),
+          allowedValues: allowedSortByValues,
+          labels: sortByLabels,
+          ascending: crateRequest.ascending,
+          onOrderChange: (val) => updateFilter({ ascending: val, page: 1 }),
+        }}
+        controls={[
+          {
+            type: "select",
+            key: "memberType",
+            label: "Member Type",
+            value: crateRequest.memberType,
+            onChange: (val) => updateFilter({ memberType: val, page: 1 }),
+            options: [
+              { value: "All", label: "All" },
+              { value: "Owner", label: "Owned" },
+              { value: "Joined", label: "Joined" },
+            ],
+          },
+        ]}
+        layout={{ searchBreakpoint: "2xl", mobileDialog: false }}
       />
 
       {!crates?.items?.length && !isPending ? (
@@ -134,7 +152,6 @@ function CratesPage() {
           {crates && !isPending && <CratesPagination crates={crates} onPageChange={handlePageChange} />}
         </>
       )}
-
 
       <CratesConfirmActionDialog
         confirmAction={confirmAction}

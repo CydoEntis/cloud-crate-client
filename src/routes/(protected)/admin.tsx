@@ -9,12 +9,12 @@ import { adminUserTableColumns } from "@/features/admin/components/adminUserTabl
 import { useAdminUserActions } from "@/features/admin/hooks/useAdminUserActions";
 import AdminUserTable from "@/features/admin/components/AdminUserTable";
 import PaginationControls from "@/shared/components/PaginationControls";
-import type { UserType, AdminUserSortBy, UserStatus, PlanFilter } from "@/features/admin/utils/adminUserConstants";
-import AdminUsersFilters from "@/features/admin/components/AdminUsersFilters";
+import { type UserType, type AdminUserSortBy, type UserStatus, type PlanFilter, adminUserSortByValues, adminUserSortByLabels } from "@/features/admin/utils/adminUserConstants";
 import AdminUsersError from "@/features/admin/components/AdminUserError";
 import AdminUsersPageHeader from "@/features/admin/components/AdminUsersPageHeader";
 import NoUsersFound from "@/features/admin/components/NoUsersFound";
 import AdminUserConfirmActionDialog from "@/features/admin/components/AdminUserConfirmActionDialog";
+import ContentFilter from "@/shared/components/filter/ContentFilter";
 
 export const Route = createFileRoute("/(protected)/admin")({
   validateSearch: zodValidator(adminUserSearchSchema),
@@ -109,20 +109,59 @@ function AdminPage() {
 
   return (
     <AdminPageLayout>
-      {/* <AdminUsersFilters
+      <ContentFilter
         searchTerm={usersRequest.searchTerm}
         onSearchTermChange={(val) => updateFilter({ searchTerm: val, page: 1 })}
-        userType={usersRequest.userType}
-        onUserTypeChange={(val) => updateFilter({ userType: val, page: 1 })}
-        sortBy={usersRequest.sortBy}
-        onSortByChange={(val) => updateFilter({ sortBy: val, page: 1 })}
-        ascending={usersRequest.ascending}
-        onOrderChange={(val) => updateFilter({ ascending: val, page: 1 })}
-        userStatus={usersRequest.userStatus}
-        onUserStatusChange={(val) => updateFilter({ userStatus: val, page: 1 })}
-        planFilter={usersRequest.planFilter}
-        onPlanFilterChange={(val) => updateFilter({ planFilter: val, page: 1 })}
-      /> */}
+        searchPlaceholder="Search users by name or email..."
+        sort={{
+          value: usersRequest.sortBy,
+          onChange: (val) => updateFilter({ sortBy: val, page: 1 }),
+          allowedValues: adminUserSortByValues,
+          labels: adminUserSortByLabels,
+          ascending: usersRequest.ascending,
+          onOrderChange: (val) => updateFilter({ ascending: val, page: 1 }),
+        }}
+        controls={[
+          {
+            type: "select",
+            key: "userType",
+            label: "User Type",
+            value: usersRequest.userType,
+            onChange: (val) => updateFilter({ userType: val, page: 1 }),
+            options: [
+              { value: "All", label: "All Users" },
+              { value: "Admin", label: "Admins" },
+              { value: "User", label: "Users" },
+            ],
+          },
+          {
+            type: "select",
+            key: "status",
+            label: "Status",
+            value: usersRequest.userStatus,
+            onChange: (val) => updateFilter({ userStatus: val, page: 1 }),
+            options: [
+              { value: "All", label: "All Statuses" },
+              { value: "Active", label: "Active" },
+              { value: "Banned", label: "Banned" },
+            ],
+          },
+          {
+            type: "select",
+            key: "plan",
+            label: "Plan",
+            value: usersRequest.planFilter,
+            onChange: (val) => updateFilter({ planFilter: val, page: 1 }),
+            options: [
+              { value: "All", label: "All Plans" },
+              { value: "Free", label: "Free" },
+              { value: "Premium", label: "Premium" },
+              { value: "Max", label: "Max" },
+            ],
+          },
+        ]}
+        layout={{ searchBreakpoint: "2xl", mobileDialog: true }}
+      />
 
       {!users?.items?.length && !isPending ? (
         <NoUsersFound searchTerm={usersRequest.searchTerm} onFilterChange={updateFilter} />

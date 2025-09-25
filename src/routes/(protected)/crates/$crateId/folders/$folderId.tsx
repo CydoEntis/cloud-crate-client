@@ -12,16 +12,20 @@ import FileTable from "@/features/folder-contents/file/components/FileTable";
 import CreateFolderModal from "@/features/folder-contents/folder/components/CreateFolderModal";
 import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
 import { folderSearchSchema } from "@/features/folder-contents/sharedSchema";
-import {
-  allowedOrderByValues,
-  type FolderContentRowItem,
-  type OrderByType,
-} from "@/features/folder-contents/sharedTypes";
+
 import folderContentsColumns from "@/features/folder-contents/components/folderContentsColumns";
 import useFolderContentsActions, {
   type FolderPageSearchParams,
 } from "@/features/folder-contents/hooks/useFolderContentsActions";
-import FolderContentsFilters, { type OrderBy } from "@/features/folder-contents/file/components/FolderContentsFilters";
+import ContentFilter from "@/shared/components/filter/ContentFilter";
+import { Button } from "@/shared/components/ui/button";
+import { Plus } from "lucide-react";
+import {
+  allowedOrderByValues,
+  orderByLabels,
+  type FolderContentRowItem,
+  type OrderBy,
+} from "@/features/folder-contents/sharedTypes";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
   validateSearch: zodValidator(folderSearchSchema),
@@ -48,7 +52,7 @@ export default function CrateFolderPage() {
       page: search.page ?? 1,
       pageSize: search.pageSize ?? 10,
       searchTerm: search.search ?? "",
-      orderBy: (search.orderBy ?? "Name") as OrderByType,
+      orderBy: (search.orderBy ?? "Name") as OrderBy,
       ascending: search.ascending ?? false,
     }),
     [search.page, search.pageSize, search.search, search.orderBy, search.ascending]
@@ -99,15 +103,25 @@ export default function CrateFolderPage() {
       {crate && <AvailableStorageIndicator crate={crate} />}
       {crate && <FileUpload crateId={crateId} folderId={folderId} />}
 
-      <FolderContentsFilters
-        search={searchParams.searchTerm}
-        onSearchChange={(val) => setSearchParams({ search: val, page: 1 })}
-        ascending={searchParams.ascending}
-        onAscendingChange={(val) => setSearchParams({ ascending: val, page: 1 })}
-        orderBy={searchParams.orderBy as OrderBy}
-        onOrderByChange={(val) => setSearchParams({ orderBy: val, page: 1 })}
-        onOpenCreateFolder={handleOpenCreateFolder}
-        allowedOrderByValues={allowedOrderByValues}
+      <ContentFilter
+        searchTerm={searchParams.searchTerm}
+        onSearchTermChange={(val) => setSearchParams({ search: val, page: 1 })}
+        searchPlaceholder="Search files & folders..."
+        sort={{
+          value: searchParams.orderBy,
+          onChange: (val) => setSearchParams({ orderBy: val, page: 1 }),
+          allowedValues: allowedOrderByValues,
+          labels: orderByLabels,
+          ascending: searchParams.ascending,
+          onOrderChange: (val) => setSearchParams({ ascending: val, page: 1 }),
+        }}
+        actions={[
+          <Button key="new-folder" onClick={handleOpenCreateFolder}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Folder
+          </Button>,
+        ]}
+        layout={{ searchBreakpoint: "lg", mobileDialog: false }}
       />
 
       <FileTable

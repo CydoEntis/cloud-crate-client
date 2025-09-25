@@ -10,7 +10,7 @@ function AdminUserTypeTabs({ value, onChange }: AdminUserTypeTabsProps) {
   return (
     <Tabs value={value} onValueChange={(value) => onChange(value as UserType)} className="w-auto">
       <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="All">All Users</TabsTrigger>
+        <TabsTrigger value="All">All</TabsTrigger>
         <TabsTrigger value="Admin">Admins</TabsTrigger>
         <TabsTrigger value="User">Users</TabsTrigger>
       </TabsList>

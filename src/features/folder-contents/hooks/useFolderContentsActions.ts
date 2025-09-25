@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
 import { useCrateDetails } from "@/features/crates/api/crateQueries";
-import { useGetMembers } from "@/features/members/api/memberQueries";
 import {
   useCreateFolder,
   useGetAvailableMoveTargets,
@@ -8,15 +7,14 @@ import {
 } from "@/features/folder-contents/folder/api/folderQueries";
 import { useFolderDragAndDrop } from "@/features/folder-contents/folder/hooks/useFolderDragAndDrop";
 import { useFolderNavigation } from "@/features/folder-contents/folder/hooks/useFolderNavigation";
-import { CrateRole } from "@/features/crates/crateTypes";
 import type { CrateFile } from "@/features/folder-contents/file/fileTypes";
-import type { FolderContentRowItem, OrderByType } from "../sharedTypes";
+import type { FolderContentRowItem, OrderBy } from "../sharedTypes";
 
 export type FolderPageSearchParams = {
   page: number;
   pageSize: number;
   searchTerm: string;
-  orderBy: OrderByType;
+  orderBy: OrderBy;
   ascending: boolean;
 };
 

@@ -5,7 +5,7 @@ import MembersList from "@/features/members/components/MemberList";
 import PaginationControls from "@/shared/components/PaginationControls";
 import InviteForm from "./InviteForm";
 import { usePaginatedMembersModal } from "@/features/members/hooks/usePaginatedMembersModal";
-import IconInputField from "@/shared/components/IconInputField";
+import IconInputField from "@/shared/components/filter/ContentInput";
 import { Search } from "lucide-react";
 
 type InviteModalProps = {

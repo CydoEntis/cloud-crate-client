@@ -3,11 +3,10 @@ import { Mail, UserPlus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { CrateRole } from "@/features/crates/crateTypes";
-import SearchInputField from "@/shared/components/SearchInputField";
 import { useInviteToCrate } from "../api/inviteQueries";
 import type { CrateInviteRequest } from "../inviteTypes";
 import { crateInviteFormSchema } from "../inviteSchemas";
-import IconInputField from "@/shared/components/IconInputField";
+import ContentInput from "@/shared/components/filter/ContentInput";
 
 type InviteFormProps = {
   crateId: string;
@@ -52,7 +51,7 @@ function InviteForm({ crateId }: InviteFormProps) {
   return (
     <div className="space-y-3">
       <div className="flex gap-1">
-        <IconInputField
+        <ContentInput
           value={searchValue}
           onChange={setSearchValue}
           placeholder="Enter email address"

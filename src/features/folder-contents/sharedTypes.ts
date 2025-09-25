@@ -10,5 +10,10 @@ export type Uploader = z.infer<typeof uploaderSchema>;
 
 export type FolderContentRowItem = CrateFolder | CrateFile;
 
-export const allowedOrderByValues = ["Name", "CreatedAt", "Size"] as const;
-export type OrderByType = (typeof allowedOrderByValues)[number];
+export type OrderBy = "Name" | "CreatedAt" | "Size";
+export const allowedOrderByValues: readonly OrderBy[] = ["Name", "CreatedAt", "Size"] as const;
+export const orderByLabels: Record<OrderBy, string> = {
+  Name: "File Name",
+  CreatedAt: "Created Date",
+  Size: "Size",
+};
