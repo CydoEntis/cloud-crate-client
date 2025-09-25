@@ -28,24 +28,19 @@ export function CratesFilters({
 }) {
   return (
     <div className="space-y-4">
-      {/* Search - always full width except on large screens */}
       <div className="lg:hidden">
         <SearchInputField value={searchTerm} onChange={onSearchTermChange} placeholder="Search crates by name..." />
       </div>
 
-      {/* Controls row */}
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between lg:gap-4">
-        {/* Large screen: Search on the left */}
         <div className="hidden lg:block lg:flex-1">
           <SearchInputField value={searchTerm} onChange={onSearchTermChange} placeholder="Search crates by name..." />
         </div>
 
-        {/* Member tabs - full width on mobile */}
         <div className="w-full md:w-auto md:flex-shrink-0">
           <CrateMemberTabs value={memberType} onChange={onMemberTypeChange} />
         </div>
 
-        {/* Sort controls - full width on mobile, together on larger screens */}
         <div className="w-full flex gap-2 md:w-auto md:flex-shrink-0">
           <div className="flex-1 md:flex-initial">
             <OrderBySelect
