@@ -23,7 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar {...props} className="border-none">
-      <SidebarContent className="bg-sidebar flex flex-col justify-between h-full">
+      <SidebarContent className="bg-sidebar flex flex-col justify-between h-full ">
         {/* Top Section */}
         <div>
           {/* Logo */}
@@ -40,7 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {/* Main Navigation */}
           <SidebarMenu>
             {navlinks.map((link) => (
-              <SidebarMenuItem key={link.id} className="my-1">
+              <SidebarMenuItem key={link.id} className="my-1  text-red-500">
                 <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
               </SidebarMenuItem>
             ))}

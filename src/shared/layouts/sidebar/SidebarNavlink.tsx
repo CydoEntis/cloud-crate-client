@@ -18,7 +18,6 @@ const ANIMATION_CONFIG = {
 const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isActive = pathname === to || pathname.startsWith(to + "/");
-
   const ref = useRef<HTMLAnchorElement>(null);
   const [height, setHeight] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -44,7 +43,7 @@ const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
       <Link
         to={to}
         ref={ref}
-        className="px-4 py-2 pr-5 rounded-lg font-medium relative z-10 flex items-center justify-between h-10"
+        className="block px-4 py-2 pr-5 rounded-lg font-medium relative z-10 h-10"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         aria-current={isActive ? "page" : undefined}
@@ -53,10 +52,11 @@ const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
           initial={{ x: 0 }}
           animate={{ x: isActive || isHovered ? ANIMATION_CONFIG.slideX : 0 }}
           transition={ANIMATION_CONFIG.slide}
-          className={clsx(
-            "font-medium flex items-center gap-4 transition-colors duration-200",
-            isActive || isHovered ? "text-primary" : "text-sidebar-accent-foreground"
-          )}
+          className={clsx("font-medium flex items-center gap-4 transition-colors duration-200 h-full", {
+            "text-primary": isActive,
+            "text-primary/80": !isActive && isHovered,
+            "text-muted-foreground": !isActive && !isHovered,
+          })}
         >
           {icon}
           {text}
