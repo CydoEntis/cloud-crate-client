@@ -1,6 +1,4 @@
-// features/admin/components/AdminUserConfirmActionDialog.tsx
 import ConfirmDialog from "@/shared/components/ConfirmDialog";
-import type { AdminUser } from "@/features/admin/adminTypes";
 
 type ConfirmAction = {
   type: "ban" | "unban" | "delete" | "makeAdmin" | "removeAdmin";
@@ -12,7 +10,6 @@ type AdminUserConfirmDialogProps = {
   confirmAction: ConfirmAction;
   isBanning: boolean;
   isUnbanning: boolean;
-  isDeleting: boolean;
   isMakingAdmin: boolean;
   isRemovingAdmin: boolean;
   onConfirm: () => void;
@@ -23,7 +20,6 @@ function AdminUserConfirmActionDialog({
   confirmAction,
   isBanning,
   isUnbanning,
-  isDeleting,
   isMakingAdmin,
   isRemovingAdmin,
   onConfirm,
@@ -65,8 +61,6 @@ function AdminUserConfirmActionDialog({
     switch (confirmAction.type) {
       case "ban":
         return isBanning ? "Banning..." : "Ban User";
-      case "delete":
-        return isDeleting ? "Deleting..." : "Delete User";
       case "makeAdmin":
         return isMakingAdmin ? "Promoting..." : "Promote";
       case "removeAdmin":

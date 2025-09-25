@@ -65,7 +65,6 @@ function AdminPage() {
     confirmAction,
     handleBanUser,
     handleUnbanUser,
-    handleDeleteUser,
     handleMakeAdmin,
     handleRemoveAdmin,
     handleConfirmAction,
@@ -73,7 +72,6 @@ function AdminPage() {
     handleUpdatePlan,
     isBanning,
     isUnbanning,
-    isDeleting,
     isMakingAdmin,
     isRemovingAdmin,
   } = useAdminUserActions(users?.items ?? []);
@@ -102,12 +100,11 @@ function AdminPage() {
         users: users?.items ?? [],
         onBan: handleBanUser,
         onUnban: handleUnbanUser,
-        onDelete: handleDeleteUser,
         onMakeAdmin: handleMakeAdmin,
         onRemoveAdmin: handleRemoveAdmin,
         onUpdatePlan: handleUpdatePlan,
       }),
-    [users?.items, handleBanUser, handleUnbanUser, handleDeleteUser, handleMakeAdmin, handleRemoveAdmin]
+    [users?.items, handleBanUser, handleUnbanUser, handleMakeAdmin, handleRemoveAdmin]
   );
 
   return (
@@ -148,7 +145,6 @@ function AdminPage() {
         confirmAction={confirmAction}
         isBanning={isBanning}
         isUnbanning={isUnbanning}
-        isDeleting={isDeleting}
         isMakingAdmin={isMakingAdmin}
         isRemovingAdmin={isRemovingAdmin}
         onConfirm={handleConfirmAction}

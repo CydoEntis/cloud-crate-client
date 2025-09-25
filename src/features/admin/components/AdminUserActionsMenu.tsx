@@ -16,7 +16,6 @@ type AdminUserActionsMenuProps = {
   user: AdminUser;
   onBan: (id: string) => void;
   onUnban: (id: string) => void;
-  onDelete: (id: string) => void;
   onMakeAdmin: (id: string) => void;
   onRemoveAdmin: (id: string) => void;
   onUpdatePlan?: (id: string, plan: SubscriptionPlan) => void;
@@ -26,7 +25,6 @@ function AdminUserActionsMenu({
   user,
   onBan,
   onUnban,
-  onDelete,
   onMakeAdmin,
   onRemoveAdmin,
   onUpdatePlan,
@@ -82,13 +80,6 @@ function AdminUserActionsMenu({
             Ban User
           </DropdownMenuItem>
         )}
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem onClick={() => onDelete(user.id)} className="text-destructive focus:text-destructive">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete User
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

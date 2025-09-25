@@ -48,14 +48,6 @@ export const adminService = {
     }
   },
 
-  async deleteUser(userId: string): Promise<void> {
-    const response = await apiService.delete<ApiResponse<null>>(`/admin/users/${userId}`);
-    const { isSuccess, message } = response.data;
-
-    if (!isSuccess) {
-      throw new Error(message ?? "Failed to delete user");
-    }
-  },
 
   async makeAdmin(userId: string): Promise<void> {
     const response = await apiService.post<ApiResponse<null>>(`/admin/users/${userId}/make-admin`);

@@ -12,7 +12,6 @@ const columnHelper = createColumnHelper<AdminUser>();
 export function adminUserTableColumns({
   onBan,
   onUnban,
-  onDelete,
   onMakeAdmin,
   onRemoveAdmin,
   onUpdatePlan,
@@ -20,7 +19,6 @@ export function adminUserTableColumns({
   users: AdminUser[];
   onBan: (id: string) => void;
   onUnban: (id: string) => void;
-  onDelete: (id: string) => void;
   onMakeAdmin: (id: string) => void;
   onRemoveAdmin: (id: string) => void;
   onUpdatePlan: (id: string, plan: SubscriptionPlan) => void;
@@ -95,7 +93,6 @@ export function adminUserTableColumns({
           user={row.original}
           onBan={onBan}
           onUnban={onUnban}
-          onDelete={onDelete}
           onMakeAdmin={onMakeAdmin}
           onRemoveAdmin={onRemoveAdmin}
           onUpdatePlan={onUpdatePlan}

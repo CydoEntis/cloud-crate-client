@@ -60,21 +60,6 @@ export const useUnbanUser = () => {
   });
 };
 
-export const useDeleteUser = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: adminService.deleteUser,
-    onSuccess: () => {
-      toast.success("User deleted successfully");
-      queryClient.invalidateQueries({ queryKey: adminKeys.users() });
-      queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
-    },
-    onError: (error) => {
-      showErrorToast(error);
-    },
-  });
-};
 
 export const useMakeAdmin = () => {
   const queryClient = useQueryClient();

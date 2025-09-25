@@ -1,12 +1,5 @@
 import { useState, useCallback } from "react";
-import {
-  useBanUser,
-  useUnbanUser,
-  useDeleteUser,
-  useMakeAdmin,
-  useRemoveAdmin,
-  useUpdateUserPlan,
-} from "../api/adminQueries";
+import { useBanUser, useUnbanUser, useMakeAdmin, useRemoveAdmin, useUpdateUserPlan } from "../api/adminQueries";
 import type { AdminUser, SubscriptionPlan } from "../adminTypes";
 
 type ConfirmAction = {
@@ -20,7 +13,6 @@ export const useAdminUserActions = (users: AdminUser[]) => {
 
   const banMutation = useBanUser();
   const unbanMutation = useUnbanUser();
-  const deleteMutation = useDeleteUser();
   const makeAdminMutation = useMakeAdmin();
   const removeAdminMutation = useRemoveAdmin();
   const updatePlanMutation = useUpdateUserPlan();
@@ -44,20 +36,6 @@ export const useAdminUserActions = (users: AdminUser[]) => {
       unbanMutation.mutate(userId);
     },
     [unbanMutation]
-  );
-
-  const handleDeleteUser = useCallback(
-    (userId: string) => {
-      const user = users.find((u) => u.id === userId);
-      if (user) {
-        setConfirmAction({
-          type: "delete",
-          userId,
-          userEmail: user.email,
-        });
-      }
-    },
-    [users]
   );
 
   const handleMakeAdmin = useCallback(
@@ -102,9 +80,6 @@ export const useAdminUserActions = (users: AdminUser[]) => {
       case "ban":
         banMutation.mutate(confirmAction.userId);
         break;
-      case "delete":
-        deleteMutation.mutate(confirmAction.userId);
-        break;
       case "makeAdmin":
         makeAdminMutation.mutate(confirmAction.userId);
         break;
@@ -113,7 +88,7 @@ export const useAdminUserActions = (users: AdminUser[]) => {
         break;
     }
     setConfirmAction(null);
-  }, [confirmAction, banMutation, deleteMutation, makeAdminMutation, removeAdminMutation]);
+  }, [confirmAction, banMutation, makeAdminMutation, removeAdminMutation]);
 
   const handleCancelAction = useCallback(() => {
     setConfirmAction(null);
@@ -123,7 +98,6 @@ export const useAdminUserActions = (users: AdminUser[]) => {
     confirmAction,
     handleBanUser,
     handleUnbanUser,
-    handleDeleteUser,
     handleMakeAdmin,
     handleRemoveAdmin,
     handleUpdatePlan,
@@ -131,7 +105,6 @@ export const useAdminUserActions = (users: AdminUser[]) => {
     handleCancelAction,
     isBanning: banMutation.isPending,
     isUnbanning: unbanMutation.isPending,
-    isDeleting: deleteMutation.isPending,
     isMakingAdmin: makeAdminMutation.isPending,
     isRemovingAdmin: removeAdminMutation.isPending,
   };
