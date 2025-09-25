@@ -22,7 +22,7 @@ export const Route = createFileRoute("/(protected)/crates/")({
 
 function CratesPageLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-4">
       <CratesPageHeader />
       {children}
     </div>

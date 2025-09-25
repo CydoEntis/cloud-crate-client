@@ -13,7 +13,7 @@ function OrderBySelect<T extends string>({ value, allowedValues, labels, label, 
     <div className="flex flex-col gap-1 rounded-md">
       {label && <span className="text-sm text-muted-foreground px-1">{label}</span>}
       <Select value={value} onValueChange={(val) => onChange(val as T)}>
-        <SelectTrigger className="w-[160px]  border-input hover:text-accent-foreground hover:bg-accent text-foreground">
+        <SelectTrigger className="w-full md:w-[160px] border-input hover:text-accent-foreground hover:bg-accent text-foreground">
           <SelectValue>{labels[value]}</SelectValue>
         </SelectTrigger>
         <SelectContent className="shadow-md rounded-md  border-input">
