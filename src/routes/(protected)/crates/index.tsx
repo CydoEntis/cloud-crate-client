@@ -136,7 +136,7 @@ function CratesPage() {
             ],
           },
         ]}
-        layout={{ searchBreakpoint: "2xl", mobileDialog: false }}
+        layout={{ searchBreakpoint: "2xl", mobileDialog: true }}
       />
 
       {!crates?.items?.length && !isPending ? (

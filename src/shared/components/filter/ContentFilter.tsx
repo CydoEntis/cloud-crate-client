@@ -44,17 +44,18 @@ function ContentFilter<T extends string>({
           <MobileFilterDialog controls={controls} sort={sort} />
         </div>
 
-        {/* Tablet: Separate search */}
         <div className="hidden md:block 2xl:hidden">
           <ContentInput value={searchTerm} onChange={onSearchTermChange} placeholder={searchPlaceholder} />
         </div>
 
-        {/* Desktop: Inline layout */}
+        {/* Desktop: Inline layout  */}
         <div className="hidden md:flex md:items-end md:justify-between 2xl:flex-row 2xl:gap-4">
-          <div className="hidden 2xl:block 2xl:flex-1">
+          <div className="hidden 2xl:block 2xl:flex-1 2xl:min-w-0">
             <ContentInput value={searchTerm} onChange={onSearchTermChange} placeholder={searchPlaceholder} />
           </div>
-          <FilterControls controls={controls} sort={sort} layout="inline" />
+          <div className="flex-shrink-0">
+            <FilterControls controls={controls} sort={sort} layout="inline" />
+          </div>
         </div>
       </div>
     );
@@ -70,8 +71,14 @@ function ContentFilter<T extends string>({
       />
 
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <FilterControls controls={controls} sort={sort} layout="inline" />
-        {actions.length > 0 && <div className="flex gap-2">{actions}</div>}
+        <div className="flex-1 min-w-0">
+          <FilterControls controls={controls} sort={sort} layout="inline" />
+        </div>
+        {actions.length > 0 && (
+          <div className="flex gap-2 flex-shrink-0">
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );

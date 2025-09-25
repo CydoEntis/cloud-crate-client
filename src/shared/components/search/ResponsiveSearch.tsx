@@ -19,12 +19,24 @@ function ResponsiveSearch({
 
   return (
     <>
-      <div className={mobileClass}>
-        <ContentInput value={searchTerm} onChange={onSearchTermChange} placeholder={searchPlaceholder} icon={Search} />
+      {/* Mobile/tablet full-width search */}
+      <div className={`w-full ${mobileClass}`}>
+        <ContentInput 
+          value={searchTerm} 
+          onChange={onSearchTermChange} 
+          placeholder={searchPlaceholder} 
+          icon={Search} 
+        />
       </div>
 
-      <div className={`hidden ${inlineClass}`}>
-        <ContentInput value={searchTerm} onChange={onSearchTermChange} placeholder={searchPlaceholder} icon={Search} />
+      {/* Desktop inline search - grows to fill available space */}
+      <div className={`hidden w-full ${inlineClass}`}>
+        <ContentInput 
+          value={searchTerm} 
+          onChange={onSearchTermChange} 
+          placeholder={searchPlaceholder} 
+          icon={Search} 
+        />
       </div>
     </>
   );

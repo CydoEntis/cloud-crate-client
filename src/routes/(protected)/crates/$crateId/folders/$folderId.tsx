@@ -121,7 +121,7 @@ export default function CrateFolderPage() {
             New Folder
           </Button>,
         ]}
-        layout={{ searchBreakpoint: "lg", mobileDialog: false }}
+        layout={{ searchBreakpoint: "lg", mobileDialog: true }}
       />
 
       <FileTable
