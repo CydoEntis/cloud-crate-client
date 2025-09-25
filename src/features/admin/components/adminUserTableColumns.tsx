@@ -1,11 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Badge } from "@/shared/components/ui/badge";
-import UserAvatar from "@/shared/components/UserAvatar";
-import DateIndicator from "@/shared/components/DateIndicator";
-import StorageDisplay from "@/shared/components/StorageDisplay";
+import DateIndicator from "@/shared/components/indicators/DateIndicator";
+import StorageDisplay from "@/shared/components/indicators/StorageDisplay";
 import type { AdminUser, SubscriptionPlan } from "../adminTypes";
 import AdminUserActionsMenu from "./AdminUserActionsMenu";
-import TruncatedText from "@/shared/components/TruncatedText";
+import UserAvatar from "@/shared/components/avatars/UserAvatar";
 
 const columnHelper = createColumnHelper<AdminUser>();
 

@@ -2,11 +2,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/compo
 import { CrateRole } from "@/features/crates/crateTypes";
 import { useAssignRole, useRemoveMember } from "@/features/members/api/memberQueries";
 import MembersList from "@/features/members/components/MemberList";
-import PaginationControls from "@/shared/components/PaginationControls";
 import InviteForm from "./InviteForm";
 import { usePaginatedMembersModal } from "@/features/members/hooks/usePaginatedMembersModal";
 import IconInputField from "@/shared/components/filter/ContentInput";
 import { Search } from "lucide-react";
+import PaginationControls from "@/shared/components/pagination/PaginationControls";
 
 type InviteModalProps = {
   currentUserRole: CrateRole;

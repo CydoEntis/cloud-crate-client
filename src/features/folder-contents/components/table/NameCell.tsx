@@ -1,5 +1,5 @@
 import type { FolderContentRowItem } from "@/features/folder-contents/sharedTypes";
-import FileIndicator from "@/shared/components/FileIndicator";
+import FileIndicator from "@/shared/components/indicators/FileIndicator";
 
 type NameCellProps = {
   row: FolderContentRowItem;

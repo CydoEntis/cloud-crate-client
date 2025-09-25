@@ -3,9 +3,9 @@ import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanst
 
 import { useMediaQuery } from "usehooks-ts";
 import { Table, TableBody } from "@/shared/components/ui/table";
-import GenericTableHeader from "@/shared/components/GenericTableHeader";
+import GenericTableHeader from "@/shared/components/table/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import GenericTableRow from "@/shared/components/GenericTableRow";
+import GenericTableRow from "@/shared/components/table/GenericTableRow";
 import type { FolderContentRowItem, FolderContents } from "../../sharedTypes";
 import type { FolderBreadcrumb } from "../../folder/folderTypes";
 import type { CrateFile } from "../fileTypes";

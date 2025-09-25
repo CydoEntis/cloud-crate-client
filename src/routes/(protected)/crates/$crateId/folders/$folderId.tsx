@@ -4,7 +4,6 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import type { ColumnDef } from "@tanstack/react-table";
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
 import BulkActionBar from "@/features/bulk/components/BulkActionToolbar";
-import PaginationControls from "@/shared/components/PaginationControls";
 import FolderContentsError from "@/features/folder-contents/components/FolderContentsError";
 import FolderContentsPageHeader from "@/features/folder-contents/components/FoloderContentsPageHeader";
 import FileUpload from "@/features/folder-contents/file/components/FileUpload";
@@ -26,6 +25,7 @@ import {
   type FolderContentRowItem,
   type OrderBy,
 } from "@/features/folder-contents/sharedTypes";
+import PaginationControls from "@/shared/components/pagination/PaginationControls";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
   validateSearch: zodValidator(folderSearchSchema),

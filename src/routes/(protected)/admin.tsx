@@ -8,13 +8,20 @@ import { useGetAdminUsers } from "@/features/admin/api/adminQueries";
 import { adminUserTableColumns } from "@/features/admin/components/adminUserTableColumns";
 import { useAdminUserActions } from "@/features/admin/hooks/useAdminUserActions";
 import AdminUserTable from "@/features/admin/components/AdminUserTable";
-import PaginationControls from "@/shared/components/PaginationControls";
-import { type UserType, type AdminUserSortBy, type UserStatus, type PlanFilter, adminUserSortByValues, adminUserSortByLabels } from "@/features/admin/utils/adminUserConstants";
+import {
+  type UserType,
+  type AdminUserSortBy,
+  type UserStatus,
+  type PlanFilter,
+  adminUserSortByValues,
+  adminUserSortByLabels,
+} from "@/features/admin/utils/adminUserConstants";
 import AdminUsersError from "@/features/admin/components/AdminUserError";
 import AdminUsersPageHeader from "@/features/admin/components/AdminUsersPageHeader";
 import NoUsersFound from "@/features/admin/components/NoUsersFound";
 import AdminUserConfirmActionDialog from "@/features/admin/components/AdminUserConfirmActionDialog";
 import ContentFilter from "@/shared/components/filter/ContentFilter";
+import PaginationControls from "@/shared/components/pagination/PaginationControls";
 
 export const Route = createFileRoute("/(protected)/admin")({
   validateSearch: zodValidator(adminUserSearchSchema),

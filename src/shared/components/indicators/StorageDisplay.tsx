@@ -1,5 +1,5 @@
 import { HardDrive } from "lucide-react";
-import { formatBytes } from "../lib/formatBytes";
+import { formatBytes } from "../../lib/formatBytes";
 
 type StorageDisplayProps = {
   storage: number;

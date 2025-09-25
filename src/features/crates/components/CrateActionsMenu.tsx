@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import ConfirmDialog from "@/shared/components/ConfirmDialog";
+import ConfirmDialog from "@/shared/components/dialogs/ConfirmDialog";
 import { useUserStore } from "@/features/user/userStore";
 import type { CrateSummary } from "../crateTypes";
 import { useCrateModalStore } from "../store/crateModalStore";

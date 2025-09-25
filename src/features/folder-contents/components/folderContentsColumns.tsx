@@ -4,14 +4,11 @@ import NameCell from "./table/NameCell";
 import SelectCell from "./table/SelectCell";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import { Checkbox } from "@/shared/components/ui/checkbox";
-import UserAvatar from "@/shared/components/UserAvatar";
-import DateIndicator from "@/shared/components/DateIndicator";
-import StorageDisplay from "@/shared/components/StorageDisplay";
+import DateIndicator from "@/shared/components/indicators/DateIndicator";
+import StorageDisplay from "@/shared/components/indicators/StorageDisplay";
 import type { CrateFile } from "@/features/folder-contents/file/fileTypes";
 import type { CrateFolder } from "@/features/folder-contents/folder/folderTypes";
 import FolderContentsActionMenu from "./FolderContentsActionMenu";
-import type { CrateRole } from "@/features/crates/crateTypes";
-import type { Uploader } from "@/features/user/userTypes";
 import type { Member } from "@/features/members/memberTypes";
 
 export type FolderContentRowItem = CrateFile | CrateFolder;
@@ -105,7 +102,7 @@ const folderContentsColumns = (folderContents: FolderContentRowItem[], currentMe
       header: "",
       size: 5,
       minSize: 5,
-      cell: (info) => <FolderContentsActionMenu row={info.row.original} currentMember={currentMember}/>,
+      cell: (info) => <FolderContentsActionMenu row={info.row.original} currentMember={currentMember} />,
     }),
   ];
 

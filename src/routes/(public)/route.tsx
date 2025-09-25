@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
 import logo from "@/assets/cloud-crate-logo.png";
-import ThemeToggle from "@/shared/components/ThemeToggle";
+import ThemeToggle from "@/shared/components/theme/ThemeToggle";
 
 export const Route = createFileRoute("/(public)")({
   component: RouteComponent,

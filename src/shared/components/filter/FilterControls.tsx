@@ -1,7 +1,7 @@
 import { Label } from "@/shared/components/ui/label";
-import OrderToggle from "@/shared/components/OrderToggle";
 import { renderSelectControl, renderSortControl } from "@/shared/utils/filterUtils";
 import type { FilterControl, SortConfig } from "@/shared/types/sharedTypes";
+import OrderToggle from "./OrderToggle";
 
 type FilterControlsProps<T extends string> = {
   controls: FilterControl[];
@@ -15,7 +15,9 @@ function FilterControls<T extends string>({ controls, sort, layout }: FilterCont
       ? "w-full"
       : "w-full md:w-auto border-input hover:text-accent-foreground hover:bg-accent text-muted-foreground";
   const sortClassName =
-    layout === "dialog" ? "w-full" : "w-auto border-input hover:text-accent-foreground hover:bg-accent text-muted-foreground";
+    layout === "dialog"
+      ? "w-full"
+      : "w-auto border-input hover:text-accent-foreground hover:bg-accent text-muted-foreground";
 
   if (layout === "dialog") {
     return (

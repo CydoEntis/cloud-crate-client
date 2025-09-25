@@ -1,6 +1,6 @@
 import { flexRender, type Table } from "@tanstack/react-table";
 import clsx from "clsx";
-import { TableHead, TableHeader, TableRow } from "./ui/table";
+import { TableHead, TableHeader, TableRow } from "../ui/table";
 
 type GenericTableHeaderProps<TData> = {
   table: Table<TData>;

@@ -2,7 +2,7 @@
 import { Check } from "lucide-react";
 import { useController, type Control } from "react-hook-form";
 import { useEffect } from "react";
-import { cn } from "../lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 const colorOptions = [
   { name: "Blue", value: "#3B82F6" },
@@ -58,7 +58,6 @@ export function ColorPicker({ control, name, disabled }: ColorPickerProps) {
                 aria-label={color.name}
                 title={color.name}
               >
-                {/* Always render Check for consistent layout */}
                 <Check
                   className={cn("transition-opacity text-white", selected ? "opacity-100" : "opacity-0")}
                   size={14}

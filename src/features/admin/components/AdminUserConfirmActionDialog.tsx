@@ -1,4 +1,4 @@
-import ConfirmDialog from "@/shared/components/ConfirmDialog";
+import ConfirmDialog from "@/shared/components/dialogs/ConfirmDialog";
 
 type ConfirmAction = {
   type: "ban" | "unban" | "delete" | "makeAdmin" | "removeAdmin";

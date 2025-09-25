@@ -1,6 +1,6 @@
 import { flexRender, type Row } from "@tanstack/react-table";
 import clsx from "clsx";
-import { TableCell, TableRow } from "./ui/table";
+import { TableCell, TableRow } from "../ui/table";
 
 type GenericTableRowProps<TData> = {
   row: Row<TData>;

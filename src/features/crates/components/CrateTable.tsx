@@ -3,9 +3,9 @@ import { useReactTable, getCoreRowModel, type ColumnDef } from "@tanstack/react-
 import { useNavigate } from "@tanstack/react-router";
 import { useMediaQuery } from "usehooks-ts";
 import { Table, TableBody } from "@/shared/components/ui/table";
-import GenericTableHeader from "@/shared/components/GenericTableHeader";
+import GenericTableHeader from "@/shared/components/table/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import GenericTableRow from "@/shared/components/GenericTableRow";
+import GenericTableRow from "@/shared/components/table/GenericTableRow";
 import type { Crate, CrateSummary } from "../crateTypes";
 
 type CrateTableProps = {

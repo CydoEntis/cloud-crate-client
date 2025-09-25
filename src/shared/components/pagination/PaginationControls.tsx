@@ -1,6 +1,6 @@
-import { Button } from "./ui/button";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem } from "./ui/pagination";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "../ui/button";
+import { PaginationItem, PaginationEllipsis } from "../ui/pagination";
 
 type PaginationAlignment = "left" | "center" | "right";
 
@@ -59,11 +59,7 @@ function PaginationControls({
           <Button
             variant={p === page ? "default" : "outline"}
             onClick={() => onPageChange(p)}
-            className={`h-9 w-9 ${
-              p === page 
-                ? "bg-primary text-foreground hover:bg-primary/90" 
-                : ""
-            }`}
+            className={`h-9 w-9 ${p === page ? "bg-primary text-foreground hover:bg-primary/90" : ""}`}
             aria-current={p === page ? "page" : undefined}
           >
             {p}

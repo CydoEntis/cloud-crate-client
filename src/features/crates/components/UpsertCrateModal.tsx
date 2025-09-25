@@ -10,7 +10,6 @@ import { Button } from "@/shared/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { Slider } from "@/shared/components/ui/slider";
-import { ColorPicker } from "@/shared/components/ColorPicker";
 
 import { useUserStore } from "@/features/user/userStore";
 import { useCreateCrate, useUpdateCrate } from "@/features/crates/api/crateQueries";
@@ -20,6 +19,7 @@ import type { CrateDetails, UpdateCrateRequest } from "@/features/crates/crateTy
 import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { setFormErrors } from "@/shared/utils/errorHandler";
 import { useCrateModalStore } from "../store/crateModalStore";
+import { ColorPicker } from "@/shared/components/color-picker/ColorPicker";
 
 type FormValues = {
   name: string;

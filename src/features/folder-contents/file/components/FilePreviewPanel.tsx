@@ -1,9 +1,9 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { FilePreview } from "./FilePreview";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import DateIndicator from "@/shared/components/DateIndicator";
+import DateIndicator from "@/shared/components/indicators/DateIndicator";
 import { DownloadButton } from "@/shared/components/DownloadButton";
-import StorageDisplay from "@/shared/components/StorageDisplay";
+import StorageDisplay from "@/shared/components/indicators/StorageDisplay";
 import { useGetFile } from "../api/fileQueries";
 
 

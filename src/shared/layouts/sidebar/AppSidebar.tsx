@@ -6,7 +6,7 @@ import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/shared/
 import { useUserStore } from "@/features/user/userStore"; // Add this import
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import SidebarNavlink from "./SidebarNavlink";
-import ThemeToggle from "@/shared/components/ThemeToggle";
+import ThemeToggle from "@/shared/components/theme/ThemeToggle";
 import { SidebarUserSection } from "./SidebarUserSection";
 
 const navlinks = [

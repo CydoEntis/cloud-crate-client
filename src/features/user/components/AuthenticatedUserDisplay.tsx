@@ -1,5 +1,5 @@
 import { useUserStore } from "../userStore";
-import TruncatedText from "@/shared/components/TruncatedText";
+import TruncatedText from "@/shared/components/text/TruncatedText";
 
 function AuthenticatedUserDisplay() {
   const user = useUserStore((state) => state.user);

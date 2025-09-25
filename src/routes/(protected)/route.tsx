@@ -3,7 +3,7 @@ import { AuthGuard } from "@/features/auth/components/AuthGuard";
 import { InviteManagementModal } from "@/features/invites/components/InviteManagementModal";
 import { UserDataProvider } from "@/features/user/components/UserDataProvider";
 import { ProtectedLayout } from "@/shared/layouts/ProctedLayout";
-import { BanDialog } from "@/shared/components/BanDialog";
+import { BanDialog } from "@/shared/components/dialogs/BanDialog";
 import { useBanDialogStore } from "@/shared/store/banDialogStore";
 import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-router";
 import { userService } from "@/features/user/api/userService";

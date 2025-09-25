@@ -4,13 +4,13 @@ import { toast } from "sonner";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
-import { ColorPicker } from "@/shared/components/ColorPicker";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 
 import { createFolderSchema } from "../folderSchema";
 import type { CreateFolder } from "../folderTypes";
 import { useCreateFolder } from "../api/folderQueries";
+import { ColorPicker } from "@/shared/components/color-picker/ColorPicker";
 
 type CreateFolderModalProps = {
   isOpen: boolean;

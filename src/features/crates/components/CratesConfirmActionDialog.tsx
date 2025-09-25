@@ -1,4 +1,4 @@
-import ConfirmDialog from "@/shared/components/ConfirmDialog";
+import ConfirmDialog from "@/shared/components/dialogs/ConfirmDialog";
 import type { CrateSummary } from "@/features/crates/crateTypes";
 
 type ConfirmAction = {
