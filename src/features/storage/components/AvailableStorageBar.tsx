@@ -59,12 +59,12 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
             <div key={s.id} style={{ width: `${scaledPercent}%` }} className="relative">
               <div className="flex justify-between items-center text-foreground mb-1 text-xs">
                 <div className="flex gap-1 items-center truncate">
-                  <div className={`rounded h-4 w-4 ${s.bgClass}`} />
+                  <div className={`rounded h-3 w-3 ${s.bgClass}`} />
                   <span className="truncate">{s.name}</span>
                 </div>
                 <span>{s.rawPercent}%</span>
               </div>
-              <div className={`h-6 rounded ${s.bgClass}`} />
+              <div className={`h-2 rounded ${s.bgClass}`} />
             </div>
           );
         })}
