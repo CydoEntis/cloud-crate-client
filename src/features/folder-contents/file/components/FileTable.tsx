@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanstack/react-table";
-
 import { useMediaQuery } from "usehooks-ts";
+import { Plus, Trash2 } from "lucide-react";
 import { Table, TableBody } from "@/shared/components/ui/table";
+import { Button } from "@/shared/components/ui/button";
 import GenericTableHeader from "@/shared/components/table/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/table/GenericTableRow";
+import { useEmptyTrash } from "@/features/folder-contents/folder/api/folderQueries";
 import type { FolderContentRowItem, FolderContents } from "../../sharedTypes";
 import type { FolderBreadcrumb } from "../../folder/folderTypes";
 import type { CrateFile } from "../fileTypes";
@@ -17,10 +19,13 @@ type FileTableProps = {
   columns: ColumnDef<FolderContentRowItem>[];
   breadcrumbs: FolderBreadcrumb[];
   isLoading?: boolean;
+  canManage?: boolean; // Add this prop
+  hasTrash?: boolean; // Add this prop
   onNavigate?: (folderId: string | null) => void;
   onDropItem?: (item: { id: string; isFolder: boolean }, targetFolderId: string | null) => void;
   onPreviewFile?: (file: CrateFile) => void;
   onBreadcrumbAction?: (action: string, folderId: string) => void;
+  onCreateFolder?: () => void; // Add this prop
 };
 
 function FileTable({
@@ -28,16 +33,19 @@ function FileTable({
   data,
   columns,
   isLoading,
+  canManage,
+  hasTrash,
   onNavigate,
   onDropItem,
   onPreviewFile,
   onBreadcrumbAction,
+  onCreateFolder,
 }: FileTableProps) {
   const isMobile = useMediaQuery("(max-width: 719px)");
   const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
   const isDesktop = useMediaQuery("(min-width: 1200px)");
-
   const [columnVisibility, setColumnVisibility] = useState({});
+  const emptyTrashMutation = useEmptyTrash();
 
   useEffect(() => {
     if (isMobile) {
@@ -108,9 +116,42 @@ function FileTable({
     }
   };
 
+  const handleEmptyTrash = () => {
+    emptyTrashMutation.mutate(crateId);
+  };
+
   return (
     <div className="space-y-4">
-      <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
+      <div className="flex justify-between items-center gap-2">
+        <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
+
+        {canManage && (
+          <div className="flex items-center gap-2 py-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-primary text-primary hover:bg-primary/20 hover:text-primary"
+              onClick={onCreateFolder}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Folder
+            </Button>
+
+            {hasTrash && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-primary"
+                onClick={handleEmptyTrash}
+                disabled={emptyTrashMutation.isPending}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                {emptyTrashMutation.isPending ? "Emptying..." : "Empty Trash"}
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
 
       <Table>
         <GenericTableHeader table={table} />

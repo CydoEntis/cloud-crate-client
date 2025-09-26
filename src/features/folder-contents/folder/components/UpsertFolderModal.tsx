@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
@@ -8,40 +9,65 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 
 import { createFolderSchema } from "../folderSchema";
-import type { CreateFolder } from "../folderTypes";
+import type { CreateFolder, CrateFolder } from "../folderTypes";
 import { useCreateFolder } from "../api/folderQueries";
 import { ColorPicker } from "@/shared/components/color-picker/ColorPicker";
 
-type CreateFolderModalProps = {
+type UpsertFolderModalProps = {
   isOpen: boolean;
   onClose: () => void;
   crateId: string;
   parentFolderId: string;
+  folder?: CrateFolder; 
 };
 
 type FormValues = Pick<CreateFolder, "name" | "color">;
 
-export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: CreateFolderModalProps) {
+export function UpsertFolderModal({ isOpen, onClose, crateId, parentFolderId, folder }: UpsertFolderModalProps) {
   const { mutateAsync: createFolder, isPending } = useCreateFolder();
+  const isEditing = !!folder;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(createFolderSchema.pick({ name: true, color: true })),
-    defaultValues: { name: "", color: "#4ade80" },
+    defaultValues: { 
+      name: folder?.name || "", 
+      color: folder?.color || "#4ade80" 
+    },
   });
+
+  // Reset form when folder changes
+  useEffect(() => {
+    if (folder) {
+      form.reset({
+        name: folder.name,
+        color: folder.color,
+      });
+    } else {
+      form.reset({
+        name: "",
+        color: "#4ade80",
+      });
+    }
+  }, [folder, form]);
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await createFolder({
-        crateId,
-        parentFolderId: parentFolderId,
-        name: data.name,
-        color: data.color,
-      });
+      if (isEditing) {
+        // TODO: Call update folder mutation when you create it
+        toast.success("Folder updated successfully");
+      } else {
+        await createFolder({
+          crateId,
+          parentFolderId: parentFolderId,
+          name: data.name,
+          color: data.color,
+        });
+        toast.success("Folder created successfully");
+      }
       form.reset();
       onClose();
-      toast.success("Folder created successfully");
     } catch (err: any) {
-      toast.error(err?.message || "Failed to create folder");
+      toast.error(err?.message || `Failed to ${isEditing ? 'update' : 'create'} folder`);
     }
   };
 
@@ -54,7 +80,7 @@ export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: 
     >
       <DialogContent className="sm:max-w-md border-none shadow bg-card text-foreground">
         <DialogHeader>
-          <DialogTitle>Create New Folder</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Folder' : 'Create New Folder'}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -92,7 +118,7 @@ export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: 
                 Cancel
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? "Creating..." : "Create Folder"}
+                {isPending ? `${isEditing ? 'Updating' : 'Creating'}...` : `${isEditing ? 'Update' : 'Create'} Folder`}
               </Button>
             </div>
           </form>
@@ -102,4 +128,4 @@ export function CreateFolderModal({ isOpen, onClose, crateId, parentFolderId }: 
   );
 }
 
-export default CreateFolderModal;
+export default UpsertFolderModal;

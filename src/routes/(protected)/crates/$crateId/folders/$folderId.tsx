@@ -8,7 +8,7 @@ import FolderContentsError from "@/features/folder-contents/components/FolderCon
 import FolderContentsPageHeader from "@/features/folder-contents/components/FoloderContentsPageHeader";
 import FileUpload from "@/features/folder-contents/file/components/FileUpload";
 import FileTable from "@/features/folder-contents/file/components/FileTable";
-import CreateFolderModal from "@/features/folder-contents/folder/components/CreateFolderModal";
+import CreateFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";
 import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
 import { folderSearchSchema } from "@/features/folder-contents/sharedSchema";
 
@@ -17,8 +17,6 @@ import useFolderContentsActions, {
   type FolderPageSearchParams,
 } from "@/features/folder-contents/hooks/useFolderContentsActions";
 import ContentFilter from "@/shared/components/filter/ContentFilter";
-import { Button } from "@/shared/components/ui/button";
-import { Plus } from "lucide-react";
 import {
   allowedOrderByValues,
   orderByLabels,
@@ -26,6 +24,7 @@ import {
   type OrderBy,
 } from "@/features/folder-contents/sharedTypes";
 import PaginationControls from "@/shared/components/pagination/PaginationControls";
+import { CrateRole } from "@/features/crates/crateTypes";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
   validateSearch: zodValidator(folderSearchSchema),
@@ -77,8 +76,8 @@ export default function CrateFolderPage() {
     refetch,
   } = useFolderContentsActions({ crateId, folderId, searchParams });
 
-  console.log("Crate: ", crate);
-
+  const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
+  const hasTrash = crate?.breakdownByType.some((item) => item.type === "Trash") ?? false;
 
   const setSearchParams = useCallback(
     (params: Partial<typeof search>) => {
@@ -118,12 +117,6 @@ export default function CrateFolderPage() {
           ascending: searchParams.ascending,
           onOrderChange: (val) => setSearchParams({ ascending: val, page: 1 }),
         }}
-        actions={[
-          <Button key="new-folder" onClick={handleOpenCreateFolder}>
-            <Plus className="mr-2 h-4 w-4" />
-            New Folder
-          </Button>,
-        ]}
         layout={{ searchBreakpoint: "lg", mobileDialog: true }}
       />
 
@@ -132,9 +125,12 @@ export default function CrateFolderPage() {
         data={folderData}
         columns={columns}
         breadcrumbs={folderData.breadcrumbs}
+        canManage={canManage}
+        hasTrash={hasTrash}
         onNavigate={handleNavigate}
         onDropItem={(item, targetFolderId) => handleDropItem(item, targetFolderId)}
         onPreviewFile={handlePreviewFile}
+        onCreateFolder={handleOpenCreateFolder}
         isLoading={isLoading}
       />
 
