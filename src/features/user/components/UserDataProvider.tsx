@@ -10,6 +10,7 @@ type UserDataProviderProps = {
 export function UserDataProvider({ children }: UserDataProviderProps) {
   const setUser = useUserStore((state) => state.setUser);
   const clearUser = useUserStore((state) => state.clearUser);
+  const setLoading = useUserStore((state) => state.setLoading);
   const { isAuthenticated } = useAuthStore();
 
   const [authInitialized, setAuthInitialized] = useState(false);
@@ -31,14 +32,23 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const shouldFetchUser = authInitialized && isAuthenticated;
 
-  const { isLoading: isUserLoading, isError, data: user, error } = useGetUser(shouldFetchUser);
+  const { isPending: isUserLoading, isError, data: user, error } = useGetUser(shouldFetchUser);
+
+  useEffect(() => {
+    if (shouldFetchUser) {
+      setLoading(isUserLoading);
+    }
+  }, [isUserLoading, shouldFetchUser, setLoading]);
 
   useEffect(() => {
     if (user) {
       console.log("👤 User data loaded successfully");
       setUser(user);
+    } else if (isError) {
+      console.error("❌ Failed to load user data:", error);
+      setLoading(false);
     }
-  }, [user, setUser]);
+  }, [user, isError, error, setUser, setLoading]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -46,7 +56,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       clearUser();
     }
   }, [isAuthenticated, clearUser]);
-
 
   return <>{children}</>;
 }

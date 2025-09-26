@@ -2,6 +2,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/componen
 import { Separator } from "@/shared/components/ui/separator";
 import { AppSidebar } from "./sidebar/AppSidebar";
 import type { ReactNode } from "react";
+import { useUserStore } from "@/features/user/userStore";
 import UpsertCrateModal from "@/features/crates/components/UpsertCrateModal";
 
 interface ProtectedLayoutProps {
@@ -9,10 +10,22 @@ interface ProtectedLayoutProps {
 }
 
 export function ProtectedLayout({ children }: ProtectedLayoutProps) {
+  const user = useUserStore((state) => state.user);
+  const isUserLoading = useUserStore((state) => state.isLoading);
+
+  const isSidebarLoading = !user && isUserLoading;
+
+  // 🔍 DEBUG: Let's see what's happening
+  console.log("🔍 ProtectedLayout Debug:", {
+    user: user ? "exists" : "null",
+    isUserLoading,
+    isSidebarLoading,
+  });
+
   return (
     <SidebarProvider>
       <UpsertCrateModal />
-      <AppSidebar />
+      <AppSidebar isLoading={isSidebarLoading} />
       <SidebarInset className="md:py-4 md:pr-4 bg-sidebar">
         <header className="flex h-12 rounded-t-2xl shrink-0 items-center gap-2 px-4 bg-background">
           <SidebarTrigger className="-ml-1 text-foreground" />

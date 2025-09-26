@@ -77,6 +77,9 @@ export default function CrateFolderPage() {
     refetch,
   } = useFolderContentsActions({ crateId, folderId, searchParams });
 
+  console.log("Crate: ", crate);
+
+
   const setSearchParams = useCallback(
     (params: Partial<typeof search>) => {
       navigate({

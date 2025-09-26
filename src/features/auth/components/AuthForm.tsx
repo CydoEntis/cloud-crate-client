@@ -63,7 +63,7 @@ function AuthForm({ mode }: AuthFormProps) {
           password: "",
           confirmPassword: "",
           displayName: "",
-          inviteToken: inviteToken || "", // Include invite token
+          inviteToken: inviteToken || "",
         },
   });
 

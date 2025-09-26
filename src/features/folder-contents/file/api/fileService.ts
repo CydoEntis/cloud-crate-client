@@ -1,6 +1,6 @@
 import apiService from "@/shared/lib/api/ApiService";
-import type { ApiResponse } from "@/features/auth/authTypes";
-import type { CrateFile, MoveFile, MultiUploadFile, SingleUploadFile } from "../types/fileTypes";
+import type { ApiResponse } from "@/shared/lib/sharedTypes";
+import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile } from "../fileTypes";
 
 export const fileService = {
   async getFile(crateId: string, fileId: string): Promise<CrateFile> {

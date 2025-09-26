@@ -21,61 +21,68 @@ export const mimeCategoryStyles: Record<
   }
 > = {
   Images: {
-    color: "#8b5cf6", // Keep hex for CSS custom properties
+    color: "#8b5cf6", // purple
     bg: "bg-purple-400/80",
     border: "border-purple-500/30",
     text: "text-purple-600",
   },
   Videos: {
-    color: "#facc15",
+    color: "#facc15", // yellow
     bg: "bg-yellow-400/80",
     border: "border-yellow-400/30",
     text: "text-yellow-600",
   },
   Audio: {
-    color: "#fb923c",
-    bg: "bg-orange-400/80",
-    border: "border-orange-400/30",
-    text: "text-orange-600",
+    color: "#6366f1", // indigo (shifted from orange)
+    bg: "bg-indigo-400/80",
+    border: "border-indigo-500/30",
+    text: "text-indigo-600",
   },
   PDF: {
-    color: "#ef4444",
+    color: "#ef4444", // red
     bg: "bg-red-400/80",
     border: "border-red-500/30",
     text: "text-red-600",
   },
   Text: {
-    color: "#3b82f6",
+    color: "#3b82f6", // blue
     bg: "bg-blue-400/80",
     border: "border-blue-500/30",
     text: "text-blue-600",
   },
   Spreadsheets: {
-    color: "#22c55e",
+    color: "#22c55e", // green
     bg: "bg-green-400/80",
     border: "border-green-500/30",
     text: "text-green-600",
   },
   Code: {
-    color: "#6366f1",
-    bg: "bg-indigo-400/80",
-    border: "border-indigo-500/30",
-    text: "text-indigo-600",
+    color: "#f59e0b", // amber (shifted from Archives)
+    bg: "bg-amber-400/80",
+    border: "border-amber-500/30",
+    text: "text-amber-600",
   },
   Archives: {
-    color: "#b45309",
-    bg: "bg-amber-400/80",
-    border: "border-amber-600/30",
-    text: "text-amber-700",
+    color: "#7c3aed", // violet/darker purple
+    bg: "bg-purple-700/80",
+    border: "border-purple-800/30",
+    text: "text-purple-200",
   },
   Other: {
-    color: "#374151",
+    color: "#374151", // gray
     bg: "bg-gray-400/80",
     border: "border-gray-600/30",
     text: "text-gray-700",
   },
+  Trash: {
+    color: "#f97316", // orange
+    bg: "bg-orange-400/80",
+    border: "border-orange-500/30",
+    text: "text-orange-600",
+  },
 };
 
+// Generate simple bg map for convenience
 export const mimeCategoryColors: Record<string, string> = Object.fromEntries(
   Object.entries(mimeCategoryStyles).map(([key, value]) => [key, value.bg])
 );

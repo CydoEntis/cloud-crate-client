@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile } from "../fileTypes";
 import { fileService } from "./fileService";
+import { SHARED_KEYS } from "@/features/shared/queryKeys";
 
 export const fileKeys = {
   all: ["files"] as const,
@@ -42,7 +43,8 @@ export const useUploadFile = () => {
     mutationFn: (uploadData: SingleUploadFile) => fileService.uploadFile(uploadData),
     onSuccess: (_, { crateId, folderId }) => {
       queryClient.invalidateQueries({ queryKey: fileKeys.list(crateId, folderId) });
-      queryClient.invalidateQueries({ queryKey: ["folder-contents", crateId, folderId] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.folderContents(crateId, folderId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("File uploaded successfully");
     },
     onError: (error: Error) => {
@@ -59,7 +61,8 @@ export const useUploadFiles = () => {
     mutationFn: (uploadData: MultiUploadFile) => fileService.uploadFiles(uploadData),
     onSuccess: (_, { crateId, folderId }) => {
       queryClient.invalidateQueries({ queryKey: fileKeys.list(crateId, folderId) });
-      queryClient.invalidateQueries({ queryKey: ["folder-contents", crateId, folderId] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.folderContents(crateId, folderId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("Files uploaded successfully");
     },
     onError: (error: Error) => {
@@ -77,7 +80,7 @@ export const useMoveFile = () => {
       fileService.moveFile(crateId, fileId, moveData),
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: ["folder-contents", crateId] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.folderContents(crateId) });
       toast.success("File moved successfully");
     },
     onError: (error: Error) => {
@@ -95,7 +98,11 @@ export const useDeleteFile = () => {
     onSuccess: (_, { crateId, fileId }) => {
       queryClient.removeQueries({ queryKey: fileKeys.detail(crateId, fileId) });
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: ["folder-contents", crateId] });
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("File deleted successfully");
     },
     onError: (error: Error) => {
@@ -113,7 +120,10 @@ export const useSoftDeleteFile = () => {
       fileService.softDeleteFile(crateId, fileId),
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: ["folder-contents", crateId] });
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
       toast.success("File moved to trash");
     },
     onError: (error: Error) => {

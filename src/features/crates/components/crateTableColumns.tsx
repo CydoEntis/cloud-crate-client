@@ -1,10 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import CrateIndicator from "./CrateIndicator";
 import CrateActionsMenu from "./CrateActionsMenu";
-import UserAvatar from "@/shared/components/UserAvatar";
 import DateIndicator from "@/shared/components/indicators/DateIndicator";
 import type { Crate, CrateSummary } from "../crateTypes";
 import StorageDisplay from "@/shared/components/indicators/StorageDisplay";
+import UserAvatar from "@/shared/components/avatars/UserAvatar";
 
 const columnHelper = createColumnHelper<CrateSummary>();
 

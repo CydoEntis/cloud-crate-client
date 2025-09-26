@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { userService } from "./userService";
 import { useAuthStore } from "@/features/auth/authStore";
 import type { User } from "../userTypes";
+import { SHARED_KEYS } from "../../shared/queryKeys";
 
 export const userKeys = {
   all: ["user"] as const,
-  me: () => [...userKeys.all, "me"] as const,
+  me: () => SHARED_KEYS.userMe(),
 };
 
 export const useGetUser = (enabled: boolean = true) => {

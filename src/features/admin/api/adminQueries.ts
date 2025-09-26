@@ -3,6 +3,7 @@ import { adminService } from "./adminService";
 import type { AdminUserSearchParams, CreateInviteRequest, SubscriptionPlan } from "../adminTypes";
 import { toast } from "sonner";
 import { showErrorToast } from "@/shared/utils/errorHandler";
+import { SHARED_KEYS } from "../../shared/queryKeys";
 
 export const adminKeys = {
   all: ["admin"] as const,
@@ -59,7 +60,6 @@ export const useUnbanUser = () => {
     },
   });
 };
-
 
 export const useMakeAdmin = () => {
   const queryClient = useQueryClient();

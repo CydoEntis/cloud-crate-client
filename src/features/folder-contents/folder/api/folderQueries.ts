@@ -3,10 +3,11 @@ import { toast } from "sonner";
 import type { CrateFolder, CreateFolder, GetFolderContentsParams, MoveFolder } from "../folderTypes";
 import type { FolderContents } from "../../sharedTypes";
 import { folderService } from "./folderService";
+import { SHARED_KEYS } from "@/features/shared/queryKeys";
 
 export const folderKeys = {
   all: ["folders"] as const,
-  contents: (crateId: string, folderId?: string | null) => ["folder-contents", crateId, folderId] as const,
+  contents: (crateId: string, folderId?: string | null) => SHARED_KEYS.folderContents(crateId, folderId),
   moveTargets: (crateId: string, excludeId?: string) =>
     [...folderKeys.all, "move-targets", crateId, excludeId] as const,
 };
@@ -45,6 +46,7 @@ export const useCreateFolder = () => {
     onSuccess: (_, { crateId, parentFolderId }) => {
       queryClient.invalidateQueries({ queryKey: folderKeys.contents(crateId, parentFolderId) });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("Folder created successfully");
     },
     onError: (error: Error) => {
@@ -61,8 +63,12 @@ export const useMoveFolder = () => {
     mutationFn: ({ crateId, folderId, moveData }: { crateId: string; folderId: string; moveData: MoveFolder }) =>
       folderService.moveFolder(crateId, folderId, moveData),
     onSuccess: (_, { crateId }) => {
-      queryClient.invalidateQueries({ queryKey: ["folder-contents", crateId] });
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("Folder moved successfully");
     },
     onError: (error: Error) => {
@@ -76,10 +82,13 @@ export const useRenameFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ folderId, newName }: { folderId: string; newName: string }) =>
+    mutationFn: ({ crateId, folderId, newName }: { crateId: string; folderId: string; newName: string }) =>
       folderService.renameFolder(folderId, newName),
-    onSuccess: (_, { folderId }) => {
-      queryClient.invalidateQueries({ queryKey: ["folder-contents"] });
+    onSuccess: (_, { crateId, folderId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
       toast.success("Folder renamed successfully");
     },
     onError: (error: Error) => {
@@ -96,8 +105,12 @@ export const useDeleteFolder = () => {
     mutationFn: ({ crateId, folderId }: { crateId: string; folderId: string }) =>
       folderService.deleteFolder(crateId, folderId),
     onSuccess: (_, { crateId }) => {
-      queryClient.invalidateQueries({ queryKey: ["folder-contents", crateId] });
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("Folder deleted successfully");
     },
     onError: (error: Error) => {
@@ -124,6 +137,26 @@ export const useDownloadFolder = () => {
     onError: (error: Error) => {
       console.error("Failed to download folder:", error);
       toast.error(error.message || "Failed to download folder");
+    },
+  });
+};
+
+export const useEmptyTrash = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (crateId: string) => folderService.emptyTrash(crateId),
+    onSuccess: (_, crateId) => {
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
+      toast.success("Trash emptied successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Failed to empty trash:", error);
+      toast.error(error.message || "Failed to empty trash");
     },
   });
 };

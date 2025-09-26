@@ -4,16 +4,17 @@ import type { Member, MemberQueryParameters } from "../memberTypes";
 import type { PaginatedResult } from "@/shared/lib/sharedTypes";
 import type { CrateRole } from "@/features/crates/crateTypes";
 import { toast } from "sonner";
+import { SHARED_KEYS } from "../../shared/queryKeys";
 
-export const crateKeys = {
-  all: ["crates"] as const,
-  members: (crateId: string) => [...crateKeys.all, "members", crateId] as const,
-  memberList: (crateId: string, params?: MemberQueryParameters) => [...crateKeys.members(crateId), params] as const,
+export const memberKeys = {
+  all: ["members"] as const,
+  crate: (crateId: string) => [...memberKeys.all, "crate", crateId] as const,
+  list: (crateId: string, params?: MemberQueryParameters) => [...memberKeys.crate(crateId), "list", params] as const,
 };
 
 export const useGetMembers = (crateId: string, params?: MemberQueryParameters) => {
   return useQuery<PaginatedResult<Member>, Error>({
-    queryKey: crateKeys.memberList(crateId, params),
+    queryKey: memberKeys.list(crateId, params),
     queryFn: () => memberService.getMembers(crateId, params),
     enabled: !!crateId,
     staleTime: 1000 * 60 * 5,
@@ -52,9 +53,10 @@ export const useAssignRole = (crateId: string) => {
       memberService.assignRole(crateId, userId, role),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: crateKeys.members(crateId),
+        queryKey: memberKeys.crate(crateId),
         exact: false,
       });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateMembers(crateId) });
       toast.success("Role updated successfully");
     },
     onError: (error: Error) => {
@@ -71,9 +73,10 @@ export const useRemoveMember = (crateId: string) => {
     mutationFn: (userId: string) => memberService.removeMember(crateId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: crateKeys.members(crateId),
+        queryKey: memberKeys.crate(crateId),
         exact: false,
       });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateMembers(crateId) });
       toast.success("Member removed successfully");
     },
     onError: (error: Error) => {

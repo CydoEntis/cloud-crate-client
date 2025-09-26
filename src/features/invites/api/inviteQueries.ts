@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { inviteService } from "./inviteService";
 import type { CrateInvite, CrateInviteRequest } from "../inviteTypes";
+import { SHARED_KEYS } from "../../shared/queryKeys";
 
 export const inviteKeys = {
   all: ["invites"] as const,
@@ -23,8 +24,7 @@ export const useInviteToCrate = () => {
   return useMutation({
     mutationFn: (request: CrateInviteRequest) => inviteService.inviteUserToCrate(request),
     onSuccess: (_, { crateId }) => {
-      queryClient.invalidateQueries({ queryKey: ["members", "crate", crateId] });
-      queryClient.invalidateQueries({ queryKey: ["crate-members"] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateMembers(crateId) });
       toast.success("User invited successfully");
     },
     onError: (error: Error) => {
@@ -41,7 +41,7 @@ export const useAcceptInvite = () => {
     mutationFn: (token: string) => inviteService.acceptInvite(token),
     onSuccess: (_, token) => {
       queryClient.removeQueries({ queryKey: inviteKeys.byToken(token) });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
       queryClient.invalidateQueries({ queryKey: ["crates"] });
       toast.success("Invite accepted successfully");
     },

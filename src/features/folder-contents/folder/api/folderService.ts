@@ -118,4 +118,14 @@ export const folderService = {
       fileName,
     };
   },
+
+  async emptyTrash(crateId: string): Promise<void> {
+    const response = await apiService.delete<ApiResponse<void>>(`/crates/${crateId}/folders/trash`);
+    const { isSuccess, message, errors } = response.data;
+
+    if (!isSuccess) {
+      console.error("Failed to empty trash:", errors);
+      throw new Error(message ?? "Failed to empty trash");
+    }
+  },
 };

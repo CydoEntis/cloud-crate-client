@@ -10,6 +10,7 @@ import type {
   CrateSummary,
 } from "../crateTypes";
 import type { PaginatedResult } from "@/shared/lib/sharedTypes";
+import { SHARED_KEYS } from "../../shared/queryKeys";
 
 export const crateKeys = {
   all: ["crates"] as const,
@@ -40,7 +41,7 @@ export const useGetCrates = (
 
 export const useCrateDetails = (crateId: string) => {
   return useQuery<CrateDetails, Error>({
-    queryKey: crateKeys.detail(crateId),
+    queryKey: SHARED_KEYS.crateDetails(crateId),
     queryFn: () => crateService.getCrate(crateId),
     enabled: !!crateId,
     staleTime: 1000 * 15,
@@ -57,7 +58,7 @@ export const useCreateCrate = () => {
     mutationFn: (request: CreateCrateRequest) => crateService.createCrate(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
       toast.success("Crate created successfully");
     },
     onError: (error: Error) => {
@@ -76,7 +77,7 @@ export const useUpdateCrate = () => {
     onSuccess: (updatedCrate, { crateId }) => {
       console.log(updatedCrate);
       console.log(crateId);
-      queryClient.setQueryData(crateKeys.detail(crateId), updatedCrate);
+      queryClient.setQueryData(SHARED_KEYS.crateDetails(crateId), updatedCrate);
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
       toast.success("Crate updated successfully");
     },
@@ -93,9 +94,9 @@ export const useDeleteCrate = () => {
   return useMutation({
     mutationFn: (crateId: string) => crateService.deleteCrate(crateId),
     onSuccess: (_, crateId) => {
-      queryClient.removeQueries({ queryKey: crateKeys.detail(crateId) });
+      queryClient.removeQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
       toast.success("Crate deleted successfully");
     },
     onError: (error: Error) => {
@@ -111,7 +112,7 @@ export const useLeaveCrate = () => {
   return useMutation({
     mutationFn: (crateId: string) => crateService.leaveCrate(crateId),
     onSuccess: (_, crateId) => {
-      queryClient.removeQueries({ queryKey: crateKeys.detail(crateId) });
+      queryClient.removeQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
       toast.success("Successfully left crate");
     },
@@ -129,10 +130,10 @@ export const useBulkDeleteCrates = () => {
     mutationFn: (crateIds: string[]) => crateService.bulkDeleteCrate(crateIds),
     onSuccess: (_, crateIds) => {
       crateIds.forEach((id) => {
-        queryClient.removeQueries({ queryKey: crateKeys.detail(id) });
+        queryClient.removeQueries({ queryKey: SHARED_KEYS.crateDetails(id) });
       });
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
       toast.success(`Successfully deleted ${crateIds.length} crates`);
     },
     onError: (error: Error) => {
@@ -149,7 +150,7 @@ export const useBulkLeaveCrates = () => {
     mutationFn: (crateIds: string[]) => crateService.bulkLeaveCrate(crateIds),
     onSuccess: (_, crateIds) => {
       crateIds.forEach((id) => {
-        queryClient.removeQueries({ queryKey: crateKeys.detail(id) });
+        queryClient.removeQueries({ queryKey: SHARED_KEYS.crateDetails(id) });
       });
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
       toast.success(`Successfully left ${crateIds.length} crates`);
