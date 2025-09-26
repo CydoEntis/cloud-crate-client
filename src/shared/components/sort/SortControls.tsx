@@ -10,15 +10,24 @@ type SortControlsProps = {
   onValueChange: (value: string) => void;
   onOrderChange: (ascending: boolean) => void;
   label?: string;
+  fullWidth?: boolean;
 };
 
-export function SortControls({ value, ascending, options, onValueChange, onOrderChange, label }: SortControlsProps) {
+export function SortControls({
+  value,
+  ascending,
+  options,
+  onValueChange,
+  onOrderChange,
+  label,
+  fullWidth,
+}: SortControlsProps) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1 ${fullWidth ? "w-full" : "w-auto"}`}>
       {label && <Label className="text-sm font-medium text-muted-foreground">{label}</Label>}
       <div className="flex gap-2">
         <Select value={value} onValueChange={onValueChange}>
-          <SelectTrigger className="w-40 text-muted-foreground cursor-pointer">
+          <SelectTrigger className={`${fullWidth ? "w-full" : "w-40"} text-muted-foreground cursor-pointer`}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="border-muted">

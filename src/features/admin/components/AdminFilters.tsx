@@ -37,7 +37,7 @@ const AdminFilters: React.FC<AdminFiltersProps> = ({ filterControls }) => {
             />
           </div>
 
-          <Drawer open={isOpen} onOpenChange={setIsOpen}>
+          <Drawer open={isOpen} onOpenChange={setIsOpen} >
             <DrawerTrigger asChild>
               <Button variant="outline" size="default" className="relative shrink-0 px-3 text-muted-foreground">
                 <Filter className="h-4 w-4 " />
@@ -50,7 +50,7 @@ const AdminFilters: React.FC<AdminFiltersProps> = ({ filterControls }) => {
               </Button>
             </DrawerTrigger>
 
-            <DrawerContent className="p-6">
+            <DrawerContent className="p-6 border-muted">
               <DrawerHeader className="p-0 mb-0">
                 <DrawerTitle className="text-left">Filter Users</DrawerTitle>
               </DrawerHeader>

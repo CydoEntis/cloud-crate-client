@@ -7,14 +7,15 @@ type FilterSelectProps = {
   options: { value: string; label: string }[];
   placeholder?: string;
   label?: string;
+  fullWidth?: boolean;
 };
 
-export function FilterSelect({ value, onChange, options, placeholder, label }: FilterSelectProps) {
+export function FilterSelect({ value, onChange, options, placeholder, label, fullWidth }: FilterSelectProps) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1 ${fullWidth ? "w-full" : "w-auto"}`}>
       {label && <Label className="text-sm font-medium text-muted-foreground">{label}</Label>}
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-40 text-muted-foreground cursor-pointer">
+        <SelectTrigger className={`${fullWidth ? "w-full" : "w-40"} text-muted-foreground cursor-pointer`}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent className="border-muted">
