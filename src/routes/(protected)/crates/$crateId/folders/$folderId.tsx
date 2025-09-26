@@ -16,7 +16,6 @@ import folderContentsColumns from "@/features/folder-contents/components/folderC
 import useFolderContentsActions, {
   type FolderPageSearchParams,
 } from "@/features/folder-contents/hooks/useFolderContentsActions";
-import ContentFilter from "@/shared/components/filter/ContentFilter";
 import {
   allowedOrderByValues,
   orderByLabels,
@@ -25,6 +24,8 @@ import {
 } from "@/features/folder-contents/sharedTypes";
 import PaginationControls from "@/shared/components/pagination/PaginationControls";
 import { CrateRole } from "@/features/crates/crateTypes";
+import { SearchInput } from "@/shared/components/search/SearchInput";
+import { SortControls } from "@/shared/components/sort/SortControls";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
   validateSearch: zodValidator(folderSearchSchema),
@@ -95,9 +96,29 @@ export default function CrateFolderPage() {
     [setSearchParams]
   );
 
+  const handleSortChange = useCallback(
+    (value: string) => {
+      if (allowedOrderByValues.includes(value as OrderBy)) {
+        setSearchParams({ orderBy: value as OrderBy, page: 1 });
+      } else {
+        console.warn(`Invalid sort value received: ${value}`);
+      }
+    },
+    [setSearchParams]
+  );
+
   const columns = useMemo(
     () => folderContentsColumns(flattenedContents, crate?.currentMember) as ColumnDef<FolderContentRowItem>[],
-    [selectMode, flattenedContents]
+    [selectMode, flattenedContents, crate?.currentMember]
+  );
+
+  const sortByOptions = useMemo(
+    () =>
+      allowedOrderByValues.map((val) => ({
+        value: val,
+        label: orderByLabels[val],
+      })),
+    []
   );
 
   return (
@@ -105,20 +126,25 @@ export default function CrateFolderPage() {
       {crate && <AvailableStorageIndicator crate={crate} />}
       {crate && <FileUpload crateId={crateId} folderId={folderId} />}
 
-      <ContentFilter
-        searchTerm={searchParams.searchTerm}
-        onSearchTermChange={(val) => setSearchParams({ search: val, page: 1 })}
-        searchPlaceholder="Search files & folders..."
-        sort={{
-          value: searchParams.orderBy,
-          onChange: (val) => setSearchParams({ orderBy: val, page: 1 }),
-          allowedValues: allowedOrderByValues,
-          labels: orderByLabels,
-          ascending: searchParams.ascending,
-          onOrderChange: (val) => setSearchParams({ ascending: val, page: 1 }),
-        }}
-        layout={{ searchBreakpoint: "lg", mobileDialog: true }}
-      />
+      <div className="flex justify-between space-y-4">
+        <SearchInput
+          label="Search Files & Folders"
+          value={searchParams.searchTerm}
+          onChange={(val) => setSearchParams({ search: val, page: 1 })}
+          placeholder="Search files & folders..."
+        />
+
+        <div className="flex gap-2">
+          <SortControls
+            label="Sort By"
+            value={searchParams.orderBy}
+            ascending={searchParams.ascending}
+            options={sortByOptions}
+            onValueChange={handleSortChange}
+            onOrderChange={(asc) => setSearchParams({ ascending: asc, page: 1 })}
+          />
+        </div>
+      </div>
 
       <FileTable
         crateId={crateId}

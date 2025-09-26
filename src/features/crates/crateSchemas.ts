@@ -3,6 +3,9 @@ import { z } from "zod";
 export const allowedSortByValues = ["Name", "JoinedAt", "UsedStorage"] as const;
 export const allowedMemberTypes = ["All", "Owner", "Joined"] as const;
 
+export type SortByValue = typeof allowedSortByValues[number];
+export type MemberType = typeof allowedMemberTypes[number];
+
 const crateNameField = z
   .string()
   .min(3, { message: "Crate name must be at least 3 characters long." })
@@ -83,3 +86,11 @@ export const crateDetailsResponseSchema = z.object({
   remainingStorage: z.number(),
   rootFolderId: z.string(),
 });
+
+export function isMemberType(value: string): value is MemberType {
+  return allowedMemberTypes.includes(value as MemberType);
+}
+
+export function isSortByValue(value: string): value is SortByValue {
+  return allowedSortByValues.includes(value as SortByValue);
+}

@@ -3,7 +3,6 @@ import ContentInput from "./ContentInput";
 import MobileFilterDialog from "./MobileFilterDialog";
 import FilterControls from "./FilterControls";
 import type { FilterControl, SortConfig } from "@/shared/types/sharedTypes";
-import type { ReactNode } from "react";
 import ResponsiveSearch from "../search/ResponsiveSearch";
 
 export type FiltersConfig<T extends string> = {
@@ -12,7 +11,6 @@ export type FiltersConfig<T extends string> = {
   searchPlaceholder: string;
   sort?: SortConfig<T>;
   controls?: FilterControl[];
-  actions?: ReactNode[];
   layout?: {
     searchBreakpoint?: "lg" | "2xl";
     mobileDialog?: boolean;
@@ -25,7 +23,6 @@ function ContentFilter<T extends string>({
   searchPlaceholder,
   sort,
   controls = [],
-  actions = [],
   layout = { searchBreakpoint: "lg", mobileDialog: false },
 }: FiltersConfig<T>) {
   if (layout.mobileDialog) {
@@ -74,11 +71,6 @@ function ContentFilter<T extends string>({
         <div className="flex-1 min-w-0">
           <FilterControls controls={controls} sort={sort} layout="inline" />
         </div>
-        {actions.length > 0 && (
-          <div className="flex gap-2 flex-shrink-0">
-            {actions}
-          </div>
-        )}
       </div>
     </div>
   );

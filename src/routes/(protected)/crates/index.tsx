@@ -2,7 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo, useCallback } from "react";
 import CrateTable from "@/features/crates/components/CrateTable";
-import { crateSearchSchema } from "@/features/crates/crateSchemas";
+import {
+  allowedMemberTypes,
+  allowedSortByValues,
+  crateSearchSchema,
+  isMemberType,
+  isSortByValue,
+} from "@/features/crates/crateSchemas";
 import { useGetCrates } from "@/features/crates/api/crateQueries";
 import { crateTableColumns } from "@/features/crates/components/crateTableColumns";
 import type { Crate } from "@/features/crates/crateTypes";
@@ -12,8 +18,10 @@ import CratesConfirmActionDialog from "@/features/crates/components/CratesConfir
 import CratesError from "@/features/crates/components/CratesError";
 import NoCratesFound from "@/features/crates/components/NoCratesFound";
 import CratesPageHeader from "@/features/crates/components/CratesPageHeader";
-import ContentFilter from "@/shared/components/filter/ContentFilter";
-import { allowedSortByValues, sortByLabels } from "@/features/crates/utils/crateConstants";
+import { sortByLabels } from "@/features/crates/utils/crateConstants";
+import { SearchInput } from "@/shared/components/search/SearchInput";
+import { FilterSelect } from "@/shared/components/filter/FilterSelect";
+import { SortControls } from "@/shared/components/sort/SortControls";
 
 export const Route = createFileRoute("/(protected)/crates/")({
   validateSearch: zodValidator(crateSearchSchema),
@@ -79,15 +87,6 @@ function CratesPage() {
     [navigate]
   );
 
-  const handleCloseModal = useCallback(() => {
-    navigate({
-      search: (old) => {
-        const { edit, ...rest } = old;
-        return rest;
-      },
-    });
-  }, [navigate]);
-
   const handlePageChange = useCallback(
     (newPage: number) => {
       navigate({
@@ -95,6 +94,28 @@ function CratesPage() {
       });
     },
     [navigate]
+  );
+
+  const handleMemberTypeChange = useCallback(
+    (value: string) => {
+      if (isMemberType(value)) {
+        updateFilter({ memberType: value, page: 1 });
+      } else {
+        console.warn(`Invalid member type received: ${value}`);
+      }
+    },
+    [updateFilter]
+  );
+
+  const handleSortByChange = useCallback(
+    (value: string) => {
+      if (isSortByValue(value)) {
+        updateFilter({ sortBy: value, page: 1 });
+      } else {
+        console.warn(`Invalid sort by value received: ${value}`);
+      }
+    },
+    [updateFilter]
   );
 
   const crateColumns = useMemo(
@@ -108,36 +129,52 @@ function CratesPage() {
     [crates?.items, handleEditCrate, handleDeleteCrate, handleLeaveCrate]
   );
 
+  const memberTypeOptions = useMemo(
+    () =>
+      allowedMemberTypes.map((type) => ({
+        value: type,
+        label: type,
+      })),
+    []
+  );
+
+  const sortByOptions = useMemo(
+    () =>
+      allowedSortByValues.map((val) => ({
+        value: val,
+        label: sortByLabels[val],
+      })),
+    []
+  );
+
   return (
     <CratesPageLayout>
-      <ContentFilter
-        searchTerm={crateRequest.searchTerm}
-        onSearchTermChange={(val) => updateFilter({ searchTerm: val, page: 1 })}
-        searchPlaceholder="Search crates by name..."
-        sort={{
-          value: crateRequest.sortBy,
-          onChange: (val) => updateFilter({ sortBy: val, page: 1 }),
-          allowedValues: allowedSortByValues,
-          labels: sortByLabels,
-          ascending: crateRequest.ascending,
-          onOrderChange: (val) => updateFilter({ ascending: val, page: 1 }),
-        }}
-        controls={[
-          {
-            type: "select",
-            key: "memberType",
-            label: "Member Type",
-            value: crateRequest.memberType,
-            onChange: (val) => updateFilter({ memberType: val, page: 1 }),
-            options: [
-              { value: "All", label: "All" },
-              { value: "Owner", label: "Owned" },
-              { value: "Joined", label: "Joined" },
-            ],
-          },
-        ]}
-        layout={{ searchBreakpoint: "2xl", mobileDialog: true }}
-      />
+      <div className="flex justify-between space-y-4">
+        <SearchInput
+          label="Search Crates"
+          value={crateRequest.searchTerm}
+          onChange={(val) => updateFilter({ searchTerm: val, page: 1 })}
+          placeholder="Search crates by name..."
+        />
+
+        <div className="flex gap-2">
+          <FilterSelect
+            label="Membership"
+            value={crateRequest.memberType}
+            onChange={handleMemberTypeChange}
+            options={memberTypeOptions}
+          />
+
+          <SortControls
+            label="Sort By"
+            value={crateRequest.sortBy}
+            ascending={crateRequest.ascending}
+            options={sortByOptions}
+            onValueChange={handleSortByChange}
+            onOrderChange={(asc) => updateFilter({ ascending: asc, page: 1 })}
+          />
+        </div>
+      </div>
 
       {!crates?.items?.length && !isPending ? (
         <NoCratesFound searchTerm={crateRequest.searchTerm} onFilterChange={updateFilter} />
