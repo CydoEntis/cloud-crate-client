@@ -45,6 +45,7 @@ export const useUploadFile = () => {
       queryClient.invalidateQueries({ queryKey: fileKeys.list(crateId, folderId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.folderContents(crateId, folderId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
       toast.success("File uploaded successfully");
     },
     onError: (error: Error) => {
@@ -63,6 +64,7 @@ export const useUploadFiles = () => {
       queryClient.invalidateQueries({ queryKey: fileKeys.list(crateId, folderId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.folderContents(crateId, folderId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
       toast.success("Files uploaded successfully");
     },
     onError: (error: Error) => {
@@ -103,6 +105,7 @@ export const useDeleteFile = () => {
         exact: false,
       });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
       toast.success("File deleted successfully");
     },
     onError: (error: Error) => {

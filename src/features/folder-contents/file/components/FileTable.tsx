@@ -34,7 +34,6 @@ function FileTable({
   columns,
   isLoading,
   canManage,
-  hasTrash,
   onNavigate,
   onDropItem,
   onPreviewFile,
@@ -45,7 +44,6 @@ function FileTable({
   const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
   const isDesktop = useMediaQuery("(min-width: 1200px)");
   const [columnVisibility, setColumnVisibility] = useState({});
-  const emptyTrashMutation = useEmptyTrash();
 
   useEffect(() => {
     if (isMobile) {
@@ -116,10 +114,6 @@ function FileTable({
     }
   };
 
-  const handleEmptyTrash = () => {
-    emptyTrashMutation.mutate(crateId);
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center gap-2">
@@ -136,19 +130,6 @@ function FileTable({
               <Plus className="h-4 w-4 mr-2" />
               New Folder
             </Button>
-
-            {hasTrash && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-primary"
-                onClick={handleEmptyTrash}
-                disabled={emptyTrashMutation.isPending}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                {emptyTrashMutation.isPending ? "Emptying..." : "Empty Trash"}
-              </Button>
-            )}
           </div>
         )}
       </div>

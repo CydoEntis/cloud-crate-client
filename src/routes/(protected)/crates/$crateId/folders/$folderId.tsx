@@ -78,7 +78,6 @@ export default function CrateFolderPage() {
   } = useFolderContentsActions({ crateId, folderId, searchParams });
 
   const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
-  const hasTrash = crate?.breakdownByType.some((item) => item.type === "Trash") ?? false;
 
   const setSearchParams = useCallback(
     (params: Partial<typeof search>) => {
@@ -152,7 +151,6 @@ export default function CrateFolderPage() {
         columns={columns}
         breadcrumbs={folderData.breadcrumbs}
         canManage={canManage}
-        hasTrash={hasTrash}
         onNavigate={handleNavigate}
         onDropItem={(item, targetFolderId) => handleDropItem(item, targetFolderId)}
         onPreviewFile={handlePreviewFile}

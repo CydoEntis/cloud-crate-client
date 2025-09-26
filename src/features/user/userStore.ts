@@ -1,10 +1,7 @@
 import { create } from "zustand";
+import type { User } from "./userTypes";
 
-interface User {
-  id: string;
-  email: string;
-  isAdmin: boolean;
-}
+
 
 interface UserStore {
   user: User | null;
