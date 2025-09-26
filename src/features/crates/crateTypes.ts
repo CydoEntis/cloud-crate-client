@@ -40,7 +40,6 @@ export type CrateDetails = {
   allocatedStorageBytes: number;
   usedStorageBytes: number;
   remainingStorageBytes: number;
-  trashStorageBytes: number; 
   currentMember: Member;
   breakdownByType: FileTypeBreakdown[];
   rootFolderId: string;
