@@ -21,7 +21,7 @@ const AvailableStorageIndicator = ({ crate }: Props) => {
   };
 
   const totalUsedIncludingTrash = usedStorageBytes + trashStorageBytes;
-
+  // TODO: Prevent the clear trash button from showing when you are not a owner/manager of a crate.
   const segments = [
     ...breakdownByType.map((item) => {
       const styles = mimeCategoryStyles[item.type] ?? mimeCategoryStyles.Other;
@@ -38,7 +38,7 @@ const AvailableStorageIndicator = ({ crate }: Props) => {
             id: "trash",
             name: "Trash",
             usedStorage: trashStorageBytes,
-            bgClass: mimeCategoryStyles.Trash.bg, 
+            bgClass: mimeCategoryStyles.Trash.bg,
           },
         ]
       : []),
