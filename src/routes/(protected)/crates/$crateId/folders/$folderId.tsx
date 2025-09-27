@@ -11,6 +11,7 @@ import FileTable from "@/features/folder-contents/file/components/FileTable";
 import UpsertFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";
 import RenameFileModal from "@/features/folder-contents/file/components/RenameFileModal";
 import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
+import MoveDialog from "@/features/folder-contents/components/MoveDialog"; // Add this import
 import { folderSearchSchema } from "@/features/folder-contents/sharedSchema";
 
 import useFolderContentsActions, {
@@ -47,6 +48,9 @@ export default function CrateFolderPage() {
 
   const [editingFolder, setEditingFolder] = useState<CrateFolder | null>(null);
   const [editingFile, setEditingFile] = useState<CrateFile | null>(null);
+  // Add move dialog state
+  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+  const [itemToMove, setItemToMove] = useState<FolderContentRowItem | null>(null);
 
   const currentFilters = useMemo(
     () => ({
@@ -101,6 +105,17 @@ export default function CrateFolderPage() {
     setEditingFile(file);
   }, []);
 
+  // Add move handlers
+  const handleMoveItem = useCallback((item: FolderContentRowItem) => {
+    setItemToMove(item);
+    setMoveDialogOpen(true);
+  }, []);
+
+  const handleCloseMoveDialog = useCallback(() => {
+    setMoveDialogOpen(false);
+    setItemToMove(null);
+  }, []);
+
   const handleCloseEditFolder = useCallback(() => {
     setEditingFolder(null);
   }, []);
@@ -118,11 +133,13 @@ export default function CrateFolderPage() {
     [navigate]
   );
 
+  // Pass the move handler to columns
   const columns = folderContentsColumns(
     flattenedContents,
     crate?.currentMember,
     handleEditFolder,
-    handleEditFile
+    handleEditFile,
+    handleMoveItem // Add this parameter
   ) as ColumnDef<FolderContentRowItem>[];
 
   return (
@@ -166,6 +183,14 @@ export default function CrateFolderPage() {
       />
 
       <RenameFileModal isOpen={!!editingFile} onClose={handleCloseEditFile} crateId={crateId} file={editingFile} />
+
+      <MoveDialog
+        isOpen={moveDialogOpen}
+        onClose={handleCloseMoveDialog}
+        item={itemToMove}
+        currentFolderId={folderId}
+        crateId={crateId}
+      />
 
       {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={handleClosePreview} />}
 
