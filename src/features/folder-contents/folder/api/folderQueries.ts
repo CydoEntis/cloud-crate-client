@@ -78,26 +78,6 @@ export const useMoveFolder = () => {
   });
 };
 
-export const useRenameFolder = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ crateId, folderId, newName }: { crateId: string; folderId: string; newName: string }) =>
-      folderService.renameFolder(folderId, newName),
-    onSuccess: (_, { crateId, folderId }) => {
-      queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
-      });
-      toast.success("Folder renamed successfully");
-    },
-    onError: (error: Error) => {
-      console.error("Failed to rename folder:", error);
-      toast.error(error.message || "Failed to rename folder");
-    },
-  });
-};
-
 export const useDeleteFolder = () => {
   const queryClient = useQueryClient();
 
@@ -157,6 +137,39 @@ export const useEmptyTrash = () => {
     onError: (error: Error) => {
       console.error("Failed to empty trash:", error);
       toast.error(error.message || "Failed to empty trash");
+    },
+  });
+};
+
+export const useUpdateFolder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      crateId,
+      folderId,
+      updateData,
+    }: {
+      crateId: string;
+      folderId: string;
+      updateData: { newName?: string; newColor?: string };
+    }) =>
+      folderService.updateFolder(crateId, folderId, {
+        folderId,
+        ...updateData,
+      }),
+    onSuccess: (_, { crateId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
+      queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+      toast.success("Folder updated successfully"); // Fixed toast message
+    },
+    onError: (error: Error) => {
+      console.error("Failed to update folder:", error);
+      toast.error(error.message || "Failed to update folder");
     },
   });
 };

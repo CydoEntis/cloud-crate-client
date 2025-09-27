@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -8,11 +8,10 @@ import FolderContentsError from "@/features/folder-contents/components/FolderCon
 import FolderContentsPageHeader from "@/features/folder-contents/components/FoloderContentsPageHeader";
 import FileUpload from "@/features/folder-contents/file/components/FileUpload";
 import FileTable from "@/features/folder-contents/file/components/FileTable";
-import CreateFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";
+import UpsertFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";
 import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
 import { folderSearchSchema } from "@/features/folder-contents/sharedSchema";
 
-import folderContentsColumns from "@/features/folder-contents/components/folderContentsColumns";
 import useFolderContentsActions, {
   type FolderPageSearchParams,
 } from "@/features/folder-contents/hooks/useFolderContentsActions";
@@ -21,6 +20,9 @@ import PaginationControls from "@/shared/components/pagination/PaginationControl
 import { CrateRole } from "@/features/crates/crateTypes";
 import FolderFilters from "@/features/folder-contents/folder/components/FolderFilters";
 import { useFolderFilters } from "@/features/folder-contents/folder/hooks/useFolderFilters";
+import type { CrateFolder } from "@/features/folder-contents/folder/folderTypes";
+import type { CrateFile } from "@/features/folder-contents/file/fileTypes";
+import { folderContentsColumns } from "@/features/folder-contents/components/folderContentsColumns";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
   validateSearch: zodValidator(folderSearchSchema),
@@ -41,6 +43,9 @@ export default function CrateFolderPage() {
   const { crateId, folderId } = Route.useParams();
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+
+  const [editingFolder, setEditingFolder] = useState<CrateFolder | null>(null);
+  const [editingFile, setEditingFile] = useState<CrateFile | null>(null);
 
   const currentFilters = useMemo(
     () => ({
@@ -87,6 +92,23 @@ export default function CrateFolderPage() {
 
   const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
 
+  // Fixed callbacks with stable references
+  const handleEditFolder = useCallback((folder: CrateFolder) => {
+    setEditingFolder(folder);
+  }, []);
+
+  const handleEditFile = useCallback((file: CrateFile) => {
+    setEditingFile(file);
+  }, []);
+
+  const handleCloseEditFolder = useCallback(() => {
+    setEditingFolder(null);
+  }, []);
+
+  const handleCloseEditFile = useCallback(() => {
+    setEditingFile(null);
+  }, []);
+
   const handlePageChange = useCallback(
     (newPage: number) => {
       navigate({
@@ -96,10 +118,13 @@ export default function CrateFolderPage() {
     [navigate]
   );
 
-  const columns = useMemo(
-    () => folderContentsColumns(flattenedContents, crate?.currentMember) as ColumnDef<FolderContentRowItem>[],
-    [selectMode, flattenedContents, crate?.currentMember]
-  );
+  // Remove columns memo completely to prevent render loop
+  const columns = folderContentsColumns(
+    flattenedContents,
+    crate?.currentMember,
+    handleEditFolder,
+    handleEditFile
+  ) as ColumnDef<FolderContentRowItem>[];
 
   return (
     <FolderPageLayout>
@@ -130,11 +155,15 @@ export default function CrateFolderPage() {
         />
       )}
 
-      <CreateFolderModal
-        isOpen={isCreateFolderOpen}
-        onClose={handleCloseCreateFolder}
+      <UpsertFolderModal
+        isOpen={isCreateFolderOpen || !!editingFolder}
+        onClose={() => {
+          handleCloseCreateFolder();
+          handleCloseEditFolder();
+        }}
         crateId={crateId}
         parentFolderId={folderId}
+        folder={editingFolder || undefined}
       />
 
       {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={handleClosePreview} />}

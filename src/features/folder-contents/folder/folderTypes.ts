@@ -15,3 +15,9 @@ export type GetFolderContentsParams = {
   ascending?: boolean;
   searchSubfolders?: boolean;
 };
+
+export type UpdateFolderRequest = {
+  folderId: string;
+  newName?: string;
+  newColor?: string;
+};

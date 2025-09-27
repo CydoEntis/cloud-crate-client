@@ -1,5 +1,4 @@
 import { MoreVertical } from "lucide-react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +11,17 @@ import { useDeleteFolder, useDownloadFolder } from "../folder/api/folderQueries"
 import { useDownloadFile, useSoftDeleteFile } from "../file/api/fileQueries";
 import { CrateRole } from "@/features/crates/crateTypes";
 import type { Member } from "@/features/members/memberTypes";
+import type { CrateFolder } from "../folder/folderTypes";
+import type { CrateFile } from "../file/fileTypes";
 
-function FolderContentsActionMenu({ row, currentMember }: { row: FolderContentRowItem; currentMember?: Member }) {
+interface FolderContentsActionMenuProps {
+  row: FolderContentRowItem;
+  currentMember?: Member;
+  onEditFolder?: (folder: CrateFolder) => void;
+  onEditFile?: (file: CrateFile) => void;
+}
+
+function FolderContentsActionMenu({ row, currentMember, onEditFolder, onEditFile }: FolderContentsActionMenuProps) {
   if ((row as any).isBackRow) return null;
 
   const currentMemberUserId = currentMember?.userId;
@@ -25,9 +33,26 @@ function FolderContentsActionMenu({ row, currentMember }: { row: FolderContentRo
 
   const softDeleteFolderMutation = useDeleteFolder();
   const softDeleteFileMutation = useSoftDeleteFile();
-
   const downloadFileMutation = useDownloadFile();
   const downloadFolderMutation = useDownloadFolder();
+
+  const isFolder = (item: FolderContentRowItem): item is CrateFolder => {
+    return item.isFolder === true;
+  };
+
+  const isFile = (item: FolderContentRowItem): item is CrateFile => {
+    return item.isFolder === false;
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (isFolder(row)) {
+      onEditFolder?.(row);
+    } else if (isFile(row)) {
+      onEditFile?.(row);
+    }
+  };
 
   const handleSoftDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,7 +65,6 @@ function FolderContentsActionMenu({ row, currentMember }: { row: FolderContentRo
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-
     if (row.isFolder) {
       downloadFolderMutation.mutate({
         crateId: row.crateId,
@@ -69,28 +93,19 @@ function FolderContentsActionMenu({ row, currentMember }: { row: FolderContentRo
         >
           Download
         </DropdownMenuItem>
-
         {canManage && (
           <>
             <DropdownMenuItem
               className="hover:bg-background cursor-pointer transition-all duration-300"
-              onClick={(e) => e.stopPropagation()}
+              onClick={handleEdit}
             >
-              Rename
+              Edit
             </DropdownMenuItem>
-            {row.isFolder && (
-              <DropdownMenuItem
-                className="hover:bg-background cursor-pointer transition-all duration-300"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Change Color
-              </DropdownMenuItem>
-            )}
             <DropdownMenuItem
               className="hover:bg-background cursor-pointer transition-all duration-300 text-destructive"
               onClick={handleSoftDelete}
             >
-              Delete
+              Trash
             </DropdownMenuItem>
           </>
         )}

@@ -1,6 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import NameCell from "./table/NameCell";
-
 import SelectCell from "./table/SelectCell";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import { Checkbox } from "@/shared/components/ui/checkbox";
@@ -15,7 +14,12 @@ export type FolderContentRowItem = CrateFile | CrateFolder;
 
 const columnHelper = createColumnHelper<FolderContentRowItem>();
 
-const folderContentsColumns = (folderContents: FolderContentRowItem[], currentMember?: Member) => {
+export const folderContentsColumns = (
+  folderContents: FolderContentRowItem[],
+  currentMember?: Member,
+  onEditFolder?: (folder: CrateFolder) => void,
+  onEditFile?: (file: CrateFile) => void
+) => {
   const columns = [
     columnHelper.display({
       id: "select",
@@ -45,37 +49,17 @@ const folderContentsColumns = (folderContents: FolderContentRowItem[], currentMe
       cell: (info) => <NameCell row={info.row.original} />,
     }),
 
-    // columnHelper.accessor("uploader.displayName", {
-    //   header: "Uploaded By",
-    //   size: 20,
-    //   minSize: 20,
-    //   cell: ({ row }) =>
-    //     row.original.isFolder ? (
-    //       <div className=" flex justify-start items-center gap-2">
-    //         <p>-</p>
-    //       </div>
-    //     ) : (
-    //       <div className=" flex justify-start items-center gap-2">
-    //         <UserAvatar
-    //           displayName={row.original.uploader.displayName}
-    //           profilePictureUrl={row.original.uploader.profilePictureUrl!}
-    //           email={row.original.uploader.email}
-    //         />
-    //       </div>
-    //     ),
-    // }),
-
     columnHelper.accessor("createdAt", {
       header: "Uploaded At",
       size: 10,
       minSize: 10,
       cell: ({ row }) =>
         row.original.isFolder ? (
-          <div className=" flex justify-start items-center gap-2">
+          <div className="flex justify-start items-center gap-2">
             <p>-</p>
           </div>
         ) : (
-          <div className=" flex justify-start items-center gap-2">
+          <div className="flex justify-start items-center gap-2">
             <DateIndicator date={row.original.createdAt} />
           </div>
         ),
@@ -87,11 +71,11 @@ const folderContentsColumns = (folderContents: FolderContentRowItem[], currentMe
       minSize: 10,
       cell: ({ row }) =>
         row.original.isFolder ? (
-          <div className=" flex justify-start items-center gap-2">
+          <div className="flex justify-start items-center gap-2">
             <p>-</p>
           </div>
         ) : (
-          <div className=" flex justify-start items-center gap-2">
+          <div className="flex justify-start items-center gap-2">
             <StorageDisplay storage={row.original.sizeInBytes ?? 0} />
           </div>
         ),
@@ -102,11 +86,16 @@ const folderContentsColumns = (folderContents: FolderContentRowItem[], currentMe
       header: "",
       size: 5,
       minSize: 5,
-      cell: (info) => <FolderContentsActionMenu row={info.row.original} currentMember={currentMember} />,
+      cell: (info) => (
+        <FolderContentsActionMenu
+          row={info.row.original}
+          currentMember={currentMember}
+          onEditFolder={onEditFolder}
+          onEditFile={onEditFile}
+        />
+      ),
     }),
   ];
 
   return columns;
 };
-
-export default folderContentsColumns;

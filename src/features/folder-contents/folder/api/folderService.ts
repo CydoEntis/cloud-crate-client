@@ -1,7 +1,13 @@
 import apiService from "@/shared/lib/api/ApiService";
 import type { ApiResponse } from "@/shared/lib/sharedTypes";
 import type { FolderContents } from "../../sharedTypes";
-import type { CreateFolder, CrateFolder, GetFolderContentsParams, MoveFolder } from "../folderTypes";
+import type {
+  CreateFolder,
+  CrateFolder,
+  GetFolderContentsParams,
+  MoveFolder,
+  UpdateFolderRequest,
+} from "../folderTypes";
 
 export const folderService = {
   async createFolder(data: CreateFolder): Promise<CrateFolder> {
@@ -85,13 +91,20 @@ export const folderService = {
     }
   },
 
-  async renameFolder(folderId: string, newName: string): Promise<void> {
-    const response = await apiService.put<ApiResponse<void>>(`/folders/${folderId}/rename`, { newName });
+  async updateFolder(crateId: string, folderId: string, updateData: UpdateFolderRequest): Promise<void> {
+    const payload = {
+      folderId: folderId,
+      newName: updateData.newName,
+      newColor: updateData.newColor,
+    };
+
+    const response = await apiService.put<ApiResponse<void>>(`/crates/${crateId}/folders/${folderId}`, payload);
+
     const { isSuccess, message, errors } = response.data;
 
     if (!isSuccess) {
-      console.error("Failed to rename folder:", errors);
-      throw new Error(message ?? "Failed to rename folder");
+      console.error("Failed to update folder:", errors);
+      throw new Error(message ?? "Failed to update folder");
     }
   },
 
