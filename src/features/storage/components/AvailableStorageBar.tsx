@@ -1,5 +1,6 @@
 import { formatBytes } from "@/shared/lib/formatBytes";
 import type { StorageSegment } from "../types/StorageSegment";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/ui/tooltip";
 
 type StorageProps = {
   totalUsedStorage: number;
@@ -16,7 +17,7 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
     const rawPercent = (s.usedStorage / storageLimit) * 100;
     return {
       ...s,
-      rawPercent: rawPercent < 1 ? 1 : Math.round(rawPercent), // round and enforce min 1%
+      rawPercent: rawPercent < 1 ? 1 : Math.round(rawPercent),
     };
   });
 
@@ -44,32 +45,71 @@ function AvailableStorageBar({ totalUsedStorage, storageLimit, segments }: Stora
   });
 
   return (
-    <div>
-      <div className="flex justify-between items-center text-foreground pb-4">
-        <h3 className="text-xl">Storage Overview</h3>
-        <p className="text-muted-foreground">
-          <span className="text-foreground text-lg">{formatBytes(totalUsedStorage)}</span> out of{" "}
-          <span className="text-foreground text-lg">{formatBytes(storageLimit)}</span> used
-        </p>
-      </div>
-      <div className="w-full flex gap-2">
-        {sortedSegments.map((s) => {
-          const scaledPercent = Math.max(s.rawPercent * scale, (minWidthPx / containerWidthPx) * 100);
-          return (
-            <div key={s.id} style={{ width: `${scaledPercent}%` }} className="relative">
-              <div className="flex justify-between items-center text-foreground mb-1 text-xs">
-                <div className="flex gap-1 items-center truncate">
-                  <div className={`rounded h-3 w-3 ${s.bgClass}`} />
-                  <span className="truncate">{s.name}</span>
+    <TooltipProvider>
+      <div>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 text-foreground pb-4">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Storage Overview</h3>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            <span className="text-foreground text-base sm:text-lg md:text-xl font-medium">
+              {formatBytes(totalUsedStorage)}
+            </span>{" "}
+            <span className="text-xs sm:text-sm md:text-base">out of</span>{" "}
+            <span className="text-foreground text-base sm:text-lg md:text-xl font-medium">
+              {formatBytes(storageLimit)}
+            </span>{" "}
+            <span className="text-xs sm:text-sm md:text-base">used</span>
+          </p>
+        </div>
+
+        <div className="w-full flex gap-2">
+          {sortedSegments.map((s) => {
+            const scaledPercent = Math.max(s.rawPercent * scale, (minWidthPx / containerWidthPx) * 100);
+
+            return (
+              <div key={s.id} style={{ width: `${scaledPercent}%` }} className="relative">
+                {/* Desktop labels - hidden on mobile */}
+                <div className="hidden md:flex justify-between items-center text-foreground mb-1 text-xs">
+                  <div className="flex gap-1 items-center truncate">
+                    <div className={`rounded h-3 w-3 ${s.bgClass}`} />
+                    <span className="truncate">{s.name}</span>
+                  </div>
+                  <span>{s.rawPercent}%</span>
                 </div>
-                <span>{s.rawPercent}%</span>
+
+                {/* Interactive bar with tooltip */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={`
+                        h-2 rounded cursor-pointer transition-all duration-200 
+                        ${s.bgClass}
+                        hover:brightness-110 active:brightness-125
+                        md:hover:h-3 md:hover:-translate-y-0.5
+                        focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                        focus-visible:outline-none
+                      `}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`${s.name}: ${s.rawPercent}% (${formatBytes(s.usedStorage)})`}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="flex items-center gap-2">
+                      <div className={`rounded h-2 w-2 ${s.bgClass}`} />
+                      <span className="font-medium">{s.name}</span>
+                      <span className="text-muted-foreground">•</span>
+                      <span>{s.rawPercent}%</span>
+                      <span className="text-muted-foreground">•</span>
+                      <span>{formatBytes(s.usedStorage)}</span>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
               </div>
-              <div className={`h-2 rounded ${s.bgClass}`} />
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }
 
