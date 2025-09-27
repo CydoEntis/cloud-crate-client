@@ -1,5 +1,5 @@
 import apiService from "@/shared/lib/api/ApiService";
-import type { ApiResponse } from "@/shared/lib/sharedTypes";
+import type { ApiResponse, PaginatedResult } from "@/shared/lib/sharedTypes";
 import type { FolderContents } from "../../sharedTypes";
 import type {
   CreateFolder,
@@ -7,6 +7,8 @@ import type {
   GetFolderContentsParams,
   MoveFolder,
   UpdateFolderRequest,
+  FolderResponse,
+  GetAvailableMoveTargetsRequest,
 } from "../folderTypes";
 
 export const folderService = {
@@ -64,13 +66,18 @@ export const folderService = {
     return result;
   },
 
-  async getAvailableMoveTargets(crateId: string, excludeFolderId?: string): Promise<CrateFolder[]> {
-    const queryParams = new URLSearchParams();
-    if (excludeFolderId) queryParams.append("excludeFolderId", excludeFolderId);
+  async getAvailableMoveTargets(request: GetAvailableMoveTargetsRequest): Promise<PaginatedResult<FolderResponse>> {
+    const params = new URLSearchParams();
+    if (request.excludeFolderId) params.append("excludeFolderId", request.excludeFolderId);
+    if (request.currentFolderId) params.append("currentFolderId", request.currentFolderId);
+    if (request.searchTerm) params.append("searchTerm", request.searchTerm);
+    params.append("page", (request.page ?? 1).toString());
+    params.append("pageSize", (request.pageSize ?? 50).toString());
+    params.append("ascending", (request.ascending ?? true).toString());
 
-    const url = `/crates/${crateId}/folders/available-move-targets${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+    const url = `/crates/${request.crateId}/folders/available-move-targets?${params.toString()}`;
 
-    const response = await apiService.get<ApiResponse<CrateFolder[]>>(url);
+    const response = await apiService.get<ApiResponse<PaginatedResult<FolderResponse>>>(url);
     const { data: result, isSuccess, message, errors } = response.data;
 
     if (!isSuccess || !result) {

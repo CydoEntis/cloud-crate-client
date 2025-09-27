@@ -7,6 +7,29 @@ export type MoveFolder = z.infer<typeof moveFolderSchema>;
 export type CrateFolder = z.infer<typeof crateFolderSchema>;
 export type FolderBreadcrumb = z.infer<typeof folderBreadcrumbSchema>;
 
+export type FolderResponse = {
+  id: string;
+  name: string;
+  crateId: string;
+  parentFolderId: string | null;
+  color: string;
+  uploadedByUserId: string;
+  uploadedByDisplayName: string;
+  uploadedByEmail: string;
+  uploadedByProfilePictureUrl: string;
+  createdAt: string;
+};
+
+export type GetAvailableMoveTargetsRequest = {
+  crateId: string;
+  excludeFolderId?: string;
+  currentFolderId?: string | null;
+  searchTerm?: string;
+  page?: number;
+  pageSize?: number;
+  ascending?: boolean;
+};
+
 export type GetFolderContentsParams = {
   page?: number;
   pageSize?: number;

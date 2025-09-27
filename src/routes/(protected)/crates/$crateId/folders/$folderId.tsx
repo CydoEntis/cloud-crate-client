@@ -48,7 +48,6 @@ export default function CrateFolderPage() {
 
   const [editingFolder, setEditingFolder] = useState<CrateFolder | null>(null);
   const [editingFile, setEditingFile] = useState<CrateFile | null>(null);
-  // Add move dialog state
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [itemToMove, setItemToMove] = useState<FolderContentRowItem | null>(null);
 

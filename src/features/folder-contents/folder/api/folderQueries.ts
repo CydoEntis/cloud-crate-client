@@ -1,15 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { CrateFolder, CreateFolder, GetFolderContentsParams, MoveFolder } from "../folderTypes";
-import type { FolderContents } from "../../sharedTypes";
+import type {
+  CreateFolder,
+  GetFolderContentsParams,
+  MoveFolder,
+  FolderResponse,
+  GetAvailableMoveTargetsRequest,
+} from "../folderTypes";
 import { folderService } from "./folderService";
 import { SHARED_KEYS } from "@/features/shared/queryKeys";
+import type { FolderContents } from "../../sharedTypes";
+import type { PaginatedResult } from "@/shared/lib/sharedTypes";
 
 export const folderKeys = {
   all: ["folders"] as const,
   contents: (crateId: string, folderId?: string | null) => SHARED_KEYS.folderContents(crateId, folderId),
-  moveTargets: (crateId: string, excludeId?: string) =>
-    [...folderKeys.all, "move-targets", crateId, excludeId] as const,
+  moveTargets: (
+    crateId: string,
+    excludeId?: string,
+    searchTerm?: string,
+    page?: number,
+    ascending?: boolean,
+    currentFolderId?: string | null
+  ) => [...folderKeys.all, "move-targets", crateId, excludeId, searchTerm, page, ascending, currentFolderId] as const,
 };
 
 export const useGetFolderContents = (
@@ -28,11 +41,18 @@ export const useGetFolderContents = (
   });
 };
 
-export const useGetAvailableMoveTargets = (crateId: string, excludeFolderId?: string) => {
-  return useQuery<CrateFolder[], Error>({
-    queryKey: folderKeys.moveTargets(crateId, excludeFolderId),
-    queryFn: () => folderService.getAvailableMoveTargets(crateId, excludeFolderId),
-    enabled: !!crateId,
+export const useGetAvailableMoveTargets = (request: GetAvailableMoveTargetsRequest) => {
+  return useQuery<PaginatedResult<FolderResponse>, Error>({
+    queryKey: folderKeys.moveTargets(
+      request.crateId,
+      request.excludeFolderId,
+      request.searchTerm,
+      request.page,
+      request.ascending,
+      request.currentFolderId
+    ),
+    queryFn: () => folderService.getAvailableMoveTargets(request),
+    enabled: !!request.crateId,
     staleTime: 1000 * 30,
     refetchOnWindowFocus: true,
   });
@@ -62,11 +82,20 @@ export const useMoveFolder = () => {
   return useMutation({
     mutationFn: ({ crateId, folderId, moveData }: { crateId: string; folderId: string; moveData: MoveFolder }) =>
       folderService.moveFolder(crateId, folderId, moveData),
-    onSuccess: (_, { crateId }) => {
+    onSuccess: (_, { crateId, moveData }) => {
       queryClient.invalidateQueries({
         queryKey: ["folder-contents", crateId],
         exact: false,
       });
+      if (moveData.newParentFolderId) {
+        queryClient.invalidateQueries({
+          queryKey: folderKeys.contents(crateId, moveData.newParentFolderId),
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: folderKeys.contents(crateId, null),
+        });
+      }
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("Folder moved successfully");
@@ -165,7 +194,7 @@ export const useUpdateFolder = () => {
       });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
-      toast.success("Folder updated successfully"); // Fixed toast message
+      toast.success("Folder updated successfully");
     },
     onError: (error: Error) => {
       console.error("Failed to update folder:", error);

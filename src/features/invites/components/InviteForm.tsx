@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Mail, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { CrateRole } from "@/features/crates/crateTypes";
 import { useInviteToCrate } from "../api/inviteQueries";
 import type { CrateInviteRequest } from "../inviteTypes";
 import { crateInviteFormSchema } from "../inviteSchemas";
-import ContentInput from "@/shared/components/filter/ContentInput";
+import { SearchInput } from "@/shared/components/search/SearchInput";
 
 type InviteFormProps = {
   crateId: string;
@@ -51,14 +51,7 @@ function InviteForm({ crateId }: InviteFormProps) {
   return (
     <div className="space-y-3">
       <div className="flex gap-1">
-        <ContentInput
-          value={searchValue}
-          onChange={setSearchValue}
-          placeholder="Enter email address"
-          icon={Mail}
-          type="email"
-        />
-
+        <SearchInput value={searchValue} onChange={setSearchValue} placeholder="Enter email address" />
         <Select value={selectedRole} onValueChange={(value: string) => setSelectedRole(value as CrateRole)}>
           <SelectTrigger className="h-9">
             <SelectValue />
@@ -74,7 +67,7 @@ function InviteForm({ crateId }: InviteFormProps) {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex flex-col space-y-1 ">
+      <div className="flex flex-col space-y-1">
         <Button variant="outline" onClick={handleInvite} disabled={!canInvite || inviteUser.isPending} className="h-9">
           <UserPlus className="h-4 w-4 mr-1" />
           {inviteUser.isPending ? "Inviting..." : "Invite"}

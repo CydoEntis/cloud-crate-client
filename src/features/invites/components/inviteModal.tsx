@@ -4,8 +4,7 @@ import { useAssignRole, useRemoveMember } from "@/features/members/api/memberQue
 import MembersList from "@/features/members/components/MemberList";
 import InviteForm from "./InviteForm";
 import { usePaginatedMembersModal } from "@/features/members/hooks/usePaginatedMembersModal";
-import IconInputField from "@/shared/components/filter/ContentInput";
-import { Search } from "lucide-react";
+import { SearchInput } from "@/shared/components/search/SearchInput";
 import PaginationControls from "@/shared/components/pagination/PaginationControls";
 
 type InviteModalProps = {
@@ -65,13 +64,7 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
 
           <InviteForm crateId={crateId} />
 
-          <IconInputField
-            icon={Search}
-            placeholder="Search members..."
-            value={searchTerm}
-            onChange={handleSearch}
-            delay={300}
-          />
+          <SearchInput placeholder="Search members..." value={searchTerm} onChange={handleSearch} delay={300} />
 
           <MembersList
             members={members}

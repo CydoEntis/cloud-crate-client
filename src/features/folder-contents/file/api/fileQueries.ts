@@ -102,9 +102,24 @@ export const useMoveFile = () => {
   return useMutation({
     mutationFn: ({ crateId, fileId, moveData }: { crateId: string; fileId: string; moveData: MoveFile }) =>
       fileService.moveFile(crateId, fileId, moveData),
-    onSuccess: (_, { crateId }) => {
+    onSuccess: (_, { crateId, moveData }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
+
+      if (moveData.newParentId) {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, moveData.newParentId),
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, null),
+        });
+      }
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.folderContents(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+
       toast.success("File moved successfully");
     },
     onError: (error: Error) => {
