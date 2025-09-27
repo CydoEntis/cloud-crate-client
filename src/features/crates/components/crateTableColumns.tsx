@@ -58,6 +58,7 @@ export function crateTableColumns({
     }),
 
     columnHelper.accessor("owner.joinedAt", {
+      id: "joinedAt",
       header: "Joined",
       size: 10,
       minSize: 10,

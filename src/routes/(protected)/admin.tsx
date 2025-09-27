@@ -42,7 +42,7 @@ function AdminPage() {
   const currentFilters = useMemo(
     () => ({
       searchTerm: search.searchTerm ?? "",
-      sortBy: search.sortBy ?? "createdAt",
+      sortBy: search.sortBy ?? "CreatedAt",
       ascending: search.ascending ?? false,
       page: search.page ?? 1,
       pageSize: search.pageSize ?? 10,

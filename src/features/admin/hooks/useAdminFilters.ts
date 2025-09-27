@@ -118,7 +118,7 @@ export function useAdminFilters(currentFilters: AdminFilterState, navigate: Navi
       userType: "All",
       userStatus: "All",
       planFilter: "All",
-      sortBy: "createdAt",
+      sortBy: "CreatedAt", // Updated to match PascalCase
       ascending: false,
       page: 1,
     });
@@ -142,11 +142,13 @@ export function useAdminFilters(currentFilters: AdminFilterState, navigate: Navi
     []
   );
 
+  // Fixed to match backend enum values
   const planFilterOptions = useMemo(
     () => [
       { value: "All", label: "All Plans" },
       { value: "Free", label: "Free" },
-      { value: "Premium", label: "Premium" },
+      { value: "Mini", label: "Mini" },
+      { value: "Standard", label: "Standard" },
       { value: "Max", label: "Max" },
     ],
     []
@@ -167,7 +169,7 @@ export function useAdminFilters(currentFilters: AdminFilterState, navigate: Navi
       currentFilters.userType !== "All" ||
       currentFilters.userStatus !== "All" ||
       currentFilters.planFilter !== "All" ||
-      currentFilters.sortBy !== "createdAt" ||
+      currentFilters.sortBy !== "CreatedAt" || // Updated to match PascalCase
       currentFilters.ascending !== false
     );
   }, [currentFilters]);

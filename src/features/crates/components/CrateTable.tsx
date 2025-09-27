@@ -6,7 +6,7 @@ import { Table, TableBody } from "@/shared/components/ui/table";
 import GenericTableHeader from "@/shared/components/table/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/table/GenericTableRow";
-import type { Crate, CrateSummary } from "../crateTypes";
+import type { CrateSummary } from "@/features/crates/crateTypes";
 
 type CrateTableProps = {
   data: CrateSummary[];
@@ -28,7 +28,8 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
       setColumnVisibility({
         name: true,
         owner: false,
-        storage: false,
+        usedStorageBytes: false,
+        allocatedStorageBytes: false,
         joinedAt: false,
         actions: true,
       });
@@ -36,7 +37,8 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
       setColumnVisibility({
         name: true,
         owner: true,
-        storage: false,
+        usedStorageBytes: false,
+        allocatedStorageBytes: false,
         joinedAt: false,
         actions: true,
       });
@@ -44,7 +46,8 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
       setColumnVisibility({
         name: true,
         owner: true,
-        storage: true,
+        usedStorageBytes: true,
+        allocatedStorageBytes: true,
         joinedAt: true,
         actions: true,
       });

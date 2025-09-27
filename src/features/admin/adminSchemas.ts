@@ -1,14 +1,14 @@
 import { z } from "zod";
 
-export const adminUserSortByValues = ["createdAt", "email", "displayName", "plan"] as const;
+export const adminUserSortByValues = ["Email", "DisplayName", "CreatedAt", "StorageUsed", "Plan"] as const;
 export const userTypeValues = ["All", "Admin", "User"] as const;
 export const userStatusValues = ["All", "Active", "Banned"] as const;
-export const planFilterValues = ["All", "Free", "Premium", "Max"] as const;
+export const planFilterValues = ["All", "Free", "Mini", "Standard", "Max"] as const;
 
-export type AdminUserSortBy = typeof adminUserSortByValues[number];
-export type UserType = typeof userTypeValues[number];
-export type UserStatus = typeof userStatusValues[number];
-export type PlanFilter = typeof planFilterValues[number];
+export type AdminUserSortBy = (typeof adminUserSortByValues)[number];
+export type UserType = (typeof userTypeValues)[number];
+export type UserStatus = (typeof userStatusValues)[number];
+export type PlanFilter = (typeof planFilterValues)[number];
 
 export function isAdminUserSortBy(value: string): value is AdminUserSortBy {
   return adminUserSortByValues.includes(value as AdminUserSortBy);
@@ -28,7 +28,7 @@ export function isPlanFilter(value: string): value is PlanFilter {
 
 export const adminUserSearchSchema = z.object({
   searchTerm: z.string().optional(),
-  sortBy: z.enum(adminUserSortByValues).optional().default("createdAt"),
+  sortBy: z.enum(adminUserSortByValues).optional().default("CreatedAt"), 
   ascending: z.boolean().optional().default(false),
   page: z.coerce.number().min(1).optional().default(1),
   pageSize: z.coerce.number().min(1).max(100).optional().default(10),
@@ -44,7 +44,7 @@ export const adminUserResponseSchema = z.object({
   profilePicture: z.string().optional(),
   isAdmin: z.boolean(),
   isBanned: z.boolean(),
-  plan: z.enum(["Free", "Premium", "Max"]),
+  plan: z.enum(["Free", "Mini", "Standard", "Max"]), 
   storageUsed: z.number(),
   storageLimit: z.number(),
   createdAt: z.string(),
@@ -54,5 +54,5 @@ export const adminUserResponseSchema = z.object({
 export const adminBatchActionSchema = z.object({
   userIds: z.array(z.string()).min(1),
   action: z.enum(["ban", "unban", "makeAdmin", "removeAdmin", "updatePlan"]),
-  planType: z.enum(["Free", "Premium", "Max"]).optional(),
+  planType: z.enum(["Free", "Mini", "Standard", "Max"]).optional(), 
 });

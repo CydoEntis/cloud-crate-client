@@ -45,15 +45,6 @@ const CrateFilterControls: React.FC<CrateFilterControlsProps> = ({
   if (isMobile) {
     return (
       <div className="flex flex-col space-y-4">
-        <div className="w-full">
-          <SearchInput
-            label="Search Crates"
-            value={filters.searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Search crates by name..."
-          />
-        </div>
-
         <div className="flex flex-col space-y-4">
           <FilterSelect
             label="Membership"
@@ -165,13 +156,6 @@ const CrateFilterControls: React.FC<CrateFilterControlsProps> = ({
           onOrderChange={handleSortOrderChange}
           fullWidth={false}
         />
-
-        {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={handleReset} className="shrink-0">
-            <RotateCcw className="h-4 w-4" />
-            <span className="ml-2">Reset</span>
-          </Button>
-        )}
       </div>
     </div>
   );
