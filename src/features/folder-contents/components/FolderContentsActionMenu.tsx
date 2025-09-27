@@ -1,14 +1,15 @@
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, FolderOpen } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
 import type { FolderContentRowItem } from "../sharedTypes";
-import { useDeleteFolder, useDownloadFolder } from "../folder/api/folderQueries";
-import { useDownloadFile, useSoftDeleteFile } from "../file/api/fileQueries";
+import { useDeleteFolder, useDownloadFolder, useMoveFolder } from "../folder/api/folderQueries";
+import { useDownloadFile, useSoftDeleteFile, useMoveFile } from "../file/api/fileQueries";
 import { CrateRole } from "@/features/crates/crateTypes";
 import type { Member } from "@/features/members/memberTypes";
 import type { CrateFolder } from "../folder/folderTypes";
@@ -19,13 +20,21 @@ interface FolderContentsActionMenuProps {
   currentMember?: Member;
   onEditFolder?: (folder: CrateFolder) => void;
   onEditFile?: (file: CrateFile) => void;
+  onMoveItem?: (item: FolderContentRowItem) => void; // New prop for move functionality
 }
 
-function FolderContentsActionMenu({ row, currentMember, onEditFolder, onEditFile }: FolderContentsActionMenuProps) {
+function FolderContentsActionMenu({
+  row,
+  currentMember,
+  onEditFolder,
+  onEditFile,
+  onMoveItem,
+}: FolderContentsActionMenuProps) {
   if ((row as any).isBackRow) return null;
 
   const currentMemberUserId = currentMember?.userId;
   const currentMemberRole = currentMember?.role;
+
   const canManage = (() => {
     if (currentMemberRole === CrateRole.Owner || currentMemberRole === CrateRole.Manager) {
       return true;
@@ -42,10 +51,15 @@ function FolderContentsActionMenu({ row, currentMember, onEditFolder, onEditFile
     return false;
   })();
 
+  // Existing mutations
   const softDeleteFolderMutation = useDeleteFolder();
   const softDeleteFileMutation = useSoftDeleteFile();
   const downloadFileMutation = useDownloadFile();
   const downloadFolderMutation = useDownloadFolder();
+
+  // New move mutations
+  const moveFolderMutation = useMoveFolder();
+  const moveFileMutation = useMoveFile();
 
   const isFolder = (item: FolderContentRowItem): item is CrateFolder => {
     return item.isFolder === true;
@@ -63,6 +77,11 @@ function FolderContentsActionMenu({ row, currentMember, onEditFolder, onEditFile
     } else if (isFile(row)) {
       onEditFile?.(row);
     }
+  };
+
+  const handleMove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onMoveItem?.(row);
   };
 
   const handleSoftDelete = (e: React.MouseEvent) => {
@@ -104,14 +123,23 @@ function FolderContentsActionMenu({ row, currentMember, onEditFolder, onEditFile
         >
           Download
         </DropdownMenuItem>
+
         {canManage && (
           <>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               className="hover:bg-background cursor-pointer transition-all duration-300"
               onClick={handleEdit}
             >
               Edit
             </DropdownMenuItem>
+            <DropdownMenuItem
+              className="hover:bg-background cursor-pointer transition-all duration-300"
+              onClick={handleMove}
+            >
+              Move
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               className="hover:bg-background cursor-pointer transition-all duration-300 text-destructive"
               onClick={handleSoftDelete}

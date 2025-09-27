@@ -18,7 +18,8 @@ export const folderContentsColumns = (
   folderContents: FolderContentRowItem[],
   currentMember?: Member,
   onEditFolder?: (folder: CrateFolder) => void,
-  onEditFile?: (file: CrateFile) => void
+  onEditFile?: (file: CrateFile) => void,
+  onMoveItem?: (item: FolderContentRowItem) => void
 ) => {
   const columns = [
     columnHelper.display({
@@ -65,7 +66,8 @@ export const folderContentsColumns = (
         ),
     }),
 
-    columnHelper.accessor("sizeInBytes", {
+    columnHelper.display({
+      id: "size",
       header: "Size",
       size: 10,
       minSize: 10,
@@ -76,7 +78,7 @@ export const folderContentsColumns = (
           </div>
         ) : (
           <div className="flex justify-start items-center gap-2">
-            <StorageDisplay storage={row.original.sizeInBytes ?? 0} />
+            <StorageDisplay storage={(row.original as CrateFile).sizeInBytes ?? 0} />
           </div>
         ),
     }),
@@ -92,6 +94,7 @@ export const folderContentsColumns = (
           currentMember={currentMember}
           onEditFolder={onEditFolder}
           onEditFile={onEditFile}
+          onMoveItem={onMoveItem}
         />
       ),
     }),
