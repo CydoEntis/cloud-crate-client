@@ -5,15 +5,15 @@ import { FilterSelect } from "@/shared/components/filter/FilterSelect";
 import { SortControls } from "@/shared/components/sort/SortControls";
 import { Button } from "@/shared/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/shared/components/ui/dialog";
-import { type UseAdminFiltersReturn } from "@/features/admin/hooks/useAdminFilters";
+import { type UseCrateFiltersReturn } from "@/features/crates/hooks/useCrateFilters";
 
-type AdminFilterControlsProps = {
-  filterControls: UseAdminFiltersReturn;
+type CrateFilterControlsProps = {
+  filterControls: UseCrateFiltersReturn;
   isMobile?: boolean;
   onMobileClose?: () => void;
 };
 
-const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
+const CrateFilterControls: React.FC<CrateFilterControlsProps> = ({
   filterControls,
   isMobile = false,
   onMobileClose,
@@ -22,14 +22,10 @@ const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
 
   const {
     filters,
-    userTypeOptions,
-    userStatusOptions,
-    planFilterOptions,
+    memberTypeOptions,
     sortByOptions,
     handleSearchChange,
-    handleUserTypeChange,
-    handleUserStatusChange,
-    handlePlanFilterChange,
+    handleMemberTypeChange,
     handleSortByChange,
     handleSortOrderChange,
     handleResetFilters,
@@ -51,35 +47,19 @@ const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
       <div className="flex flex-col space-y-4">
         <div className="w-full">
           <SearchInput
-            label="Search Users"
+            label="Search Crates"
             value={filters.searchTerm}
             onChange={handleSearchChange}
-            placeholder="Search users by name or email..."
+            placeholder="Search crates by name..."
           />
         </div>
 
         <div className="flex flex-col space-y-4">
           <FilterSelect
-            label="User Type"
-            value={filters.userType}
-            onChange={handleUserTypeChange}
-            options={userTypeOptions}
-            fullWidth={true}
-          />
-
-          <FilterSelect
-            label="Status"
-            value={filters.userStatus}
-            onChange={handleUserStatusChange}
-            options={userStatusOptions}
-            fullWidth={true}
-          />
-
-          <FilterSelect
-            label="Plan"
-            value={filters.planFilter}
-            onChange={handlePlanFilterChange}
-            options={planFilterOptions}
+            label="Membership"
+            value={filters.memberType}
+            onChange={handleMemberTypeChange}
+            options={memberTypeOptions}
             fullWidth={true}
           />
 
@@ -109,10 +89,10 @@ const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
     <div className="w-full space-y-4 2xl:space-y-0 2xl:flex 2xl:items-end 2xl:gap-4">
       <div className="flex justify-between items-end w-full 2xl:flex-1 2xl:min-w-[300px] gap-2">
         <SearchInput
-          label="Search Users"
+          label="Search Crates"
           value={filters.searchTerm}
           onChange={handleSearchChange}
-          placeholder="Search users by name or email..."
+          placeholder="Search crates by name..."
         />
 
         {/* Tablet/Small Desktop: Filter button + modal (768px - 1535px) */}
@@ -124,11 +104,7 @@ const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
                 <span className="ml-2">Filters</span>
                 {hasActiveFilters && (
                   <span className="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                    {
-                      [filters.userType, filters.userStatus, filters.planFilter, filters.sortBy].filter(
-                        (f) => f && f !== "all" && f !== ""
-                      ).length
-                    }
+                    {[filters.memberType, filters.sortBy].filter((f) => f && f !== "All" && f !== "Name").length}
                   </span>
                 )}
               </Button>
@@ -136,31 +112,15 @@ const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
 
             <DialogContent className="max-w-md text-muted-foreground border-muted">
               <DialogHeader>
-                <DialogTitle>Filter Users</DialogTitle>
+                <DialogTitle>Filter Crates</DialogTitle>
               </DialogHeader>
 
               <div className="grid gap-4 py-4">
                 <FilterSelect
-                  label="User Type"
-                  value={filters.userType}
-                  onChange={handleUserTypeChange}
-                  options={userTypeOptions}
-                  fullWidth={true}
-                />
-
-                <FilterSelect
-                  label="Status"
-                  value={filters.userStatus}
-                  onChange={handleUserStatusChange}
-                  options={userStatusOptions}
-                  fullWidth={true}
-                />
-
-                <FilterSelect
-                  label="Plan"
-                  value={filters.planFilter}
-                  onChange={handlePlanFilterChange}
-                  options={planFilterOptions}
+                  label="Membership"
+                  value={filters.memberType}
+                  onChange={handleMemberTypeChange}
+                  options={memberTypeOptions}
                   fullWidth={true}
                 />
 
@@ -189,26 +149,10 @@ const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
       {/* Large Desktop: Inline filters (≥ 1536px) */}
       <div className="hidden 2xl:flex 2xl:gap-4 2xl:items-end 2xl:shrink-0">
         <FilterSelect
-          label="User Type"
-          value={filters.userType}
-          onChange={handleUserTypeChange}
-          options={userTypeOptions}
-          fullWidth={false}
-        />
-
-        <FilterSelect
-          label="Status"
-          value={filters.userStatus}
-          onChange={handleUserStatusChange}
-          options={userStatusOptions}
-          fullWidth={false}
-        />
-
-        <FilterSelect
-          label="Plan"
-          value={filters.planFilter}
-          onChange={handlePlanFilterChange}
-          options={planFilterOptions}
+          label="Membership"
+          value={filters.memberType}
+          onChange={handleMemberTypeChange}
+          options={memberTypeOptions}
           fullWidth={false}
         />
 
@@ -221,9 +165,16 @@ const AdminFilterControls: React.FC<AdminFilterControlsProps> = ({
           onOrderChange={handleSortOrderChange}
           fullWidth={false}
         />
+
+        {hasActiveFilters && (
+          <Button variant="ghost" size="sm" onClick={handleReset} className="shrink-0">
+            <RotateCcw className="h-4 w-4" />
+            <span className="ml-2">Reset</span>
+          </Button>
+        )}
       </div>
     </div>
   );
 };
 
-export default AdminFilterControls;
+export default CrateFilterControls;

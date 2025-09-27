@@ -45,7 +45,6 @@ export interface UseAdminFiltersReturn {
 }
 
 export function useAdminFilters(currentFilters: AdminFilterState, navigate: NavigateFunction): UseAdminFiltersReturn {
-  // Core update function that handles navigation with proper typing
   const updateFilter = useCallback<UpdateFilterFn>(
     (partial: Partial<RouteSearch>) => {
       navigate({
