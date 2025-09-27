@@ -1,8 +1,7 @@
 import { z } from "zod";
+import { allowedOrderByValues } from "./sharedTypes";
 import { crateFolderSchema } from "./folder/folderSchema";
 import { crateFileSchema } from "./file/fileSchema";
-import { allowedOrderByValues } from "./sharedTypes";
-
 
 export const folderBreadcrumbSchema = z.object({
   id: z.string().uuid(),
@@ -25,6 +24,9 @@ export const folderSearchSchema = z.object({
   page: z.coerce.number().optional().default(1),
   pageSize: z.coerce.number().optional().default(10),
   search: z.string().optional(),
-  orderBy: z.enum(allowedOrderByValues).optional().default("Name"),
+  orderBy: z
+    .enum(allowedOrderByValues as [string, ...string[]])
+    .optional()
+    .default("Name"),
   ascending: z.boolean().default(false),
 });

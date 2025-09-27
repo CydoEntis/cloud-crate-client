@@ -42,3 +42,18 @@ export const uploadFileSchema = z.object({
       message: "Each file must be under 10MB.",
     }),
 });
+
+export const renameFileSchema = z.object({
+  name: z
+    .string()
+    .min(1, "File name is required")
+    .max(200, "File name too long")
+    .refine((name) => !/[\/\\:*?"<>|]/.test(name), 'File name cannot contain: / \\ : * ? " < > |')
+    .refine((name) => !/^\.+$/.test(name), "File name cannot be only dots")
+    .refine((name) => !name.startsWith(" ") && !name.endsWith(" "), "File name cannot start or end with spaces")
+    .refine(
+      (name) => !/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i.test(name),
+      "File name cannot be a reserved system name"
+    )
+    .refine((name) => !/[\x00-\x1f\x7f]/.test(name), "File name cannot contain control characters"),
+});

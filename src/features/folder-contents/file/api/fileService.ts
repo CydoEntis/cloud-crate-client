@@ -1,6 +1,6 @@
 import apiService from "@/shared/lib/api/ApiService";
 import type { ApiResponse } from "@/shared/lib/sharedTypes";
-import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile } from "../fileTypes";
+import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile, UpdateFileRequest } from "../fileTypes";
 
 export const fileService = {
   async getFile(crateId: string, fileId: string): Promise<CrateFile> {
@@ -82,6 +82,21 @@ export const fileService = {
     }
 
     return result;
+  },
+
+  async updateFile(crateId: string, fileId: string, updateData: UpdateFileRequest): Promise<void> {
+    const payload = {
+      fileId: fileId,
+      newName: updateData.newName,
+    };
+
+    const response = await apiService.put<ApiResponse<void>>(`/crates/${crateId}/files/${fileId}`, payload);
+    const { isSuccess, message, errors } = response.data;
+
+    if (!isSuccess) {
+      console.error("Failed to update file:", errors);
+      throw new Error(message ?? "Failed to update file");
+    }
   },
 
   async moveFile(crateId: string, fileId: string, moveData: MoveFile): Promise<void> {

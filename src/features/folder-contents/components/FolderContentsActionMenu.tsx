@@ -26,10 +26,21 @@ function FolderContentsActionMenu({ row, currentMember, onEditFolder, onEditFile
 
   const currentMemberUserId = currentMember?.userId;
   const currentMemberRole = currentMember?.role;
-  const canManage =
-    currentMemberRole === CrateRole.Owner ||
-    currentMemberRole === CrateRole.Manager ||
-    (currentMemberRole === CrateRole.Member && row.uploader?.id === currentMemberUserId);
+  const canManage = (() => {
+    if (currentMemberRole === CrateRole.Owner || currentMemberRole === CrateRole.Manager) {
+      return true;
+    }
+
+    if (currentMemberRole === CrateRole.Member) {
+      if (row.isFolder) {
+        return (row as any).createdByUserId === currentMemberUserId;
+      } else {
+        return (row as any).uploader?.id === currentMemberUserId;
+      }
+    }
+
+    return false;
+  })();
 
   const softDeleteFolderMutation = useDeleteFolder();
   const softDeleteFileMutation = useSoftDeleteFile();

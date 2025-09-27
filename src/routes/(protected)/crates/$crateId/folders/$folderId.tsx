@@ -9,6 +9,7 @@ import FolderContentsPageHeader from "@/features/folder-contents/components/Folo
 import FileUpload from "@/features/folder-contents/file/components/FileUpload";
 import FileTable from "@/features/folder-contents/file/components/FileTable";
 import UpsertFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";
+import RenameFileModal from "@/features/folder-contents/file/components/RenameFileModal";
 import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
 import { folderSearchSchema } from "@/features/folder-contents/sharedSchema";
 
@@ -92,7 +93,6 @@ export default function CrateFolderPage() {
 
   const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
 
-  // Fixed callbacks with stable references
   const handleEditFolder = useCallback((folder: CrateFolder) => {
     setEditingFolder(folder);
   }, []);
@@ -118,7 +118,6 @@ export default function CrateFolderPage() {
     [navigate]
   );
 
-  // Remove columns memo completely to prevent render loop
   const columns = folderContentsColumns(
     flattenedContents,
     crate?.currentMember,
@@ -165,6 +164,8 @@ export default function CrateFolderPage() {
         parentFolderId={folderId}
         folder={editingFolder || undefined}
       />
+
+      <RenameFileModal isOpen={!!editingFile} onClose={handleCloseEditFile} crateId={crateId} file={editingFile} />
 
       {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={handleClosePreview} />}
 

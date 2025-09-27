@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile } from "../fileTypes";
+import type { CrateFile, SingleUploadFile, MultiUploadFile, MoveFile, UpdateFileRequest } from "../fileTypes";
 import { fileService } from "./fileService";
 import { SHARED_KEYS } from "@/features/shared/queryKeys";
 
@@ -70,6 +70,28 @@ export const useUploadFiles = () => {
     onError: (error: Error) => {
       console.error("Failed to upload files:", error);
       toast.error(error.message || "Failed to upload files");
+    },
+  });
+};
+
+export const useUpdateFile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ crateId, fileId, updateData }: { crateId: string; fileId: string; updateData: UpdateFileRequest }) =>
+      fileService.updateFile(crateId, fileId, updateData),
+    onSuccess: (_, { crateId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
+      queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+      toast.success("File updated successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Failed to update file:", error);
+      toast.error(error.message || "Failed to update file");
     },
   });
 };

@@ -30,3 +30,8 @@ export type FileTypeBreakdown = {
   type: string;
   sizeMb: number;
 };
+
+export type UpdateFileRequest = {
+  fileId: string;
+  newName?: string;
+};
