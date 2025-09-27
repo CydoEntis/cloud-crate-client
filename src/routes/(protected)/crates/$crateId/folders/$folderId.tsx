@@ -16,16 +16,11 @@ import folderContentsColumns from "@/features/folder-contents/components/folderC
 import useFolderContentsActions, {
   type FolderPageSearchParams,
 } from "@/features/folder-contents/hooks/useFolderContentsActions";
-import {
-  allowedOrderByValues,
-  orderByLabels,
-  type FolderContentRowItem,
-  type OrderBy,
-} from "@/features/folder-contents/sharedTypes";
+import { type FolderContentRowItem, type OrderBy } from "@/features/folder-contents/sharedTypes";
 import PaginationControls from "@/shared/components/pagination/PaginationControls";
 import { CrateRole } from "@/features/crates/crateTypes";
-import { SearchInput } from "@/shared/components/search/SearchInput";
-import { SortControls } from "@/shared/components/sort/SortControls";
+import FolderFilters from "@/features/folder-contents/folder/components/FolderFilters";
+import { useFolderFilters } from "@/features/folder-contents/folder/hooks/useFolderFilters";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
   validateSearch: zodValidator(folderSearchSchema),
@@ -47,15 +42,28 @@ export default function CrateFolderPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const searchParams = useMemo<FolderPageSearchParams>(
+  const currentFilters = useMemo(
     () => ({
-      page: search.page ?? 1,
-      pageSize: search.pageSize ?? 10,
       searchTerm: search.search ?? "",
       orderBy: (search.orderBy ?? "Name") as OrderBy,
       ascending: search.ascending ?? false,
+      page: search.page ?? 1,
+      pageSize: search.pageSize ?? 10,
     }),
-    [search.page, search.pageSize, search.search, search.orderBy, search.ascending]
+    [search]
+  );
+
+  const filterControls = useFolderFilters(currentFilters, navigate);
+
+  const searchParams = useMemo<FolderPageSearchParams>(
+    () => ({
+      page: currentFilters.page,
+      pageSize: currentFilters.pageSize,
+      searchTerm: currentFilters.searchTerm,
+      orderBy: currentFilters.orderBy,
+      ascending: currentFilters.ascending,
+    }),
+    [currentFilters]
   );
 
   const {
@@ -79,31 +87,13 @@ export default function CrateFolderPage() {
 
   const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
 
-  const setSearchParams = useCallback(
-    (params: Partial<typeof search>) => {
+  const handlePageChange = useCallback(
+    (newPage: number) => {
       navigate({
-        search: (old: typeof search) => ({ ...old, ...params }),
+        search: (old) => ({ ...old, page: newPage }),
       });
     },
     [navigate]
-  );
-
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      setSearchParams({ page: newPage });
-    },
-    [setSearchParams]
-  );
-
-  const handleSortChange = useCallback(
-    (value: string) => {
-      if (allowedOrderByValues.includes(value as OrderBy)) {
-        setSearchParams({ orderBy: value as OrderBy, page: 1 });
-      } else {
-        console.warn(`Invalid sort value received: ${value}`);
-      }
-    },
-    [setSearchParams]
   );
 
   const columns = useMemo(
@@ -111,39 +101,12 @@ export default function CrateFolderPage() {
     [selectMode, flattenedContents, crate?.currentMember]
   );
 
-  const sortByOptions = useMemo(
-    () =>
-      allowedOrderByValues.map((val) => ({
-        value: val,
-        label: orderByLabels[val],
-      })),
-    []
-  );
-
   return (
     <FolderPageLayout>
       {crate && <AvailableStorageIndicator crate={crate} />}
       {crate && <FileUpload crateId={crateId} folderId={folderId} />}
 
-      <div className="flex justify-between space-y-4">
-        <SearchInput
-          label="Search Files & Folders"
-          value={searchParams.searchTerm}
-          onChange={(val) => setSearchParams({ search: val, page: 1 })}
-          placeholder="Search files & folders..."
-        />
-
-        <div className="flex gap-2">
-          <SortControls
-            label="Sort By"
-            value={searchParams.orderBy}
-            ascending={searchParams.ascending}
-            options={sortByOptions}
-            onValueChange={handleSortChange}
-            onOrderChange={(asc) => setSearchParams({ ascending: asc, page: 1 })}
-          />
-        </div>
-      </div>
+      <FolderFilters filterControls={filterControls} />
 
       <FileTable
         crateId={crateId}
@@ -160,8 +123,8 @@ export default function CrateFolderPage() {
 
       {totalItems > 0 && (
         <PaginationControls
-          page={searchParams.page}
-          pageSize={searchParams.pageSize}
+          page={currentFilters.page}
+          pageSize={currentFilters.pageSize}
           totalCount={totalItems}
           onPageChange={handlePageChange}
         />
