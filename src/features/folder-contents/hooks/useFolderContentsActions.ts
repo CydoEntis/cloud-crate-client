@@ -33,7 +33,7 @@ function useFolderContentsActions({ crateId, folderId, searchParams }: UseFolder
   const crateQuery = useCrateDetails(crateId);
   const availableFoldersQuery = useGetAvailableMoveTargets({
     crateId,
-    excludeFolderId: folderId,
+    excludeFolderIds: folderId ? [folderId] : undefined,
     currentFolderId: folderId,
   });
 
