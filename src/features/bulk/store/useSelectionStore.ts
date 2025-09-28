@@ -1,4 +1,3 @@
-// src/features/folder/store/useSelectionStore.ts
 import { create } from "zustand";
 
 interface FolderContentRowItem {

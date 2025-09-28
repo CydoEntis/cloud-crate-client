@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -56,6 +56,10 @@ export default function CrateFolderPage() {
 
   const { getFinalMoveSelection, clearSelection } = useSelectionStore();
 
+  useEffect(() => {
+    clearSelection();
+  }, [folderId, clearSelection]);
+
   const currentFilters = useMemo(
     () => ({
       searchTerm: search.search ?? "",
@@ -83,13 +87,11 @@ export default function CrateFolderPage() {
   const {
     crate,
     folderData,
-    availableFolders,
     flattenedContents,
     isLoading,
     totalItems,
     previewFile,
     isCreateFolderOpen,
-    selectMode,
     handlePreviewFile,
     handleClosePreview,
     handleOpenCreateFolder,
@@ -133,14 +135,6 @@ export default function CrateFolderPage() {
     }
   }, [crateId, getFinalMoveSelection, clearSelection, refetch]);
 
-  const handleCloseMoveDialog = useCallback(() => {
-    setMoveDialogOpen(false);
-    setItemToMove(null);
-  }, []);
-
-  const handleCloseBulkMoveDialog = useCallback(() => {
-    setBulkMoveDialogOpen(false);
-  }, []);
 
   const handleCloseEditFolder = useCallback(() => {
     setEditingFolder(null);
@@ -158,6 +152,11 @@ export default function CrateFolderPage() {
     },
     [navigate]
   );
+
+  const handleMoveDialogSuccess = useCallback(() => {
+    clearSelection();
+    refetch();
+  }, [clearSelection, refetch]);
 
   const columns = folderContentsColumns(
     flattenedContents,
@@ -222,7 +221,7 @@ export default function CrateFolderPage() {
         currentFolderId={folderId}
         crateId={crateId}
         isBulkOperation={bulkMoveDialogOpen}
-        onSuccess={refetch}
+        onSuccess={handleMoveDialogSuccess}
       />
 
       {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={handleClosePreview} />}
