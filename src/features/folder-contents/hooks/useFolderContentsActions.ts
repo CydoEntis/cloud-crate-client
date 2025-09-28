@@ -31,7 +31,11 @@ function useFolderContentsActions({ crateId, folderId, searchParams }: UseFolder
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
 
   const crateQuery = useCrateDetails(crateId);
-  const availableFoldersQuery = useGetAvailableMoveTargets(crateId);
+  const availableFoldersQuery = useGetAvailableMoveTargets({
+    crateId,
+    excludeFolderId: folderId,
+    currentFolderId: folderId,
+  });
 
   const folderContentsQuery = useGetFolderContents(crateId, folderId, {
     page: searchParams.page,

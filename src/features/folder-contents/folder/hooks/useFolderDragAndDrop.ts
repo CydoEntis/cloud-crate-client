@@ -18,7 +18,9 @@ export function useFolderDragAndDrop(crateId: string) {
         await moveFolderMutation.mutateAsync({
           crateId,
           folderId: item.id,
-          moveData: { newParentId: targetFolderId },
+          moveData: {
+            newParentId: targetFolderId,
+          },
         });
       } else {
         await moveFileMutation.mutateAsync({

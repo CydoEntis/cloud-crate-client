@@ -53,13 +53,15 @@ function MoveDialog({ isOpen, onClose, item, currentFolderId, crateId }: MoveDia
   const handleMoveToFolder = useCallback(
     async (targetFolderId: string | null) => {
       if (!item) return;
-
       try {
         if (item.isFolder) {
           await moveFolderMutation.mutateAsync({
             crateId,
             folderId: item.id,
-            moveData: { newParentFolderId: targetFolderId },
+            moveData: {
+              folderId: item.id,
+              newParentId: targetFolderId, // ✅ Fixed property name
+            },
           });
         } else {
           await moveFileMutation.mutateAsync({

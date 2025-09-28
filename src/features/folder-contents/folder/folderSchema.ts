@@ -41,3 +41,8 @@ export const updateFolderSchema = z.object({
     .regex(/^#[0-9A-Fa-f]{6}$/, "Invalid color format")
     .optional(),
 });
+
+
+export const moveFolderSchema = z.object({
+  newParentId: z.string().uuid("Invalid parent folder ID").nullable(),
+});

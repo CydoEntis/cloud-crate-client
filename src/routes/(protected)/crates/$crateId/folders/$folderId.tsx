@@ -193,7 +193,12 @@ export default function CrateFolderPage() {
 
       {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={handleClosePreview} />}
 
-      <BulkActionBar crateId={crateId} folderId={folderId} folderDestinations={availableFolders} refetch={refetch} />
+      <BulkActionBar
+        crateId={crateId}
+        folderId={folderId}
+        folderDestinations={availableFolders?.items || []} 
+        refetch={refetch}
+      />
     </FolderPageLayout>
   );
 }

@@ -87,9 +87,9 @@ export const useMoveFolder = () => {
         queryKey: ["folder-contents", crateId],
         exact: false,
       });
-      if (moveData.newParentFolderId) {
+      if (moveData.newParentId) {
         queryClient.invalidateQueries({
-          queryKey: folderKeys.contents(crateId, moveData.newParentFolderId),
+          queryKey: folderKeys.contents(crateId, moveData.newParentId),
         });
       } else {
         queryClient.invalidateQueries({

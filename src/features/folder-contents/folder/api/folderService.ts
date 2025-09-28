@@ -10,6 +10,7 @@ import type {
   FolderResponse,
   GetAvailableMoveTargetsRequest,
 } from "../folderTypes";
+import { moveFolderSchema } from "../folderSchema";
 
 export const folderService = {
   async createFolder(data: CreateFolder): Promise<CrateFolder> {
@@ -89,7 +90,12 @@ export const folderService = {
   },
 
   async moveFolder(crateId: string, folderId: string, moveData: MoveFolder): Promise<void> {
-    const response = await apiService.put<ApiResponse<void>>(`/crates/${crateId}/folders/${folderId}/move`, moveData);
+    const validatedData = moveFolderSchema.parse(moveData);
+
+    const response = await apiService.put<ApiResponse<void>>(
+      `/crates/${crateId}/folders/${folderId}/move`,
+      validatedData
+    );
     const { isSuccess, message, errors } = response.data;
 
     if (!isSuccess) {

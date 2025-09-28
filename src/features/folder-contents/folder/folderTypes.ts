@@ -30,6 +30,8 @@ export type GetAvailableMoveTargetsRequest = {
   ascending?: boolean;
 };
 
+
+
 export type GetFolderContentsParams = {
   page?: number;
   pageSize?: number;
