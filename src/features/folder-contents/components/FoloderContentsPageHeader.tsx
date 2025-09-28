@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pencil, UserPlus, X } from "lucide-react";
+import { Pencil, UserPlus, Users, X } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { useCrateDetails } from "@/features/crates/api/crateQueries";
@@ -7,7 +7,7 @@ import { CrateRole } from "@/features/crates/crateTypes";
 import { useParams } from "@tanstack/react-router";
 import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
 import { useMemberPreview } from "@/features/members/api/memberQueries";
-import InviteModal from "@/features/invites/components/InviteModal";
+import InviteModal from "@/features/invites/components/inviteModal";
 
 function FolderContentsPageHeader() {
   const { crateId } = useParams({ from: "/(protected)/crates/$crateId/folders/$folderId" });
@@ -22,7 +22,7 @@ function FolderContentsPageHeader() {
 
   const remainingCount = members ? Math.max(0, members.totalCount - members.items.length) : 0;
 
-  const handleInvite = () => {
+  const handleMembersClick = () => {
     setInviteModalOpen(true);
   };
 
@@ -49,28 +49,37 @@ function FolderContentsPageHeader() {
               )}
             </div>
 
-            {canManage && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-primary text-primary hover:bg-primary/20 hover:text-primary"
-                  onClick={handleInvite}
-                >
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-primary text-primary hover:bg-primary/20 hover:text-primary"
+              onClick={handleMembersClick}
+            >
+              {canManage ? (
+                <>
                   <UserPlus className="h-4 w-4 mr-2" />
                   Invite
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary/30 cursor-pointer hover:text-primary"
-                  onClick={() => open(crate.id)}
-                >
-                  <Pencil className="h-4 w-4 mr-2" />
-                  Edit
-                </Button>
-              </>
+                </>
+              ) : (
+                <>
+                  <Users className="h-4 w-4 mr-2" />
+                  Members
+                </>
+              )}
+            </Button>
+
+            {canManage && (
+              <Button
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary/30 cursor-pointer hover:text-primary"
+                onClick={() => open(crate.id)}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
             )}
           </div>
+
           {canLeave && (
             <Button
               variant="outline"

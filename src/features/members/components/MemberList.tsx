@@ -66,9 +66,6 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
                     {member.displayName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                {member.userId === currentUserId && (
-                  <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-background" />
-                )}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -104,9 +101,9 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
                   </SelectContent>
                 </Select>
               ) : (
-                <span className="text-sm text-muted-foreground w-[120px] text-center">
-                  {member.role}
-                </span>
+             <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-muted-foreground">{member.role}</span>
+                </div>
               )}
 
               {canRemoveMember(member) && (

@@ -25,7 +25,7 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
     setPage,
     handleSearch,
     resetPagination,
-  } = usePaginatedMembersModal(crateId, 1);
+  } = usePaginatedMembersModal(crateId, 10);
 
   const assignRoleMutation = useAssignRole(crateId);
   const removeMemberMutation = useRemoveMember(crateId);
