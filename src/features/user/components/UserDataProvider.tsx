@@ -18,13 +18,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   useEffect(() => {
     if (initRef.current) {
-      console.log("🔄 Auth already initialized, skipping...");
       return;
     }
-
-    console.log("🔄 UserDataProvider initializing...", {
-      isAuthenticated,
-    });
 
     initRef.current = true;
     setAuthInitialized(true);
@@ -42,17 +37,14 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   useEffect(() => {
     if (user) {
-      console.log("👤 User data loaded successfully");
       setUser(user);
     } else if (isError) {
-      console.error("❌ Failed to load user data:", error);
       setLoading(false);
     }
   }, [user, isError, error, setUser, setLoading]);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      console.log("👤 Not authenticated, clearing user data");
       clearUser();
     }
   }, [isAuthenticated, clearUser]);

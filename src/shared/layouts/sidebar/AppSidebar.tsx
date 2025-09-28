@@ -25,19 +25,11 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
   const user = useUserStore((state) => state.user);
 
-  // 🔍 DEBUG: Let's see what's happening in sidebar
-  console.log("🔍 AppSidebar Debug:", {
-    isLoading,
-    user: user ? "exists" : "null",
-    willShowSkeleton: isLoading,
-  });
 
   if (isLoading) {
-    console.log("🎨 Rendering AppSidebarSkeleton");
     return <AppSidebarSkeleton {...props} />;
   }
 
-  console.log("🎨 Rendering normal AppSidebar");
   return (
     <Sidebar {...props} className="border-none">
       <SidebarContent className="bg-sidebar flex flex-col justify-between h-full">

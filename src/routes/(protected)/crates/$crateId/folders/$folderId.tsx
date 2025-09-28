@@ -103,6 +103,9 @@ export default function CrateFolderPage() {
 
   const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
 
+  console.log("Logged in users ROLE: ", crate?.currentMember.role);
+  console.log("User Id: ", crate?.currentMember.userId);
+
   const handleEditFolder = useCallback((folder: CrateFolder) => {
     setEditingFolder(folder);
   }, []);

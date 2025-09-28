@@ -15,13 +15,6 @@ export function ProtectedLayout({ children }: ProtectedLayoutProps) {
 
   const isSidebarLoading = !user && isUserLoading;
 
-  // 🔍 DEBUG: Let's see what's happening
-  console.log("🔍 ProtectedLayout Debug:", {
-    user: user ? "exists" : "null",
-    isUserLoading,
-    isSidebarLoading,
-  });
-
   return (
     <SidebarProvider>
       <UpsertCrateModal />

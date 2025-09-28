@@ -6,6 +6,7 @@ import InviteForm from "./InviteForm";
 import { usePaginatedMembersModal } from "@/features/members/hooks/usePaginatedMembersModal";
 import { SearchInput } from "@/shared/components/search/SearchInput";
 import PaginationControls from "@/shared/components/pagination/PaginationControls";
+import { Separator } from "@/shared/components/ui/separator";
 
 type InviteModalProps = {
   currentUserRole: CrateRole;
@@ -63,6 +64,8 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
           <p className="text-sm text-muted-foreground">Invite your team to collaborate on this crate.</p>
 
           <InviteForm crateId={crateId} />
+
+          <Separator />
 
           <SearchInput placeholder="Search members..." value={searchTerm} onChange={handleSearch} delay={300} />
 

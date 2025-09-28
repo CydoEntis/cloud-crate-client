@@ -57,7 +57,7 @@ export function ThemeProvider({
     root.classList.add(actualTheme);
     setResolvedTheme(actualTheme);
 
-    console.log(`🎨 Theme applied: ${actualTheme} (from ${theme})`);
+
   }, [theme]);
 
   useEffect(() => {
@@ -73,7 +73,6 @@ export function ThemeProvider({
       root.classList.add(newTheme);
       setResolvedTheme(newTheme);
 
-      console.log(`🎨 System theme changed to: ${newTheme}`);
     };
 
     mediaQuery.addEventListener("change", handleChange);
@@ -87,7 +86,6 @@ export function ThemeProvider({
       try {
         localStorage.setItem(storageKey, newTheme);
         setTheme(newTheme);
-        console.log(`🎨 Theme set to: ${newTheme}`);
       } catch (error) {
         console.warn("Failed to save theme to localStorage:", error);
         setTheme(newTheme);

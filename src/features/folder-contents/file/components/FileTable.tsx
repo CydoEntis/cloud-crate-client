@@ -54,26 +54,29 @@ function FileTable({
   useEffect(() => {
     if (isMobile) {
       setColumnVisibility({
+        select: true,
         name: true,
-        uploadedByDisplayName: false,
+        uploadedBy: false,
         createdAt: false,
-        sizeInBytes: false,
+        size: false,
         controls: true,
       });
     } else if (isTablet) {
       setColumnVisibility({
+        select: true,
         name: true,
-        uploadedByDisplayName: true,
+        uploadedBy: false,
         createdAt: false,
-        sizeInBytes: false,
+        size: false,
         controls: true,
       });
     } else if (isDesktop) {
       setColumnVisibility({
+        select: true,
         name: true,
-        uploadedByDisplayName: true,
+        uploadedBy: true,
         createdAt: true,
-        sizeInBytes: true,
+        size: true,
         controls: true,
       });
     }
@@ -92,6 +95,8 @@ function FileTable({
     enableColumnResizing: true,
     defaultColumn: { size: 10 },
   });
+
+  console.log("Crate items: ", items);
 
   const getRowClass = (row: Row<any>) => (row.original.isFolder ? "cursor-pointer hover:bg-muted/30" : "");
 

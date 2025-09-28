@@ -30,13 +30,7 @@ export const useAuthStore = create<AuthStore>()(
         isLoading: false,
 
         setAuth: (tokens) => {
-          console.log("🔧 setAuth called with:", {
-            hasToken: !!tokens.accessToken,
-            expires: tokens.accessTokenExpires,
-          });
-
           if (!tokens.accessToken || !tokens.accessTokenExpires) {
-            console.error("⚠️ setAuth called with invalid tokens");
             return;
           }
 
@@ -49,10 +43,7 @@ export const useAuthStore = create<AuthStore>()(
         },
 
         updateAccessToken: (accessToken, expires) => {
-          console.log("🔧 updateAccessToken called");
-
           if (!accessToken || !expires) {
-            console.error("⚠️ updateAccessToken called with invalid data");
             return;
           }
 
@@ -63,7 +54,6 @@ export const useAuthStore = create<AuthStore>()(
         },
 
         clearMemoryAuth: () => {
-          console.log("🔧 clearMemoryAuth called - clearing tokens but keeping auth status");
           set({
             accessToken: null,
             accessTokenExpires: null,
@@ -72,8 +62,6 @@ export const useAuthStore = create<AuthStore>()(
         },
 
         logout: () => {
-          console.log("🚨 Full logout - removing all auth data");
-
           localStorage.removeItem("auth-store");
 
           set({
@@ -120,10 +108,7 @@ export const useAuthStore = create<AuthStore>()(
         version: 1,
         onRehydrateStorage: () => (state) => {
           if (state) {
-            console.log("🏪 Auth store rehydrated - authenticated:", state.isAuthenticated);
-
             if (state.isAuthenticated && !state.accessToken) {
-              console.log("🔄 Authenticated but no token in memory - will refresh on first API call");
             }
           }
         },

@@ -20,7 +20,7 @@ interface FolderContentsActionMenuProps {
   currentMember?: Member;
   onEditFolder?: (folder: CrateFolder) => void;
   onEditFile?: (file: CrateFile) => void;
-  onMoveItem?: (item: FolderContentRowItem) => void; // New prop for move functionality
+  onMoveItem?: (item: FolderContentRowItem) => void;
 }
 
 function FolderContentsActionMenu({
@@ -32,34 +32,13 @@ function FolderContentsActionMenu({
 }: FolderContentsActionMenuProps) {
   if ((row as any).isBackRow) return null;
 
-  const currentMemberUserId = currentMember?.userId;
   const currentMemberRole = currentMember?.role;
+  const currentMemberId = currentMember?.userId;
 
-  const canManage = (() => {
-    if (currentMemberRole === CrateRole.Owner || currentMemberRole === CrateRole.Manager) {
-      return true;
-    }
-
-    if (currentMemberRole === CrateRole.Member) {
-      if (row.isFolder) {
-        return (row as any).createdByUserId === currentMemberUserId;
-      } else {
-        return (row as any).uploader?.id === currentMemberUserId;
-      }
-    }
-
-    return false;
-  })();
-
-  // Existing mutations
   const softDeleteFolderMutation = useDeleteFolder();
   const softDeleteFileMutation = useSoftDeleteFile();
   const downloadFileMutation = useDownloadFile();
   const downloadFolderMutation = useDownloadFolder();
-
-  // New move mutations
-  const moveFolderMutation = useMoveFolder();
-  const moveFileMutation = useMoveFile();
 
   const isFolder = (item: FolderContentRowItem): item is CrateFolder => {
     return item.isFolder === true;
@@ -68,6 +47,17 @@ function FolderContentsActionMenu({
   const isFile = (item: FolderContentRowItem): item is CrateFile => {
     return item.isFolder === false;
   };
+
+  const canManage = currentMemberRole === CrateRole.Owner || currentMemberRole === CrateRole.Manager;
+
+  const isOwner =
+    currentMemberId &&
+    ((isFile(row) && row.uploader.userId === currentMemberId) ||
+      (isFolder(row) && row.createdByUserId === currentMemberId));
+
+  const canDelete = canManage || isOwner;
+  const canEdit = canManage || isOwner;
+  const canMove = canManage || isOwner;
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -124,21 +114,27 @@ function FolderContentsActionMenu({
           Download
         </DropdownMenuItem>
 
-        {canManage && (
+        {(canEdit || canMove) && <DropdownMenuSeparator />}
+
+        {canEdit && (
+          <DropdownMenuItem
+            className="hover:bg-background cursor-pointer transition-all duration-300"
+            onClick={handleEdit}
+          >
+            Edit
+          </DropdownMenuItem>
+        )}
+
+        {canMove && (
+          <DropdownMenuItem
+            className="hover:bg-background cursor-pointer transition-all duration-300"
+            onClick={handleMove}
+          >
+            Move
+          </DropdownMenuItem>
+        )}
+        {canDelete && (
           <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="hover:bg-background cursor-pointer transition-all duration-300"
-              onClick={handleEdit}
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="hover:bg-background cursor-pointer transition-all duration-300"
-              onClick={handleMove}
-            >
-              Move
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="hover:bg-background cursor-pointer transition-all duration-300 text-destructive"
