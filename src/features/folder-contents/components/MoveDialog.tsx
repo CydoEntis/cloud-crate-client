@@ -10,6 +10,8 @@ import { useMoveFolder } from "../folder/api/folderQueries";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import { folderService } from "@/features/folder-contents/folder/api/folderService";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { SHARED_KEYS } from "@/features/shared/queryKeys";
 import type { FolderContentRowItem } from "../sharedTypes";
 
 interface MoveDialogProps {
@@ -36,6 +38,7 @@ function MoveDialog({
   const [ascending, setAscending] = useState(true);
   const [isMovingBulk, setIsMovingBulk] = useState(false);
 
+  const queryClient = useQueryClient();
   const { getFinalMoveSelection, clearSelection, folderIds } = useSelectionStore();
 
   const excludeFolderIds = useMemo(() => {
@@ -124,6 +127,35 @@ function MoveDialog({
     return true;
   }, [currentFolderId, isBulkOperation, getFinalMoveSelection]);
 
+  const invalidateRelevantCaches = useCallback(
+    (targetFolderId: string | null) => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
+        },
+      });
+
+      if (currentFolderId !== undefined) {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, currentFolderId),
+        });
+      }
+      if (targetFolderId) {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, targetFolderId),
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, null),
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+    },
+    [queryClient, crateId, currentFolderId]
+  );
+
   const handleMoveToFolder = useCallback(
     async (targetFolderId: string | null) => {
       if (isBulkOperation) {
@@ -137,6 +169,9 @@ function MoveDialog({
           }
 
           await folderService.bulkMoveItems(crateId, fileIds, selectedFolderIds, targetFolderId);
+
+          invalidateRelevantCaches(targetFolderId);
+
           clearSelection();
           onSuccess?.();
           toast.success("Items moved successfully");
@@ -165,6 +200,10 @@ function MoveDialog({
               moveData: { newParentId: targetFolderId },
             });
           }
+
+          invalidateRelevantCaches(targetFolderId);
+
+          onSuccess?.();
           onClose();
         } catch (error) {
           console.error("Move failed:", error);
@@ -181,6 +220,8 @@ function MoveDialog({
       getFinalMoveSelection,
       clearSelection,
       onSuccess,
+      currentFolderId,
+      invalidateRelevantCaches,
     ]
   );
 

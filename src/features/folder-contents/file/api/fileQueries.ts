@@ -82,8 +82,10 @@ export const useUpdateFile = () => {
       fileService.updateFile(crateId, fileId, updateData),
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
+        },
       });
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
@@ -100,14 +102,30 @@ export const useMoveFile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ crateId, fileId, moveData }: { crateId: string; fileId: string; moveData: MoveFile }) =>
-      fileService.moveFile(crateId, fileId, moveData),
-    onSuccess: (_, { crateId, moveData }) => {
+    mutationFn: ({
+      crateId,
+      fileId,
+      moveData,
+      sourceParentId,
+    }: {
+      crateId: string;
+      fileId: string;
+      moveData: MoveFile;
+      sourceParentId?: string | null;
+    }) => fileService.moveFile(crateId, fileId, moveData),
+    onSuccess: (_, { crateId, moveData, sourceParentId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
+        },
       });
 
+      if (sourceParentId !== undefined) {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, sourceParentId),
+        });
+      }
       if (moveData.newParentId) {
         queryClient.invalidateQueries({
           queryKey: SHARED_KEYS.folderContents(crateId, moveData.newParentId),
@@ -117,6 +135,7 @@ export const useMoveFile = () => {
           queryKey: SHARED_KEYS.folderContents(crateId, null),
         });
       }
+
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
 
@@ -138,8 +157,10 @@ export const useDeleteFile = () => {
       queryClient.removeQueries({ queryKey: fileKeys.detail(crateId, fileId) });
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
+        },
       });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
@@ -161,8 +182,10 @@ export const useSoftDeleteFile = () => {
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({ queryKey: fileKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
+        },
       });
       toast.success("File moved to trash");
     },

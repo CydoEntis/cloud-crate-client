@@ -80,13 +80,29 @@ export const useMoveFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ crateId, folderId, moveData }: { crateId: string; folderId: string; moveData: MoveFolder }) =>
-      folderService.moveFolder(crateId, folderId, moveData),
-    onSuccess: (_, { crateId, moveData }) => {
+    mutationFn: ({ crateId, folderId, moveData, sourceParentId }: { 
+      crateId: string; 
+      folderId: string; 
+      moveData: MoveFolder;
+      sourceParentId?: string | null;
+    }) => folderService.moveFolder(crateId, folderId, moveData),
+    onSuccess: (_, { crateId, moveData, sourceParentId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey.includes("folder-contents") &&
+            queryKey.includes(crateId)
+          );
+        },
       });
+
+      if (sourceParentId !== undefined) {
+        queryClient.invalidateQueries({
+          queryKey: folderKeys.contents(crateId, sourceParentId),
+        });
+      }
       if (moveData.newParentId) {
         queryClient.invalidateQueries({
           queryKey: folderKeys.contents(crateId, moveData.newParentId),
@@ -96,6 +112,7 @@ export const useMoveFolder = () => {
           queryKey: folderKeys.contents(crateId, null),
         });
       }
+
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("Folder moved successfully");
@@ -115,8 +132,14 @@ export const useDeleteFolder = () => {
       folderService.deleteFolder(crateId, folderId),
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey.includes("folder-contents") &&
+            queryKey.includes(crateId)
+          );
+        },
       });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
@@ -158,8 +181,14 @@ export const useEmptyTrash = () => {
     onSuccess: (_, crateId) => {
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey.includes("folder-contents") &&
+            queryKey.includes(crateId)
+          );
+        },
       });
       toast.success("Trash emptied successfully");
     },
@@ -189,8 +218,14 @@ export const useUpdateFolder = () => {
       }),
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey.includes("folder-contents") &&
+            queryKey.includes(crateId)
+          );
+        },
       });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
@@ -212,18 +247,45 @@ export const useBulkMoveItems = () => {
       fileIds,
       folderIds,
       newParentId,
+      sourceParentId,
     }: {
       crateId: string;
       fileIds: string[];
       folderIds: string[];
       newParentId: string | null;
+      sourceParentId?: string | null;
     }) => folderService.bulkMoveItems(crateId, fileIds, folderIds, newParentId),
 
-    onSuccess: (_, { crateId }) => {
+    onSuccess: (_, { crateId, newParentId, sourceParentId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey.includes("folder-contents") &&
+            queryKey.includes(crateId)
+          );
+        },
       });
+
+      if (sourceParentId !== undefined) {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, sourceParentId),
+        });
+      }
+      if (newParentId) {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, newParentId),
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: SHARED_KEYS.folderContents(crateId, null),
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+
       toast.success("Items moved successfully");
     },
     onError: (error: Error) => {
@@ -239,11 +301,16 @@ export const useBulkSoftDeleteItems = () => {
   return useMutation({
     mutationFn: ({ crateId, fileIds, folderIds }: { crateId: string; fileIds: string[]; folderIds: string[] }) =>
       folderService.bulkSoftDeleteItems(crateId, fileIds, folderIds),
-
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["folder-contents", crateId],
-        exact: false,
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey.includes("folder-contents") &&
+            queryKey.includes(crateId)
+          );
+        },
       });
       toast.success("Items deleted successfully");
     },
