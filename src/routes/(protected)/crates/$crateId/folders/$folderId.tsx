@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import type { ColumnDef } from "@tanstack/react-table";
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
-import BulkActionBar from "@/features/bulk/components/BulkActionToolbar";
 import FolderContentsError from "@/features/folder-contents/components/FolderContentsError";
 import FolderContentsPageHeader from "@/features/folder-contents/components/FoloderContentsPageHeader";
 import FileUpload from "@/features/folder-contents/file/components/FileUpload";
@@ -11,8 +10,11 @@ import FileTable from "@/features/folder-contents/file/components/FileTable";
 import UpsertFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";
 import RenameFileModal from "@/features/folder-contents/file/components/RenameFileModal";
 import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
-import MoveDialog from "@/features/folder-contents/components/MoveDialog"; // Add this import
+import MoveDialog from "@/features/folder-contents/components/MoveDialog";
 import { folderSearchSchema } from "@/features/folder-contents/sharedSchema";
+import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
+import { folderService } from "@/features/folder-contents/folder/api/folderService";
+import { toast } from "sonner";
 
 import useFolderContentsActions, {
   type FolderPageSearchParams,
@@ -49,7 +51,10 @@ export default function CrateFolderPage() {
   const [editingFolder, setEditingFolder] = useState<CrateFolder | null>(null);
   const [editingFile, setEditingFile] = useState<CrateFile | null>(null);
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+  const [bulkMoveDialogOpen, setBulkMoveDialogOpen] = useState(false);
   const [itemToMove, setItemToMove] = useState<FolderContentRowItem | null>(null);
+
+  const { getFinalMoveSelection, clearSelection } = useSelectionStore();
 
   const currentFilters = useMemo(
     () => ({
@@ -104,15 +109,37 @@ export default function CrateFolderPage() {
     setEditingFile(file);
   }, []);
 
-  // Add move handlers
   const handleMoveItem = useCallback((item: FolderContentRowItem) => {
     setItemToMove(item);
     setMoveDialogOpen(true);
   }, []);
 
+  const handleBulkMove = useCallback(() => {
+    setBulkMoveDialogOpen(true);
+  }, []);
+
+  const handleBulkDelete = useCallback(async () => {
+    const { fileIds, folderIds } = getFinalMoveSelection();
+    if (fileIds.length === 0 && folderIds.length === 0) return;
+
+    try {
+      await folderService.bulkSoftDeleteItems(crateId, fileIds, folderIds);
+      clearSelection();
+      refetch();
+      toast.success("Items deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete items:", error);
+      toast.error("Failed to delete items");
+    }
+  }, [crateId, getFinalMoveSelection, clearSelection, refetch]);
+
   const handleCloseMoveDialog = useCallback(() => {
     setMoveDialogOpen(false);
     setItemToMove(null);
+  }, []);
+
+  const handleCloseBulkMoveDialog = useCallback(() => {
+    setBulkMoveDialogOpen(false);
   }, []);
 
   const handleCloseEditFolder = useCallback(() => {
@@ -132,13 +159,12 @@ export default function CrateFolderPage() {
     [navigate]
   );
 
-  // Pass the move handler to columns
   const columns = folderContentsColumns(
     flattenedContents,
     crate?.currentMember,
     handleEditFolder,
     handleEditFile,
-    handleMoveItem // Add this parameter
+    handleMoveItem
   ) as ColumnDef<FolderContentRowItem>[];
 
   return (
@@ -158,6 +184,8 @@ export default function CrateFolderPage() {
         onDropItem={(item, targetFolderId) => handleDropItem(item, targetFolderId)}
         onPreviewFile={handlePreviewFile}
         onCreateFolder={handleOpenCreateFolder}
+        onBulkMove={handleBulkMove}
+        onBulkDelete={handleBulkDelete}
         isLoading={isLoading}
       />
 
@@ -184,21 +212,20 @@ export default function CrateFolderPage() {
       <RenameFileModal isOpen={!!editingFile} onClose={handleCloseEditFile} crateId={crateId} file={editingFile} />
 
       <MoveDialog
-        isOpen={moveDialogOpen}
-        onClose={handleCloseMoveDialog}
+        isOpen={moveDialogOpen || bulkMoveDialogOpen}
+        onClose={() => {
+          setMoveDialogOpen(false);
+          setBulkMoveDialogOpen(false);
+          setItemToMove(null);
+        }}
         item={itemToMove}
         currentFolderId={folderId}
         crateId={crateId}
+        isBulkOperation={bulkMoveDialogOpen}
+        onSuccess={refetch}
       />
 
       {previewFile && <FilePreviewPanel crateId={crateId} fileId={previewFile.id} onClose={handleClosePreview} />}
-
-      <BulkActionBar
-        crateId={crateId}
-        folderId={folderId}
-        folderDestinations={availableFolders?.items || []} 
-        refetch={refetch}
-      />
     </FolderPageLayout>
   );
 }

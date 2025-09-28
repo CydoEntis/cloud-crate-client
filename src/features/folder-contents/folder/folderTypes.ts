@@ -22,7 +22,7 @@ export type FolderResponse = {
 
 export type GetAvailableMoveTargetsRequest = {
   crateId: string;
-  excludeFolderId?: string;
+  excludeFolderIds?: string[];
   currentFolderId?: string | null;
   searchTerm?: string;
   page?: number;

@@ -17,12 +17,12 @@ export const folderKeys = {
   contents: (crateId: string, folderId?: string | null) => SHARED_KEYS.folderContents(crateId, folderId),
   moveTargets: (
     crateId: string,
-    excludeId?: string,
+    excludeIds?: string[],
     searchTerm?: string,
     page?: number,
     ascending?: boolean,
     currentFolderId?: string | null
-  ) => [...folderKeys.all, "move-targets", crateId, excludeId, searchTerm, page, ascending, currentFolderId] as const,
+  ) => [...folderKeys.all, "move-targets", crateId, excludeIds, searchTerm, page, ascending, currentFolderId] as const,
 };
 
 export const useGetFolderContents = (
@@ -45,7 +45,7 @@ export const useGetAvailableMoveTargets = (request: GetAvailableMoveTargetsReque
   return useQuery<PaginatedResult<FolderResponse>, Error>({
     queryKey: folderKeys.moveTargets(
       request.crateId,
-      request.excludeFolderId,
+      request.excludeFolderIds, 
       request.searchTerm,
       request.page,
       request.ascending,
@@ -199,6 +199,57 @@ export const useUpdateFolder = () => {
     onError: (error: Error) => {
       console.error("Failed to update folder:", error);
       toast.error(error.message || "Failed to update folder");
+    },
+  });
+};
+
+export const useBulkMoveItems = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      crateId,
+      fileIds,
+      folderIds,
+      newParentId,
+    }: {
+      crateId: string;
+      fileIds: string[];
+      folderIds: string[];
+      newParentId: string | null;
+    }) => folderService.bulkMoveItems(crateId, fileIds, folderIds, newParentId),
+
+    onSuccess: (_, { crateId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
+      toast.success("Items moved successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Failed to move items:", error);
+      toast.error(error.message || "Failed to move items");
+    },
+  });
+};
+
+export const useBulkSoftDeleteItems = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ crateId, fileIds, folderIds }: { crateId: string; fileIds: string[]; folderIds: string[] }) =>
+      folderService.bulkSoftDeleteItems(crateId, fileIds, folderIds),
+
+    onSuccess: (_, { crateId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["folder-contents", crateId],
+        exact: false,
+      });
+      toast.success("Items deleted successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Failed to delete items:", error);
+      toast.error(error.message || "Failed to delete items");
     },
   });
 };

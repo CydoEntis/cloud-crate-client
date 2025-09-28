@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanstack/react-table";
 import { useMediaQuery } from "usehooks-ts";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Move } from "lucide-react";
 import { Table, TableBody } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import GenericTableHeader from "@/shared/components/table/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/table/GenericTableRow";
-import { useEmptyTrash } from "@/features/folder-contents/folder/api/folderQueries";
+import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import type { FolderContentRowItem, FolderContents } from "../../sharedTypes";
 import type { FolderBreadcrumb } from "../../folder/folderTypes";
 import type { CrateFile } from "../fileTypes";
@@ -19,13 +19,14 @@ type FileTableProps = {
   columns: ColumnDef<FolderContentRowItem>[];
   breadcrumbs: FolderBreadcrumb[];
   isLoading?: boolean;
-  canManage?: boolean; // Add this prop
-  hasTrash?: boolean; // Add this prop
+  canManage?: boolean;
   onNavigate?: (folderId: string | null) => void;
   onDropItem?: (item: { id: string; isFolder: boolean }, targetFolderId: string | null) => void;
   onPreviewFile?: (file: CrateFile) => void;
   onBreadcrumbAction?: (action: string, folderId: string) => void;
-  onCreateFolder?: () => void; // Add this prop
+  onCreateFolder?: () => void;
+  onBulkMove?: () => void;
+  onBulkDelete?: () => void;
 };
 
 function FileTable({
@@ -39,11 +40,16 @@ function FileTable({
   onPreviewFile,
   onBreadcrumbAction,
   onCreateFolder,
+  onBulkMove,
+  onBulkDelete,
 }: FileTableProps) {
   const isMobile = useMediaQuery("(max-width: 719px)");
   const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
   const isDesktop = useMediaQuery("(min-width: 1200px)");
   const [columnVisibility, setColumnVisibility] = useState({});
+
+  const { fileIds, folderIds } = useSelectionStore();
+  const selectedCount = fileIds.size + folderIds.size;
 
   useEffect(() => {
     if (isMobile) {
@@ -119,8 +125,22 @@ function FileTable({
       <div className="flex justify-between items-center gap-2">
         <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
 
-        {canManage && (
-          <div className="flex items-center gap-2 py-2">
+        <div className="flex items-center gap-2 py-2">
+          {selectedCount > 0 && (
+            <>
+              <span className="text-sm text-muted-foreground mr-2">{selectedCount} selected</span>
+              <Button variant="outline" size="sm" onClick={onBulkMove} className="flex items-center gap-2">
+                <Move className="h-4 w-4" />
+                Move
+              </Button>
+              <Button variant="outline" size="sm" onClick={onBulkDelete} className="flex items-center gap-2">
+                <Trash2 className="h-4 w-4" />
+                Delete
+              </Button>
+            </>
+          )}
+
+          {canManage && (
             <Button
               variant="outline"
               size="sm"
@@ -130,8 +150,8 @@ function FileTable({
               <Plus className="h-4 w-4 mr-2" />
               New Folder
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <Table>

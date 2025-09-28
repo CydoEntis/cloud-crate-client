@@ -69,7 +69,11 @@ export const folderService = {
 
   async getAvailableMoveTargets(request: GetAvailableMoveTargetsRequest): Promise<PaginatedResult<FolderResponse>> {
     const params = new URLSearchParams();
-    if (request.excludeFolderId) params.append("excludeFolderId", request.excludeFolderId);
+
+    if (request.excludeFolderIds?.length) {
+      request.excludeFolderIds.forEach((id) => params.append("excludeFolderIds", id));
+    }
+
     if (request.currentFolderId) params.append("currentFolderId", request.currentFolderId);
     if (request.searchTerm) params.append("searchTerm", request.searchTerm);
     params.append("page", (request.page ?? 1).toString());
@@ -77,15 +81,13 @@ export const folderService = {
     params.append("ascending", (request.ascending ?? true).toString());
 
     const url = `/crates/${request.crateId}/folders/available-move-targets?${params.toString()}`;
-
     const response = await apiService.get<ApiResponse<PaginatedResult<FolderResponse>>>(url);
-    const { data: result, isSuccess, message, errors } = response.data;
 
+    const { data: result, isSuccess, message, errors } = response.data;
     if (!isSuccess || !result) {
       console.error("Failed to get available move targets:", errors);
       throw new Error(message ?? "Failed to fetch available move targets");
     }
-
     return result;
   },
 
@@ -152,6 +154,38 @@ export const folderService = {
     if (!isSuccess) {
       console.error("Failed to empty trash:", errors);
       throw new Error(message ?? "Failed to empty trash");
+    }
+  },
+
+  async bulkMoveItems(
+    crateId: string,
+    fileIds: string[],
+    folderIds: string[],
+    newParentId: string | null
+  ): Promise<void> {
+    const response = await apiService.post<ApiResponse<void>>(`/crates/${crateId}/folders/bulk-move`, {
+      fileIds,
+      folderIds,
+      newParentId,
+    });
+
+    const { isSuccess, message, errors } = response.data;
+    if (!isSuccess) {
+      console.error("Failed to move items:", errors);
+      throw new Error(message ?? "Failed to move items");
+    }
+  },
+
+  async bulkSoftDeleteItems(crateId: string, fileIds: string[], folderIds: string[]): Promise<void> {
+    const response = await apiService.post<ApiResponse<void>>(`/crates/${crateId}/folders/bulk-delete`, {
+      fileIds,
+      folderIds,
+    });
+
+    const { isSuccess, message, errors } = response.data;
+    if (!isSuccess) {
+      console.error("Failed to delete items:", errors);
+      throw new Error(message ?? "Failed to delete items");
     }
   },
 };
