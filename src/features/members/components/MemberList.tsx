@@ -22,26 +22,24 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
   const canRemoveMembers = currentUserRole === CrateRole.Owner || currentUserRole === CrateRole.Manager;
 
   const canEditMember = (member: Member) => {
-    if (member.role === CrateRole.Owner) return false;
-    if (member.userId === currentUserId) return false;
-
-    return canManageRoles;
+    if (!canManageRoles) return false; 
+    if (member.role === CrateRole.Owner) return false; 
+    if (member.userId === currentUserId) return false; 
+    return true;
   };
 
   const canRemoveMember = (member: Member) => {
-    if (member.role === CrateRole.Owner) return false;
-    if (member.userId === currentUserId) return false;
-
-    return canRemoveMembers;
+    if (!canRemoveMembers) return false; 
+    if (member.role === CrateRole.Owner) return false; 
+    if (member.userId === currentUserId) return false; 
+    return true;
   };
 
   const getAvailableRoles = (member: Member) => {
     const allRoles = Object.values(CrateRole).filter((role) => role !== CrateRole.Owner);
-
     if (currentUserRole === CrateRole.Manager) {
       return allRoles.filter((role) => role !== CrateRole.Manager);
     }
-
     return allRoles;
   };
 
@@ -64,7 +62,9 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
               <div className="relative">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={member.profilePicture} alt={member.displayName} />
-                  <AvatarFallback className="text-xs">{member.displayName.charAt(0).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback className="text-xs">
+                    {member.displayName.charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 {member.userId === currentUserId && (
                   <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-background" />
@@ -73,7 +73,9 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-medium truncate">{member.displayName}</p>
-                  {member.userId === currentUserId && <span className="text-xs text-muted-foreground">(You)</span>}
+                  {member.userId === currentUserId && (
+                    <span className="text-xs text-muted-foreground">(You)</span>
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{member.email}</p>
               </div>
@@ -102,7 +104,9 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
                   </SelectContent>
                 </Select>
               ) : (
-                <span className="text-sm text-muted-foreground w-[120px] text-center">{member.role}</span>
+                <span className="text-sm text-muted-foreground w-[120px] text-center">
+                  {member.role}
+                </span>
               )}
 
               {canRemoveMember(member) && (

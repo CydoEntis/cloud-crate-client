@@ -19,11 +19,9 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
   const {
     data: paginatedResult,
     isLoading,
-    error,
     page,
     pageSize,
     searchTerm,
-    totalPages,
     setPage,
     handleSearch,
     resetPagination,
@@ -33,13 +31,19 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
   const removeMemberMutation = useRemoveMember(crateId);
   const members = paginatedResult?.items || [];
 
+  const canManageMembers = currentUserRole === CrateRole.Owner || currentUserRole === CrateRole.Manager;
+
   const handleRoleChange = async (userId: string, newRole: CrateRole) => {
+    if (!canManageMembers) return;
+    
     try {
       await assignRoleMutation.mutateAsync({ userId, role: newRole });
     } catch (error) {}
   };
 
   const handleRemoveMember = async (userId: string) => {
+    if (!canManageMembers) return; 
+    
     try {
       await removeMemberMutation.mutateAsync(userId);
     } catch (error) {}
@@ -57,18 +61,32 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
     <Dialog open={isOpen} onOpenChange={handleModalChange}>
       <DialogContent className="min-w-2xl mx-auto text-foreground border-muted">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-left">Manage Crate Members</DialogTitle>
+          <DialogTitle className="text-xl font-semibold text-left">
+            {canManageMembers ? "Manage Crate Members" : "Crate Members"}
+          </DialogTitle>
         </DialogHeader>
-
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">Invite your team to collaborate on this crate.</p>
-
-          <InviteForm crateId={crateId} />
-
-          <Separator />
-
-          <SearchInput placeholder="Search members..." value={searchTerm} onChange={handleSearch} delay={300} />
-
+          {canManageMembers ? (
+            <>
+              <p className="text-sm text-muted-foreground">
+                Invite your team to collaborate on this crate.
+              </p>
+              <InviteForm crateId={crateId} />
+              <Separator />
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              View members of this crate.
+            </p>
+          )}
+          
+          <SearchInput 
+            placeholder="Search members..." 
+            value={searchTerm} 
+            onChange={handleSearch} 
+            delay={300} 
+          />
+          
           <MembersList
             members={members}
             onRoleChange={handleRoleChange}
@@ -76,7 +94,7 @@ function InviteModal({ currentUserRole, isOpen, onClose, crateId }: InviteModalP
             isLoading={assignRoleMutation.isPending || removeMemberMutation.isPending || isLoading}
             currentUserRole={currentUserRole}
           />
-
+          
           {paginatedResult && (
             <PaginationControls
               align="left"
