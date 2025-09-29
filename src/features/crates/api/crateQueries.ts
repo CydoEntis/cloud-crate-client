@@ -18,6 +18,7 @@ export const crateKeys = {
   list: (params: GetCrateParams) => [...crateKeys.lists(), params] as const,
   details: () => [...crateKeys.all, "detail"] as const,
   detail: (id: string) => [...crateKeys.details(), id] as const,
+  recent: () => [...crateKeys.all, "recent"] as const,
 };
 
 export const useGetCrates = (
@@ -40,9 +41,15 @@ export const useGetCrates = (
 };
 
 export const useCrateDetails = (crateId: string) => {
+  const queryClient = useQueryClient();
+
   return useQuery<CrateDetails, Error>({
     queryKey: SHARED_KEYS.crateDetails(crateId),
-    queryFn: () => crateService.getCrate(crateId),
+    queryFn: async () => {
+      const result = await crateService.getCrate(crateId);
+      queryClient.invalidateQueries({ queryKey: crateKeys.recent() });
+      return result;
+    },
     enabled: !!crateId,
     staleTime: 1000 * 15,
     refetchOnWindowFocus: true,
@@ -159,5 +166,16 @@ export const useBulkLeaveCrates = () => {
       console.error("Failed to leave crates:", error);
       toast.error(error.message || "Failed to leave crates");
     },
+  });
+};
+
+export const useRecentlyAccessedCrates = (count: number = 5) => {
+  return useQuery<CrateSummary[], Error>({
+    queryKey: [...crateKeys.recent(), count],
+    queryFn: () => crateService.getRecentlyAccessedCrates(count),
+    staleTime: 1000 * 30, // 30 seconds - more aggressive since this changes frequently
+    refetchOnWindowFocus: true,
+    refetchInterval: 60000, // Refetch every minute
+    refetchIntervalInBackground: false,
   });
 };

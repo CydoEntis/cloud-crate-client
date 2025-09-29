@@ -106,4 +106,17 @@ export const crateService = {
       throw new Error(message ?? "Failed to leave crates");
     }
   },
+
+  async getRecentlyAccessedCrates(count: number = 5): Promise<CrateSummary[]> {
+    const response = await apiService.get<ApiResponse<CrateSummary[]>>(`/crates/recent?count=${count}`);
+
+    const { data: result, isSuccess, message, errors } = response.data;
+
+    if (!isSuccess || !result) {
+      console.error("Failed to fetch recently accessed crates:", errors);
+      throw new Error(message ?? "Failed to fetch recently accessed crates");
+    }
+
+    return result;
+  },
 };

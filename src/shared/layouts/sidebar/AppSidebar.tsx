@@ -10,6 +10,7 @@ import ThemeToggle from "@/shared/components/theme/ThemeToggle";
 import { SidebarUserSection } from "./SidebarUserSection";
 import AppSidebarSkeleton from "./AppSidebarSkeleton";
 import { Separator } from "@/shared/components/ui/separator";
+import { RecentCratesSection } from "./RecentCratesSection";
 
 const navlinks = [
   { id: "crates", text: "Crates", to: "/crates", icon: <Box /> },
@@ -48,7 +49,9 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
             adminNavlinks.map((link) => (
               <SidebarMenuItem key={link.id} className="my-1">
                 <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
-                <div className="px-4 py-2"><Separator /></div>
+                <div className="px-4 py-2">
+                  <Separator />
+                </div>
               </SidebarMenuItem>
             ))}
 
@@ -59,6 +62,7 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
                 <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
               </SidebarMenuItem>
             ))}
+            <RecentCratesSection />
           </SidebarMenu>
 
           <SidebarMenu className="pt-4 pb-8 px-5">
