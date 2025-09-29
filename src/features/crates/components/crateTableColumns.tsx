@@ -14,8 +14,8 @@ export function crateTableColumns({
 }: {
   crates: CrateSummary[];
   onEdit: (crate: Crate) => void;
-  onDelete: (id: string) => void;
-  onLeave: (id: string) => void;
+  onDelete: (crate: CrateSummary) => void;
+  onLeave: (crate: CrateSummary) => void;
 }) {
   return [
     columnHelper.accessor("name", {

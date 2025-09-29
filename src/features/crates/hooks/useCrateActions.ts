@@ -1,56 +1,44 @@
-import { useState, useCallback } from "react";
-import { useDeleteCrate, useLeaveCrate } from "@/features/crates/api/crateQueries";
-import type { Crate, CrateSummary } from "@/features/crates/crateTypes";
+import { useState } from "react";
+import { useDeleteCrate, useLeaveCrate } from "../api/crateQueries";
+import type { CrateSummary } from "../crateTypes";
 
 type ConfirmAction = {
   type: "delete" | "leave";
   crate: CrateSummary;
-};
+} | null;
 
 export function useCrateActions(crates: CrateSummary[]) {
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
-  const deleteCrateMutation = useDeleteCrate();
-  const leaveCrateMutation = useLeaveCrate();
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
 
-  const handleDeleteCrate = useCallback(
-    (crateId: string) => {
-      const crate = crates?.find((c) => c.id === crateId);
-      if (crate) {
-        setConfirmAction({ type: "delete", crate });
-      }
-    },
-    [crates]
-  );
+  const { mutateAsync: deleteCrate, isPending: isDeleting } = useDeleteCrate();
+  const { mutateAsync: leaveCrate, isPending: isLeaving } = useLeaveCrate();
 
-  const handleLeaveCrate = useCallback(
-    (crateId: string) => {
-      const crate = crates?.find((c) => c.id === crateId);
-      if (crate) {
-        setConfirmAction({ type: "leave", crate });
-      }
-    },
-    [crates]
-  );
+  const handleDeleteCrate = (crate: CrateSummary) => {
+    setConfirmAction({ type: "delete", crate });
+  };
 
-  const handleConfirmAction = useCallback(async () => {
+  const handleLeaveCrate = (crate: CrateSummary) => {
+    setConfirmAction({ type: "leave", crate });
+  };
+
+  const handleConfirmAction = async () => {
     if (!confirmAction) return;
 
-    const { type, crate } = confirmAction;
-
     try {
-      if (type === "delete") {
-        await deleteCrateMutation.mutateAsync(crate.id);
+      if (confirmAction.type === "delete") {
+        await deleteCrate(confirmAction.crate.id);
       } else {
-        await leaveCrateMutation.mutateAsync(crate.id);
+        await leaveCrate(confirmAction.crate.id);
       }
-    } finally {
       setConfirmAction(null);
+    } catch (error) {
+      console.error("Action failed:", error);
     }
-  }, [confirmAction, deleteCrateMutation, leaveCrateMutation]);
+  };
 
-  const handleCancelAction = useCallback(() => {
+  const handleCancelAction = () => {
     setConfirmAction(null);
-  }, []);
+  };
 
   return {
     confirmAction,
@@ -58,7 +46,7 @@ export function useCrateActions(crates: CrateSummary[]) {
     handleLeaveCrate,
     handleConfirmAction,
     handleCancelAction,
-    isDeleting: deleteCrateMutation.isPending,
-    isLeaving: leaveCrateMutation.isPending,
+    isDeleting,
+    isLeaving,
   };
 }

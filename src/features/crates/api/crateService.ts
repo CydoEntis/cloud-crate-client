@@ -68,6 +68,11 @@ export const crateService = {
 
   async deleteCrate(crateId: string): Promise<void> {
     const response = await apiService.delete<ApiResponse<void>>(`/crates/${crateId}`);
+
+    if (response.status === 204) {
+      return;
+    }
+
     const { isSuccess, message, errors } = response.data;
 
     if (!isSuccess) {
