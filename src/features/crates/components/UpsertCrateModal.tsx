@@ -20,6 +20,7 @@ import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { setFormErrors } from "@/shared/utils/errorHandler";
 import { useCrateModalStore } from "../store/crateModalStore";
 import { ColorPicker } from "@/shared/components/color-picker/ColorPicker";
+import { useNavigate } from "@tanstack/react-router";
 
 type FormValues = {
   name: string;
@@ -28,6 +29,7 @@ type FormValues = {
 };
 
 export default function UpsertCrateModal() {
+  const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const [crate, setCrate] = useState<CrateDetails | null>(null);
   const [globalError, setGlobalError] = useState<string | null>(null);
@@ -117,10 +119,20 @@ export default function UpsertCrateModal() {
           storageAllocationGb: data.allocatedStorageGb,
         };
         await run(() => updateCrate({ crateId: crate.id, request: updateData }));
+        handleClose();
       } else {
-        await run(() => createCrate(data));
+        try {
+          const crateId = await createCrate(data);
+          handleClose();
+
+          navigate({
+            to: "/crates/$crateId",
+            params: { crateId: crateId },
+          });
+        } catch (error) {
+          throw error;
+        }
       }
-      handleClose();
     } catch (err) {
       const globalError = setFormErrors(err, form);
       setGlobalError(globalError);

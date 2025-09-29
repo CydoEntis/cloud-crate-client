@@ -19,7 +19,6 @@ export const crateService = {
       console.error("Failed to get crate:", errors);
       throw new Error(message ?? `Failed to fetch crate with id ${crateId}`);
     }
-
     return result;
   },
 
@@ -45,8 +44,8 @@ export const crateService = {
     return result;
   },
 
-  async createCrate(request: CreateCrateRequest): Promise<Crate> {
-    const response = await apiService.post<ApiResponse<Crate>>("/crates", request);
+  async createCrate(request: CreateCrateRequest): Promise<string> {
+    const response = await apiService.post<ApiResponse<string>>("/crates", request);
     const { data: result, isSuccess, message, errors } = response.data;
 
     if (!isSuccess || !result) {

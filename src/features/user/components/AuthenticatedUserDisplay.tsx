@@ -18,12 +18,12 @@ function AuthenticatedUserDisplay() {
         <TruncatedText 
           text={user.displayName} 
           maxLength={15}
-          className="font-semibold block"
+          className="font-semibold block cursor-default"
         />
         <TruncatedText 
           text={user.email} 
           maxLength={15}
-          className="text-sm text-muted-foreground block"
+          className="text-sm text-muted-foreground block cursor-default"
         />
       </div>
     </div>

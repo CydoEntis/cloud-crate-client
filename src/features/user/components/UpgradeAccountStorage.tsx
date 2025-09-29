@@ -61,9 +61,9 @@ function UpgradeAccountStorage({ onUpgradeClick }: UpgradeAccountStorageProps) {
         </div>
       </div>
 
-      <Button className="w-full" variant={actualUsagePercent >= 95 ? "default" : "outline"} onClick={handleUpgradeClick}>
+      {/* <Button className="w-full" variant={actualUsagePercent >= 95 ? "default" : "outline"} onClick={handleUpgradeClick}>
         {actualUsagePercent >= 95 ? "Upgrade Now" : "Get More Storage"}
-      </Button>
+      </Button> */}
     </div>
   );
 }
