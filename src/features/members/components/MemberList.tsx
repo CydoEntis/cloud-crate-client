@@ -35,7 +35,7 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
     return true;
   };
 
-  const getAvailableRoles = (member: Member) => {
+  const getAvailableRoles = () => {
     const allRoles = Object.values(CrateRole).filter((role) => role !== CrateRole.Owner);
     if (currentUserRole === CrateRole.Manager) {
       return allRoles.filter((role) => role !== CrateRole.Manager);
@@ -66,6 +66,7 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
                     {member.displayName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
+
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -93,7 +94,7 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="border-muted">
-                    {getAvailableRoles(member).map((role) => (
+                    {getAvailableRoles().map((role) => (
                       <SelectItem key={role} value={role}>
                         {role}
                       </SelectItem>

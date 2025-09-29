@@ -9,11 +9,11 @@ import SidebarNavlink from "./SidebarNavlink";
 import ThemeToggle from "@/shared/components/theme/ThemeToggle";
 import { SidebarUserSection } from "./SidebarUserSection";
 import AppSidebarSkeleton from "./AppSidebarSkeleton";
+import { Separator } from "@/shared/components/ui/separator";
 
 const navlinks = [
   { id: "crates", text: "Crates", to: "/crates", icon: <Box /> },
-  { id: "deleted", text: "Deleted Files", to: "/deleted", icon: <Trash2 /> },
-  { id: "settings", text: "Settings", to: "/settings", icon: <Settings /> },
+  { id: "trash", text: "Trash", to: "/trash", icon: <Trash2 /> },
 ];
 
 const adminNavlinks = [{ id: "admin", text: "Admin Panel", to: "/admin", icon: <Shield /> }];
@@ -24,7 +24,6 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
   const user = useUserStore((state) => state.user);
-
 
   if (isLoading) {
     return <AppSidebarSkeleton {...props} />;
@@ -45,6 +44,14 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
             <AddCrateButton />
           </SidebarMenu>
 
+          {user?.isAdmin &&
+            adminNavlinks.map((link) => (
+              <SidebarMenuItem key={link.id} className="my-1">
+                <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
+                <div className="px-4 py-2"><Separator /></div>
+              </SidebarMenuItem>
+            ))}
+
           {/* Main Navigation */}
           <SidebarMenu>
             {navlinks.map((link) => (
@@ -52,13 +59,6 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
                 <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
               </SidebarMenuItem>
             ))}
-
-            {user?.isAdmin &&
-              adminNavlinks.map((link) => (
-                <SidebarMenuItem key={link.id} className="my-1">
-                  <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
-                </SidebarMenuItem>
-              ))}
           </SidebarMenu>
 
           <SidebarMenu className="pt-4 pb-8 px-5">
