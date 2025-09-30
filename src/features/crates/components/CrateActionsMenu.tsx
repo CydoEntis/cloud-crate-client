@@ -16,7 +16,7 @@ type CrateActionsMenuProps = {
 };
 
 function CrateActionsMenu({ crate, onDelete, onLeave }: CrateActionsMenuProps) {
-  const { open } = useCrateModalStore();
+  const open = useCrateModalStore((state) => state.open);
 
   const canEdit = crate.currentUserRole === CrateRole.Owner || crate.currentUserRole === CrateRole.Manager;
   const canDelete = crate.currentUserRole === CrateRole.Owner;
@@ -24,7 +24,9 @@ function CrateActionsMenu({ crate, onDelete, onLeave }: CrateActionsMenuProps) {
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    open(crate.id);
+    requestAnimationFrame(() => {
+      open(crate.id);
+    });
   };
 
   const handleDelete = (e: React.MouseEvent) => {

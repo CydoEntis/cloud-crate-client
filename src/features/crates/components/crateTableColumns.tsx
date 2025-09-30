@@ -9,10 +9,10 @@ import UserAvatar from "@/shared/components/avatars/UserAvatar";
 const columnHelper = createColumnHelper<CrateSummary>();
 
 export function crateTableColumns({
+  onEdit,
   onDelete,
   onLeave,
 }: {
-  crates: CrateSummary[];
   onEdit: (crate: Crate) => void;
   onDelete: (crate: CrateSummary) => void;
   onLeave: (crate: CrateSummary) => void;

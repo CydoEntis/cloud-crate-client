@@ -58,6 +58,7 @@ export const crateService = {
 
   async updateCrate(crateId: string, request: UpdateCrateRequest): Promise<void> {
     const response = await apiService.put<ApiResponse<void>>(`/crates/${crateId}`, request);
+
     const { isSuccess, message, errors } = response.data;
 
     if (!isSuccess) {

@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
 import CrateTable from "@/features/crates/components/CrateTable";
 import { crateSearchSchema } from "@/features/crates/crateSchemas";
-import { useGetCrates } from "@/features/crates/api/crateQueries";
+import { useGetCrates, useDeleteCrate, useLeaveCrate } from "@/features/crates/api/crateQueries";
 import { crateTableColumns } from "@/features/crates/components/crateTableColumns";
-import type { Crate } from "@/features/crates/crateTypes";
-import { useCrateActions } from "@/features/crates/hooks/useCrateActions";
+import type { Crate, CrateSummary } from "@/features/crates/crateTypes";
 import { useCrateFilters } from "@/features/crates/hooks/useCrateFilters";
 import CratesPagination from "@/features/crates/components/CratesPagination";
 import CratesConfirmActionDialog from "@/features/crates/components/CratesConfirmActionDialog";
@@ -30,10 +29,16 @@ function CratesPageLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
+type ConfirmAction = {
+  type: "delete" | "leave";
+  crate: CrateSummary;
+} | null;
+
 function CratesPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  const editingCrateId = search.edit ?? null;
+
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
 
   const currentFilters = useMemo(
     () => ({
@@ -48,22 +53,14 @@ function CratesPage() {
   );
 
   const filterControls = useCrateFilters(currentFilters, navigate);
-
   const { data: crates, isPending, error } = useGetCrates(currentFilters);
+
+  const { mutateAsync: deleteCrate, isPending: isDeleting } = useDeleteCrate();
+  const { mutateAsync: leaveCrate, isPending: isLeaving } = useLeaveCrate();
 
   if (error) {
     throw error;
   }
-
-  const {
-    confirmAction,
-    handleDeleteCrate,
-    handleLeaveCrate,
-    handleConfirmAction,
-    handleCancelAction,
-    isDeleting,
-    isLeaving,
-  } = useCrateActions(crates?.items ?? []);
 
   const handleEditCrate = useCallback(
     (crate: Crate) => {
@@ -71,6 +68,33 @@ function CratesPage() {
     },
     [navigate]
   );
+
+  const handleDeleteCrate = useCallback((crate: CrateSummary) => {
+    setConfirmAction({ type: "delete", crate });
+  }, []);
+
+  const handleLeaveCrate = useCallback((crate: CrateSummary) => {
+    setConfirmAction({ type: "leave", crate });
+  }, []);
+
+  const handleConfirmAction = useCallback(async () => {
+    if (!confirmAction) return;
+
+    try {
+      if (confirmAction.type === "delete") {
+        await deleteCrate(confirmAction.crate.id);
+      } else {
+        await leaveCrate(confirmAction.crate.id);
+      }
+      setConfirmAction(null);
+    } catch (error) {
+      console.error("Action failed:", error);
+    }
+  }, [confirmAction, deleteCrate, leaveCrate]);
+
+  const handleCancelAction = useCallback(() => {
+    setConfirmAction(null);
+  }, []);
 
   const handlePageChange = useCallback(
     (newPage: number) => {
@@ -84,19 +108,17 @@ function CratesPage() {
   const crateColumns = useMemo(
     () =>
       crateTableColumns({
-        crates: crates?.items ?? [],
         onEdit: handleEditCrate,
         onDelete: handleDeleteCrate,
         onLeave: handleLeaveCrate,
       }),
-    [crates?.items, handleEditCrate, handleDeleteCrate, handleLeaveCrate]
+    [handleEditCrate, handleDeleteCrate, handleLeaveCrate]
   );
 
   return (
     <CratesPageLayout>
       <CrateFilters filterControls={filterControls} />
 
-      {/* Results */}
       {!crates?.items?.length && !isPending ? (
         <NoCratesFound
           searchTerm={currentFilters.searchTerm}

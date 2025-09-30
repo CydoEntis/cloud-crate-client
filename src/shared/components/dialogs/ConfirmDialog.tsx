@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 
 type ConfirmDialogProps = {
   open: boolean;
@@ -22,11 +22,14 @@ function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onCancel}>
-      <DialogContent className="text-foreground border-muted">
+      <DialogContent
+        className="text-foreground border-muted"
+        aria-describedby={description ? "confirm-dialog-description" : undefined}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
+          {description && <DialogDescription id="confirm-dialog-description">{description}</DialogDescription>}
         </DialogHeader>
-        {description && <p className="text-muted-foreground">{description}</p>}
         <DialogFooter className="mt-4 flex gap-2 justify-end">
           <Button
             variant="outline"

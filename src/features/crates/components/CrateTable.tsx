@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "@tanstack/react-router";
 import { useMediaQuery } from "usehooks-ts";
@@ -16,49 +16,44 @@ type CrateTableProps = {
 
 function CrateTable({ data, columns, isLoading }: CrateTableProps) {
   const navigate = useNavigate();
-
   const isMobile = useMediaQuery("(max-width: 719px)");
   const isTablet = useMediaQuery("(min-width: 720px) and (max-width: 1199px)");
   const isDesktop = useMediaQuery("(min-width: 1200px)");
 
-  const [columnVisibility, setColumnVisibility] = useState({});
-
-  useEffect(() => {
+  const columnVisibility = useMemo(() => {
     if (isMobile) {
-      setColumnVisibility({
+      return {
         name: true,
         owner: false,
         usedStorageBytes: false,
         allocatedStorageBytes: false,
         joinedAt: false,
         actions: true,
-      });
+      };
     } else if (isTablet) {
-      setColumnVisibility({
+      return {
         name: true,
         owner: true,
         usedStorageBytes: false,
         allocatedStorageBytes: false,
         joinedAt: false,
         actions: true,
-      });
-    } else if (isDesktop) {
-      setColumnVisibility({
-        name: true,
-        owner: true,
-        usedStorageBytes: true,
-        allocatedStorageBytes: true,
-        joinedAt: true,
-        actions: true,
-      });
+      };
     }
+    return {
+      name: true,
+      owner: true,
+      usedStorageBytes: true,
+      allocatedStorageBytes: true,
+      joinedAt: true,
+      actions: true,
+    };
   }, [isMobile, isTablet, isDesktop]);
 
   const table = useReactTable<CrateSummary>({
     data,
     columns,
     state: { columnVisibility },
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: "onChange",
     columnResizeDirection: "ltr",

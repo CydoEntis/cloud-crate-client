@@ -1,26 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Check } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { Slider } from "@/shared/components/ui/slider";
-
 import { useUserStore } from "@/features/user/userStore";
 import { useCreateCrate, useUpdateCrate } from "@/features/crates/api/crateQueries";
 import { crateService } from "@/features/crates/api/crateService";
 import { createCreateCrateSchema } from "@/features/crates/crateSchemas";
 import type { CrateDetails, UpdateCrateRequest } from "@/features/crates/crateTypes";
-import { useAnimatedAction } from "@/shared/hooks/useAnimationAction";
 import { setFormErrors } from "@/shared/utils/errorHandler";
-import { useCrateModalStore } from "../store/crateModalStore";
 import { ColorPicker } from "@/shared/components/color-picker/ColorPicker";
 import { useNavigate } from "@tanstack/react-router";
+import { useCrateModalStore } from "../store/crateModalStore";
 
 type FormValues = {
   name: string;
@@ -33,21 +30,15 @@ export default function UpsertCrateModal() {
   const user = useUserStore((state) => state.user);
   const [crate, setCrate] = useState<CrateDetails | null>(null);
   const [globalError, setGlobalError] = useState<string | null>(null);
-  const { open, close, isOpen, crateId } = useCrateModalStore();
+  const { isOpen, crateId, close } = useCrateModalStore();
 
   const isEditing = !!crateId;
 
   const { mutateAsync: createCrate, isPending: isCreating } = useCreateCrate();
-  const { mutateAsync: updateCrate } = useUpdateCrate();
-  const { phase, run } = useAnimatedAction();
+  const { mutateAsync: updateCrate, isPending: isUpdating } = useUpdateCrate();
   const BytesPerGb = 1024 * 1024 * 1024;
 
   const remainingGb = user ? Math.floor(user.remainingAllocationBytes / BytesPerGb) : 0;
-  const minAlloc = remainingGb >= 1 ? 1 : remainingGb > 0 ? remainingGb : 0;
-  const defaultAlloc =
-    isEditing && crate
-      ? Math.floor(crate.allocatedStorageBytes / BytesPerGb)
-      : Math.min(Math.max(minAlloc, 1), remainingGb);
 
   const schema = useMemo(() => {
     return isEditing && crate
@@ -63,14 +54,14 @@ export default function UpsertCrateModal() {
           usedStorageBytes: user?.usedStorageBytes || 0,
           accountStorageLimitBytes: user?.accountStorageLimitBytes || 0,
         });
-  }, [isEditing, crate, user?.usedStorageBytes, user?.accountStorageLimitBytes, remainingGb]);
+  }, [isEditing, crate?.allocatedStorageBytes, user?.usedStorageBytes, user?.accountStorageLimitBytes, remainingGb]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: crate?.name ?? "",
-      color: crate?.color ?? "#4B9CED",
-      allocatedStorageGb: defaultAlloc,
+      name: "",
+      color: "#4B9CED",
+      allocatedStorageGb: 1,
     },
   });
 
@@ -80,28 +71,42 @@ export default function UpsertCrateModal() {
   };
 
   useEffect(() => {
-    if (!crateId) {
+    if (!crateId || !isOpen) {
       setCrate(null);
+      form.reset({
+        name: "",
+        color: "#4B9CED",
+        allocatedStorageGb: 1,
+      });
       return;
     }
 
+    let cancelled = false;
+
     crateService
       .getCrate(crateId)
-      .then(setCrate)
+      .then((data) => {
+        if (!cancelled) {
+          setCrate(data);
+          form.reset({
+            name: data.name,
+            color: data.color,
+            allocatedStorageGb: Math.floor(data.allocatedStorageBytes / BytesPerGb),
+          });
+        }
+      })
       .catch((err) => {
-        console.error(err);
-        toast.error("Failed to fetch crate details");
-        close();
+        if (!cancelled) {
+          console.error(err);
+          toast.error("Failed to fetch crate details");
+          close();
+        }
       });
-  }, [crateId, close]);
 
-  useEffect(() => {
-    form.reset({
-      name: crate?.name ?? "",
-      color: crate?.color ?? "#4B9CED",
-      allocatedStorageGb: defaultAlloc,
-    });
-  }, [crate, defaultAlloc, form]);
+    return () => {
+      cancelled = true;
+    };
+  }, [crateId, isOpen, close, form, BytesPerGb]);
 
   const handleClose = () => {
     form.reset();
@@ -118,20 +123,15 @@ export default function UpsertCrateModal() {
           color: data.color,
           storageAllocationGb: data.allocatedStorageGb,
         };
-        await run(() => updateCrate({ crateId: crate.id, request: updateData }));
+        await updateCrate({ crateId: crate.id, request: updateData });
         handleClose();
       } else {
-        try {
-          const crateId = await createCrate(data);
-          handleClose();
-
-          navigate({
-            to: "/crates/$crateId",
-            params: { crateId: crateId },
-          });
-        } catch (error) {
-          throw error;
-        }
+        const crateId = await createCrate(data);
+        handleClose();
+        navigate({
+          to: "/crates/$crateId",
+          params: { crateId: crateId },
+        });
       }
     } catch (err) {
       const globalError = setFormErrors(err, form);
@@ -139,9 +139,15 @@ export default function UpsertCrateModal() {
     }
   };
 
-  const isPending = isCreating || phase !== "idle";
+  const isPending = isCreating || isUpdating;
 
-  if (!open || (!isEditing && !user)) return null;
+  if (!isOpen || (!isEditing && !user)) return null;
+
+  const minAlloc = remainingGb >= 1 ? 1 : remainingGb > 0 ? remainingGb : 0;
+  const crateCurrentGb = crate ? Math.floor(crate.allocatedStorageBytes / BytesPerGb) : 1;
+  const crateUsedGb = crate ? Math.ceil(crate.usedStorageBytes / BytesPerGb) : 0;
+  const maxGb = isEditing && crate ? crateCurrentGb + remainingGb : Math.max(1, remainingGb);
+  const minGb = isEditing ? Math.max(crateUsedGb, 1) : 1;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -149,10 +155,20 @@ export default function UpsertCrateModal() {
         className="border-none shadow bg-card text-foreground max-w-lg"
         style={{ top: "25%", transform: "translate(0, 0)" }}
         onClick={(e) => e.stopPropagation()}
+        aria-describedby={isEditing ? "edit-crate-description" : "create-crate-description"}
       >
         <DialogHeader>
           <DialogTitle>{isEditing ? "Edit Crate" : "Create Your Crate"}</DialogTitle>
-          {!isEditing && <DialogDescription>Enter a name, pick a color, and allocate storage</DialogDescription>}
+          {!isEditing && (
+            <DialogDescription id="create-crate-description">
+              Enter a name, pick a color, and allocate storage
+            </DialogDescription>
+          )}
+          {isEditing && (
+            <DialogDescription id="edit-crate-description">
+              Update your crate's name, color, or storage allocation
+            </DialogDescription>
+          )}
         </DialogHeader>
 
         <Form {...form}>
@@ -197,11 +213,7 @@ export default function UpsertCrateModal() {
               name="allocatedStorageGb"
               control={form.control}
               render={({ field }) => {
-                const crateCurrentGb = isEditing && crate ? Math.floor(crate.allocatedStorageBytes / BytesPerGb) : 1;
-                const crateUsedGb = isEditing && crate ? Math.ceil(crate.usedStorageBytes / BytesPerGb) : 0;
                 const currentValue = typeof field.value === "number" ? field.value : crateCurrentGb;
-                const maxGb = isEditing && crate ? crateCurrentGb + remainingGb : Math.max(1, remainingGb);
-                const minGb = isEditing ? Math.max(crateUsedGb, 1) : 1;
 
                 return (
                   <FormItem>
@@ -248,17 +260,10 @@ export default function UpsertCrateModal() {
               </Button>
               <Button type="submit" disabled={isPending || (!isEditing && remainingGb <= 0)}>
                 {isPending ? (
-                  phase === "loading" ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      {isEditing ? "Updating..." : "Creating..."}
-                    </>
-                  ) : phase === "success" ? (
-                    <div className="flex items-center gap-1">
-                      <Check className="h-4 w-4 text-white" />
-                      <span>{isEditing ? "Updated" : "Created"}</span>
-                    </div>
-                  ) : null
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    {isEditing ? "Updating..." : "Creating..."}
+                  </>
                 ) : isEditing ? (
                   "Save Changes"
                 ) : (
