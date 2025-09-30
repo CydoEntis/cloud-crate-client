@@ -11,6 +11,7 @@ interface SelectionState {
 
   toggleFile: (id: string) => void;
   toggleFolder: (id: string) => void;
+  toggleSelection: (id: string, isFolder: boolean) => void; // ADD THIS
   clearSelection: () => void;
 
   selectAll: (items: FolderContentRowItem[]) => void;
@@ -42,6 +43,15 @@ export const useSelectionStore = create<SelectionState>((set, get) => ({
       updated.has(id) ? updated.delete(id) : updated.add(id);
       return { folderIds: updated };
     }),
+
+  // ADD THIS METHOD
+  toggleSelection: (id, isFolder) => {
+    if (isFolder) {
+      get().toggleFolder(id);
+    } else {
+      get().toggleFile(id);
+    }
+  },
 
   clearSelection: () => set({ fileIds: new Set(), folderIds: new Set() }),
 

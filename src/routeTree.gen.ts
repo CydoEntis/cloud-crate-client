@@ -8,204 +8,293 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as publicRouteRouteImport } from './routes/(public)/route'
+import { Route as protectedRouteRouteImport } from './routes/(protected)/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as protectedTrashRouteImport } from './routes/(protected)/trash'
+import { Route as protectedAdminRouteImport } from './routes/(protected)/admin'
+import { Route as publicauthRouteRouteImport } from './routes/(public)/(auth)/route'
+import { Route as protectedCratesIndexRouteImport } from './routes/(protected)/crates/index'
+import { Route as publicInviteTokenRouteImport } from './routes/(public)/invite/$token'
+import { Route as publicauthResetPasswordRouteImport } from './routes/(public)/(auth)/reset-password'
+import { Route as publicauthRegisterRouteImport } from './routes/(public)/(auth)/register'
+import { Route as publicauthLoginRouteImport } from './routes/(public)/(auth)/login'
+import { Route as publicauthForgotPasswordRouteImport } from './routes/(public)/(auth)/forgot-password'
+import { Route as protectedCratesCrateIdIndexRouteImport } from './routes/(protected)/crates/$crateId/index'
+import { Route as protectedCratesCrateIdFoldersFolderIdRouteImport } from './routes/(protected)/crates/$crateId/folders/$folderId'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as publicRouteImport } from './routes/(public)/route'
-import { Route as protectedRouteImport } from './routes/(protected)/route'
-import { Route as IndexImport } from './routes/index'
-import { Route as protectedAdminImport } from './routes/(protected)/admin'
-import { Route as publicauthRouteImport } from './routes/(public)/(auth)/route'
-import { Route as protectedCratesIndexImport } from './routes/(protected)/crates/index'
-import { Route as publicInviteTokenImport } from './routes/(public)/invite/$token'
-import { Route as publicauthResetPasswordImport } from './routes/(public)/(auth)/reset-password'
-import { Route as publicauthRegisterImport } from './routes/(public)/(auth)/register'
-import { Route as publicauthLoginImport } from './routes/(public)/(auth)/login'
-import { Route as publicauthForgotPasswordImport } from './routes/(public)/(auth)/forgot-password'
-import { Route as protectedCratesCrateIdIndexImport } from './routes/(protected)/crates/$crateId/index'
-import { Route as protectedCratesCrateIdFoldersFolderIdImport } from './routes/(protected)/crates/$crateId/folders/$folderId'
-
-// Create/Update Routes
-
-const publicRouteRoute = publicRouteImport.update({
+const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const protectedRouteRoute = protectedRouteImport.update({
+const protectedRouteRoute = protectedRouteRouteImport.update({
   id: '/(protected)',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const protectedAdminRoute = protectedAdminImport.update({
+const protectedTrashRoute = protectedTrashRouteImport.update({
+  id: '/trash',
+  path: '/trash',
+  getParentRoute: () => protectedRouteRoute,
+} as any)
+const protectedAdminRoute = protectedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => protectedRouteRoute,
 } as any)
-
-const publicauthRouteRoute = publicauthRouteImport.update({
+const publicauthRouteRoute = publicauthRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => publicRouteRoute,
 } as any)
-
-const protectedCratesIndexRoute = protectedCratesIndexImport.update({
+const protectedCratesIndexRoute = protectedCratesIndexRouteImport.update({
   id: '/crates/',
   path: '/crates/',
   getParentRoute: () => protectedRouteRoute,
 } as any)
-
-const publicInviteTokenRoute = publicInviteTokenImport.update({
+const publicInviteTokenRoute = publicInviteTokenRouteImport.update({
   id: '/invite/$token',
   path: '/invite/$token',
   getParentRoute: () => publicRouteRoute,
 } as any)
-
-const publicauthResetPasswordRoute = publicauthResetPasswordImport.update({
+const publicauthResetPasswordRoute = publicauthResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => publicauthRouteRoute,
 } as any)
-
-const publicauthRegisterRoute = publicauthRegisterImport.update({
+const publicauthRegisterRoute = publicauthRegisterRouteImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => publicauthRouteRoute,
 } as any)
-
-const publicauthLoginRoute = publicauthLoginImport.update({
+const publicauthLoginRoute = publicauthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => publicauthRouteRoute,
 } as any)
-
-const publicauthForgotPasswordRoute = publicauthForgotPasswordImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => publicauthRouteRoute,
-} as any)
-
+const publicauthForgotPasswordRoute =
+  publicauthForgotPasswordRouteImport.update({
+    id: '/forgot-password',
+    path: '/forgot-password',
+    getParentRoute: () => publicauthRouteRoute,
+  } as any)
 const protectedCratesCrateIdIndexRoute =
-  protectedCratesCrateIdIndexImport.update({
+  protectedCratesCrateIdIndexRouteImport.update({
     id: '/crates/$crateId/',
     path: '/crates/$crateId/',
     getParentRoute: () => protectedRouteRoute,
   } as any)
-
 const protectedCratesCrateIdFoldersFolderIdRoute =
-  protectedCratesCrateIdFoldersFolderIdImport.update({
+  protectedCratesCrateIdFoldersFolderIdRouteImport.update({
     id: '/crates/$crateId/folders/$folderId',
     path: '/crates/$crateId/folders/$folderId',
     getParentRoute: () => protectedRouteRoute,
   } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof publicauthRouteRouteWithChildren
+  '/admin': typeof protectedAdminRoute
+  '/trash': typeof protectedTrashRoute
+  '/forgot-password': typeof publicauthForgotPasswordRoute
+  '/login': typeof publicauthLoginRoute
+  '/register': typeof publicauthRegisterRoute
+  '/reset-password': typeof publicauthResetPasswordRoute
+  '/invite/$token': typeof publicInviteTokenRoute
+  '/crates': typeof protectedCratesIndexRoute
+  '/crates/$crateId': typeof protectedCratesCrateIdIndexRoute
+  '/crates/$crateId/folders/$folderId': typeof protectedCratesCrateIdFoldersFolderIdRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof publicauthRouteRouteWithChildren
+  '/admin': typeof protectedAdminRoute
+  '/trash': typeof protectedTrashRoute
+  '/forgot-password': typeof publicauthForgotPasswordRoute
+  '/login': typeof publicauthLoginRoute
+  '/register': typeof publicauthRegisterRoute
+  '/reset-password': typeof publicauthResetPasswordRoute
+  '/invite/$token': typeof publicInviteTokenRoute
+  '/crates': typeof protectedCratesIndexRoute
+  '/crates/$crateId': typeof protectedCratesCrateIdIndexRoute
+  '/crates/$crateId/folders/$folderId': typeof protectedCratesCrateIdFoldersFolderIdRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/(protected)': typeof protectedRouteRouteWithChildren
+  '/(public)': typeof publicRouteRouteWithChildren
+  '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
+  '/(protected)/admin': typeof protectedAdminRoute
+  '/(protected)/trash': typeof protectedTrashRoute
+  '/(public)/(auth)/forgot-password': typeof publicauthForgotPasswordRoute
+  '/(public)/(auth)/login': typeof publicauthLoginRoute
+  '/(public)/(auth)/register': typeof publicauthRegisterRoute
+  '/(public)/(auth)/reset-password': typeof publicauthResetPasswordRoute
+  '/(public)/invite/$token': typeof publicInviteTokenRoute
+  '/(protected)/crates/': typeof protectedCratesIndexRoute
+  '/(protected)/crates/$crateId/': typeof protectedCratesCrateIdIndexRoute
+  '/(protected)/crates/$crateId/folders/$folderId': typeof protectedCratesCrateIdFoldersFolderIdRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/trash'
+    | '/forgot-password'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/invite/$token'
+    | '/crates'
+    | '/crates/$crateId'
+    | '/crates/$crateId/folders/$folderId'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/admin'
+    | '/trash'
+    | '/forgot-password'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/invite/$token'
+    | '/crates'
+    | '/crates/$crateId'
+    | '/crates/$crateId/folders/$folderId'
+  id:
+    | '__root__'
+    | '/'
+    | '/(protected)'
+    | '/(public)'
+    | '/(public)/(auth)'
+    | '/(protected)/admin'
+    | '/(protected)/trash'
+    | '/(public)/(auth)/forgot-password'
+    | '/(public)/(auth)/login'
+    | '/(public)/(auth)/register'
+    | '/(public)/(auth)/reset-password'
+    | '/(public)/invite/$token'
+    | '/(protected)/crates/'
+    | '/(protected)/crates/$crateId/'
+    | '/(protected)/crates/$crateId/folders/$folderId'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  protectedRouteRoute: typeof protectedRouteRouteWithChildren
+  publicRouteRoute: typeof publicRouteRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/(public)': {
+      id: '/(public)'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof publicRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(protected)': {
       id: '/(protected)'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof protectedRouteImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof protectedRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/(public)': {
-      id: '/(public)'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof publicRouteImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/(public)/(auth)': {
-      id: '/(public)/(auth)'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof publicauthRouteImport
-      parentRoute: typeof publicRouteImport
+    '/(protected)/trash': {
+      id: '/(protected)/trash'
+      path: '/trash'
+      fullPath: '/trash'
+      preLoaderRoute: typeof protectedTrashRouteImport
+      parentRoute: typeof protectedRouteRoute
     }
     '/(protected)/admin': {
       id: '/(protected)/admin'
       path: '/admin'
       fullPath: '/admin'
-      preLoaderRoute: typeof protectedAdminImport
-      parentRoute: typeof protectedRouteImport
+      preLoaderRoute: typeof protectedAdminRouteImport
+      parentRoute: typeof protectedRouteRoute
     }
-    '/(public)/(auth)/forgot-password': {
-      id: '/(public)/(auth)/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof publicauthForgotPasswordImport
-      parentRoute: typeof publicauthRouteImport
-    }
-    '/(public)/(auth)/login': {
-      id: '/(public)/(auth)/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof publicauthLoginImport
-      parentRoute: typeof publicauthRouteImport
-    }
-    '/(public)/(auth)/register': {
-      id: '/(public)/(auth)/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof publicauthRegisterImport
-      parentRoute: typeof publicauthRouteImport
-    }
-    '/(public)/(auth)/reset-password': {
-      id: '/(public)/(auth)/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof publicauthResetPasswordImport
-      parentRoute: typeof publicauthRouteImport
-    }
-    '/(public)/invite/$token': {
-      id: '/(public)/invite/$token'
-      path: '/invite/$token'
-      fullPath: '/invite/$token'
-      preLoaderRoute: typeof publicInviteTokenImport
-      parentRoute: typeof publicRouteImport
+    '/(public)/(auth)': {
+      id: '/(public)/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof publicauthRouteRouteImport
+      parentRoute: typeof publicRouteRoute
     }
     '/(protected)/crates/': {
       id: '/(protected)/crates/'
       path: '/crates'
       fullPath: '/crates'
-      preLoaderRoute: typeof protectedCratesIndexImport
-      parentRoute: typeof protectedRouteImport
+      preLoaderRoute: typeof protectedCratesIndexRouteImport
+      parentRoute: typeof protectedRouteRoute
+    }
+    '/(public)/invite/$token': {
+      id: '/(public)/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof publicInviteTokenRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/(auth)/reset-password': {
+      id: '/(public)/(auth)/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof publicauthResetPasswordRouteImport
+      parentRoute: typeof publicauthRouteRoute
+    }
+    '/(public)/(auth)/register': {
+      id: '/(public)/(auth)/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof publicauthRegisterRouteImport
+      parentRoute: typeof publicauthRouteRoute
+    }
+    '/(public)/(auth)/login': {
+      id: '/(public)/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof publicauthLoginRouteImport
+      parentRoute: typeof publicauthRouteRoute
+    }
+    '/(public)/(auth)/forgot-password': {
+      id: '/(public)/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof publicauthForgotPasswordRouteImport
+      parentRoute: typeof publicauthRouteRoute
     }
     '/(protected)/crates/$crateId/': {
       id: '/(protected)/crates/$crateId/'
       path: '/crates/$crateId'
       fullPath: '/crates/$crateId'
-      preLoaderRoute: typeof protectedCratesCrateIdIndexImport
-      parentRoute: typeof protectedRouteImport
+      preLoaderRoute: typeof protectedCratesCrateIdIndexRouteImport
+      parentRoute: typeof protectedRouteRoute
     }
     '/(protected)/crates/$crateId/folders/$folderId': {
       id: '/(protected)/crates/$crateId/folders/$folderId'
       path: '/crates/$crateId/folders/$folderId'
       fullPath: '/crates/$crateId/folders/$folderId'
-      preLoaderRoute: typeof protectedCratesCrateIdFoldersFolderIdImport
-      parentRoute: typeof protectedRouteImport
+      preLoaderRoute: typeof protectedCratesCrateIdFoldersFolderIdRouteImport
+      parentRoute: typeof protectedRouteRoute
     }
   }
 }
 
-// Create and export the route tree
-
 interface protectedRouteRouteChildren {
   protectedAdminRoute: typeof protectedAdminRoute
+  protectedTrashRoute: typeof protectedTrashRoute
   protectedCratesIndexRoute: typeof protectedCratesIndexRoute
   protectedCratesCrateIdIndexRoute: typeof protectedCratesCrateIdIndexRoute
   protectedCratesCrateIdFoldersFolderIdRoute: typeof protectedCratesCrateIdFoldersFolderIdRoute
@@ -213,6 +302,7 @@ interface protectedRouteRouteChildren {
 
 const protectedRouteRouteChildren: protectedRouteRouteChildren = {
   protectedAdminRoute: protectedAdminRoute,
+  protectedTrashRoute: protectedTrashRoute,
   protectedCratesIndexRoute: protectedCratesIndexRoute,
   protectedCratesCrateIdIndexRoute: protectedCratesCrateIdIndexRoute,
   protectedCratesCrateIdFoldersFolderIdRoute:
@@ -255,184 +345,11 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
   publicRouteRouteChildren,
 )
 
-export interface FileRoutesByFullPath {
-  '/': typeof publicauthRouteRouteWithChildren
-  '/admin': typeof protectedAdminRoute
-  '/forgot-password': typeof publicauthForgotPasswordRoute
-  '/login': typeof publicauthLoginRoute
-  '/register': typeof publicauthRegisterRoute
-  '/reset-password': typeof publicauthResetPasswordRoute
-  '/invite/$token': typeof publicInviteTokenRoute
-  '/crates': typeof protectedCratesIndexRoute
-  '/crates/$crateId': typeof protectedCratesCrateIdIndexRoute
-  '/crates/$crateId/folders/$folderId': typeof protectedCratesCrateIdFoldersFolderIdRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof publicauthRouteRouteWithChildren
-  '/admin': typeof protectedAdminRoute
-  '/forgot-password': typeof publicauthForgotPasswordRoute
-  '/login': typeof publicauthLoginRoute
-  '/register': typeof publicauthRegisterRoute
-  '/reset-password': typeof publicauthResetPasswordRoute
-  '/invite/$token': typeof publicInviteTokenRoute
-  '/crates': typeof protectedCratesIndexRoute
-  '/crates/$crateId': typeof protectedCratesCrateIdIndexRoute
-  '/crates/$crateId/folders/$folderId': typeof protectedCratesCrateIdFoldersFolderIdRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/(protected)': typeof protectedRouteRouteWithChildren
-  '/(public)': typeof publicRouteRouteWithChildren
-  '/(public)/(auth)': typeof publicauthRouteRouteWithChildren
-  '/(protected)/admin': typeof protectedAdminRoute
-  '/(public)/(auth)/forgot-password': typeof publicauthForgotPasswordRoute
-  '/(public)/(auth)/login': typeof publicauthLoginRoute
-  '/(public)/(auth)/register': typeof publicauthRegisterRoute
-  '/(public)/(auth)/reset-password': typeof publicauthResetPasswordRoute
-  '/(public)/invite/$token': typeof publicInviteTokenRoute
-  '/(protected)/crates/': typeof protectedCratesIndexRoute
-  '/(protected)/crates/$crateId/': typeof protectedCratesCrateIdIndexRoute
-  '/(protected)/crates/$crateId/folders/$folderId': typeof protectedCratesCrateIdFoldersFolderIdRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/admin'
-    | '/forgot-password'
-    | '/login'
-    | '/register'
-    | '/reset-password'
-    | '/invite/$token'
-    | '/crates'
-    | '/crates/$crateId'
-    | '/crates/$crateId/folders/$folderId'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/admin'
-    | '/forgot-password'
-    | '/login'
-    | '/register'
-    | '/reset-password'
-    | '/invite/$token'
-    | '/crates'
-    | '/crates/$crateId'
-    | '/crates/$crateId/folders/$folderId'
-  id:
-    | '__root__'
-    | '/'
-    | '/(protected)'
-    | '/(public)'
-    | '/(public)/(auth)'
-    | '/(protected)/admin'
-    | '/(public)/(auth)/forgot-password'
-    | '/(public)/(auth)/login'
-    | '/(public)/(auth)/register'
-    | '/(public)/(auth)/reset-password'
-    | '/(public)/invite/$token'
-    | '/(protected)/crates/'
-    | '/(protected)/crates/$crateId/'
-    | '/(protected)/crates/$crateId/folders/$folderId'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  protectedRouteRoute: typeof protectedRouteRouteWithChildren
-  publicRouteRoute: typeof publicRouteRouteWithChildren
-}
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   protectedRouteRoute: protectedRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/(protected)",
-        "/(public)"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/(protected)": {
-      "filePath": "(protected)/route.tsx",
-      "children": [
-        "/(protected)/admin",
-        "/(protected)/crates/",
-        "/(protected)/crates/$crateId/",
-        "/(protected)/crates/$crateId/folders/$folderId"
-      ]
-    },
-    "/(public)": {
-      "filePath": "(public)/route.tsx",
-      "children": [
-        "/(public)/(auth)",
-        "/(public)/invite/$token"
-      ]
-    },
-    "/(public)/(auth)": {
-      "filePath": "(public)/(auth)/route.tsx",
-      "parent": "/(public)",
-      "children": [
-        "/(public)/(auth)/forgot-password",
-        "/(public)/(auth)/login",
-        "/(public)/(auth)/register",
-        "/(public)/(auth)/reset-password"
-      ]
-    },
-    "/(protected)/admin": {
-      "filePath": "(protected)/admin.tsx",
-      "parent": "/(protected)"
-    },
-    "/(public)/(auth)/forgot-password": {
-      "filePath": "(public)/(auth)/forgot-password.tsx",
-      "parent": "/(public)/(auth)"
-    },
-    "/(public)/(auth)/login": {
-      "filePath": "(public)/(auth)/login.tsx",
-      "parent": "/(public)/(auth)"
-    },
-    "/(public)/(auth)/register": {
-      "filePath": "(public)/(auth)/register.tsx",
-      "parent": "/(public)/(auth)"
-    },
-    "/(public)/(auth)/reset-password": {
-      "filePath": "(public)/(auth)/reset-password.tsx",
-      "parent": "/(public)/(auth)"
-    },
-    "/(public)/invite/$token": {
-      "filePath": "(public)/invite/$token.tsx",
-      "parent": "/(public)"
-    },
-    "/(protected)/crates/": {
-      "filePath": "(protected)/crates/index.tsx",
-      "parent": "/(protected)"
-    },
-    "/(protected)/crates/$crateId/": {
-      "filePath": "(protected)/crates/$crateId/index.tsx",
-      "parent": "/(protected)"
-    },
-    "/(protected)/crates/$crateId/folders/$folderId": {
-      "filePath": "(protected)/crates/$crateId/folders/$folderId.tsx",
-      "parent": "/(protected)"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
