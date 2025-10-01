@@ -45,7 +45,7 @@ export const useGetAvailableMoveTargets = (request: GetAvailableMoveTargetsReque
   return useQuery<PaginatedResult<FolderResponse>, Error>({
     queryKey: folderKeys.moveTargets(
       request.crateId,
-      request.excludeFolderIds, 
+      request.excludeFolderIds,
       request.searchTerm,
       request.page,
       request.ascending,
@@ -65,7 +65,14 @@ export const useCreateFolder = () => {
     mutationFn: (folderData: CreateFolder) => folderService.createFolder(folderData),
     onSuccess: (_, { crateId, parentFolderId }) => {
       queryClient.invalidateQueries({ queryKey: folderKeys.contents(crateId, parentFolderId) });
-      queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
+
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return Array.isArray(queryKey) && queryKey.includes("move-targets") && queryKey.includes(crateId);
+        },
+      });
+
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       toast.success("Folder created successfully");
     },
@@ -80,9 +87,14 @@ export const useMoveFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ crateId, folderId, moveData, sourceParentId }: { 
-      crateId: string; 
-      folderId: string; 
+    mutationFn: ({
+      crateId,
+      folderId,
+      moveData,
+      sourceParentId,
+    }: {
+      crateId: string;
+      folderId: string;
       moveData: MoveFolder;
       sourceParentId?: string | null;
     }) => folderService.moveFolder(crateId, folderId, moveData),
@@ -90,11 +102,7 @@ export const useMoveFolder = () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey;
-          return (
-            Array.isArray(queryKey) &&
-            queryKey.includes("folder-contents") &&
-            queryKey.includes(crateId)
-          );
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
         },
       });
 
@@ -134,15 +142,14 @@ export const useDeleteFolder = () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey;
-          return (
-            Array.isArray(queryKey) &&
-            queryKey.includes("folder-contents") &&
-            queryKey.includes(crateId)
-          );
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
         },
       });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+      // ADD THIS LINE:
+      queryClient.invalidateQueries({ queryKey: ["trash"] });
+
       toast.success("Folder deleted successfully");
     },
     onError: (error: Error) => {
@@ -183,11 +190,7 @@ export const useEmptyTrash = () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey;
-          return (
-            Array.isArray(queryKey) &&
-            queryKey.includes("folder-contents") &&
-            queryKey.includes(crateId)
-          );
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
         },
       });
       toast.success("Trash emptied successfully");
@@ -220,11 +223,7 @@ export const useUpdateFolder = () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey;
-          return (
-            Array.isArray(queryKey) &&
-            queryKey.includes("folder-contents") &&
-            queryKey.includes(crateId)
-          );
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
         },
       });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
@@ -260,11 +259,7 @@ export const useBulkMoveItems = () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey;
-          return (
-            Array.isArray(queryKey) &&
-            queryKey.includes("folder-contents") &&
-            queryKey.includes(crateId)
-          );
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
         },
       });
 
@@ -305,13 +300,11 @@ export const useBulkSoftDeleteItems = () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey;
-          return (
-            Array.isArray(queryKey) &&
-            queryKey.includes("folder-contents") &&
-            queryKey.includes(crateId)
-          );
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
         },
       });
+      queryClient.invalidateQueries({ queryKey: ["trash"] });
+
       toast.success("Items deleted successfully");
     },
     onError: (error: Error) => {

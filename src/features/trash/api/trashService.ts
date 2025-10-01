@@ -17,7 +17,6 @@ export const trashService = {
     }
     if (params.searchTerm) queryParams.append("searchTerm", params.searchTerm);
 
-    // Use ALL_CRATES_ID if no crateId specified
     const crateId = params.crateId || ALL_CRATES_ID;
     const url = `/crates/${crateId}/folders/trash?${queryParams.toString()}`;
     const response = await apiService.get<ApiResponse<PaginatedResult<TrashItem>>>(url);
@@ -53,7 +52,7 @@ export const trashService = {
   },
 
   async permanentlyDeleteFile(crateId: string, fileId: string): Promise<void> {
-    const response = await apiService.delete<ApiResponse<void>>(`/crates/${crateId}/files/${fileId}`);
+    const response = await apiService.delete<ApiResponse<void>>(`/crates/${crateId}/files/${fileId}/permanent`);
 
     const { isSuccess, message, errors } = response.data;
     if (!isSuccess) {

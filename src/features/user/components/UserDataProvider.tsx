@@ -28,7 +28,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const shouldFetchUser = authInitialized && isAuthenticated;
 
   const { isPending: isUserLoading, isError, data: user, error } = useGetUser(shouldFetchUser);
-
+  console.log(user);
   useEffect(() => {
     if (shouldFetchUser) {
       setLoading(isUserLoading);
