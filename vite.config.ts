@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite"; // ADD THIS IMPORT
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite"; 
 import tailwindcss from "@tailwindcss/vite";
-import tsconfigPaths from "vite-tsconfig-paths"; // ADD THIS TOO
+import tsconfigPaths from "vite-tsconfig-paths"; 
 import path from "path";
 import fs from "fs";
 

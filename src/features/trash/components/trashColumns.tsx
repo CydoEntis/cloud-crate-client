@@ -4,26 +4,13 @@ import DateIndicator from "@/shared/components/indicators/DateIndicator";
 import StorageDisplay from "@/shared/components/indicators/StorageDisplay";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
 import type { TrashItem } from "../trashTypes";
-import type { Member } from "@/features/members/memberTypes";
-import { CrateRole } from "@/features/crates/crateTypes";
 import TrashItemNameCell from "./TashItemNameCell";
 import TrashActionMenu from "./TrashActionMenu";
 
 const columnHelper = createColumnHelper<TrashItem>();
 
-const canModifyItem = (item: TrashItem, currentMember?: Member): boolean => {
-  if (!currentMember) return false;
-
-  if (currentMember.role === CrateRole.Owner || currentMember.role === CrateRole.Manager) {
-    return true;
-  }
-
-  return item.canRestore && item.canPermanentlyDelete;
-};
-
 export const trashColumns = (
   trashItems: TrashItem[],
-  currentMember?: Member,
   onRestore?: (item: TrashItem) => void,
   onDelete?: (item: TrashItem) => void
 ) => {
@@ -34,8 +21,7 @@ export const trashColumns = (
       minSize: 2,
       header: () => {
         const { fileIds, folderIds, selectAll, deselectAll } = useSelectionStore();
-
-        const modifiableItems = trashItems.filter((item) => canModifyItem(item, currentMember));
+        const modifiableItems = trashItems.filter((item) => item.canRestore || item.canPermanentlyDelete);
 
         const allModifiableSelected =
           modifiableItems.length > 0 &&
@@ -62,9 +48,8 @@ export const trashColumns = (
       },
       cell: (info) => {
         const item = info.row.original;
-        const canModify = canModifyItem(item, currentMember);
+        const canModify = item.canRestore || item.canPermanentlyDelete;
         const { fileIds, folderIds, toggleSelection } = useSelectionStore();
-
         const isSelected = item.type === "Folder" ? folderIds.has(item.id) : fileIds.has(item.id);
 
         if (!canModify) {
@@ -76,7 +61,6 @@ export const trashColumns = (
         );
       },
     }),
-
     columnHelper.accessor("crateName", {
       header: "Crate",
       size: 15,
@@ -87,14 +71,12 @@ export const trashColumns = (
         </div>
       ),
     }),
-
     columnHelper.accessor("name", {
       header: () => <div className="text-left">Name</div>,
       size: 53,
       minSize: 28,
       cell: (info) => <TrashItemNameCell item={info.row.original} />,
     }),
-
     columnHelper.accessor("deletedByUserName", {
       header: "Deleted By",
       size: 12,
@@ -105,7 +87,6 @@ export const trashColumns = (
         </div>
       ),
     }),
-
     columnHelper.accessor("deletedAt", {
       header: "Deleted At",
       size: 10,
@@ -116,7 +97,6 @@ export const trashColumns = (
         </div>
       ),
     }),
-
     columnHelper.display({
       id: "size",
       header: "Size",
@@ -133,22 +113,13 @@ export const trashColumns = (
           </div>
         ),
     }),
-
     columnHelper.display({
       id: "controls",
       header: "",
       size: 5,
       minSize: 5,
-      cell: (info) => (
-        <TrashActionMenu
-          item={info.row.original}
-          currentMember={currentMember}
-          onRestore={onRestore}
-          onDelete={onDelete}
-        />
-      ),
+      cell: (info) => <TrashActionMenu item={info.row.original} onRestore={onRestore} onDelete={onDelete} />,
     }),
   ];
-
   return columns;
 };

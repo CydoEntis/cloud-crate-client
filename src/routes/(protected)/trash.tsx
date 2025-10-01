@@ -71,6 +71,8 @@ export default function TrashPage() {
     ascending: currentFilters.ascending,
   });
 
+  console.log("Trashed items: ", trashData);
+
   const restoreMutation = useRestoreItem();
   const deleteMutation = usePermanentlyDeleteItem();
 
@@ -133,12 +135,7 @@ export default function TrashPage() {
     [navigate]
   );
 
-  const columns = trashColumns(
-    trashData?.items ?? [],
-    undefined,
-    handleRestore,
-    handleDelete
-  ) as ColumnDef<TrashItem>[];
+  const columns = trashColumns(trashData?.items ?? [], handleRestore, handleDelete) as ColumnDef<TrashItem>[];
 
   return (
     <TrashPageLayout>
