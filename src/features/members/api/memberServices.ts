@@ -91,4 +91,31 @@ export const memberService = {
       throw new Error(error.message || "Failed to remove member");
     }
   },
+
+  async leaveCrate(crateId: string): Promise<void> {
+    try {
+      const response = await apiService.post<ApiResponse<void>>(`/crates/${crateId}/members/leave`);
+
+      const { isSuccess, message, errors } = response.data;
+      if (!isSuccess) {
+        console.error("Failed to leave crate:", errors);
+        throw new Error(message ?? "Failed to leave crate");
+      }
+    } catch (error: any) {
+      if (error.response?.data) {
+        const errorData = error.response.data;
+
+        if (errorData.errors) {
+          const errorMessages = Object.values(errorData.errors).flat();
+          throw new Error(errorMessages.join(", "));
+        }
+
+        if (errorData.message || errorData.title) {
+          throw new Error(errorData.message || errorData.title);
+        }
+      }
+
+      throw new Error(error.message || "Failed to leave crate");
+    }
+  },
 };

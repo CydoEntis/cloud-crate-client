@@ -3,7 +3,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo, useCallback, useState } from "react";
 import CrateTable from "@/features/crates/components/CrateTable";
 import { crateSearchSchema } from "@/features/crates/crateSchemas";
-import { useGetCrates, useDeleteCrate, useLeaveCrate } from "@/features/crates/api/crateQueries";
+import { useGetCrates, useDeleteCrate } from "@/features/crates/api/crateQueries";
 import { crateTableColumns } from "@/features/crates/components/crateTableColumns";
 import type { Crate, CrateSummary } from "@/features/crates/crateTypes";
 import { useCrateFilters } from "@/features/crates/hooks/useCrateFilters";
@@ -13,6 +13,8 @@ import CratesError from "@/features/crates/components/CratesError";
 import NoCratesFound from "@/features/crates/components/NoCratesFound";
 import CratesPageHeader from "@/features/crates/components/CratesPageHeader";
 import CrateFilters from "@/features/crates/components/CrateFilters";
+import { useLeaveCrate } from "@/features/members/api/memberQueries";
+import { useUserStore } from "@/features/user/userStore";
 
 export const Route = createFileRoute("/(protected)/crates/")({
   validateSearch: zodValidator(crateSearchSchema),
@@ -37,6 +39,7 @@ type ConfirmAction = {
 function CratesPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+  const currentUser = useUserStore((state) => state.user);
 
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
 
@@ -56,7 +59,7 @@ function CratesPage() {
   const { data: crates, isPending, error } = useGetCrates(currentFilters);
 
   const { mutateAsync: deleteCrate, isPending: isDeleting } = useDeleteCrate();
-  const { mutateAsync: leaveCrate, isPending: isLeaving } = useLeaveCrate();
+  const leaveCrateMutation = useLeaveCrate();
 
   if (error) {
     throw error;
@@ -78,19 +81,22 @@ function CratesPage() {
   }, []);
 
   const handleConfirmAction = useCallback(async () => {
-    if (!confirmAction) return;
+    if (!confirmAction || !currentUser) return;
 
     try {
       if (confirmAction.type === "delete") {
         await deleteCrate(confirmAction.crate.id);
       } else {
-        await leaveCrate(confirmAction.crate.id);
+        await leaveCrateMutation.mutateAsync({
+          crateId: confirmAction.crate.id,
+          userId: currentUser.id,
+        });
       }
       setConfirmAction(null);
     } catch (error) {
       console.error("Action failed:", error);
     }
-  }, [confirmAction, deleteCrate, leaveCrate]);
+  }, [confirmAction, deleteCrate, leaveCrateMutation, currentUser]);
 
   const handleCancelAction = useCallback(() => {
     setConfirmAction(null);
@@ -143,10 +149,12 @@ function CratesPage() {
       <CratesConfirmActionDialog
         confirmAction={confirmAction}
         isDeleting={isDeleting}
-        isLeaving={isLeaving}
+        isLeaving={leaveCrateMutation.isPending}
         onConfirm={handleConfirmAction}
         onCancel={handleCancelAction}
       />
     </CratesPageLayout>
   );
 }
+
+export default CratesPage;

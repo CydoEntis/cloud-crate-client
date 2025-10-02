@@ -111,22 +111,6 @@ export const useDeleteCrate = () => {
   });
 };
 
-export const useLeaveCrate = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (crateId: string) => crateService.leaveCrate(crateId),
-    onSuccess: (_, crateId) => {
-      queryClient.removeQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
-      queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
-      toast.success("Successfully left crate");
-    },
-    onError: (error: Error) => {
-      console.error("Failed to leave crate:", error);
-      toast.error(error.message || "Failed to leave crate");
-    },
-  });
-};
 
 export const useBulkDeleteCrates = () => {
   const queryClient = useQueryClient();

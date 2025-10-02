@@ -4,9 +4,9 @@ import { Button } from "@/shared/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { useCrateDetails } from "@/features/crates/api/crateQueries";
 import { CrateRole } from "@/features/crates/crateTypes";
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { useCrateModalStore } from "@/features/crates/store/crateModalStore";
-import { useMemberPreview } from "@/features/members/api/memberQueries";
+import { useLeaveCrate, useMemberPreview } from "@/features/members/api/memberQueries";
 import InviteModal from "@/features/invites/components/inviteModal";
 
 function FolderContentsPageHeader() {
@@ -14,6 +14,8 @@ function FolderContentsPageHeader() {
   const { data: members } = useMemberPreview(crateId);
   const { data: crate } = useCrateDetails(crateId);
   const { open } = useCrateModalStore();
+  const leaveCrate = useLeaveCrate();
+  const navigate = useNavigate();
 
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
@@ -80,16 +82,21 @@ function FolderContentsPageHeader() {
             )}
           </div>
 
-          {canLeave && (
-            <Button
-              variant="outline"
-              className="!border-destructive text-destructive hover:!bg-destructive/30 cursor-pointer hover:!text-destructive"
-              onClick={() => open(crate.id)}
-            >
-              <X className="h-4 w-4 mr-2" />
-              Leave
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            className="!border-destructive text-destructive hover:!bg-destructive/30 cursor-pointer hover:!text-destructive"
+            onClick={async () => {
+              if (!crate?.currentMember) return;
+              await leaveCrate.mutateAsync({
+                crateId,
+                userId: crate.currentMember.userId,
+              });
+              navigate({ to: "/crates" });
+            }}
+          >
+            <X className="h-4 w-4 mr-2" />
+            Leave
+          </Button>
         </div>
       </div>
 

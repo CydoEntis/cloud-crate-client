@@ -5,6 +5,7 @@ import type { PaginatedResult } from "@/shared/lib/sharedTypes";
 import type { CrateRole } from "@/features/crates/crateTypes";
 import { toast } from "sonner";
 import { SHARED_KEYS } from "../../shared/queryKeys";
+import { crateKeys } from "@/features/crates/api/crateQueries";
 
 export const memberKeys = {
   all: ["members"] as const,
@@ -82,6 +83,25 @@ export const useRemoveMember = (crateId: string) => {
     onError: (error: Error) => {
       console.error("Failed to remove member:", error);
       toast.error(error.message || "Failed to remove member");
+    },
+  });
+};
+
+export const useLeaveCrate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (args: { crateId: string; userId: string }) =>
+      memberService.removeMember(args.crateId, args.userId),
+    onSuccess: (_, { crateId }) => {
+      queryClient.invalidateQueries({ queryKey: memberKeys.crate(crateId) });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateMembers(crateId) });
+      queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
+      toast.success("Left crate successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Failed to leave crate:", error);
+      toast.error(error.message || "Failed to leave crate");
     },
   });
 };
