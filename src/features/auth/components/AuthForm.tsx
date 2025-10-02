@@ -11,6 +11,9 @@ import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import type { LoginRequest, RegisterRequest } from "../authTypes";
 import { loginSchema, registerSchema } from "../authSchemas";
 import { useLogin, useRegister } from "../api/authQueries";
+import { useValidateInviteToken } from "@/features/admin/api/adminQueries";
+import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 
 type AuthMode = "login" | "register";
 
@@ -26,6 +29,117 @@ function AuthForm({ mode }: AuthFormProps) {
   const inviteToken = search.inviteToken;
 
   const { error, handleAuthSuccess, handleAuthError, clearError } = useAuthForm();
+
+  const {
+    data: inviteValidation,
+    isLoading: isValidatingToken,
+    error: tokenError,
+  } = useValidateInviteToken(!isLogin && inviteToken ? inviteToken : undefined);
+
+  const { mutateAsync: login, isPending: isLoginPending } = useLogin();
+  const { mutateAsync: register, isPending: isRegisterPending } = useRegister();
+
+  const isPending = isLogin ? isLoginPending : isRegisterPending;
+
+  const invitedEmail = inviteValidation?.email;
+
+  const form = useForm<LoginRequest | RegisterRequest>({
+    resolver: zodResolver(isLogin ? loginSchema : registerSchema),
+    defaultValues: isLogin
+      ? { email: "", password: "" }
+      : {
+          email: invitedEmail || "",
+          password: "",
+          confirmPassword: "",
+          displayName: "",
+          inviteToken: inviteToken || "",
+        },
+  });
+
+  useEffect(() => {
+    if (!isLogin && invitedEmail) {
+      form.setValue("email", invitedEmail);
+    }
+  }, [invitedEmail, form, isLogin]);
+
+  async function onSubmit(data: LoginRequest | RegisterRequest) {
+    try {
+      clearError();
+      if (isLogin) {
+        await login(data as LoginRequest);
+      } else {
+        const registerData = data as RegisterRequest;
+        const avatarUrl = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(registerData.displayName)}`;
+
+        await register({
+          ...registerData,
+          profilePictureUrl: avatarUrl,
+          inviteToken: inviteToken || "",
+        });
+      }
+
+      handleAuthSuccess();
+    } catch (err: unknown) {
+      handleAuthError(err, form);
+    }
+  }
+
+  if (!isLogin && inviteToken && isValidatingToken) {
+    return (
+      <Card className="shadow-md border-none bg-card">
+        <CardContent className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">Validating invitation...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!isLogin && inviteToken && tokenError) {
+    return (
+      <Card className="shadow-md border-none bg-card">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold">Invalid Invitation</CardTitle>
+          <CardDescription className="text-sm">There was a problem with your invitation</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Alert variant="destructive">
+            <AlertDescription>
+              {tokenError instanceof Error ? tokenError.message : "Failed to validate invitation"}
+            </AlertDescription>
+          </Alert>
+          <div className="mt-6">
+            <Link to="/login">
+              <Button className="w-full bg-indigo-500 hover:bg-indigo-600">Go to Login</Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!isLogin && inviteToken && inviteValidation && !inviteValidation.isValid) {
+    return (
+      <Card className="shadow-md border-none bg-card">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold">Invalid Invitation</CardTitle>
+          <CardDescription className="text-sm">This invitation cannot be used</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Alert variant="destructive">
+            <AlertDescription>{inviteValidation.errorMessage || "This invitation is invalid"}</AlertDescription>
+          </Alert>
+          <div className="mt-6">
+            <Link to="/login">
+              <Button className="w-full bg-indigo-500 hover:bg-indigo-600">Go to Login</Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (!isLogin && !inviteToken) {
     return (
@@ -54,46 +168,6 @@ function AuthForm({ mode }: AuthFormProps) {
     );
   }
 
-  const form = useForm<LoginRequest | RegisterRequest>({
-    resolver: zodResolver(isLogin ? loginSchema : registerSchema),
-    defaultValues: isLogin
-      ? { email: "", password: "" }
-      : {
-          email: "",
-          password: "",
-          confirmPassword: "",
-          displayName: "",
-          inviteToken: inviteToken || "",
-        },
-  });
-
-  const { mutateAsync: login, isPending: isLoginPending } = useLogin();
-  const { mutateAsync: register, isPending: isRegisterPending } = useRegister();
-
-  const isPending = isLogin ? isLoginPending : isRegisterPending;
-
-  async function onSubmit(data: LoginRequest | RegisterRequest) {
-    try {
-      clearError();
-      if (isLogin) {
-        await login(data as LoginRequest);
-      } else {
-        const registerData = data as RegisterRequest;
-        const avatarUrl = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(registerData.displayName)}`;
-
-        await register({
-          ...registerData,
-          profilePictureUrl: avatarUrl,
-          inviteToken: inviteToken || "",
-        });
-      }
-
-      handleAuthSuccess();
-    } catch (err: unknown) {
-      handleAuthError(err, form);
-    }
-  }
-
   return (
     <div className="flex flex-col gap-6">
       <Card className="shadow-md border-none bg-card">
@@ -102,10 +176,11 @@ function AuthForm({ mode }: AuthFormProps) {
           <CardDescription className="text-sm">
             {isLogin ? "Enter your account details" : "Enter your details to create an account"}
           </CardDescription>
-          {!isLogin && inviteToken && (
+          {!isLogin && invitedEmail && (
             <Alert>
               <AlertDescription>
-                You have been invited to join CloudCrate. Complete the form below to create your account.
+                You have been invited to join CloudCrate at <strong>{invitedEmail}</strong>. Complete the form below to
+                create your account.
               </AlertDescription>
             </Alert>
           )}
@@ -137,8 +212,19 @@ function AuthForm({ mode }: AuthFormProps) {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="m@example.com" {...field} type="email" />
+                        <Input
+                          placeholder="m@example.com"
+                          {...field}
+                          type="email"
+                          disabled={!!invitedEmail}
+                          className={invitedEmail ? "bg-muted cursor-not-allowed" : ""}
+                        />
                       </FormControl>
+                      {invitedEmail && (
+                        <p className="text-xs text-muted-foreground">
+                          This email is locked to your invitation and cannot be changed.
+                        </p>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}

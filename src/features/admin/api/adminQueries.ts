@@ -124,3 +124,13 @@ export const useUpdateUserPlan = () => {
     },
   });
 };
+
+export const useValidateInviteToken = (token: string | undefined) => {
+  return useQuery({
+    queryKey: ["validate-invite", token],
+    queryFn: () => adminService.validateInviteToken(token!),
+    enabled: !!token,
+    staleTime: 1000 * 60 * 5, 
+    retry: false,
+  });
+};

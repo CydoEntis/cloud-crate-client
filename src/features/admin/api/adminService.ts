@@ -7,7 +7,6 @@ import type {
   SubscriptionPlan,
 } from "../adminTypes";
 import type { ApiResponse, PaginatedResult } from "@/shared/lib/sharedTypes";
-import { use } from "react";
 
 export const adminService = {
   async getUsers(params: AdminUserSearchParams): Promise<PaginatedResult<AdminUser>> {
@@ -48,7 +47,6 @@ export const adminService = {
     }
   },
 
-
   async makeAdmin(userId: string): Promise<void> {
     const response = await apiService.post<ApiResponse<null>>(`/admin/users/${userId}/make-admin`);
     const { isSuccess, message } = response.data;
@@ -84,5 +82,29 @@ export const adminService = {
     if (!isSuccess) {
       throw new Error(message ?? "Failed to update user plan");
     }
+  },
+
+  async validateInviteToken(token: string): Promise<{
+    isValid: boolean;
+    email?: string;
+    expiresAt?: string;
+    errorMessage?: string;
+  }> {
+    const response = await apiService.get<
+      ApiResponse<{
+        isValid: boolean;
+        email?: string;
+        expiresAt?: string;
+        errorMessage?: string;
+      }>
+    >(`/admin/invites/validate/${token}`);
+
+    const { data: result, isSuccess, message } = response.data;
+
+    if (!isSuccess || !result) {
+      throw new Error(message ?? "Failed to validate invite token");
+    }
+
+    return result;
   },
 };
