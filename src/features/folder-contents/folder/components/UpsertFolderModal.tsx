@@ -89,7 +89,7 @@ export function UpsertFolderModal({ isOpen, onClose, crateId, parentFolderId, fo
         }
       }}
     >
-      <DialogContent className="sm:max-w-md border-none shadow bg-card text-foreground">
+      <DialogContent className="sm:max-w-md border-none shadow text-foreground">
         <DialogHeader>
           <DialogTitle>{isEditing ? "Edit Folder" : "Create New Folder"}</DialogTitle>
         </DialogHeader>

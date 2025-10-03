@@ -63,10 +63,7 @@ function AdminInviteUserModal({ open, onClose }: AdminInviteUserModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent
-        className="border-none shadow bg-card text-foreground max-w-lg"
-        style={{ top: "25%", transform: "translate(0, 0)" }}
-      >
+      <DialogContent className="border-none shadow  text-foreground max-w-lg">
         <DialogHeader>
           <DialogTitle>Invite New User</DialogTitle>
           <DialogDescription>

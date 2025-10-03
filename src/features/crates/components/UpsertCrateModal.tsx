@@ -149,7 +149,7 @@ export default function UpsertCrateModal() {
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
-        className="border-none shadow bg-card text-foreground max-w-lg max-h-[90vh] overflow-y-auto"
+        className="border-none shadow text-foreground max-w-lg max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         aria-describedby={isEditing ? "edit-crate-description" : "create-crate-description"}
       >
