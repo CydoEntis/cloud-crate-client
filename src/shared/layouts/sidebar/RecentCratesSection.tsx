@@ -24,7 +24,7 @@ export function RecentCratesSection({ onItemClick }: RecentCratesSectionProps) {
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mb-2 px-2">
       <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-2 hover:bg-accent rounded-md transition-colors group">
         <div className="flex items-center gap-2 text-muted-foreground">
-          <Clock className="text-muted-foreground" />
+          <Clock className="text-muted-foreground h-4 w-4" />
           <span className="text-sm font-medium">Recent Crates</span>
         </div>
         <ChevronDown
@@ -43,7 +43,7 @@ export function RecentCratesSection({ onItemClick }: RecentCratesSectionProps) {
               <Link
                 to="/crates/$crateId"
                 params={{ crateId: crate.id }}
-                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent transition-colors group text-muted-foreground"
+                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent transition-colors group text-muted-foreground text-sm"
                 activeProps={{
                   className: "text-primary",
                 }}

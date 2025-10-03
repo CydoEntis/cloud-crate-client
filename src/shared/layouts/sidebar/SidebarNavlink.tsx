@@ -44,7 +44,7 @@ const SidebarNavlink = ({ to, text, icon, onClick }: SidebarNavlinkProps) => {
       <Link
         to={to}
         ref={ref}
-        className="block px-4 py-2 pr-5 rounded-lg font-medium relative z-10 h-10"
+        className="block px-4 py-2 pr-5 rounded-lg font-medium relative z-10 h-10 text-sm"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={onClick}
