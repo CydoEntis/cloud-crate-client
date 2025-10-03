@@ -10,8 +10,8 @@ import { Button } from "@/shared/components/ui/button";
 import { forgotPasswordSchema } from "@/features/auth/authSchemas";
 import { useForgotPassword } from "@/features/auth/api/authQueries";
 import type { ForgotPasswordRequest } from "@/features/auth/authTypes";
-import { extractApiErrors } from "@/shared/lib/formUtils";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
+import { setFormErrors } from "@/shared/utils/errorHandler";
 
 export const Route = createFileRoute("/(public)/(auth)/forgot-password")({
   component: ForgotPasswordPage,
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/(public)/(auth)/forgot-password")({
 
 function ForgotPasswordPage() {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [globalError, setGlobalError] = useState<string | null>(null);
 
   const form = useForm<ForgotPasswordRequest>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -32,12 +32,13 @@ function ForgotPasswordPage() {
 
   async function onSubmit(data: ForgotPasswordRequest) {
     try {
-      setError(null);
+      setGlobalError(null);
+      form.clearErrors();
       await forgotPassword(data.email);
       setIsSuccess(true);
     } catch (err: unknown) {
-      const errorMessage = extractApiErrors(err, form);
-      setError(errorMessage);
+      const error = setFormErrors(err, form);
+      setGlobalError(error);
     }
   }
 
@@ -107,9 +108,9 @@ function ForgotPasswordPage() {
                   )}
                 />
 
-                {error && (
+                {globalError && (
                   <Alert variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
+                    <AlertDescription>{globalError}</AlertDescription>
                   </Alert>
                 )}
               </div>
