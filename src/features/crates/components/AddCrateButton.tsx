@@ -1,18 +1,26 @@
 import { Plus } from "lucide-react";
 import { useCrateModalStore } from "../store/crateModalStore";
-import { SidebarMenuItem } from "@/shared/components/ui/sidebar";
 import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/lib/utils";
 
-function AddCrateButton() {
+interface AddCrateButtonProps {
+  className?: string;
+  iconSize?: number;
+  size?: "default" | "sm" | "lg" | "icon";
+}
+
+function AddCrateButton({ className, iconSize = 28, size = "default" }: AddCrateButtonProps) {
   const { open } = useCrateModalStore();
 
   return (
-    <SidebarMenuItem className="mx-4">
-      <Button onClick={() => open()} className="w-full flex items-center justify-center p-2 cursor-pointer">
-        <Plus size={28} />
-        <span className="text-sm font-medium">New Crate</span>
-      </Button>
-    </SidebarMenuItem>
+    <Button
+      onClick={() => open()}
+      size={size}
+      className={cn("flex items-center justify-center p-2 cursor-pointer", className)}
+    >
+      <Plus size={iconSize} />
+      <span className="text-sm font-medium">New Crate</span>
+    </Button>
   );
 }
 

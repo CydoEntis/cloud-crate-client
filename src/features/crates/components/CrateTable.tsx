@@ -7,6 +7,7 @@ import GenericTableHeader from "@/shared/components/table/GenericTableHeader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import GenericTableRow from "@/shared/components/table/GenericTableRow";
 import type { CrateSummary } from "@/features/crates/crateTypes";
+import AddCrateButton from "./AddCrateButton";
 
 type CrateTableProps = {
   data: CrateSummary[];
@@ -70,30 +71,35 @@ function CrateTable({ data, columns, isLoading }: CrateTableProps) {
   const getRowClass = () => "hover:bg-muted/20";
 
   return (
-    <Table className="">
-      <GenericTableHeader table={table} />
-      <TableBody>
-        {isLoading
-          ? Array.from({ length: 20 }).map((_, i) => (
-              <tr key={i} className="h-10">
-                <td colSpan={columns.length}>
-                  <Skeleton className="w-full h-10 mt-2 bg-accent" />
-                </td>
-              </tr>
-            ))
-          : table
-              .getRowModel()
-              .rows.map((row, index) => (
-                <GenericTableRow<CrateSummary>
-                  key={row.id}
-                  row={row}
-                  rowIndex={index}
-                  className={getRowClass()}
-                  onClickRow={() => onNavigateToCrate(row.original.id)}
-                />
-              ))}
-      </TableBody>
-    </Table>
+    <div className="space-y-4">
+      <div className="flex items-center justify-end">
+        <AddCrateButton />
+      </div>
+      <Table className="">
+        <GenericTableHeader table={table} />
+        <TableBody>
+          {isLoading
+            ? Array.from({ length: 20 }).map((_, i) => (
+                <tr key={i} className="h-10">
+                  <td colSpan={columns.length}>
+                    <Skeleton className="w-full h-10 mt-2 bg-accent" />
+                  </td>
+                </tr>
+              ))
+            : table
+                .getRowModel()
+                .rows.map((row, index) => (
+                  <GenericTableRow<CrateSummary>
+                    key={row.id}
+                    row={row}
+                    rowIndex={index}
+                    className={getRowClass()}
+                    onClickRow={() => onNavigateToCrate(row.original.id)}
+                  />
+                ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 

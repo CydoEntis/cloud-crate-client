@@ -62,7 +62,9 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
           </div>
 
           <SidebarMenu className="pt-4 pb-8">
-            <AddCrateButton />
+            <SidebarMenuItem className="mx-4">
+              <AddCrateButton className="w-full" />
+            </SidebarMenuItem>
           </SidebarMenu>
 
           {user?.isAdmin &&
