@@ -1,6 +1,6 @@
-// src/shared/components/sidebar/SidebarUserSection.tsx
 import { useState } from "react";
 import { LogOut } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/shared/components/ui/button";
 import { useUserStore } from "@/features/user/userStore";
 import UpgradeAccountStorage from "@/features/user/components/UpgradeAccountStorage";
@@ -10,11 +10,16 @@ import UserSettingsModal from "@/features/user/components/UserSettingsModal";
 
 export function SidebarUserSection() {
   const user = useUserStore((state) => state.user);
+  const navigate = useNavigate();
   const { mutate: logout, isPending } = useLogout();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    logout(undefined, {
+      onSuccess: () => {
+        navigate({ to: "/login" });
+      },
+    });
   };
 
   const handleUpgrade = () => {
@@ -27,10 +32,10 @@ export function SidebarUserSection() {
 
   return (
     <>
-      <div className="pb-6 px-4 space-y-4">
+      <div className="pb-6  px-4 space-y-4">
         <UpgradeAccountStorage onUpgradeClick={handleUpgrade} />
-        <div className="border-t border-secondary pt-4 flex justify-between items-center">
-          <div className="cursor-pointer" onClick={() => setIsSettingsOpen(true)}>
+        <div className="border-t border-secondary pt-4 flex items-center gap-2 ">
+          <div className="p-2 hover:bg-accent rounded-lg cursor-pointer" onClick={() => setIsSettingsOpen(true)}>
             <AuthenticatedUserDisplay />
           </div>
           <Button

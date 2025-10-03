@@ -14,11 +14,11 @@ import { Separator } from "@/shared/components/ui/separator";
 import { RecentCratesSection } from "./RecentCratesSection";
 
 const navlinks = [
-  { id: "crates", text: "Crates", to: "/crates", icon: <Box className="h-4 w-4" /> },
-  { id: "trash", text: "Trash", to: "/trash", icon: <Trash2 className="h-4 w-4" /> },
+  { id: "crates", text: "Crates", to: "/crates", icon: <Box className="h-5 w-5" /> },
+  { id: "trash", text: "Trash", to: "/trash", icon: <Trash2 className="h-5 w-5" /> },
 ];
 
-const adminNavlinks = [{ id: "admin", text: "Admin Panel", to: "/admin", icon: <Shield className="h-4 w-4" /> }];
+const adminNavlinks = [{ id: "admin", text: "Admin Panel", to: "/admin", icon: <Shield className="h-5 w-5" /> }];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   isLoading?: boolean;
