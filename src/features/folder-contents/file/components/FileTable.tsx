@@ -96,8 +96,6 @@ function FileTable({
     defaultColumn: { size: 10 },
   });
 
-  console.log("Crate items: ", items);
-
   const getRowClass = (row: Row<any>) => (row.original.isFolder ? "cursor-pointer hover:bg-muted/30" : "");
 
   const handleClickRow = (row: Row<any>, e: React.MouseEvent) => {
@@ -127,7 +125,41 @@ function FileTable({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center gap-2">
+      {/* Mobile: Stack breadcrumbs and actions */}
+      <div className="flex flex-col gap-3 md:hidden">
+        <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
+
+        <div className="flex items-center gap-2 flex-wrap">
+          {selectedCount > 0 && (
+            <>
+              <span className="text-sm text-muted-foreground">{selectedCount} selected</span>
+              <Button variant="outline" size="sm" onClick={onBulkMove} className="flex items-center gap-1">
+                <Move className="h-4 w-4" />
+                <span className="hidden xs:inline">Move</span>
+              </Button>
+              <Button variant="outline" size="sm" onClick={onBulkDelete} className="flex items-center gap-1">
+                <Trash2 className="h-4 w-4" />
+                <span className="hidden xs:inline">Delete</span>
+              </Button>
+            </>
+          )}
+
+          {canManage && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-primary text-primary hover:bg-primary/20 hover:text-primary ml-auto"
+              onClick={onCreateFolder}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Folder
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Tablet/Desktop: Single row */}
+      <div className="hidden md:flex justify-between items-center gap-2">
         <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
 
         <div className="flex items-center gap-2 py-2">
@@ -162,28 +194,49 @@ function FileTable({
       <Table>
         <GenericTableHeader table={table} />
         <TableBody>
-          {isLoading
-            ? Array.from({ length: 10 }).map((_, i) => (
-                <tr key={i} className="h-10">
-                  <td colSpan={columns.length}>
-                    <Skeleton className="w-full h-10 mt-2" />
-                  </td>
-                </tr>
+          {isLoading ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <tr key={i} className="h-10">
+                <td colSpan={columns.length}>
+                  <Skeleton className="w-full h-10 mt-2" />
+                </td>
+              </tr>
+            ))
+          ) : items.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="h-64">
+                <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+                  <svg className="h-12 w-12 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                    />
+                  </svg>
+                  <p className="text-sm font-medium mb-1">No files or folders</p>
+                  <p className="text-xs text-muted-foreground/70">
+                    {canManage ? "Upload files or create folders to get started" : "This folder is empty"}
+                  </p>
+                </div>
+              </td>
+            </tr>
+          ) : (
+            table
+              .getRowModel()
+              .rows.map((row, index) => (
+                <GenericTableRow
+                  key={row.id}
+                  row={row}
+                  className={getRowClass(row)}
+                  onClickRow={handleClickRow}
+                  onDoubleClickRow={handleDoubleClickRow}
+                  onDragStartRow={handleDragStartRow}
+                  onDropOnRow={handleDropOnRow}
+                  rowIndex={index}
+                />
               ))
-            : table
-                .getRowModel()
-                .rows.map((row, index) => (
-                  <GenericTableRow
-                    key={row.id}
-                    row={row}
-                    className={getRowClass(row)}
-                    onClickRow={handleClickRow}
-                    onDoubleClickRow={handleDoubleClickRow}
-                    onDragStartRow={handleDragStartRow}
-                    onDropOnRow={handleDropOnRow}
-                    rowIndex={index}
-                  />
-                ))}
+          )}
         </TableBody>
       </Table>
     </div>

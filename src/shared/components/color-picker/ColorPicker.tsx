@@ -1,4 +1,3 @@
-// features/crates/components/ColorPicker.tsx
 import { Check } from "lucide-react";
 import { useController, type Control } from "react-hook-form";
 import { useEffect } from "react";
@@ -37,7 +36,7 @@ export function ColorPicker({ control, name, disabled }: ColorPickerProps) {
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Select Color</label>
-      <div className="flex items-center overflow-x-auto">
+      <div className="flex items-center gap-1.5 flex-wrap">
         {colorOptions.map((color) => {
           const selected = value === color.value;
           return (
@@ -53,7 +52,7 @@ export function ColorPicker({ control, name, disabled }: ColorPickerProps) {
                 disabled={disabled}
                 type="button"
                 onClick={() => onChange(color.value)}
-                className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] rounded-sm flex items-center justify-center cursor-pointer"
+                className="w-7 h-7 rounded-sm flex items-center justify-center cursor-pointer"
                 style={{ backgroundColor: color.value }}
                 aria-label={color.name}
                 title={color.name}

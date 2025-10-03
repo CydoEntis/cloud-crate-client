@@ -31,13 +31,11 @@ export default function UpsertCrateModal() {
   const [crate, setCrate] = useState<CrateDetails | null>(null);
   const [globalError, setGlobalError] = useState<string | null>(null);
   const { isOpen, crateId, close } = useCrateModalStore();
-
   const isEditing = !!crateId;
-
   const { mutateAsync: createCrate, isPending: isCreating } = useCreateCrate();
   const { mutateAsync: updateCrate, isPending: isUpdating } = useUpdateCrate();
-  const BytesPerGb = 1024 * 1024 * 1024;
 
+  const BytesPerGb = 1024 * 1024 * 1024;
   const remainingGb = user ? Math.floor(user.remainingAllocationBytes / BytesPerGb) : 0;
 
   const schema = useMemo(() => {
@@ -82,7 +80,6 @@ export default function UpsertCrateModal() {
     }
 
     let cancelled = false;
-
     crateService
       .getCrate(crateId)
       .then((data) => {
@@ -147,43 +144,42 @@ export default function UpsertCrateModal() {
   const crateCurrentGb = crate ? Math.floor(crate.allocatedStorageBytes / BytesPerGb) : 1;
   const crateUsedGb = crate ? Math.ceil(crate.usedStorageBytes / BytesPerGb) : 0;
   const maxGb = isEditing && crate ? crateCurrentGb + remainingGb : Math.max(1, remainingGb);
-  const minGb = isEditing ? Math.max(crateUsedGb, 1) : 1;
+  const minGb = isEditing ? Math.max(crateUsedGb, 5) : 5;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
-        className="border-none shadow bg-card text-foreground max-w-lg"
-        style={{ top: "25%", transform: "translate(0, 0)" }}
+        className="border-none shadow bg-card text-foreground max-w-lg max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         aria-describedby={isEditing ? "edit-crate-description" : "create-crate-description"}
       >
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Edit Crate" : "Create Your Crate"}</DialogTitle>
+          <DialogTitle className="text-xl sm:text-2xl">{isEditing ? "Edit Crate" : "Create Your Crate"}</DialogTitle>
           {!isEditing && (
-            <DialogDescription id="create-crate-description">
+            <DialogDescription id="create-crate-description" className="text-sm">
               Enter a name, pick a color, and allocate storage
             </DialogDescription>
           )}
           {isEditing && (
-            <DialogDescription id="edit-crate-description">
+            <DialogDescription id="edit-crate-description" className="text-sm">
               Update your crate's name, color, or storage allocation
             </DialogDescription>
           )}
         </DialogHeader>
-
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4" noValidate>
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{isEditing ? "Name" : "Crate Name"}</FormLabel>
+                  <FormLabel className="text-sm sm:text-base">{isEditing ? "Name" : "Crate Name"}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={isPending}
                       autoComplete="off"
+                      className="text-sm sm:text-base"
                       onChange={(e) => {
                         field.onChange(e);
                         clearErrors();
@@ -194,13 +190,12 @@ export default function UpsertCrateModal() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel className="text-sm sm:text-base">Color</FormLabel>
                   <FormControl>
                     <ColorPicker control={form.control} name={field.name} disabled={isPending} />
                   </FormControl>
@@ -208,23 +203,23 @@ export default function UpsertCrateModal() {
                 </FormItem>
               )}
             />
-
             <Controller
               name="allocatedStorageGb"
               control={form.control}
               render={({ field }) => {
                 const currentValue = typeof field.value === "number" ? field.value : crateCurrentGb;
-
                 return (
                   <FormItem>
-                    <FormLabel>{isEditing ? "Adjust Storage Allocation (GB)" : "Allocate Storage (GB)"}</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">
+                      {isEditing ? "Adjust Storage Allocation (GB)" : "Allocate Storage (GB)"}
+                    </FormLabel>
                     <FormControl>
                       <div className="flex flex-col space-y-2">
                         <Slider
                           value={[currentValue]}
                           min={minGb}
                           max={maxGb}
-                          step={1}
+                          step={5}
                           onValueChange={(val) => {
                             field.onChange(val[0]);
                             clearErrors();
@@ -236,7 +231,7 @@ export default function UpsertCrateModal() {
                           <span>Min: {minGb} GB</span>
                           <span>Max: {maxGb} GB</span>
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs sm:text-sm text-muted-foreground">
                           {currentValue} GB selected
                           {isEditing && ` (Currently allocated: ${crateCurrentGb} GB, In use: ${crateUsedGb} GB)`}
                         </div>
@@ -247,18 +242,26 @@ export default function UpsertCrateModal() {
                 );
               }}
             />
-
             {globalError && (
-              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-                <p className="text-sm text-destructive font-medium">{globalError}</p>
+              <div className="p-2 sm:p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                <p className="text-xs sm:text-sm text-destructive font-medium">{globalError}</p>
               </div>
             )}
-
-            <div className="flex justify-end space-x-3">
-              <Button type="button" variant="outline" onClick={handleClose} disabled={isPending}>
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isPending}
+                className="w-full sm:w-auto"
+              >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending || (!isEditing && remainingGb <= 0)}>
+              <Button
+                type="submit"
+                disabled={isPending || (!isEditing && remainingGb <= 0)}
+                className="w-full sm:w-auto"
+              >
                 {isPending ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />

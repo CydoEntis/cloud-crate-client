@@ -5,6 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  BreadcrumbEllipsis,
 } from "@/shared/components/ui/breadcrumb";
 import {
   DropdownMenu,
@@ -23,51 +24,129 @@ interface FolderBreadcrumbsProps {
 }
 
 function FolderBreadcrumbs({ crateId, breadcrumbs = [], onAction }: FolderBreadcrumbsProps) {
-  return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        {breadcrumbs.map((crumb, idx) => {
-          const isLast = idx === breadcrumbs.length - 1;
+  const MAX_VISIBLE = 3; // Root, Parent, Current
+  const shouldCollapse = breadcrumbs.length > MAX_VISIBLE;
 
-          return (
-            <BreadcrumbItem key={crumb.id}>
-              {!isLast ? (
-                <BreadcrumbLink asChild>
-                  <Link
-                    to={crumb.isRoot ? "/crates/$crateId" : "/crates/$crateId/folders/$folderId"}
-                    params={{ crateId, folderId: crumb.id }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded" style={{ backgroundColor: crumb.color }} />
-                      {crumb.name}
-                    </span>
-                  </Link>
-                </BreadcrumbLink>
-              ) : (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <BreadcrumbPage>
+  if (!shouldCollapse) {
+    // Show all breadcrumbs
+    return (
+      <Breadcrumb>
+        <BreadcrumbList>
+          {breadcrumbs.map((crumb, idx) => {
+            const isLast = idx === breadcrumbs.length - 1;
+
+            return (
+              <BreadcrumbItem key={crumb.id}>
+                {!isLast ? (
+                  <BreadcrumbLink asChild>
+                    <Link
+                      to={crumb.isRoot ? "/crates/$crateId" : "/crates/$crateId/folders/$folderId"}
+                      params={{ crateId, folderId: crumb.id }}
+                    >
                       <span className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded" style={{ backgroundColor: crumb.color }} />
                         {crumb.name}
                       </span>
-                    </BreadcrumbPage>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start">
-                    <DropdownMenuItem onClick={() => onAction?.("rename", crumb.id)}>Rename</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onAction?.("move", crumb.id)}>Move</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onAction?.("delete", crumb.id)}>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-              {!isLast && (
-                <BreadcrumbSeparator>
-                  <ChevronRight className="w-4 h-4" />
-                </BreadcrumbSeparator>
-              )}
-            </BreadcrumbItem>
-          );
-        })}
+                    </Link>
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>
+                    <span className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded" style={{ backgroundColor: crumb.color }} />
+                      {crumb.name}
+                    </span>
+                  </BreadcrumbPage>
+                )}
+                {!isLast && (
+                  <BreadcrumbSeparator>
+                    <ChevronRight className="w-4 h-4" />
+                  </BreadcrumbSeparator>
+                )}
+              </BreadcrumbItem>
+            );
+          })}
+        </BreadcrumbList>
+      </Breadcrumb>
+    );
+  }
+
+  // Collapsed: Root > ... > Parent > Current
+  const root = breadcrumbs[0];
+  const current = breadcrumbs[breadcrumbs.length - 1];
+  const parent = breadcrumbs[breadcrumbs.length - 2];
+  const hidden = breadcrumbs.slice(1, -2);
+
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        {/* Root */}
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link
+              to={root.isRoot ? "/crates/$crateId" : "/crates/$crateId/folders/$folderId"}
+              params={{ crateId, folderId: root.id }}
+            >
+              <span className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded" style={{ backgroundColor: root.color }} />
+                {root.name}
+              </span>
+            </Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator>
+            <ChevronRight className="w-4 h-4" />
+          </BreadcrumbSeparator>
+        </BreadcrumbItem>
+
+        {/* Ellipsis with dropdown */}
+        <BreadcrumbItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1">
+              <BreadcrumbEllipsis className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {hidden.map((crumb) => (
+                <DropdownMenuItem key={crumb.id} asChild>
+                  <Link
+                    to="/crates/$crateId/folders/$folderId"
+                    params={{ crateId, folderId: crumb.id }}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="w-3 h-3 rounded" style={{ backgroundColor: crumb.color }} />
+                    {crumb.name}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <BreadcrumbSeparator>
+            <ChevronRight className="w-4 h-4" />
+          </BreadcrumbSeparator>
+        </BreadcrumbItem>
+
+        {/* Parent */}
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link to="/crates/$crateId/folders/$folderId" params={{ crateId, folderId: parent.id }}>
+              <span className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded" style={{ backgroundColor: parent.color }} />
+                {parent.name}
+              </span>
+            </Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator>
+            <ChevronRight className="w-4 h-4" />
+          </BreadcrumbSeparator>
+        </BreadcrumbItem>
+
+        {/* Current */}
+        <BreadcrumbItem>
+          <BreadcrumbPage>
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded" style={{ backgroundColor: current.color }} />
+              {current.name}
+            </span>
+          </BreadcrumbPage>
+        </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
   );

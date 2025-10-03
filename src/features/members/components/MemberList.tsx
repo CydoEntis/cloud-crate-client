@@ -22,16 +22,16 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
   const canRemoveMembers = currentUserRole === CrateRole.Owner || currentUserRole === CrateRole.Manager;
 
   const canEditMember = (member: Member) => {
-    if (!canManageRoles) return false; 
-    if (member.role === CrateRole.Owner) return false; 
-    if (member.userId === currentUserId) return false; 
+    if (!canManageRoles) return false;
+    if (member.role === CrateRole.Owner) return false;
+    if (member.userId === currentUserId) return false;
     return true;
   };
 
   const canRemoveMember = (member: Member) => {
-    if (!canRemoveMembers) return false; 
-    if (member.role === CrateRole.Owner) return false; 
-    if (member.userId === currentUserId) return false; 
+    if (!canRemoveMembers) return false;
+    if (member.role === CrateRole.Owner) return false;
+    if (member.userId === currentUserId) return false;
     return true;
   };
 
@@ -54,57 +54,52 @@ function MembersList({ members, currentUserRole, onRoleChange, onRemoveMember, i
 
   return (
     <div>
-      <h3 className="font-medium text-sm mb-3">Members of Crate ({members.length})</h3>
+      <h3 className="font-medium text-xs sm:text-sm mb-3">Members of Crate ({members.length})</h3>
       <div className="space-y-3">
         {members.map((member) => (
-          <div key={member.userId} className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={member.profilePicture} alt={member.displayName} />
-                  <AvatarFallback className="text-xs">
-                    {member.displayName.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+          <div
+            key={member.userId}
+            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <Avatar className="h-8 w-8 flex-shrink-0">
+                <AvatarImage src={member.profilePicture} alt={member.displayName} />
+                <AvatarFallback className="text-xs">{member.displayName.charAt(0).toUpperCase()}</AvatarFallback>
+              </Avatar>
 
-              </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-medium truncate">{member.displayName}</p>
                   {member.userId === currentUserId && (
-                    <span className="text-xs text-muted-foreground">(You)</span>
+                    <span className="text-xs text-muted-foreground flex-shrink-0">(You)</span>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{member.email}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:ml-auto pl-11 sm:pl-0">
               {member.role === CrateRole.Owner ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-primary">Owner</span>
-                </div>
+                <span className="text-sm font-medium text-primary">Owner</span>
               ) : canEditMember(member) ? (
                 <Select
                   value={member.role}
                   onValueChange={(value: string) => onRoleChange(member.userId, value as CrateRole)}
                   disabled={isLoading}
                 >
-                  <SelectTrigger className="w-[120px] h-8 border-0 disabled:opacity-50">
+                  <SelectTrigger className="w-[110px] sm:w-[120px] h-8 border-0 disabled:opacity-50 text-xs sm:text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="border-muted">
                     {getAvailableRoles().map((role) => (
-                      <SelectItem key={role} value={role}>
+                      <SelectItem key={role} value={role} className="text-xs sm:text-sm">
                         {role}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               ) : (
-             <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">{member.role}</span>
-                </div>
+                <span className="text-sm font-medium text-muted-foreground">{member.role}</span>
               )}
 
               {canRemoveMember(member) && (
