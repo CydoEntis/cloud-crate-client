@@ -8,7 +8,11 @@ import { useRecentlyAccessedCrates } from "@/features/crates/api/crateQueries";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import TruncatedText from "@/shared/components/text/TruncatedText";
 
-export function RecentCratesSection() {
+interface RecentCratesSectionProps {
+  onItemClick?: () => void;
+}
+
+export function RecentCratesSection({ onItemClick }: RecentCratesSectionProps) {
   const [isOpen, setIsOpen] = React.useState(true);
   const { data: recentCrates, isLoading, isError } = useRecentlyAccessedCrates(5);
 
@@ -19,8 +23,8 @@ export function RecentCratesSection() {
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mb-2 px-2">
       <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-2 hover:bg-accent rounded-md transition-colors group">
-        <div className="flex items-center gap-2  text-muted-foreground">
-          <Clock className=" text-muted-foreground" />
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Clock className="text-muted-foreground" />
           <span className="text-sm font-medium">Recent Crates</span>
         </div>
         <ChevronDown
@@ -39,10 +43,11 @@ export function RecentCratesSection() {
               <Link
                 to="/crates/$crateId"
                 params={{ crateId: crate.id }}
-                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent transition-colors group  text-muted-foreground"
+                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent transition-colors group text-muted-foreground"
                 activeProps={{
                   className: "text-primary",
                 }}
+                onClick={onItemClick}
               >
                 <div
                   className="w-2 h-2 rounded-full flex-shrink-0"

@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
-import { Settings, Trash2, Box, Shield } from "lucide-react";
+import { Settings, Trash2, Box, Shield, X } from "lucide-react";
 import logo from "@/assets/cloud-crate-logo.png";
-import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem } from "@/shared/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, useSidebar } from "@/shared/components/ui/sidebar";
+import { Button } from "@/shared/components/ui/button";
 import { useUserStore } from "@/features/user/userStore";
 import AddCrateButton from "@/features/crates/components/AddCrateButton";
 import SidebarNavlink from "./SidebarNavlink";
@@ -25,6 +26,13 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
   const user = useUserStore((state) => state.user);
+  const { setOpenMobile, isMobile } = useSidebar();
+
+  const handleNavClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   if (isLoading) {
     return <AppSidebarSkeleton {...props} />;
@@ -35,12 +43,24 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
       <SidebarContent className="bg-sidebar flex flex-col justify-between h-full border-none">
         {/* Top Section */}
         <div>
-          <div className="py-6">
-            <Link to="/" className="flex justify-center items-center gap-2">
-              <img src={logo} alt="Cloud Crate Logo" className="h-10 w-10" />
-              <h3 className="font-bold text-3xl text-primary">Cloud Crate</h3>
+          <div className="py-6 relative px-4">
+            <Link to="/" className="flex items-center gap-2" onClick={handleNavClick}>
+              <img src={logo} alt="Cloud Crate Logo" className="h-8 w-8" />
+              <h3 className="font-bold text-2xl text-primary">Cloud Crate</h3>
             </Link>
+
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-6"
+                onClick={() => setOpenMobile(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            )}
           </div>
+
           <SidebarMenu className="pt-4 pb-8">
             <AddCrateButton />
           </SidebarMenu>
@@ -48,7 +68,7 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
           {user?.isAdmin &&
             adminNavlinks.map((link) => (
               <SidebarMenuItem key={link.id} className="my-1">
-                <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
+                <SidebarNavlink text={link.text} to={link.to} icon={link.icon} onClick={handleNavClick} />
                 <div className="px-4 py-2">
                   <Separator />
                 </div>
@@ -59,10 +79,10 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
           <SidebarMenu>
             {navlinks.map((link) => (
               <SidebarMenuItem key={link.id} className="my-1">
-                <SidebarNavlink text={link.text} to={link.to} icon={link.icon} />
+                <SidebarNavlink text={link.text} to={link.to} icon={link.icon} onClick={handleNavClick} />
               </SidebarMenuItem>
             ))}
-            <RecentCratesSection />
+            <RecentCratesSection onItemClick={handleNavClick} />
           </SidebarMenu>
 
           <SidebarMenu className="pt-4 pb-8 px-5">

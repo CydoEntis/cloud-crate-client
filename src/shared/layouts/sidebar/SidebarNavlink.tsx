@@ -7,6 +7,7 @@ type SidebarNavlinkProps = {
   to: string;
   text: string;
   icon: React.ReactElement;
+  onClick?: () => void;
 };
 
 const ANIMATION_CONFIG = {
@@ -15,7 +16,7 @@ const ANIMATION_CONFIG = {
   slide: { type: "spring", stiffness: 300, damping: 30 },
 } as const;
 
-const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
+const SidebarNavlink = ({ to, text, icon, onClick }: SidebarNavlinkProps) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isActive = pathname === to || pathname.startsWith(to + "/");
   const ref = useRef<HTMLAnchorElement>(null);
@@ -46,6 +47,7 @@ const SidebarNavlink = ({ to, text, icon }: SidebarNavlinkProps) => {
         className="block px-4 py-2 pr-5 rounded-lg font-medium relative z-10 h-10"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onClick={onClick}
         aria-current={isActive ? "page" : undefined}
       >
         <motion.span
