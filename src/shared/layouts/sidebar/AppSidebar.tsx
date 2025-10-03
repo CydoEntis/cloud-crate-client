@@ -32,7 +32,7 @@ export function AppSidebar({ isLoading = false, ...props }: AppSidebarProps) {
 
   return (
     <Sidebar {...props} className="border-none">
-      <SidebarContent className="bg-sidebar flex flex-col justify-between h-full">
+      <SidebarContent className="bg-sidebar flex flex-col justify-between h-full border-none">
         {/* Top Section */}
         <div>
           <div className="py-6">
