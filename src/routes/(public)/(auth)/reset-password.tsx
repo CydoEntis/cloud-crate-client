@@ -12,7 +12,7 @@ import { Button } from "@/shared/components/ui/button";
 import { resetPasswordSchema } from "@/features/auth/authSchemas";
 import { useResetPassword } from "@/features/auth/api/authQueries";
 import type { ResetPasswordRequest } from "@/features/auth/authTypes";
-import { extractApiErrors } from "@/shared/lib/formUtils";
+import { setFormErrors } from "@/shared/utils/errorHandler";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 
 const resetPasswordSearchSchema = z.object({
@@ -29,7 +29,7 @@ function ResetPasswordPage() {
   const navigate = useNavigate();
   const { token, email } = Route.useSearch();
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [globalError, setGlobalError] = useState<string | null>(null);
 
   const form = useForm<ResetPasswordRequest>({
     resolver: zodResolver(resetPasswordSchema),
@@ -48,12 +48,13 @@ function ResetPasswordPage() {
 
   async function onSubmit(data: ResetPasswordRequest) {
     try {
-      setError(null);
+      setGlobalError(null);
+      form.clearErrors();
       await resetPassword(data);
       setIsSuccess(true);
     } catch (err: unknown) {
-      const errorMessage = extractApiErrors(err, form);
-      setError(errorMessage);
+      const error = setFormErrors(err, form);
+      setGlobalError(error);
     }
   }
 
@@ -175,9 +176,9 @@ function ResetPasswordPage() {
                   )}
                 />
 
-                {error && (
+                {globalError && (
                   <Alert variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
+                    <AlertDescription>{globalError}</AlertDescription>
                   </Alert>
                 )}
               </div>
