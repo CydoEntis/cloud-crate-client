@@ -275,6 +275,34 @@ function AuthForm({ mode }: AuthFormProps) {
                 >
                   {isPending ? `${isLogin ? "Logging in" : "Registering"}...` : isLogin ? "Login" : "Register"}
                 </Button>
+                {isLogin ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full mt-2"
+                    disabled={isLoginPending}
+                    onClick={async () => {
+                      try {
+                        clearError();
+                        await login({
+                          email: "demo@cloudcrate.com",
+                          password: "Demo123!",
+                        });
+                        handleAuthSuccess();
+                      } catch (err) {
+                        handleAuthError(err, form);
+                      }
+                    }}
+                  >
+                    {isLoginPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logging into demo...
+                      </>
+                    ) : (
+                      "Demo Login"
+                    )}
+                  </Button>
+                ) : null}
               </div>
 
               {isLogin && (
