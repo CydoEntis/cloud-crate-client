@@ -81,11 +81,26 @@ export const useUpdateCrate = () => {
   return useMutation({
     mutationFn: ({ crateId, request }: { crateId: string; request: UpdateCrateRequest }) =>
       crateService.updateCrate(crateId, request),
-    onSuccess: (updatedCrate, { crateId }) => {
+
+    onSuccess: async (updatedCrate, { crateId }) => {
       queryClient.setQueryData(SHARED_KEYS.crateDetails(crateId), updatedCrate);
+
+      await queryClient.invalidateQueries({
+        queryKey: SHARED_KEYS.crateDetails(crateId),
+        exact: true,
+      });
+
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
+        },
+      });
+
       toast.success("Crate updated successfully");
     },
+
     onError: (error: Error) => {
       console.error("Failed to update crate:", error);
       toast.error(error.message || "Failed to update crate");
@@ -110,7 +125,6 @@ export const useDeleteCrate = () => {
     },
   });
 };
-
 
 export const useBulkDeleteCrates = () => {
   const queryClient = useQueryClient();
@@ -157,7 +171,7 @@ export const useRecentlyAccessedCrates = (count: number = 5) => {
     queryFn: () => crateService.getRecentlyAccessedCrates(count),
     staleTime: 1000 * 30,
     refetchOnWindowFocus: true,
-    refetchInterval: 60000, 
+    refetchInterval: 60000,
     refetchIntervalInBackground: false,
   });
 };
