@@ -141,5 +141,17 @@ export const fileService = {
       throw new Error("Failed to download file");
     }
   },
+  async bulkDownloadFiles(crateId: string, fileIds: string[], archiveName?: string): Promise<Blob> {
+    try {
+      const response = await apiService.post(
+        `/crates/${crateId}/files/bulk-download`,
+        { fileIds, archiveName },
+        { responseType: "blob" }
+      );
+      return new Blob([response.data]);
+    } catch (error) {
+      console.error("Failed to bulk download files:", error);
+      throw new Error("Failed to download files");
+    }
+  },
 };
-

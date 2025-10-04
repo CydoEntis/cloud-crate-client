@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel, type ColumnDef, type Row } from "@tanstack/react-table";
 import { useMediaQuery } from "usehooks-ts";
-import { Plus, Trash2, Move } from "lucide-react";
+import { Plus, Trash2, Move, Download } from "lucide-react";
 import { Table, TableBody } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import GenericTableHeader from "@/shared/components/table/GenericTableHeader";
@@ -12,6 +12,7 @@ import type { FolderContentRowItem, FolderContents } from "../../sharedTypes";
 import type { FolderBreadcrumb } from "../../folder/folderTypes";
 import type { CrateFile } from "../fileTypes";
 import FolderBreadcrumbs from "../../folder/components/FolderBreadcrumbs";
+import { useBulkDownloadFiles } from "../api/fileQueries";
 
 type FileTableProps = {
   crateId: string;
@@ -50,6 +51,7 @@ function FileTable({
 
   const { fileIds, folderIds } = useSelectionStore();
   const selectedCount = fileIds.size + folderIds.size;
+  const bulkDownload = useBulkDownloadFiles();
 
   useEffect(() => {
     if (isMobile) {
@@ -123,6 +125,13 @@ function FileTable({
     }
   };
 
+  const handleBulkDownload = () => {
+    bulkDownload.mutate({
+      crateId,
+      fileIds: Array.from(fileIds),
+    });
+  };
+
   return (
     <div className="space-y-4">
       {/* Mobile: Stack breadcrumbs and actions */}
@@ -133,6 +142,12 @@ function FileTable({
           {selectedCount > 0 && (
             <>
               <span className="text-sm text-muted-foreground">{selectedCount} selected</span>
+              {fileIds.size > 0 && (
+                <Button variant="outline" size="sm" onClick={handleBulkDownload} className="flex items-center gap-1">
+                  <Download className="h-4 w-4" />
+                  <span className="hidden xs:inline">Download</span>
+                </Button>
+              )}
               <Button variant="outline" size="sm" onClick={onBulkMove} className="flex items-center gap-1">
                 <Move className="h-4 w-4" />
                 <span className="hidden xs:inline">Move</span>
@@ -166,6 +181,12 @@ function FileTable({
           {selectedCount > 0 && (
             <>
               <span className="text-sm text-muted-foreground mr-2">{selectedCount} selected</span>
+              {fileIds.size > 0 && (
+                <Button variant="outline" size="sm" onClick={handleBulkDownload} className="flex items-center gap-2">
+                  <Download className="h-4 w-4" />
+                  Download
+                </Button>
+              )}
               <Button variant="outline" size="sm" onClick={onBulkMove} className="flex items-center gap-2">
                 <Move className="h-4 w-4" />
                 Move

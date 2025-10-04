@@ -220,3 +220,35 @@ export const useDownloadFile = () => {
     },
   });
 };
+
+export const useBulkDownloadFiles = () => {
+  return useMutation({
+    mutationFn: async ({
+      crateId,
+      fileIds,
+      archiveName,
+    }: {
+      crateId: string;
+      fileIds: string[];
+      archiveName?: string;
+    }) => {
+      const blob = await fileService.bulkDownloadFiles(crateId, fileIds, archiveName);
+      return { blob, archiveName: archiveName || "files.zip" };
+    },
+    onSuccess: ({ blob, archiveName }) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = archiveName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success("Files downloaded successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Failed to bulk download files:", error);
+      toast.error(error.message || "Failed to download files");
+    },
+  });
+};
