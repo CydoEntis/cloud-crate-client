@@ -1,4 +1,3 @@
-// src/features/crates/components/RecentCratesSection.tsx
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, Clock, Loader2 } from "lucide-react";

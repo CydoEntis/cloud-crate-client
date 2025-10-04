@@ -103,7 +103,6 @@ function useFolderContentsActions({ crateId, folderId, searchParams }: UseFolder
 
   return {
     crate: crateQuery.data,
-    // members: membersQuery.data,
     availableFolders: availableFoldersQuery.data,
     folderData,
     flattenedContents,

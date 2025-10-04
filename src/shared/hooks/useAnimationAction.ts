@@ -26,5 +26,4 @@ export function useAnimatedAction(successResetDelay = 1000) {
   };
 }
 
-// helper sleep function
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));

@@ -26,14 +26,10 @@ export const Route = createFileRoute("/(protected)")({
   beforeLoad: async ({ context }) => {
     const auth = useAuthStore.getState();
     if (!auth.isAuthenticated) {
-      // console.log("🚫 User not authenticated, redirecting to login");
       throw redirect({ to: "/login" });
     }
 
-    // console.log("✅ User authenticated, proceeding to protected route");
-
     try {
-      // console.log("👤 Pre-loading user data for child routes...");
 
       const userData = await context.queryClient.ensureQueryData({
         queryKey: ["user", "me"],
@@ -42,17 +38,13 @@ export const Route = createFileRoute("/(protected)")({
         retry: 1,
       });
 
-      // console.log("👤 User data pre-loaded:", { isAdmin: userData.isAdmin });
       return { userData };
     } catch (error: any) {
-      // console.error("❌ Failed to pre-load user data:", error.message);
 
       if (error.response?.status === 401) {
-        // console.log("🔄 Authentication issue during user data load");
         throw redirect({ to: "/login" });
       }
 
-      // console.warn("⚠️ Continuing without pre-loaded user data");
       return { userData: null };
     }
   },

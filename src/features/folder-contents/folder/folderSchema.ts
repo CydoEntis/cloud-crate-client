@@ -13,7 +13,6 @@ export const folderNameSchema = z
   )
   .refine((name) => !/[\x00-\x1f\x7f]/.test(name), "Folder name cannot contain control characters");
 
-// Add this schema
 export const crateFolderSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),

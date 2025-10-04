@@ -147,7 +147,6 @@ export const useDeleteFolder = () => {
       });
       queryClient.invalidateQueries({ queryKey: folderKeys.moveTargets(crateId) });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
-      // ADD THIS LINE:
       queryClient.invalidateQueries({ queryKey: ["trash"] });
 
       toast.success("Folder deleted successfully");

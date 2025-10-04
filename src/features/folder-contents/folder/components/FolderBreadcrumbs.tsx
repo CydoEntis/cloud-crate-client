@@ -24,11 +24,10 @@ interface FolderBreadcrumbsProps {
 }
 
 function FolderBreadcrumbs({ crateId, breadcrumbs = [], onAction }: FolderBreadcrumbsProps) {
-  const MAX_VISIBLE = 3; // Root, Parent, Current
+  const MAX_VISIBLE = 3; 
   const shouldCollapse = breadcrumbs.length > MAX_VISIBLE;
 
   if (!shouldCollapse) {
-    // Show all breadcrumbs
     return (
       <Breadcrumb>
         <BreadcrumbList>
@@ -70,7 +69,6 @@ function FolderBreadcrumbs({ crateId, breadcrumbs = [], onAction }: FolderBreadc
     );
   }
 
-  // Collapsed: Root > ... > Parent > Current
   const root = breadcrumbs[0];
   const current = breadcrumbs[breadcrumbs.length - 1];
   const parent = breadcrumbs[breadcrumbs.length - 2];

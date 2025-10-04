@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { Route } from "@/routes/(protected)/admin"; // Import your route
+import { Route } from "@/routes/(protected)/admin";
 import {
   adminUserSortByValues,
   isAdminUserSortBy,
@@ -9,7 +9,6 @@ import {
 } from "@/features/admin/adminSchemas";
 import { adminUserSortByLabels } from "@/features/admin/utils/adminUserConstants";
 
-// Use the actual search type from your route
 type RouteSearch = ReturnType<typeof Route.useSearch>;
 type NavigateFunction = ReturnType<typeof Route.useNavigate>;
 
@@ -24,7 +23,6 @@ export interface AdminFilterState {
   planFilter: string;
 }
 
-// Type for filter updates that matches TanStack Router's expectations
 type UpdateFilterFn = (partial: Partial<RouteSearch>) => void;
 
 export interface UseAdminFiltersReturn {
@@ -118,7 +116,7 @@ export function useAdminFilters(currentFilters: AdminFilterState, navigate: Navi
       userType: "All",
       userStatus: "All",
       planFilter: "All",
-      sortBy: "CreatedAt", // Updated to match PascalCase
+      sortBy: "CreatedAt", 
       ascending: false,
       page: 1,
     });
@@ -142,7 +140,6 @@ export function useAdminFilters(currentFilters: AdminFilterState, navigate: Navi
     []
   );
 
-  // Fixed to match backend enum values
   const planFilterOptions = useMemo(
     () => [
       { value: "All", label: "All Plans" },
@@ -169,7 +166,7 @@ export function useAdminFilters(currentFilters: AdminFilterState, navigate: Navi
       currentFilters.userType !== "All" ||
       currentFilters.userStatus !== "All" ||
       currentFilters.planFilter !== "All" ||
-      currentFilters.sortBy !== "CreatedAt" || // Updated to match PascalCase
+      currentFilters.sortBy !== "CreatedAt" || 
       currentFilters.ascending !== false
     );
   }, [currentFilters]);

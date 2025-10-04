@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { Route } from "@/routes/(protected)/crates/$crateId/folders/$folderId"; // Import your route
+import { Route } from "@/routes/(protected)/crates/$crateId/folders/$folderId"; 
 import { allowedOrderByValues, orderByLabels, type OrderBy } from "@/features/folder-contents/sharedTypes";
 
 type RouteSearch = ReturnType<typeof Route.useSearch>;

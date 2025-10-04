@@ -82,16 +82,6 @@ export const crateService = {
     }
   },
 
-  // async leaveCrate(crateId: string): Promise<void> {
-  //   const response = await apiService.post<ApiResponse<void>>(`/crates/${crateId}/leave`);
-  //   const { isSuccess, message, errors } = response.data;
-
-  //   if (!isSuccess) {
-  //     console.error("Failed to leave crate:", errors);
-  //     throw new Error(message ?? "Failed to leave crate");
-  //   }
-  // },
-
   async bulkDeleteCrate(crateIds: string[]): Promise<void> {
     const response = await apiService.post<ApiResponse<void>>(`/crates/bulk-delete`, { crateIds });
     const { isSuccess, message, errors } = response.data;

@@ -43,7 +43,6 @@ function ResetPasswordPage() {
 
   const { mutateAsync: resetPassword, isPending } = useResetPassword();
 
-  // Check if we have required params
   const hasRequiredParams = token && email;
 
   async function onSubmit(data: ResetPasswordRequest) {
@@ -58,7 +57,6 @@ function ResetPasswordPage() {
     }
   }
 
-  // Success state
   if (isSuccess) {
     return (
       <div className="flex flex-col gap-6">
@@ -86,7 +84,6 @@ function ResetPasswordPage() {
     );
   }
 
-  // Missing required parameters
   if (!hasRequiredParams) {
     return (
       <div className="flex flex-col gap-6">
@@ -122,7 +119,6 @@ function ResetPasswordPage() {
     );
   }
 
-  // Reset password form
   return (
     <div className="flex flex-col gap-6">
       <Card className="shadow-md border-none bg-card">

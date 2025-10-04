@@ -1,23 +1,10 @@
-// export const mimeCategoryColors: Record<string, string> = {
-//   Images: "#773bbf",        // purple (matches your palette)
-//   Videos: "#fad937",        // yellow
-//   Audio: "#faa032",         // orange
-//   PDF: "#f53141",           // red
-//   Text: "#1793e6",          // lighter variant of blue
-//   Spreadsheets: "#55b33b",  // green
-//   Code: "#586ac4",          // lighter variant of orange
-//   Archives: "#7a5e37",      // darker purple variant
-//   Other: "#374151",         // gray fallback
-// };
-
-// mimeCategoryColors.ts
 export const mimeCategoryStyles: Record<
   string,
   {
-    color: string; // For your current usage
-    bg: string; // For background with opacity
-    border: string; // For borders
-    text: string; // For text color
+    color: string; 
+    bg: string; 
+    border: string; 
+    text: string; 
   }
 > = {
   Images: {
@@ -82,7 +69,6 @@ export const mimeCategoryStyles: Record<
   },
 };
 
-// Generate simple bg map for convenience
 export const mimeCategoryColors: Record<string, string> = Object.fromEntries(
   Object.entries(mimeCategoryStyles).map(([key, value]) => [key, value.bg])
 );

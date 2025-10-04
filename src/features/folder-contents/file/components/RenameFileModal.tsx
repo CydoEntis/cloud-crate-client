@@ -59,7 +59,6 @@ export function RenameFileModal({ isOpen, onClose, crateId, file }: RenameFileMo
       form.reset();
       onClose();
     } catch (err: any) {
-      // Error handling is done in the mutation
     }
   };
 

@@ -3,7 +3,7 @@ import { Checkbox } from "@radix-ui/react-checkbox";
 
 function SelectHeader() {
   const { fileIds, folderIds, clearSelection } = useSelectionStore();
-  return <Checkbox /* you can add checked state here if needed */ />;
+  return <Checkbox />;
 }
 
 export default SelectHeader;

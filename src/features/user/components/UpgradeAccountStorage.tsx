@@ -6,7 +6,6 @@ type UpgradeAccountStorageProps = {
   onUpgradeClick: () => void;
 };
 
-// Updated component with consistent 1% minimum
 function UpgradeAccountStorage({ onUpgradeClick }: UpgradeAccountStorageProps) {
   const user = useUserStore((state) => state.user);
 

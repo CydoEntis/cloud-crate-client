@@ -26,9 +26,6 @@ export class ApiService {
         if (accessToken) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
-        if (import.meta.env.DEV && accessToken && isTokenExpiringSoon()) {
-          // console.log("⚠️ Access token is expiring soon, will refresh on next API call if needed");
-        }
         return config;
       },
       (error) => Promise.reject(error)
@@ -38,7 +35,7 @@ export class ApiService {
       (response) => response,
       async (error: AxiosError) => {
         if (import.meta.env.DEV) {
-          // console.error(`❌ ${error.response?.status} ${error.config?.url}`, error);
+          console.error(`❌ ${error.response?.status} ${error.config?.url}`, error);
         }
 
         if (isSuspensionError(error)) {
@@ -55,10 +52,6 @@ export class ApiService {
           originalRequest._retry = true;
 
           if (this.isRefreshing && this.refreshPromise) {
-            if (import.meta.env.DEV) {
-              // console.log("🔄 Token refresh already in progress, queuing request...");
-            }
-
             try {
               const newToken = await this.refreshPromise;
               originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
@@ -88,18 +81,12 @@ export class ApiService {
               refreshError?.message?.includes("refresh token");
 
             if (isRefreshTokenInvalid) {
-              if (import.meta.env.DEV) {
-                // console.log("🚨 Refresh token invalid - performing full logout");
-              }
               useAuthStore.getState().logout();
 
               if (typeof window !== "undefined") {
                 window.location.href = "/login";
               }
             } else {
-              if (import.meta.env.DEV) {
-                // console.log("🔧 Temporary refresh failure - clearing memory auth only");
-              }
               useAuthStore.getState().clearMemoryAuth();
             }
 
@@ -116,11 +103,6 @@ export class ApiService {
   }
 
   private async performTokenRefresh(): Promise<string> {
-    if (import.meta.env.DEV) {
-      // console.log("🔄 Starting token refresh...");
-      // console.log("🍪 Refresh token cookie will be sent automatically");
-    }
-
     try {
       const response = await this.api.post("/auth/refresh");
       const { data: result, isSuccess, message } = response.data;
@@ -138,14 +120,14 @@ export class ApiService {
       });
 
       if (import.meta.env.DEV) {
-        // console.log("✅ Token refreshed successfully");
-        // console.log("🍪 New refresh token cookie set by server");
+        console.log("✅ Token refreshed successfully");
+        console.log("🍪 New refresh token cookie set by server");
       }
 
       return accessToken;
     } catch (error: any) {
       if (import.meta.env.DEV) {
-        // console.error("❌ Token refresh failed:", error);
+        console.error("❌ Token refresh failed:", error);
       }
       throw error;
     }
