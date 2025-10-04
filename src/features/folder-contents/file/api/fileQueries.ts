@@ -201,11 +201,7 @@ export const useSoftDeleteFile = () => {
 export const useDownloadFile = () => {
   return useMutation({
     mutationFn: async ({ crateId, fileId, fileName }: { crateId: string; fileId: string; fileName: string }) => {
-      const response = await fetch(`/api/crates/${crateId}/files/${fileId}/download`);
-      if (!response.ok) {
-        throw new Error("Download failed");
-      }
-      const blob = await response.blob();
+      const blob = await fileService.downloadFile(crateId, fileId);
       return { blob, fileName };
     },
     onSuccess: ({ blob, fileName }) => {

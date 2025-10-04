@@ -33,7 +33,6 @@ export const useRegister = () => {
         accessToken: response.accessToken,
         accessTokenExpires: response.accessTokenExpires,
       });
-      
     },
   });
 };
@@ -41,19 +40,19 @@ export const useRegister = () => {
 export const useLogout = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const logout = useAuthStore((state) => state.logout);
   const clearUser = useUserStore((state) => state.clearUser);
 
   return useMutation({
     mutationFn: authService.logout,
     onSuccess: () => {
-      clearAuth();
+      logout();
       clearUser();
       queryClient.clear();
       router.navigate({ to: "/login" });
     },
     onError: () => {
-      clearAuth();
+      logout();
       clearUser();
       queryClient.clear();
       router.navigate({ to: "/login" });
@@ -72,6 +71,3 @@ export const useResetPassword = () => {
     mutationFn: authService.resetPassword,
   });
 };
-
-
-

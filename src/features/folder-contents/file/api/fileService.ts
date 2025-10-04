@@ -143,5 +143,3 @@ export const fileService = {
   },
 };
 
-
-// TODO: you shouldnt be able to select the root folder and move/delete it when ur navigation folder contents

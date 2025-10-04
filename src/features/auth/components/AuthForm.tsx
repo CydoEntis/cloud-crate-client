@@ -275,15 +275,6 @@ function AuthForm({ mode }: AuthFormProps) {
                 >
                   {isPending ? `${isLogin ? "Logging in" : "Registering"}...` : isLogin ? "Login" : "Register"}
                 </Button>
-
-                {isLogin && (
-                  <Button
-                    variant="outline"
-                    className="w-full border border-indigo-500 hover:bg-indigo-50 transition-all duration-200 mt-3"
-                  >
-                    Login with Google
-                  </Button>
-                )}
               </div>
 
               {isLogin && (
