@@ -44,7 +44,7 @@ export function SearchInput({ value, onChange, placeholder, label, delay = 300 }
           value={internalValue}
           onChange={handleInputChange}
           placeholder={placeholder}
-          className="pl-9 border-muted"
+          className="pl-9 border-muted text-muted-foreground"
         />
       </div>
     </div>

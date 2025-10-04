@@ -21,7 +21,7 @@ export function RecentCratesSection({ onItemClick }: RecentCratesSectionProps) {
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mb-2 px-2">
-      <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-2 hover:text-primary rounded-md transition-colors group">
+      <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-2 hover:text-primary rounded-md transition-colors group cursor-pointer">
         <div className="flex items-center gap-2 text-muted-foreground hover:text-primary cursor-pointer">
           <Clock className="text-muted-foreground h-5 w-5" />
           <span className="text-sm font-medium">Recent Crates</span>
