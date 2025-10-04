@@ -141,7 +141,6 @@ function FileTable({
         <div className="flex items-center gap-2 flex-wrap">
           {selectedCount > 0 && (
             <>
-              <span className="text-sm text-muted-foreground">{selectedCount} selected</span>
               {fileIds.size > 0 && (
                 <Button variant="outline" size="sm" onClick={handleBulkDownload} className="flex items-center gap-1">
                   <Download className="h-4 w-4" />
@@ -180,7 +179,6 @@ function FileTable({
         <div className="flex items-center gap-2 py-2">
           {selectedCount > 0 && (
             <>
-              <span className="text-sm text-muted-foreground mr-2">{selectedCount} selected</span>
               {fileIds.size > 0 && (
                 <Button variant="outline" size="sm" onClick={handleBulkDownload} className="flex items-center gap-2">
                   <Download className="h-4 w-4" />
