@@ -9,7 +9,6 @@ import FileUpload from "@/features/folder-contents/file/components/FileUpload";
 import FileTable from "@/features/folder-contents/file/components/FileTable";
 import UpsertFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";
 import RenameFileModal from "@/features/folder-contents/file/components/RenameFileModal";
-import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
 import MoveDialog from "@/features/folder-contents/components/MoveDialog";
 import { folderSearchSchema } from "@/features/folder-contents/sharedSchema";
 import { useSelectionStore } from "@/features/bulk/store/useSelectionStore";
@@ -27,6 +26,7 @@ import { useFolderFilters } from "@/features/folder-contents/folder/hooks/useFol
 import type { CrateFolder } from "@/features/folder-contents/folder/folderTypes";
 import type { CrateFile } from "@/features/folder-contents/file/fileTypes";
 import { folderContentsColumns } from "@/features/folder-contents/components/folderContentsColumns";
+import FilePreviewPanel from "@/features/folder-contents/file/components/FilePreviewPanel";
 
 export const Route = createFileRoute("/(protected)/crates/$crateId/folders/$folderId")({
   validateSearch: zodValidator(folderSearchSchema),
