@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/shared/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
+import ThemeToggle from "@/shared/components/theme/ThemeToggle";
 
 export const Route = createFileRoute("/")({
   beforeLoad: ({ context }) => {
@@ -66,8 +67,9 @@ function LandingPage() {
               </Button>
             </Link>
             <Link to="/register">
-              <Button className="bg-primary text-black">Get Started</Button>
+              <Button className="bg-primary ">Get Started</Button>
             </Link>
+            <ThemeToggle />
           </div>
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -82,13 +84,16 @@ function LandingPage() {
                 <h3 className="font-bold text-xl text-foreground">CloudCrate</h3>
               </div>
               <div className="flex flex-col gap-6 mt-8">
+                <div className="flex items-center justify-between">
+                  <ThemeToggle />
+                </div>
                 <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="text-foreground hover:bg-secondary w-full">
                     Login
                   </Button>
                 </Link>
                 <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="bg-primary text-black w-full">Get Started</Button>
+                  <Button className="bg-primary  w-full">Get Started</Button>
                 </Link>
               </div>
             </SheetContent>
@@ -175,7 +180,7 @@ function LandingPage() {
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Get Organized and Stay Productive with CloudCrate</h2>
-          <p className="text-xl mb-8 text-blue-100">
+          <p className="text-xl mb-8 text-muted-foreground">
             Join thousands of users who trust CloudCrate for secure cloud storage
           </p>
           <Link to="/register">

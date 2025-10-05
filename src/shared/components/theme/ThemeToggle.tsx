@@ -32,11 +32,9 @@ function ThemeToggle() {
       <ThemeTransition
         color={getTransitionColor()}
         onThemeSwitch={() => {
-          console.log(`Theme transition executing switch to: ${newTheme}`);
           setTheme(newTheme);
         }}
         onComplete={() => {
-          console.log("Theme transition complete");
           setTransition(null);
         }}
       />
