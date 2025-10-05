@@ -11,6 +11,7 @@ import { FeatureCard } from "@/shared/components/FeatureCard";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/shared/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/")({
   beforeLoad: ({ context }) => {
@@ -21,6 +22,11 @@ export const Route = createFileRoute("/")({
   },
   component: LandingPage,
 });
+
+const fadeUpVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
+};
 
 function LandingPage() {
   const features = [
@@ -53,7 +59,6 @@ function LandingPage() {
             <h3 className="font-bold text-xl text-foreground">CloudCrate</h3>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4">
             <Link to="/login">
               <Button variant="ghost" className="text-foreground hover:bg-secondary">
@@ -65,9 +70,8 @@ function LandingPage() {
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild className="md:hidden ">
+            <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon">
                 <Menu className="h-6 w-6" />
               </Button>
@@ -78,12 +82,12 @@ function LandingPage() {
                 <h3 className="font-bold text-xl text-foreground">CloudCrate</h3>
               </div>
               <div className="flex flex-col gap-6 mt-8">
-                <Link to="/login">
+                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="text-foreground hover:bg-secondary w-full">
                     Login
                   </Button>
                 </Link>
-                <Link to="/register">
+                <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="bg-primary text-black w-full">Get Started</Button>
                 </Link>
               </div>
@@ -92,7 +96,14 @@ function LandingPage() {
         </div>
       </header>
 
-      <section className="relative py-20 px-6 overflow-hidden">
+      <motion.section
+        className="relative py-20 px-6 overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        variants={fadeUpVariants}
+      >
         <div className="absolute inset-0 pointer-events-none" />
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 text-foreground">
@@ -107,44 +118,60 @@ function LandingPage() {
             </Button>
           </Link>
 
-          {/* Desktop view  */}
           <div className="hidden md:block mt-20 w-full max-w-[1400px] mx-auto">
             <div className="rounded-xl overflow-hidden shadow-2xl border border-muted">
               <img src={CloudCrate} alt="CloudCrate Dashboard Preview" className="w-full h-auto" />
             </div>
           </div>
 
-          {/* Mobile view  */}
           <div className="md:hidden mt-16 -mr-6 ml-0">
             <div className="rounded-l-xl shadow-2xl border-l border-t border-b border-muted">
               <img src={CloudCrateMobile} alt="CloudCrate Dashboard Preview" />
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            variants={fadeUpVariants}
+          >
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Simplify Your Digital Life with Smart Tools</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Everything you need to organize, collaborate, and secure your files in one powerful platform
             </p>
-          </div>
+          </motion.div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 place-items-center lg:place-items-stretch">
-            {features.map((feature) => (
-              <FeatureCard
+            {features.map((feature, index) => (
+              <motion.div
                 key={feature.title}
-                image={feature.image}
-                title={feature.title}
-                description={feature.description}
-              />
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                variants={fadeUpVariants}
+              >
+                <FeatureCard image={feature.image} title={feature.title} description={feature.description} />
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-24 px-6 bg-gradient-to-b from-background to-card">
+      <motion.section
+        className="py-24 px-6 bg-gradient-to-b from-background to-card"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        variants={fadeUpVariants}
+      >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Get Organized and Stay Productive with CloudCrate</h2>
           <p className="text-xl mb-8 text-blue-100">
@@ -156,7 +183,7 @@ function LandingPage() {
             </Button>
           </Link>
         </div>
-      </section>
+      </motion.section>
 
       <footer className="py-12 px-6 bg-card">
         <div className="max-w-7xl mx-auto text-center">
