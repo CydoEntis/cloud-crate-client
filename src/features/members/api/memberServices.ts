@@ -40,7 +40,6 @@ export const memberService = {
         throw new Error(message ?? "Failed to assign role");
       }
 
-      console.log("Role assignment succeeded");
     } catch (error: any) {
       console.error("Full error object:", error);
 

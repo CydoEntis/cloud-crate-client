@@ -30,7 +30,6 @@ function FileUpload({ crateId, folderId }: FileUploadProps) {
       folderId,
       files: selectedFiles,
       onProgress: (percent: number) => {
-        console.log(`Upload progress: ${percent}%`);
       },
     });
   };

@@ -32,9 +32,6 @@ function UpgradeAccountStorage({ onUpgradeClick }: UpgradeAccountStorageProps) {
 
   const storageStatus = getStorageStatus();
 
-  const handleUpgradeClick = () => {
-    onUpgradeClick?.() ?? console.log("Navigate to upgrade page");
-  };
 
   return (
     <div className="space-y-1 w-full">

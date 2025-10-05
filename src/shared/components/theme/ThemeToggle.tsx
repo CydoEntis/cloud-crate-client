@@ -16,7 +16,6 @@ function ThemeToggle() {
   };
 
   const toggleTheme = () => {
-    console.log(`Current theme: ${theme}, resolved: ${resolvedTheme}`);
 
     let newTheme: "dark" | "light";
 
@@ -26,7 +25,6 @@ function ThemeToggle() {
       newTheme = theme === "dark" ? "light" : "dark";
     }
 
-    console.log(`Switching to: ${newTheme}`);
 
     setTransition(
       <ThemeTransition

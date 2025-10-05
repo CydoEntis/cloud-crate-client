@@ -71,7 +71,6 @@ export default function TrashPage() {
     ascending: currentFilters.ascending,
   });
 
-  console.log("Trashed items: ", trashData);
 
   const restoreMutation = useRestoreItem();
   const deleteMutation = usePermanentlyDeleteItem();
