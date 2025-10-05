@@ -60,7 +60,7 @@ function ResetPasswordPage() {
   if (isSuccess) {
     return (
       <div className="flex flex-col gap-6">
-        <Card className="shadow-md border-none bg-card">
+        <Card className="shadow-none md:shadow-md border-none bg-card rounded-none md:rounded-lg">
           <CardHeader>
             <CardTitle className="text-3xl font-bold">Password Reset Successfully</CardTitle>
             <CardDescription className="text-sm">Your password has been updated</CardDescription>

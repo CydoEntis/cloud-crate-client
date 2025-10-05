@@ -44,14 +44,14 @@ export const useSelectionStore = create<SelectionState>((set, get) => ({
       return { folderIds: updated };
     }),
 
-  // ADD THIS METHOD
-  toggleSelection: (id, isFolder) => {
-    if (isFolder) {
-      get().toggleFolder(id);
-    } else {
-      get().toggleFile(id);
-    }
-  },
+toggleSelection: (id, isFolder, visibleFolderIds?: string[]) => {
+  if (isFolder) {
+    if (visibleFolderIds && !visibleFolderIds.includes(id)) return;
+    get().toggleFolder(id);
+  } else {
+    get().toggleFile(id);
+  }
+},
 
   clearSelection: () => set({ fileIds: new Set(), folderIds: new Set() }),
 

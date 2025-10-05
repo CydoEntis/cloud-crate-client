@@ -145,8 +145,7 @@ function TrashTable({ data, columns, isLoading, onRefetch }: TrashTableProps) {
     <>
       <div className="space-y-4">
         {selectedCount > 0 && (
-          <div className="flex items-center gap-2 py-2">
-            <span className="text-sm text-muted-foreground mr-2">{selectedCount} selected</span>
+          <div className="flex items-center justify-end gap-2 py-2">
             <Button variant="outline" size="sm" onClick={handleBulkRestore} className="flex items-center gap-2">
               <RotateCcw className="h-4 w-4" />
               Restore

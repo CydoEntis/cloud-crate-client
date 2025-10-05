@@ -298,13 +298,26 @@ export const useBulkSoftDeleteItems = () => {
     onSuccess: (_, { crateId }) => {
       queryClient.invalidateQueries({
         predicate: (query) => {
-          const queryKey = query.queryKey;
-          return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
+          const key = query.queryKey;
+          if (!Array.isArray(key)) return false;
+          if (key[0] !== "trash") return false;
+
+          const params = key[2];
+          if (!params) return true;
+          return params.crateId === crateId;
         },
       });
-      queryClient.invalidateQueries({ queryKey: ["trash"] });
 
-      toast.success("Items deleted successfully");
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey) &&
+          query.queryKey.includes("folder-contents") &&
+          query.queryKey.includes(crateId),
+      });
+
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
+
+      toast.success("Items moved to trash");
     },
     onError: (error: Error) => {
       console.error("Failed to delete items:", error);

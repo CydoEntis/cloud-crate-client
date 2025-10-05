@@ -13,10 +13,12 @@ export const useGetTrashItems = (params: TrashQueryParams) => {
   return useQuery({
     queryKey: trashKeys.items(params),
     queryFn: () => trashService.getTrashItems(params),
-    staleTime: 1000 * 30,
+    staleTime: 1000 * 30, 
     refetchOnWindowFocus: true,
+    refetchOnMount: 'always', 
   });
 };
+
 
 export const useRestoreItem = () => {
   const queryClient = useQueryClient();

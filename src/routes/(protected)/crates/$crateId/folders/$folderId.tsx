@@ -103,7 +103,6 @@ export default function CrateFolderPage() {
 
   const canManage = crate?.currentMember.role === CrateRole.Owner || crate?.currentMember.role === CrateRole.Manager;
 
-
   const handleEditFolder = useCallback((folder: CrateFolder) => {
     setEditingFolder(folder);
   }, []);
@@ -129,13 +128,12 @@ export default function CrateFolderPage() {
       await folderService.bulkSoftDeleteItems(crateId, fileIds, folderIds);
       clearSelection();
       refetch();
-      toast.success("Items deleted successfully");
+      toast.success("Items moved to trash");
     } catch (error) {
       console.error("Failed to delete items:", error);
-      toast.error("Failed to delete items");
+      toast.error("Failed move items to trash");
     }
   }, [crateId, getFinalMoveSelection, clearSelection, refetch]);
-
 
   const handleCloseEditFolder = useCallback(() => {
     setEditingFolder(null);
@@ -162,6 +160,7 @@ export default function CrateFolderPage() {
   const columns = folderContentsColumns(
     flattenedContents,
     crate?.currentMember,
+    folderId, 
     handleEditFolder,
     handleEditFile,
     handleMoveItem

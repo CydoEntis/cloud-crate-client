@@ -134,7 +134,6 @@ function FileTable({
 
   return (
     <div className="space-y-4">
-      {/* Mobile: Stack breadcrumbs and actions */}
       <div className="flex flex-col gap-3 md:hidden">
         <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
 
@@ -153,7 +152,7 @@ function FileTable({
               </Button>
               <Button variant="outline" size="sm" onClick={onBulkDelete} className="flex items-center gap-1">
                 <Trash2 className="h-4 w-4" />
-                <span className="hidden xs:inline">Delete</span>
+                <span className="hidden xs:inline">Trash</span>
               </Button>
             </>
           )}
@@ -172,7 +171,6 @@ function FileTable({
         </div>
       </div>
 
-      {/* Tablet/Desktop: Single row */}
       <div className="hidden md:flex justify-between items-center gap-2">
         <FolderBreadcrumbs crateId={crateId} breadcrumbs={data.breadcrumbs} onAction={onBreadcrumbAction} />
 
@@ -191,7 +189,7 @@ function FileTable({
               </Button>
               <Button variant="outline" size="sm" onClick={onBulkDelete} className="flex items-center gap-2">
                 <Trash2 className="h-4 w-4" />
-                Delete
+                Trash
               </Button>
             </>
           )}

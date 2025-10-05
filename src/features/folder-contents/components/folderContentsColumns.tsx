@@ -19,27 +19,27 @@ const columnHelper = createColumnHelper<FolderContentRowItem>();
 const canModifyItem = (item: FolderContentRowItem, currentMember?: Member): boolean => {
   if (!currentMember) return false;
 
-  if (item.isFolder && (item as CrateFolder).isRoot) {
-    return false;
-  }
+  if (item.isFolder && (item as CrateFolder).isRoot) return false;
 
-  if (currentMember.role === CrateRole.Owner || currentMember.role === CrateRole.Manager) {
-    return true;
-  }
+  if (currentMember.role === CrateRole.Owner || currentMember.role === CrateRole.Manager) return true;
 
   if (currentMember.role === CrateRole.Member) {
-    if (!item.isFolder) {
-      return (item as CrateFile).uploader?.userId === currentMember.userId;
-    }
+    if (!item.isFolder) return (item as CrateFile).uploader?.userId === currentMember.userId;
     return (item as CrateFolder).createdByUserId === currentMember.userId;
   }
 
   return false;
 };
 
+const getParentFolderId = (item: FolderContentRowItem) => {
+  if (item.isFolder) return (item as CrateFolder).parentFolderId;
+  return (item as CrateFile).folderId;
+};
+
 export const folderContentsColumns = (
   folderContents: FolderContentRowItem[],
   currentMember?: Member,
+  currentFolderId?: string, 
   onEditFolder?: (folder: CrateFolder) => void,
   onEditFile?: (file: CrateFile) => void,
   onMoveItem?: (item: FolderContentRowItem) => void
@@ -52,26 +52,29 @@ export const folderContentsColumns = (
       header: () => {
         const { fileIds, folderIds, selectAll, deselectAll } = useSelectionStore();
 
-        const modifiableItems = folderContents.filter((item) => canModifyItem(item, currentMember));
+        const selectableItems = folderContents.filter(
+          (item) => canModifyItem(item, currentMember) && getParentFolderId(item) === currentFolderId
+        );
 
-        const allModifiableSelected =
-          modifiableItems.length > 0 &&
-          modifiableItems.every((item) => (item.isFolder ? folderIds.has(item.id) : fileIds.has(item.id)));
+        const allSelected =
+          selectableItems.length > 0 &&
+          selectableItems.every((item) => (item.isFolder ? folderIds.has(item.id) : fileIds.has(item.id)));
 
-        const handleToggleAll = () => {
-          if (allModifiableSelected) deselectAll();
-          else selectAll(modifiableItems);
+        const toggleAll = () => {
+          if (allSelected) deselectAll();
+          else selectAll(selectableItems);
         };
 
-        return modifiableItems.length > 0 ? (
-          <Checkbox checked={allModifiableSelected} onCheckedChange={handleToggleAll} />
+        return selectableItems.length > 0 ? (
+          <Checkbox checked={allSelected} onCheckedChange={toggleAll} />
         ) : (
           <div className="w-4 h-4" />
         );
       },
       cell: (info) => {
-        const canModify = canModifyItem(info.row.original, currentMember);
-        return canModify ? <SelectCell row={info.row} /> : <div className="w-4 h-4" />;
+        const item = info.row.original;
+        const canSelect = canModifyItem(item, currentMember) && getParentFolderId(item) === currentFolderId;
+        return canSelect ? <SelectCell row={info.row} /> : <div className="w-4 h-4" />;
       },
     }),
 
@@ -89,25 +92,9 @@ export const folderContentsColumns = (
       minSize: 10,
       cell: ({ row }) => {
         const item = row.original;
-
-        if (item.isFolder) {
-          return (
-            <div className="flex justify-start items-center gap-2">
-              <p className="text-sm text-muted-foreground">-</p>
-            </div>
-          );
-        }
-
+        if (item.isFolder) return <p className="text-sm text-muted-foreground">-</p>;
         const file = item as CrateFile;
-
-        if (!file.uploader) {
-          return (
-            <div className="flex justify-start items-center gap-2">
-              <p className="text-sm text-muted-foreground">Unknown</p>
-            </div>
-          );
-        }
-
+        if (!file.uploader) return <p className="text-sm text-muted-foreground">Unknown</p>;
         return (
           <UserAvatar
             displayName={file.uploader.displayName || file.uploader.email || "Unknown User"}
@@ -122,16 +109,7 @@ export const folderContentsColumns = (
       header: "Uploaded At",
       size: 10,
       minSize: 10,
-      cell: ({ row }) =>
-        row.original.isFolder ? (
-          <div className="flex justify-start items-center gap-2">
-            <p>-</p>
-          </div>
-        ) : (
-          <div className="flex justify-start items-center gap-2">
-            <DateIndicator date={row.original.createdAt} />
-          </div>
-        ),
+      cell: ({ row }) => (row.original.isFolder ? <p>-</p> : <DateIndicator date={row.original.createdAt} />),
     }),
 
     columnHelper.display({
@@ -140,15 +118,7 @@ export const folderContentsColumns = (
       size: 10,
       minSize: 10,
       cell: ({ row }) =>
-        row.original.isFolder ? (
-          <div className="flex justify-start items-center gap-2">
-            <p>-</p>
-          </div>
-        ) : (
-          <div className="flex justify-start items-center gap-2">
-            <StorageDisplay storage={(row.original as CrateFile).sizeInBytes ?? 0} />
-          </div>
-        ),
+        row.original.isFolder ? <p>-</p> : <StorageDisplay storage={(row.original as CrateFile).sizeInBytes ?? 0} />,
     }),
 
     columnHelper.display({

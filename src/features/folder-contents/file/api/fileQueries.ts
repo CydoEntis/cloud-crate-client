@@ -187,7 +187,9 @@ export const useSoftDeleteFile = () => {
           return Array.isArray(queryKey) && queryKey.includes("folder-contents") && queryKey.includes(crateId);
         },
       });
+
       queryClient.invalidateQueries({ queryKey: ["trash"] });
+      queryClient.invalidateQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
 
       toast.success("File moved to trash");
     },

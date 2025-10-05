@@ -22,15 +22,15 @@ function RouteComponent() {
         className="pointer-events-none select-none absolute bottom-0 left-0 w-full h-[1000px] object-cover z-0"
       />
 
-      <div className="relative z-10 flex flex-col top-50 justify-center min-h-svh px-6">
-        <div className="flex justify-center">
+      <div className="relative z-10 flex flex-col justify-center min-h-svh">
+        <div className="flex justify-center px-6 py-8">
           <div className="flex justify-center items-center gap-2">
             <img src={logo} alt="Cloud Crate Logo" className="h-16 w-16" />
             <h3 className="font-bold text-4xl text-primary">Cloud Crate</h3>
           </div>
         </div>
-        <div className="flex flex-1 justify-center p-6 md:p-10 pt-16 z-10 relative">
-          <div className="w-full max-w-sm">
+        <div className="flex flex-1 justify-center px-0 md:px-6 md:py-10 z-10 relative">
+          <div className="w-full md:max-w-sm">
             <Outlet />
           </div>
         </div>

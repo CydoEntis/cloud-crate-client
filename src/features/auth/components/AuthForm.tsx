@@ -86,7 +86,7 @@ function AuthForm({ mode }: AuthFormProps) {
 
   if (!isLogin && inviteToken && isValidatingToken) {
     return (
-      <Card className="shadow-md border-none bg-card">
+      <Card className="shadow-none md:shadow-md border-none bg-card rounded-none md:rounded-lg">
         <CardContent className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -99,7 +99,7 @@ function AuthForm({ mode }: AuthFormProps) {
 
   if (!isLogin && inviteToken && tokenError) {
     return (
-      <Card className="shadow-md border-none bg-card">
+      <Card className="shadow-none md:shadow-md border-none bg-card rounded-none md:rounded-lg">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Invalid Invitation</CardTitle>
           <CardDescription className="text-sm">There was a problem with your invitation</CardDescription>
@@ -122,7 +122,7 @@ function AuthForm({ mode }: AuthFormProps) {
 
   if (!isLogin && inviteToken && inviteValidation && !inviteValidation.isValid) {
     return (
-      <Card className="shadow-md border-none bg-card">
+      <Card className="shadow-none md:shadow-md border-none bg-card rounded-none md:rounded-lg">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Invalid Invitation</CardTitle>
           <CardDescription className="text-sm">This invitation cannot be used</CardDescription>
