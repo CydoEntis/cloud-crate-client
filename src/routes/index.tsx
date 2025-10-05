@@ -1,12 +1,18 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { Button } from "@/shared/components/ui/button";
 import { useAuthStore } from "@/features/auth/authStore";
+import { useTheme } from "@/app/providers/ThemeProvider";
 import logo from "@/assets/cloud-crate-logo.png";
 import CloudCrate from "../../public/cloudcrate.png";
 import CloudCrateMobile from "../../public/cloud-crate-mobie.png";
 import ManageMembers from "../../public/manage-members.png";
 import ManageDeletedFiles from "../../public/manage-trash.png";
+import CloudCrateLight from "../../public/cloud-crate-light.png";
+import CloudCrateMobileLight from "../../public/cloud-crate-mobie-light.png";
+import ManageMembersLight from "../../public/manage-members-light.png";
+import ManageDeletedFilesLight from "../../public/manage-trash-light.png";
 import AdminPanel from "../../public/admin-panel.png";
+import AdminPanelLight from "../../public/admin-panel-light.png";
 import { FeatureCard } from "@/shared/components/FeatureCard";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/shared/components/ui/sheet";
@@ -30,20 +36,23 @@ const fadeUpVariants = {
 };
 
 function LandingPage() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const features = [
     {
-      image: ManageMembers,
+      image: isDark ? ManageMembers : ManageMembersLight,
       title: "Invite & Collaborate",
       description: "Add members to your crates to share, upload, and manage files together—all in one secure space.",
     },
     {
-      image: ManageDeletedFiles,
+      image: isDark ? ManageDeletedFiles : ManageDeletedFilesLight,
       title: "Recover with Ease",
       description:
         "Accidentally deleted something? Restore files from the trash or permanently remove them when you're ready.",
     },
     {
-      image: AdminPanel,
+      image: isDark ? AdminPanel : AdminPanelLight,
       title: "Powerful User Management",
       description: "Control access, set roles, and monitor activity from a centralized admin dashboard.",
     },
@@ -67,7 +76,7 @@ function LandingPage() {
               </Button>
             </Link>
             <Link to="/register">
-              <Button className="bg-primary ">Get Started</Button>
+              <Button className="bg-primary">Get Started</Button>
             </Link>
             <ThemeToggle />
           </div>
@@ -93,7 +102,7 @@ function LandingPage() {
                   </Button>
                 </Link>
                 <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="bg-primary  w-full">Get Started</Button>
+                  <Button className="bg-primary w-full">Get Started</Button>
                 </Link>
               </div>
             </SheetContent>
@@ -125,13 +134,17 @@ function LandingPage() {
 
           <div className="hidden md:block mt-20 w-full max-w-[1400px] mx-auto">
             <div className="rounded-xl overflow-hidden shadow-2xl border border-muted">
-              <img src={CloudCrate} alt="CloudCrate Dashboard Preview" className="w-full h-auto" />
+              <img
+                src={isDark ? CloudCrate : CloudCrateLight}
+                alt="CloudCrate Dashboard Preview"
+                className="w-full h-auto"
+              />
             </div>
           </div>
 
           <div className="md:hidden mt-16 -mr-6 ml-0">
             <div className="rounded-l-xl shadow-2xl border-l border-t border-b border-muted">
-              <img src={CloudCrateMobile} alt="CloudCrate Dashboard Preview" />
+              <img src={isDark ? CloudCrateMobile : CloudCrateMobileLight} alt="CloudCrate Dashboard Preview" />
             </div>
           </div>
         </div>
