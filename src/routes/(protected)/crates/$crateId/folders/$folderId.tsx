@@ -4,7 +4,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import type { ColumnDef } from "@tanstack/react-table";
 import AvailableStorageIndicator from "@/features/storage/components/AvailableStorageIndicator";
 import FolderContentsError from "@/features/folder-contents/components/FolderContentsError";
-import FolderContentsPageHeader from "@/features/folder-contents/components/FoloderContentsPageHeader";
+import FolderContentsPageHeader from "@/features/folder-contents/components/FolderContentsPageHeader";
 import FileUpload from "@/features/folder-contents/file/components/FileUpload";
 import FileTable from "@/features/folder-contents/file/components/FileTable";
 import UpsertFolderModal from "@/features/folder-contents/folder/components/UpsertFolderModal";

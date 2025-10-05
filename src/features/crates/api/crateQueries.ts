@@ -117,6 +117,7 @@ export const useDeleteCrate = () => {
       queryClient.removeQueries({ queryKey: SHARED_KEYS.crateDetails(crateId) });
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
       queryClient.invalidateQueries({ queryKey: SHARED_KEYS.user() });
+      queryClient.invalidateQueries({ queryKey: crateKeys.recent() });
       toast.success("Crate deleted successfully");
     },
     onError: (error: Error) => {
@@ -156,6 +157,7 @@ export const useBulkLeaveCrates = () => {
         queryClient.removeQueries({ queryKey: SHARED_KEYS.crateDetails(id) });
       });
       queryClient.invalidateQueries({ queryKey: crateKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: crateKeys.recent() });
       toast.success(`Successfully left ${crateIds.length} crates`);
     },
     onError: (error: Error) => {

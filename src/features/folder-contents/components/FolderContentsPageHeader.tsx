@@ -21,8 +21,8 @@ function FolderContentsPageHeader() {
   const { data: crate } = useCrateDetails(crateId);
   const { open } = useCrateModalStore();
   const leaveCrate = useLeaveCrate();
+  const deleteCrate = useDeleteCrate();
   const navigate = useNavigate();
-
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   if (!crate) return null;
@@ -30,24 +30,14 @@ function FolderContentsPageHeader() {
   const canManage = crate.currentMember.role === CrateRole.Owner || crate.currentMember.role === CrateRole.Manager;
   const canLeave = crate.currentMember.role !== CrateRole.Owner;
   const isOwner = crate.currentMember.role === CrateRole.Owner;
-
   const remainingCount = members ? Math.max(0, members.totalCount - members.items.length) : 0;
 
-  const handleMembersClick = () => {
-    setInviteModalOpen(true);
-  };
-
+  const handleMembersClick = () => setInviteModalOpen(true);
   const handleLeaveCrate = async () => {
     if (!crate.currentMember) return;
-    await leaveCrate.mutateAsync({
-      crateId,
-      userId: crate.currentMember.userId,
-    });
+    await leaveCrate.mutateAsync({ crateId, userId: crate.currentMember.userId });
     navigate({ to: "/crates" });
   };
-
-  const deleteCrate = useDeleteCrate();
-
   const handleDeleteCrate = async () => {
     if (!crate?.id) return;
     await deleteCrate.mutateAsync(crate.id);
@@ -130,12 +120,10 @@ function FolderContentsPageHeader() {
         <h1 className="text-3xl font-bold text-foreground">{crate.name}</h1>
         {renderDesktopButtons()}
       </div>
-
       <div className="hidden md:flex xl:hidden flex-col gap-3 py-2">
         <h1 className="text-3xl font-bold text-foreground">{crate.name}</h1>
         <div className="flex items-center justify-between gap-2">{renderDesktopButtons()}</div>
       </div>
-
       <div className="flex md:hidden justify-between items-center py-2">
         <h1 className="text-2xl font-bold text-foreground">{crate.name}</h1>
         <DropdownMenu>
@@ -179,7 +167,6 @@ function FolderContentsPageHeader() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
       <InviteModal
         isOpen={inviteModalOpen}
         onClose={() => setInviteModalOpen(false)}
