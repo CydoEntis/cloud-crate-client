@@ -151,6 +151,7 @@ function LandingPage() {
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
+                className="h-full w-full max-w-md lg:max-w-none"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
