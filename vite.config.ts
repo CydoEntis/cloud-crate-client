@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite"; 
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import tailwindcss from "@tailwindcss/vite";
-import tsconfigPaths from "vite-tsconfig-paths"; 
+import tsconfigPaths from "vite-tsconfig-paths";
 import path from "path";
 import fs from "fs";
 
@@ -13,12 +13,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: {
-    https: {
-      key: fs.readFileSync("./localhost+2-key.pem"),
-      cert: fs.readFileSync("./localhost+2.pem"),
-    },
-    port: 5173,
-    host: "localhost",
-  },
+  server:
+    process.env.NODE_ENV === "development"
+      ? {
+          https: {
+            key: fs.readFileSync("./localhost+2-key.pem"),
+            cert: fs.readFileSync("./localhost+2.pem"),
+          },
+        }
+      : {},
 });
