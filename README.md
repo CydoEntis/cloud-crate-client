@@ -1,8 +1,8 @@
-## **CloudCrate Client (Frontend)**
+# 🌩️ CloudCrate Client
 
-# CloudCrate Client
+Frontend for **CloudCrate** — a modern cloud storage web app with rich file previews and collaborative workspaces.
 
-Frontend for CloudCrate - a modern cloud storage web app with rich file previews and collaborative workspaces.
+![CloudCrate Client Screenshot](./docs/demo.gif)
 
 ## Tech Stack
 
@@ -11,6 +11,8 @@ Frontend for CloudCrate - a modern cloud storage web app with rich file previews
 - TanStack Query (data fetching)
 - Tailwind CSS + shadcn/ui
 - Zustand (state management)
+- Zod
+- ShadCn
 
 ## Features
 
@@ -24,7 +26,7 @@ Frontend for CloudCrate - a modern cloud storage web app with rich file previews
 
 ### Prerequisites
 - Node.js 18+
-- pnpm (recommended)
+- npm (recommended)
 - Running CloudCrate API backend
 
 ## HTTPs
