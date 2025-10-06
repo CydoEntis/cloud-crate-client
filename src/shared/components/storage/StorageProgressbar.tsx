@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Progress } from "@radix-ui/react-progress";
-import { formatBytes } from "../lib/formatBytes";
+import { formatBytes } from "@/shared/lib/formatBytes";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 type StorageProgressProps = {
   used: number;
